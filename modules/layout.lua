@@ -11,6 +11,7 @@ local getScreenDimensions = function()
 	end
 	return screenW, screenH;
 end
+m.getScreenDimensions = getScreenDimensions;
 
 m.left = function(pixelsFromEdge)
 	local screenW, screenH = getScreenDimensions();
@@ -33,19 +34,39 @@ m.bottom = function(pixelsFromEdge)
 end
 
 m.alignToLeft = function(displayObject, pixelsFromEdge)
-	displayObject.x = m.left(pixelsFromEdge) + (displayObject.contentWidth * displayObject.anchorX);
+	if (((displayObject) and (type(displayObject) ~= 'number'))) then
+		displayObject.x = m.left(pixelsFromEdge) + (displayObject.contentWidth * displayObject.anchorX);
+	else
+		local pixelsFromEdge = displayObject or 0;
+		return m.left(pixelsFromEdge);
+	end
 end
 
 m.alignToRight = function(displayObject, pixelsFromEdge)
-	displayObject.x = m.right(pixelsFromEdge) - (displayObject.contentWidth - (displayObject.contentWidth * displayObject.anchorX));
+	if (((displayObject) and (type(displayObject) ~= 'number'))) then
+		displayObject.x = m.right(pixelsFromEdge) - (displayObject.contentWidth - (displayObject.contentWidth * displayObject.anchorX));
+	else
+		local pixelsFromEdge = displayObject or 0;
+		return m.right(pixelsFromEdge);
+	end
 end
 
 m.alignToTop = function(displayObject, pixelsFromEdge)
-	displayObject.y = m.top(pixelsFromEdge) + (displayObject.contentHeight * displayObject.anchorY);
+	if (((displayObject) and (type(displayObject) ~= 'number'))) then
+		displayObject.y = m.top(pixelsFromEdge) + (displayObject.contentHeight * displayObject.anchorY);
+	else
+		local pixelsFromEdge = displayObject or 0;
+		return m.top(pixelsFromEdge);
+	end
 end
 
 m.alignToBottom = function(displayObject, pixelsFromEdge)
-	displayObject.y = m.bottom(pixelsFromEdge) - (displayObject.contentHeight - (displayObject.contentHeight * displayObject.anchorY));
+	if (((displayObject) and (type(displayObject) ~= 'number'))) then
+		displayObject.y = m.bottom(pixelsFromEdge) - (displayObject.contentHeight - (displayObject.contentHeight * displayObject.anchorY));
+	else
+		local pixelsFromEdge = displayObject or 0;
+		return m.bottom(pixelsFromEdge);
+	end
 end
 
 return m;

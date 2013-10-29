@@ -5,11 +5,20 @@ settings = {
 	
 	orientation = {
 		default = "landscapeRight",
-		supported = { "landscapeRight", }
+		supported = { "landscapeRight", "landscapeLeft" }
 	},
 	
 	iphone = {
 		plist = {
+			CFBundleIconFiles = {
+				"Icon",
+				"Icon-60", 
+				"Icon-72",
+				"Icon-76",
+				"Icon-29",
+				"Icon-40",
+				"Icon-50"
+			},
 			UIStatusBarHidden = true,
 			MinimumOSVersion = "5.1.0",
 			UIViewControllerBasedStatusBarAppearance = false,

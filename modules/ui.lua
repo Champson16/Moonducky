@@ -70,11 +70,39 @@ ui.button.defaults = {
 
 ui.button.new = function(args)
 	checkoptions.callee = 'ui.button.new';
+
+	local onPress, onRelease;
+	if (args) then
+		if (args.default) then
+			args.imageUp = args.default;
+		end
+
+		if (args.over) then
+			args.imageDown = args.over;
+		end
+
+		if ((args.left) and (args.width)) then
+			args.x = args.left;
+		end
+
+		if ((args.top) and (args.height)) then
+			args.y = args.top;
+		end
+
+		if (args.onPress) then
+			onPress = args.onPress;
+		end
+
+		if (args.onRelease) then
+			onRelease = args.onRelease;
+		end
+	end
+
 	local options = checkoptions.check(args, ui.button.required, ui.button.defaults);
 
 	local view = display.newContainer(options.width, options.height);
 	view._uiType = 'button';
-
+	view.id = options.id or '';
 	view.up = display.newImageRect(options.imageUp, options.width, options.height);
 	view:insert(view.up, true);
 	view.down = display.newImageRect(options.imageDown, options.width, options.height);
@@ -91,8 +119,18 @@ ui.button.new = function(args)
 	view.x = options.x;
 	view.y = options.y;
 
+	if (onPress) then
+		view:addEventListener('press', onPress);
+	end
+
+	if (onRelease) then
+		view:addEventListener('release', onRelease);
+	end
+
 	return view;
 end
+
+ui.newButton = ui.button.new;
 
 ui.button.touch = function(event)
 	local self = event.target;
@@ -186,7 +224,7 @@ ui.button.touch = function(event)
 			self._hasFocus = false;
 		end
 		return true;
-	elseif (event.phase == "moved") then
+	elseif ((event.phase == "moved") and(self._startX) and (self._startY)) then
 		-- simple touches can sometimes caused "moved" phase to occur due to sensitive touch screens,
 		-- so ensure finger moved at least a few pixelsfrom start of touch location to consider it moved
 		local dx = math_abs(event.x - self._startX);
