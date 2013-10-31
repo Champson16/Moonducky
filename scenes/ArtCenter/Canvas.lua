@@ -1,6 +1,8 @@
 local Canvas = {};
 local ArtCenter = require('scenes.ArtCenter.Scene');
 
+local eraserColor = { .956862745, .956862745, .956862745 };
+
 local function fillBackground(self, r, g, b)
 	self.layerBgColor.bg:setFillColor(r, g, b);
 end
@@ -30,7 +32,23 @@ local function onCanvasTouch(event)
 	return true;
 end
 
-Canvas.new = function(width, height)
+local function repositionLayers(self)
+	self.layerDrawing.x = self.x;
+	self.layerDrawing.y = self.y;
+
+	for i=2,self.numChildren do
+		self[i].x = -(self.x);
+		self[i].y = -(self.y);
+	end
+
+	-- TODO: once display.captureBounds works on device, uncoment the following:
+	if (system.getInfo("environment") == "simulator") then
+		self.drawingBuffer.x = self.x;
+		self.drawingBuffer.y = self.y;
+	end
+end
+
+Canvas.new = function(width, height, x, y)
 	local canvas = display.newContainer(width, height);
 	canvas.layerBgColor = display.newGroup(); canvas:insert(canvas.layerBgColor);
 
@@ -51,29 +69,18 @@ Canvas.new = function(width, height)
 
 	-- background for layerBgColor layer
 	local bgRect = display.newRect(0, 0, width, height);
-	bgRect:setFillColor(1.0, 1.0, 1.0);
+	bgRect:setFillColor(eraserColor[1], eraserColor[2], eraserColor[3]);
 	canvas.layerBgColor:insert(bgRect, true);
 	canvas.layerBgColor.bg = bgRect;
 	canvas.layerBgColor:addEventListener("touch", onCanvasTouch);
 
-	canvas.x = display.contentWidth * 0.5;
-	canvas.y = display.contentHeight * 0.5;
-	canvas.layerDrawing.x = canvas.x;
-	canvas.layerDrawing.y = canvas.y;
-
-	-- TODO: once display.captureBounds works on device, uncoment the following:
-	if (system.getInfo("environment") == "simulator") then
-		canvas.drawingBuffer.x = canvas.x;
-		canvas.drawingBuffer.y = canvas.y;
-	end
-	
-	for i=2,canvas.numChildren do
-		canvas[i].x = -(canvas.x);
-		canvas[i].y = -(canvas.y);
-	end
+	canvas.x = x; --display.contentWidth * 0.5;
+	canvas.y = y; --display.contentHeight * 0.5;
+	repositionLayers(canvas);
 
 	-- public methods
 	canvas.fillBackground = fillBackground;
+	canvas.repositionLayers = repositionLayers;
 
 	return canvas;
 end

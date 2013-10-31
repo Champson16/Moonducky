@@ -2,9 +2,9 @@ local ui = require('modules.ui');
 local data = require('modules.data');
 
 local DATA_PATH = 'assets/data/UX/FRC_UX_ArtCenter_Tools_global_UI.json';
-local BUTTON_WIDTH = 95;
-local BUTTON_HEIGHT = 95;
-local BUTTON_PADDING = 12;
+local BUTTON_WIDTH = 75;
+local BUTTON_HEIGHT = 75;
+local BUTTON_PADDING = 8;
 
 local ToolSelector = {};
 
@@ -18,7 +18,7 @@ local function onButtonRelease(event)
 	});
 end
 
-ToolSelector.new = function(scene)
+ToolSelector.new = function(scene, height)
 	local group = display.newGroup();
 	local toolData = data.readJSON(DATA_PATH);
 	local toolButtons = toolData.tools;

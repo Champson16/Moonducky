@@ -65,7 +65,8 @@ ui.button.required = {
 };
 ui.button.defaults = {
 	x = 0,
-	y = 0
+	y = 0,
+	pressAlpha = 1.0
 };
 
 ui.button.new = function(args)
@@ -118,6 +119,7 @@ ui.button.new = function(args)
 	view.dispose = ui.button.dispose;
 	view.x = options.x;
 	view.y = options.y;
+	view.pressAlpha = options.pressAlpha;
 
 	if (onPress) then
 		view:addEventListener('press', onPress);
@@ -140,7 +142,7 @@ ui.button.touch = function(event)
 	if (event.phase == "began") then
 		self._startX = event.x;
 		self._startY = event.y;
-		self._touchTimer = timer.performWithDelay(50, function()
+		self._touchTimer = timer.performWithDelay(10, function()
 			if (not self._proxy) then
 				self._touchTimer = nil;
 				for k,v in pairs(self) do
@@ -169,7 +171,7 @@ ui.button.touch = function(event)
 			-- handle case where user pressed the button, but then begins to drag a scroller
 			local dx = math_abs(event.x - self._startX);
 			local dy = math_abs(event.y - self._startY);
-			local thresh = 15;
+			local thresh = 5;
 			local eventPassedToScroller;
 			if ((dx < thresh) and (dy < thresh)) then
 				if (isWithinBounds) then
@@ -186,7 +188,7 @@ ui.button.touch = function(event)
 				for i=#ui.scrollers,1,-1 do
 					local scrollerBounds = ui.scrollers[i].contentBounds;
 					local isWithinScroller = scrollerBounds.xMin <= event.x and scrollerBounds.xMax >= event.x and scrollerBounds.yMin <= event.y and scrollerBounds.yMax >= event.y;
-					if (isWithinScroller) then
+					if ((isWithinScroller) and (ui.scrollers[i].isVisible)) then
 						eventPassedToScroller = true;
 						ui.scrollers[i]:_focusTouch(event);
 						break;
@@ -272,6 +274,7 @@ end
 ui.button.press = function(self, callback)
 	self.up.isVisible = false;
 	self.down.isVisible = true;
+	self.down.alpha = self.pressAlpha;
 
 	if ((callback) and (type(callback) == "function")) then
 		callback();
@@ -784,10 +787,15 @@ ui.scroller._focusTouch = function(self, event)
 	if (target.isFocus) then target.isFocus = nil; end
 	
 	-- set event.target to scrollView and start back at "began" phase
-	event.target = self;
-	event.name = "touch";
-	event.phase = "began";
-	self:dispatchEvent(event);
+	local nextTarget = self.bg or self;
+	local e = {
+		name = event.name,
+		target = nextTarget,
+		phase = "began",
+		x = event.x,
+		y = event.y
+	};
+	nextTarget:dispatchEvent(e);
 end
 
 ui.scroller.dispose = function(self)
@@ -800,6 +808,136 @@ ui.scroller.dispose = function(self)
 	end
 	removeScroller(self);
 	self:removeSelf();
+end
+
+--- ui.scrollContainer
+-- Scrollable container with no momentum/physics simulation.
+ui.scrollContainer = {};
+ui.scrollContainer.required = {
+	width = "number",
+	height = "number"
+};
+ui.scrollContainer.defaults = {
+	x = 0,
+	y = 0,
+	scrollLock = false,
+	xScroll = true,
+	yScroll = true,
+	leftPadding = 0,
+	rightPadding = 0,
+	topPadding = 0,
+	bottomPadding = 0,
+	borderRadius = 0,
+	borderWidth = 0,
+	borderColor = { 0, 0, 0, 0 }
+};
+
+ui.scrollContainer.new = function(args)
+	checkoptions.callee = 'ui.scrollContainer.new';
+	local options = checkoptions.check(args, ui.scrollContainer.required, ui.scrollContainer.defaults);
+
+	local view = display.newContainer(options.width, options.height);
+	view.anchorChildren = true;
+	view._uiType = 'scrollContainer';
+
+	-- if bgColor option is set, create a rectangle and insert directly into container (behind content group)
+	local rect = display.newRect;
+	if (options.borderRadius > 0) then
+		rect = display.newRoundedRect;
+	end
+	local bg = rect(-(options.width * 0.5), -(options.height * 0.5), options.width, options.height, options.borderRadius);
+	if ((options.bgColor) and (type(options.bgColor) == "table") and (#options.bgColor == 3)) then
+		bg:setFillColor(options.bgColor[1], options.bgColor[2], options.bgColor[3]);
+	else
+		bg:setFillColor(1, 1, 1);
+	end
+
+	if (options.borderWidth > 0) then
+		bg:setStrokeColor(options.borderColor[1], options.borderColor[2], options.borderColor[3], options.borderColor[4] or 1);
+		bg.strokeWidth = options.borderWidth;
+	end
+
+	view:insert(bg, true);
+	view.bg = bg;
+	bg:addEventListener("touch", ui.scrollContainer.touch);
+
+	view.content = display.newGroup();
+	view:insert(view.content, false);
+
+	view.insert = function(self, obj)
+		view.content:insert(obj);
+	end
+
+	-- set properties (or use defaults)
+	for k,v in pairs(ui.scrollContainer.defaults) do
+		if (options[k]) then
+			view[k] = options[k];
+		else
+			view[k] = v;
+		end
+	end
+
+	view._focusTouch = ui.scroller._focusTouch;
+
+	table.insert(ui.scrollers, view);
+	return view;
+end
+
+ui.scrollContainer.touch = function(event)
+	local self = event.target;
+	local content = self.parent.content;
+
+	if (event.phase == "began") then
+		display.getCurrentStage():setFocus(self);
+		self._hasFocus = true;
+
+		self.markX = content.x;
+		self.markY = content.y;
+
+	elseif (self._hasFocus) then
+		if (event.phase == "moved") then
+
+			if (self.parent.scrollLock) then return true; end
+			local containerBounds = self.parent.contentBounds;
+			local contentBounds = content.contentBounds;
+			local dx = (event.x - event.xStart) + self.markX;
+			local dy = (event.y - event.yStart) + self.markY;
+
+			if (self.parent.xScroll) then
+				if (self.parent.contentWidth < content.contentWidth) then
+					content.x = dx;
+					local left = containerBounds.xMin + self.parent.leftPadding;
+					local right = containerBounds.xMax - self.parent.rightPadding;
+
+					if (content.contentBounds.xMin > left) then
+						content.x = content.x - (content.contentBounds.xMin - left);
+					elseif (content.contentBounds.xMax < right) then
+						content.x = content.x + (right - content.contentBounds.xMax);
+					end
+				end
+			end
+
+			if (self.parent.yScroll) then
+				if (self.parent.contentHeight < content.contentHeight) then
+					content.y = dy;
+					local top = containerBounds.yMin + self.parent.topPadding;
+					local bottom = containerBounds.yMax - self.parent.bottomPadding;
+
+					if (content.contentBounds.yMin > top) then
+						content.y = content.y - (content.contentBounds.yMin - top);
+					elseif (content.contentBounds.yMax < bottom) then
+						content.y = content.y + (bottom - content.contentBounds.yMax);
+					end
+				end
+			end
+
+		elseif ((event.phase == "cancelled") or (event.phase == "ended")) then
+
+			display.getCurrentStage():setFocus(nil);
+			self._hasFocus = false;
+		end
+	end
+	return true;
 end
 
 return ui;

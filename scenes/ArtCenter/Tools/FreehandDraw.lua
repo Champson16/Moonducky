@@ -21,7 +21,7 @@ FreehandDraw.a = 0.05;
 
 FreehandDraw.arbRotate = true;
 
-local function drawLine(parent, x0, y0, x1, y1)
+FreehandDraw.drawLine = function(parent, x0, y0, x1, y1)
 	local steep = false;
 	if (math_abs(y1 - y0) > math_abs(x1 - x0)) then steep = true; end
 
@@ -86,7 +86,7 @@ FreehandDraw.onCanvasTouch = function(self, event)
 		FreehandDraw.points[#FreehandDraw.points+1] = { x = event.x, y = event.y };
 		local previous = FreehandDraw.points[#FreehandDraw.points-1];
 		local current = FreehandDraw.points[#FreehandDraw.points];
-		drawLine(self.parent.layerDrawing, previous.x, previous.y, current.x, current.y);
+		FreehandDraw.drawLine(self.parent.layerDrawing, previous.x, previous.y, current.x, current.y);
 	
 	elseif (event.phase == 'ended') or (event.phase == 'cancelled') then
 		FreehandDraw.points = nil;
