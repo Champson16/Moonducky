@@ -11,8 +11,20 @@ local BUTTON_PADDING = 16;
 local ColorSelector = {};
 
 local function onButtonPress(event)
-	self = event.target;
+	local self = event.target;
+	local scene = self._scene;
+
 	self._parent:changeColor(self.r, self.g, self.b);
+
+	if (scene.eraserSelected) then
+		scene.selectedTool.a = scene.selectedTool.old_a;
+		scene.selectedTool.graphic.image = scene.selectedTool.old_image;
+		scene.selectedTool.graphic.width = scene.selectedTool.old_width;
+		scene.selectedTool.graphic.height = scene.selectedTool.old_height;
+		scene.selectedTool.arbRotate = scene.selectedTool.old_arbRotate;
+		scene.eraserSelected = false;
+		require('scenes.ArtCenter.SubToolSelector').selection.isVisible = true;
+	end
 end
 
 local function changeColor(self, r, g, b)

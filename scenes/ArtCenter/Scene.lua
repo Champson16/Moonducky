@@ -23,6 +23,17 @@ local canvas_top = 42;
 local function onEraserButtonRelease(event)
 	local self = event.target;
 	local scene = self._scene;
+	if (scene.eraserSelected) then return; end
+
+	-- Save prior settings (in case different color is selected)
+	scene.selectedTool.old_r = scene.selectedTool.r;
+	scene.selectedTool.old_g = scene.selectedTool.g;
+	scene.selectedTool.old_b = scene.selectedTool.b;
+	scene.selectedTool.old_a = scene.selectedTool.a;
+	scene.selectedTool.old_image = scene.selectedTool.graphic.image;
+	scene.selectedTool.old_width = scene.selectedTool.graphic.width;
+	scene.selectedTool.old_height = scene.selectedTool.graphic.height;
+	scene.selectedTool.old_arbRotate = scene.selectedTool.arbRotate;
 
 	-- Eraser settings
 	scene.selectedTool = require(const.TOOLS.FreehandDraw);
@@ -34,6 +45,7 @@ local function onEraserButtonRelease(event)
 	scene.selectedTool.graphic.width = 38;
 	scene.selectedTool.graphic.height = 38;
 	scene.selectedTool.arbRotate = true;
+	scene.eraserSelected = true;
 
 	SubToolSelector.selection.isVisible = false;
 end
