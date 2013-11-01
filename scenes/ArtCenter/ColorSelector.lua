@@ -10,6 +10,55 @@ local BUTTON_PADDING = 16;
 
 local ColorSelector = {};
 
+local function HexToRGB(color)
+	local newcolor = {
+		r = tonumber((string.sub(color,1,2)),16)/255,
+		g = tonumber((string.sub(color,3,4)),16)/255,
+		b = tonumber((string.sub(color,5,6)),16)/255,
+		hex = color
+	};
+	return newcolor;
+end
+
+local function sortByHue(colors)
+	for i=1,#colors do
+		local r, g, b = colors[i].r, colors[i].g, colors[i].b;
+
+		-- Get max and min values for chroma
+		local max = math.max(r, g, b);
+		local min = math.min(r, g, b);
+
+		-- Variables for HSV value of hex color
+		local chr = max - min;
+		local hue = 0;
+		local val = max;
+		local sat = 0;
+
+		if (val > 0) then
+			-- Calculate saturation only if value isn't 0
+			sat = chr / val;
+			if (sat > 0) then
+				if (r == max) then
+					hue = 60 * (((g-min) - (b-min)) / chr);
+					if (hue < 0) then hue = hue + 360; end
+				elseif (g == max) then
+					hue = 120 + 60 * (((b-min) - (r-min)) / chr);
+				elseif (b == max) then
+					hue = 240 + 60 * (((r-min) - (g-min)) / chr);
+				end
+			end
+		end
+
+		-- modify existing object by adding HSV values
+		colors[i].hue = hue;
+		colors[i].sat = sat;
+		colors[i].val = val;
+	end
+
+	table.sort(colors, function(a, b) return a.hue < b.hue; end);
+	return colors;
+end
+
 local function onButtonPress(event)
 	local self = event.target;
 	local scene = self._scene;
@@ -55,34 +104,15 @@ ColorSelector.new = function(scene, width, height)
 	--group.bg.fill.effect = "filter.crosshatch";
 	--group.bg.fill.effect.grain = 0.2;
 	local colorData = data.readJSON(DATA_PATH).colors;
+	local colors = {};
 
-	--[[
 	for i=1,#colorData do
-		local button = ui.button.new({
-			id = i,
-			imageUp = 'assets/images/UX/FRC_UX_ArtCenter_Color_Blank.png',
-			imageDown = 'assets/images/UX/FRC_UX_ArtCenter_Color_Blank.png',
-			width = BUTTON_WIDTH,
-			height = BUTTON_HEIGHT
-		});
-		button._scene = scene;
-		button.up:setFillColor(colorData[i].r, colorData[i].g, colorData[i].b);
-		button.down:setFillColor(colorData[i].r, colorData[i].g, colorData[i].b, 0.90);
-		button.anchorX = 0;
-		button.x = BUTTON_PADDING + (i - 1) * (BUTTON_WIDTH + BUTTON_PADDING);
-		button.y = height * 0.5;
-
-		-- color data
-		button.r = colorData[i].r;
-		button.g = colorData[i].g;
-		button.b = colorData[i].b;
-		button:addEventListener('press', onButtonPress);
-
-		group:insert(button);
+		colors[#colors+1] = HexToRGB(colorData[i]);
 	end
-	--]]
+	colors = sortByHue(colors);
 
-	for i=1,#colorData do
+	for i=1,#colors do
+		local c = colors[i];
 		local button = ui.button.new({
 			id = i,
 			imageUp = BLANK_COLOR_PATH,
@@ -91,17 +121,17 @@ ColorSelector.new = function(scene, width, height)
 			height = BUTTON_HEIGHT
 		});
 		button._scene = scene;
-		button.up:setFillColor(colorData[i].r, colorData[i].g, colorData[i].b);
-		button.down:setFillColor(colorData[i].r, colorData[i].g, colorData[i].b, 0.75);
+		button.up:setFillColor(c.r, c.g, c.b);
+		button.down:setFillColor(c.r, c.g, c.b, 0.75);
 		button.anchorY = 0.5;
 		button.x = 0;
 		button.y = -(height * 0.5) + (button.height * 0.5) + BUTTON_PADDING + (i-1) * (BUTTON_HEIGHT + BUTTON_PADDING);
 
 		-- color attributes
 		button._parent = group;
-		button.r = colorData[i].r;
-		button.g = colorData[i].g;
-		button.b = colorData[i].b;
+		button.r = c.r;
+		button.g = c.g;
+		button.b = c.b;
 		button:addEventListener('press', onButtonPress);
 		group:insert(button);
 
