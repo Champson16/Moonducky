@@ -1,5 +1,15 @@
 {
 	"tools": [{
+		"id": "BackgroundImage",
+		"module": "BackgroundImage",
+		"subtools": [{
+			"id": "Blank"
+		},
+		{
+			"id": "BarnStage"
+		}]
+	},
+	{
 		"id": "FreehandDraw",
 		"module": "FreehandDraw",
 		"subtools": [{

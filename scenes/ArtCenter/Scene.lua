@@ -13,6 +13,7 @@ const.SELECTOR_SIZE = 130;		-- width for vertical selectors; height for horizont
 const.ELEMENT_PADDING = 4;		-- spacing between elements (such as drawing canvas, selectors, etc.)
 
 const.TOOLS = {};
+const.TOOLS.BackgroundImage = 'scenes.ArtCenter.Tools.BackgroundImage';
 const.TOOLS.FreehandDraw = 'scenes.ArtCenter.Tools.FreehandDraw';
 
 local screenW, screenH = layout.getScreenDimensions();
@@ -24,6 +25,7 @@ local function onEraserButtonRelease(event)
 	local self = event.target;
 	local scene = self._scene;
 	if (scene.eraserSelected) then return; end
+	if (scene.backgroundSelectionMode) then print('here!'); return; end
 
 	-- Save prior settings (in case different color is selected)
 	scene.selectedTool.old_r = scene.selectedTool.r;
@@ -172,14 +174,16 @@ local function onCreateScene(event)
 	view:insert(self.currentColor);
 
 	-- set selected tool
-	self.selectedTool = require(const.TOOLS.FreehandDraw);
+	self.selectedTool = require(const.TOOLS.BackgroundImage);
 	self.subToolSelectors[1].content[1]:dispatchEvent({
 		name = "release",
 		target = self.subToolSelectors[1].content[1]
 	});
+	self.backgroundSelectionMode = true;
+	self.eraserSelected = false;
 
 	-- set current color to first in palette
-	self.colorSelector:changeColor(self.colorSelector.content[1].r, self.colorSelector.content[1].g, self.colorSelector.content[1].b);
+	self.colorSelector:changeColor(self.colorSelector.content[2].r, self.colorSelector.content[2].g, self.colorSelector.content[2].b);
 
 	local buildText = display.newText(view, _G.APP_VERSION, 0, 0, native.systemFontBold, 14);
 	buildText:setFillColor(1.0, 1.0, 1.0);
@@ -190,9 +194,12 @@ local function onCreateScene(event)
 end
 
 local function onShake(event)
+	local canvas = ArtCenter.canvas;
+	if (not canvas) then return; end
+
 	if event.isShake then
 		-- Device was shaken, clear the canvas
-		if (system.getInfo("environment") == "simulator") then
+		if (not _G.COMPAT_DRAWING_MODE) then
 			for i=canvas.drawingBuffer.group.numChildren,1,-1 do
 				canvas.drawingBuffer.group[i]:removeSelf();
 				canvas.drawingBuffer.group[i] = nil;

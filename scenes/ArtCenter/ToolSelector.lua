@@ -10,6 +10,18 @@ local ToolSelector = {};
 
 local function onButtonRelease(event)
 	local self = event.target;
+	
+	if (self.module == "BackgroundImage") then
+		self._scene.backgroundSelectionMode = true;
+		self._scene.eraserSelected = false;
+		self._scene.selectedTool = require('scenes.ArtCenter.Tools.BackgroundImage');
+		require('scenes.ArtCenter.SubToolSelector').selection.isVisible = false;
+		self._scene.colorSelector:noColorVisible(true);
+	else
+		self._scene.backgroundSelectionMode = false;
+		self._scene.colorSelector:noColorVisible(false);
+	end
+
 	self._scene:dispatchEvent({
 		name = "toolSelection",
 		target = self._scene,
@@ -32,6 +44,7 @@ ToolSelector.new = function(scene, height)
 			height = BUTTON_HEIGHT
 		});
 		button.index = i;
+		button.module = toolButtons[i].module;
 		button.anchorX = 0;
 		button.anchorY = 0;
 		button.x = (i-1) * (BUTTON_WIDTH + BUTTON_PADDING);

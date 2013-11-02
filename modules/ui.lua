@@ -66,7 +66,8 @@ ui.button.required = {
 ui.button.defaults = {
 	x = 0,
 	y = 0,
-	pressAlpha = 1.0
+	pressAlpha = 1.0,
+	bgColor = { 1.0, 1.0, 1.0, 0 }
 };
 
 ui.button.new = function(args)
@@ -104,6 +105,11 @@ ui.button.new = function(args)
 	local view = display.newContainer(options.width, options.height);
 	view._uiType = 'button';
 	view.id = options.id or '';
+
+	view.bg = display.newRect(-(options.width * 0.5), -(options.height * 0.5), options.width, options.height);
+	view.bg:setFillColor(options.bgColor[1], options.bgColor[2], options.bgColor[3], options.bgColor[4] or 0);
+	view:insert(view.bg, true);
+
 	view.up = display.newImageRect(options.imageUp, options.width, options.height);
 	view:insert(view.up, true);
 	view.down = display.newImageRect(options.imageDown, options.width, options.height);
@@ -265,6 +271,8 @@ end
 ui.button.release = function(self, callback)
 	self.up.isVisible = true;
 	self.down.isVisible = false;
+	self.bg.isVisible = true;
+	self.bg.alpha = 1.0;
 
 	if ((callback) and (type(callback) == "function")) then
 		callback();
@@ -275,6 +283,7 @@ ui.button.press = function(self, callback)
 	self.up.isVisible = false;
 	self.down.isVisible = true;
 	self.down.alpha = self.pressAlpha;
+	self.bg.alpha = self.pressAlpha;
 
 	if ((callback) and (type(callback) == "function")) then
 		callback();

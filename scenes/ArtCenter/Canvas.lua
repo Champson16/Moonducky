@@ -36,13 +36,16 @@ local function repositionLayers(self)
 	self.layerDrawing.x = self.x;
 	self.layerDrawing.y = self.y;
 
-	for i=2,self.numChildren do
+	self.layerBgImage.x = self.x;
+	self.layerBgImage.y = self.y;
+
+	for i=4,self.numChildren do
 		self[i].x = -(self.x);
 		self[i].y = -(self.y);
 	end
 
 	-- TODO: once display.captureBounds works on device, uncoment the following:
-	if (system.getInfo("environment") == "simulator") then
+	if (not _G.COMPAT_DRAWING_MODE) then
 		self.drawingBuffer.x = self.x;
 		self.drawingBuffer.y = self.y;
 	end
@@ -52,18 +55,18 @@ Canvas.new = function(width, height, x, y)
 	local canvas = display.newContainer(width, height);
 	canvas.layerBgColor = display.newGroup(); canvas:insert(canvas.layerBgColor);
 
-	if (system.getInfo("environment") == "simulator") then
+	if (not _G.COMPAT_DRAWING_MODE) then
 		canvas.drawingBuffer = display.newSnapshot(width, height); -- TODO: uncomment this line once display.captureBounds works on device
 	end
 	canvas.layerDrawing = display.newSnapshot(width, height);
 
 	-- TODO: once display.captureBounds() works on device, remove the following lines:
-	if (system.getInfo("environment") ~= "simulator") then
+	if (_G.COMPAT_DRAWING_MODE) then
 		canvas.snapshots = {};
 		table.insert(canvas.snapshots, canvas.layerDrawing);
 	end
 
-	canvas.layerBgImage = display.newGroup(); canvas:insert(canvas.layerBgImage);
+	canvas.layerBgImage = display.newSnapshot(width, height); --canvas:insert(canvas.layerBgImage);
 	canvas.layerObjects = display.newGroup(); canvas:insert(canvas.layerObjects);
 	canvas.layerOverlay = display.newGroup(); canvas:insert(canvas.layerOverlay);
 

@@ -3,6 +3,7 @@ local data = require('modules.data');
 local layout = require('modules.layout');
 
 local DATA_PATH = 'assets/data/UX/FRC_UX_ArtCenter_Colors.json';
+local NO_COLOR_PATH = 'assets/images/UX/FRC_UX_ArtCenter_Color_NoColor.png';
 local BLANK_COLOR_PATH = 'assets/images/UX/FRC_UX_ArtCenter_Color_Blank.png';
 local BUTTON_WIDTH = 64;
 local BUTTON_HEIGHT = 64;
@@ -59,11 +60,10 @@ local function sortByHue(colors)
 	return colors;
 end
 
-local function onButtonPress(event)
+local function onButtonRelease(event)
 	local self = event.target;
 	local scene = self._scene;
-
-	self._parent:changeColor(self.r, self.g, self.b);
+	local showSelectedColor = true;
 
 	if (scene.eraserSelected) then
 		scene.selectedTool.a = scene.selectedTool.old_a;
@@ -73,6 +73,14 @@ local function onButtonPress(event)
 		scene.selectedTool.arbRotate = scene.selectedTool.old_arbRotate;
 		scene.eraserSelected = false;
 		require('scenes.ArtCenter.SubToolSelector').selection.isVisible = true;
+
+	elseif (scene.backgroundSelectionMode) then
+		scene.canvas:fillBackground(self.r, self.g, self.b);
+		showSelectedColor = false;
+	end
+
+	if (showSelectedColor) then
+		self._parent:changeColor(self.r, self.g, self.b);
 	end
 end
 
@@ -87,6 +95,22 @@ local function changeColor(self, r, g, b)
 	self._scene.currentColor.preview.r = r;
 	self._scene.currentColor.preview.g = g;
 	self._scene.currentColor.preview.b = b;
+end
+
+local function noColorVisible(self, visible)
+	if ((visible) and (self.content[1].isVisible == false)) then
+		self.content[1].isVisible = true;
+
+		for i=2,self.content.numChildren do
+			self.content[i].y = self.content[i].y + self.shiftDistance;
+		end
+	elseif (self.content[1].isVisible) then
+		self.content[1].isVisible = false;
+
+		for i=2,self.content.numChildren do
+			self.content[i].y = self.content[i].y - self.shiftDistance;
+		end
+	end
 end
 
 ColorSelector.new = function(scene, width, height)
@@ -127,27 +151,43 @@ ColorSelector.new = function(scene, width, height)
 		button.x = 0;
 		button.y = -(height * 0.5) + (button.height * 0.5) + BUTTON_PADDING + (i-1) * (BUTTON_HEIGHT + BUTTON_PADDING);
 
+		if (i == 1) then
+			local noColor = ui.button.new({
+				id = i,
+				imageUp = NO_COLOR_PATH,
+				imageDown = NO_COLOR_PATH,
+				width = BUTTON_WIDTH,
+				height = BUTTON_HEIGHT
+			});
+			noColor._scene = scene;
+			noColor.down:setFillColor(1.0, 1.0, 1.0, 0.75);
+			noColor.anchorY = 0.5;
+			noColor.x = 0;
+			noColor.y = -(height * 0.5) + (noColor.height * 0.5) + BUTTON_PADDING + (i-1) * (BUTTON_HEIGHT + BUTTON_PADDING);
+			noColor.isVisible = false;
+
+			noColor._parent = group;
+			noColor.r = .956862745;
+			noColor.g = .956862745;
+			noColor.b = .956862745;
+			noColor:addEventListener('release', onButtonRelease);
+			group:insert(noColor);
+		end
+
 		-- color attributes
 		button._parent = group;
 		button.r = c.r;
 		button.g = c.g;
 		button.b = c.b;
-		button:addEventListener('press', onButtonPress);
+		button:addEventListener('release', onButtonRelease);
 		group:insert(button);
-
-		--[[
-		local num = display.newText(i, 0, 0, native.systemFontBold, 12);
-		num:setFillColor(0, 0, 0);
-		num.anchorX = 0.5;
-		num.anchorY = 0.5;
-		num.x = button.x + (button.width * 0.5) + 10;
-		num.y = button.y + (button.height * 0.5) - 2;
-		group:insert(num);
-		--]]
 	end
 
 	group._scene = scene;
+	group.shiftDistance = group.content[3].y - group.content[2].y;
 	group.changeColor = changeColor;
+	group.noColorVisible = noColorVisible;
+	group:noColorVisible(true);
 
 	if (scene) then scene.view:insert(group); end
 	return group;

@@ -91,15 +91,16 @@ FreehandDraw.onCanvasTouch = function(self, event)
 	elseif (event.phase == 'ended') or (event.phase == 'cancelled') then
 		FreehandDraw.points = nil;
 
-		-- [[ TODO: once display.captureBounds works on device, uncomment the following
-		if (system.getInfo("environment") == "simulator") then
+		if (not _G.COMPAT_DRAWING_MODE) then
 			local bounds = {
 				xMin = self.parent.layerDrawing.contentBounds.xMin,
 				yMin = self.parent.layerDrawing.contentBounds.yMin,
 				xMax = self.parent.layerDrawing.contentBounds.xMax,
 				yMax = self.parent.layerDrawing.contentBounds.yMax
 			};
+			self.parent.layerBgImage.isVisible = false;
 			local capture = display.captureBounds(bounds);
+			self.parent.layerBgImage.isVisible = true;
 			capture.x = 0;
 			capture.y = 0;
 			self.parent.drawingBuffer.group:insert(capture);
@@ -127,6 +128,8 @@ FreehandDraw.onCanvasTouch = function(self, event)
 				end
 				collectgarbage("collect");
 			end, 1);
+
+			self.parent.layerBgImage:toFront();
 			--]]
 		end
 	end
