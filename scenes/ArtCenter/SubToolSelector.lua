@@ -11,9 +11,10 @@ local SubToolSelector = {};
 SubToolSelector.selection = display.newImageRect('assets/images/selected.png', 48, 48);
 SubToolSelector.selection.isVisible = false;
 
-local function onButtonRelease(event)
+local function onFreehandButtonRelease(event)
 	local self = event.target;
 
+	self._scene.eraserSelected = false;
 	self._scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
 	local tool = self._scene.selectedTool;
 	tool.graphic.image = 'assets/images/UX/FRC_UX_ArtCenter_' .. self.parentId .. '_Brush_' .. self.id .. '.png';
@@ -80,7 +81,7 @@ SubToolSelector.new = function(scene, id, width, height)
 		button.arbRotate = subToolButtons[i].arbRotate or false;
 		button.brushAlpha = subToolButtons[i].alpha;
 		button.brushSizes = subToolButtons[i].brushSizes;
-		button:addEventListener('release', onButtonRelease);
+		button:addEventListener('release', onFreehandButtonRelease);
 		group:insert(button);
 
 		local num = display.newText(i, 0, 0, native.systemFontBold, 12);
