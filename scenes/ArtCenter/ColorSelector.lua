@@ -60,21 +60,21 @@ local function sortByHue(colors)
 	return colors;
 end
 
+-- Color from palette is selected
 local function onButtonRelease(event)
 	local self = event.target;
 	local scene = self._scene;
 	local showSelectedColor = true;
 
-	if (scene.eraserSelected) then
+	if (scene.mode == scene.modes.ERASE) then
 		scene.selectedTool.a = scene.selectedTool.old_a;
 		scene.selectedTool.graphic.image = scene.selectedTool.old_image;
 		scene.selectedTool.graphic.width = scene.selectedTool.old_width;
 		scene.selectedTool.graphic.height = scene.selectedTool.old_height;
 		scene.selectedTool.arbRotate = scene.selectedTool.old_arbRotate;
-		scene.eraserSelected = false;
 		require('scenes.ArtCenter.SubToolSelector').selection.isVisible = true;
 
-	elseif (scene.backgroundSelectionMode) then
+	elseif (scene.mode == scene.modes.BACKGROUND_SELECTION) then
 		scene.canvas:fillBackground(self.r, self.g, self.b);
 		showSelectedColor = false;
 	end

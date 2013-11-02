@@ -43,7 +43,6 @@ FreehandDraw.drawLine = function(parent, x0, y0, x1, y1)
 	if (y0 < y1) then ystep = 1 else ystep = -1 end
 
 	for x=x0,x1 do
-		--local c = display.newImageRect(FreehandDraw.graphic.image, FreehandDraw.graphic.width, FreehandDraw.graphic.height);
 		c = display.newImage(FreehandDraw.graphic.image);
 		c.xScale = FreehandDraw.graphic.width / c.width;
 		c.yScale = FreehandDraw.graphic.height / c.height;

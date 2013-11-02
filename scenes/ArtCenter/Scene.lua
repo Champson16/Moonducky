@@ -21,11 +21,19 @@ local canvas_width = screenW - ((const.SELECTOR_SIZE * 2) + (const.ELEMENT_PADDI
 local canvas_height = screenH - ((const.SELECTOR_SIZE * 0.8) + 0);
 local canvas_top = 42;
 
+ArtCenter.modes = {
+	FREEHAND_DRAW = 1,
+	BACKGROUND_SELECTION = 2,
+	OBJECT_SELECTION = 3,
+	SHAPE_PLACEMENT = 4,
+	STAMP_PLACEMENT = 5,
+	ERASE = 6
+};
+
 local function onEraserButtonRelease(event)
 	local self = event.target;
 	local scene = self._scene;
-	if (scene.eraserSelected) then return; end
-	if (scene.backgroundSelectionMode) then print('here!'); return; end
+	if ((scene.mode == scene.modes.ERASE) or (scene.mode == scene.modes.BACKGROUND_SELECTION)) then return; end
 
 	-- Save prior settings (in case different color is selected)
 	scene.selectedTool.old_r = scene.selectedTool.r;
@@ -47,7 +55,7 @@ local function onEraserButtonRelease(event)
 	scene.selectedTool.graphic.width = 38;
 	scene.selectedTool.graphic.height = 38;
 	scene.selectedTool.arbRotate = true;
-	scene.eraserSelected = true;
+	scene.mode = scene.modes.ERASE;
 
 	SubToolSelector.selection.isVisible = false;
 end
@@ -179,8 +187,7 @@ local function onCreateScene(event)
 		name = "release",
 		target = self.subToolSelectors[1].content[1]
 	});
-	self.backgroundSelectionMode = true;
-	self.eraserSelected = false;
+	self.mode = self.modes.BACKGROUND_SELECTION;
 
 	-- set current color to first in palette
 	self.colorSelector:changeColor(self.colorSelector.content[2].r, self.colorSelector.content[2].g, self.colorSelector.content[2].b);

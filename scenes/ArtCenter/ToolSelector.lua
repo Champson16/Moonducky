@@ -8,21 +8,34 @@ local BUTTON_PADDING = 8;
 
 local ToolSelector = {};
 
+-- New tool from top toolbar is selected
 local function onButtonRelease(event)
 	local self = event.target;
-	
-	if (self.module == "BackgroundImage") then
-		self._scene.backgroundSelectionMode = true;
-		self._scene.eraserSelected = false;
-		self._scene.selectedTool = require('scenes.ArtCenter.Tools.BackgroundImage');
-		require('scenes.ArtCenter.SubToolSelector').selection.isVisible = false;
-		self._scene.colorSelector:noColorVisible(true);
-	else
-		self._scene.backgroundSelectionMode = false;
-		self._scene.colorSelector:noColorVisible(false);
+	local scene = self._scene;
+	scene.mode = scene.modes[self.mode];
+	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.module);
+
+	-- show/hide sub-tool selection indicator
+	if (require('scenes.ArtCenter.SubToolSelector').selection.isActive) then
+		require('scenes.ArtCenter.SubToolSelector').selection.isVisible = self.subToolSelection;
 	end
 
-	self._scene:dispatchEvent({
+	-- show/hide 'No Color' option in the color palette
+	scene.colorSelector:noColorVisible(self.noColorVisible);
+
+	-- restore selected tool's properties
+	if (scene.mode == scene.modes["FREEHAND_DRAW"]) then
+		scene.selectedTool.graphic.image = scene.freehandImage;
+		scene.selectedTool.graphic.width = scene.freehandWidth;
+		scene.selectedTool.graphic.height = scene.freehandHeight;
+		scene.selectedTool.a = scene.freehandAlpha;
+		scene.selectedTool.arbRotate = scene.freehandArbRotate;
+
+		-- set color for tool to match currently selected color (in case eraser was previously selected)
+		scene.colorSelector:changeColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b);
+	end
+
+	scene:dispatchEvent({
 		name = "toolSelection",
 		target = self._scene,
 		tool = self.id,
@@ -45,6 +58,10 @@ ToolSelector.new = function(scene, height)
 		});
 		button.index = i;
 		button.module = toolButtons[i].module;
+		button.mode = toolButtons[i].mode;
+		button.subToolSelection = toolButtons[i].subToolSelection;
+		button.noColorVisible = toolButtons[i].noColorVisible;
+
 		button.anchorX = 0;
 		button.anchorY = 0;
 		button.x = (i-1) * (BUTTON_WIDTH + BUTTON_PADDING);

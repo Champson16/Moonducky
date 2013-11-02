@@ -11,13 +11,16 @@ local BUTTON_PADDING = 44;
 local SubToolSelector = {};
 SubToolSelector.selection = display.newImageRect('assets/images/selected.png', 48, 48);
 SubToolSelector.selection.isVisible = false;
+SubToolSelector.selection.isActive = false;
 
 local function onBackgroundButtonRelease(event)
 	local self = event.target;
+	local scene = self._scene;
 
-	self._scene.eraserSelected = false;
-	self._scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
-	local bgImageLayer = self._scene.canvas.layerBgImage;
+	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
+	scene.mode = scene.modes[self.toolMode];
+
+	local bgImageLayer = scene.canvas.layerBgImage;
 	local imageFile = 'assets/images/UX/MDSS_UX_ArtCenter_Backdrop_' .. self.id .. '.png'
 
 	if (bgImageLayer.group.numChildren > 0) then
@@ -26,8 +29,8 @@ local function onBackgroundButtonRelease(event)
 	end
 
 	local image = display.newImageRect(bgImageLayer.group, imageFile, 1152, 768);
-	local x = self._scene.canvas.width / image.contentWidth;
-	local y = self._scene.canvas.height / image.contentHeight;
+	local x = scene.canvas.width / image.contentWidth;
+	local y = scene.canvas.height / image.contentHeight;
 
 	if (x > y) then
 		image.yScale = x;
@@ -40,22 +43,32 @@ end
 
 local function onFreehandButtonRelease(event)
 	local self = event.target;
+	local scene = self._scene;
 
-	self._scene.eraserSelected = false;
-	self._scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
-	local tool = self._scene.selectedTool;
+	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
+	scene.mode = scene.modes[self.toolMode];
+
+	local tool = scene.selectedTool;
 	tool.graphic.image = 'assets/images/UX/FRC_UX_ArtCenter_' .. self.parentId .. '_Brush_' .. self.id .. '.png';
 	tool.graphic.width = self.brushSizes[1];
 	tool.graphic.height = self.brushSizes[1];
 	tool.a = self.brushAlpha;
 	tool.arbRotate = self.arbRotate;
+
+	scene.freehandImage = tool.graphic.image;
+	scene.freehandWidth = tool.graphic.width;
+	scene.freehandHeight = tool.graphic.height;
+	scene.freehandAlpha = tool.a;
+	scene.freehandArbRotate = tool.arbRotate;
+
 	self.parent:insert(SubToolSelector.selection);
 	SubToolSelector.selection.isVisible = true;
 	SubToolSelector.selection.x = self.x;
 	SubToolSelector.selection.y = self.y;
+	SubToolSelector.selection.isActive = true;
 
 	-- set color for tool to match currently selected color (in case eraser was previously selected)
-	self._scene.colorSelector:changeColor(self._scene.currentColor.preview.r, self._scene.currentColor.preview.g, self._scene.currentColor.preview.b);
+	scene.colorSelector:changeColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b);
 end
 
 SubToolSelector.new = function(scene, id, width, height)
@@ -121,6 +134,7 @@ SubToolSelector.new = function(scene, id, width, height)
 		-- brush attributes
 		button.parentId = id;
 		button.toolModule = toolData.module;
+		button.toolMode = toolData.mode;
 		button.arbRotate = subToolButtons[i].arbRotate or false;
 		button.brushAlpha = subToolButtons[i].alpha or 1.0;
 		button.brushSizes = subToolButtons[i].brushSizes or {};

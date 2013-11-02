@@ -2,6 +2,9 @@
 	"tools": [{
 		"id": "BackgroundImage",
 		"module": "BackgroundImage",
+		"mode": "BACKGROUND_SELECTION",
+		"subToolSelection": false,
+		"noColorVisible": true,
 		"subtools": [{
 			"id": "Blank"
 		},
@@ -12,6 +15,8 @@
 	{
 		"id": "FreehandDraw",
 		"module": "FreehandDraw",
+		"mode": "FREEHAND_DRAW",
+		"subToolSelection": true,
 		"subtools": [{
 			"id": "Pencil",
 			"alpha": 0.1,
@@ -64,6 +69,8 @@
 	{
 		"id": "FreehandPaintBasic",
 		"module": "FreehandDraw",
+		"mode": "FREEHAND_DRAW",
+		"subToolSelection": true,
 		"subtools": [{
 			"id": "PaintBrush1",
 			"alpha": 0.05,
@@ -108,23 +115,31 @@
 	},
 	{
 		"id": "FreehandPaintFancy",
-		"module": "FreehandPaint",
+		"module": "FreehandDraw",
+		"mode": "FREEHAND_DRAW",
+		"subToolSelection": true,
 		"subtools": []
 	},
 	{
 		"id": "ShapesPalette",
+		"mode": "SHAPE_PLACEMENT",
+		"subToolSelection": false,
 		"subtools": []
 	},
 	{
 		"id": "StampsPalette",
+		"mode": "STAMP_PLACEMENT",
+		"subToolSelection": false,
 		"subtools": []
 	},
 	{
 		"id": "TextPalette",
+		"subToolSelection": false,
 		"subtools": []
 	},
 	{
 		"id": "SpecialFX",
+		"subToolSelection": false,
 		"subtools": []
 	}]
 }
