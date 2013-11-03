@@ -71,6 +71,40 @@ local function onFreehandButtonRelease(event)
 	scene.colorSelector:changeColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b);
 end
 
+local function onStampButtonRelease(event)
+	local self = event.target;
+	local scene = self._scene;
+	local canvas = scene.canvas;
+
+	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
+	scene.mode = scene.modes[self.toolMode];
+
+	local tool = scene.selectedTool;
+
+	local image = 'assets/images/UX/FRC_UX_ArtCenter_Stamp_' .. self.id .. '.png';
+	local size = 150;
+
+	-- place stamp on canvas
+	local stampGroup = display.newGroup();
+	local stamp = display.newImage(stampGroup, image);
+	local scaleX = size / stamp.width;
+	local scaleY = size / stamp.height;
+
+	if (scaleX > scaleY) then
+		stamp.xScale = scaleX;
+		stamp.yScale = scaleX;
+	else
+		stamp.xScale = scaleY;
+		stamp.yScale = scaleY;
+	end
+
+	--stampGroup:addEventListener('touch', tool.onStampTouch);
+	stampGroup:addEventListener('multitouch', tool.onStampPinch);
+	canvas.layerObjects:insert(stampGroup);
+
+	stampGroup._scene = scene;
+end
+
 SubToolSelector.new = function(scene, id, width, height)
 	local group = ui.scrollContainer.new({
 		width = width,
@@ -83,9 +117,7 @@ SubToolSelector.new = function(scene, id, width, height)
 		borderWidth = 6,
 		borderColor = { 0, 0, 0, 1.0 }
 	});
-	--group.bg.fill.effect = "filter.crosshatch";
-	--group.bg.fill.effect.grain = 0.2;
-
+	
 	local toolData = data.readJSON(DATA_PATH);
 	local toolButtons = toolData.tools;
 	local toolData, subToolButtons;
@@ -99,14 +131,18 @@ SubToolSelector.new = function(scene, id, width, height)
 	end
 	if (not subToolButtons) then return; end
 
+	local yPos = -(height * 0.5);
+
 	for i=1,#subToolButtons do
-		local image, onButtonRelease, btnWidth, btnHeight, btnBgColor;
+		local image, onButtonRelease, btnWidth, btnHeight, btnPadding, btnBgColor;
+
+		btnPadding = BUTTON_PADDING;
 
 		if (toolData.module == "BackgroundImage") then
 			image = 'assets/images/UX/MDSS_UX_ArtCenter_Backdrop_' .. subToolButtons[i].id .. '.png';
 			onButtonRelease = onBackgroundButtonRelease;
-			btnWidth = 100;
-			btnHeight = 66;
+			btnWidth = 80;
+			btnHeight = 53;
 			btnBgColor = { 1.0, 1.0, 1.0, 1.0 };
 
 		elseif (toolData.module == "FreehandDraw") then
@@ -114,7 +150,18 @@ SubToolSelector.new = function(scene, id, width, height)
 			onButtonRelease = onFreehandButtonRelease;
 			btnWidth = BUTTON_WIDTH;
 			btnHeight = BUTTON_HEIGHT;
+
+		elseif (toolData.module == "StampPlacement") then
+			image = 'assets/images/UX/FRC_UX_ArtCenter_Stamp_' .. subToolButtons[i].id .. '.png';
+			onButtonRelease = onStampButtonRelease;
+			btnWidth = 80;
+			btnHeight = subToolButtons[i].height * (80/subToolButtons[i].width);
+			btnPadding = BUTTON_PADDING + 16;
 		end
+
+		btnHeight = btnHeight or BUTTON_HEIGHT;
+
+		yPos = yPos + (btnHeight * 0.5) + 16;
 
 		local button = ui.button.new({
 			id = subToolButtons[i].id,
@@ -129,7 +176,9 @@ SubToolSelector.new = function(scene, id, width, height)
 		button._scene = scene;
 		button.anchorY = 0.5;
 		button.x = -6;
-		button.y = -(height * 0.5) + (button.height * 0.5) + 16 + (i-1) * (BUTTON_HEIGHT + BUTTON_PADDING);
+		button.y = yPos; -- -(height * 0.5) + (button.height * 0.5) + 16 + (i-1) * (BUTTON_HEIGHT + BUTTON_PADDING);
+
+		yPos = yPos + btnPadding;
 
 		-- brush attributes
 		button.parentId = id;
@@ -138,6 +187,8 @@ SubToolSelector.new = function(scene, id, width, height)
 		button.arbRotate = subToolButtons[i].arbRotate or false;
 		button.brushAlpha = subToolButtons[i].alpha or 1.0;
 		button.brushSizes = subToolButtons[i].brushSizes or {};
+		button.stampWidth = subToolButtons[i].width or nil;
+		button.stampHeight = subToolButtons[i].height or nil;
 		group:insert(button);
 
 		local num = display.newText(i, 0, 0, native.systemFontBold, 12);

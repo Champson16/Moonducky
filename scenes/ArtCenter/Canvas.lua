@@ -10,23 +10,21 @@ end
 local function onCanvasTouch(event)
 	if ((not ArtCenter) or (not ArtCenter.selectedTool)) then return; end
 	local self = event.target;
-	
+
 	if (event.phase == "began") then
-		display.getCurrentStage():setFocus(self);
-		self.isFocused = true;
+		self._hasFocus = true;
 
-		ArtCenter.selectedTool.onCanvasTouch(event.target, event);
+		ArtCenter.selectedTool.onCanvasTouch(self, event);
 
-	elseif (self.isFocused) then
+	elseif (self._hasFocus) then
 	
 		if (event.phase == "moved") then
-			ArtCenter.selectedTool.onCanvasTouch(event.target, event);
+			ArtCenter.selectedTool.onCanvasTouch(self, event);
 			
 		elseif ((event.phase == "cancelled") or (event.phase == "ended")) then
-			ArtCenter.selectedTool.onCanvasTouch(event.target, event);
+			ArtCenter.selectedTool.onCanvasTouch(self, event);
 			
-			display.getCurrentStage():setFocus(nil);
-			self.isFocused = false;
+			self._hasFocus = false;
 		end
 	end
 	return true;
@@ -38,6 +36,12 @@ local function repositionLayers(self)
 
 	self.layerBgImage.x = self.x;
 	self.layerBgImage.y = self.y;
+
+	self.layerObjects.x = self.x;
+	self.layerObjects.y = self.y;
+
+	self.layerSelection.x = self.x;
+	self.layerSelection.y = self.y;
 
 	for i=4,self.numChildren do
 		self[i].x = -(self.x);
@@ -67,7 +71,8 @@ Canvas.new = function(width, height, x, y)
 	end
 
 	canvas.layerBgImage = display.newSnapshot(width, height); --canvas:insert(canvas.layerBgImage);
-	canvas.layerObjects = display.newGroup(); canvas:insert(canvas.layerObjects);
+	canvas.layerObjects = display.newContainer(width, height); --canvas:insert(canvas.layerObjects);
+	canvas.layerSelection = display.newContainer(width, height); 
 	canvas.layerOverlay = display.newGroup(); canvas:insert(canvas.layerOverlay);
 
 	-- background for layerBgColor layer
@@ -75,10 +80,10 @@ Canvas.new = function(width, height, x, y)
 	bgRect:setFillColor(eraserColor[1], eraserColor[2], eraserColor[3]);
 	canvas.layerBgColor:insert(bgRect, true);
 	canvas.layerBgColor.bg = bgRect;
-	canvas.layerBgColor:addEventListener("touch", onCanvasTouch);
+	canvas.layerBgColor:addEventListener("multitouch", onCanvasTouch);
 
-	canvas.x = x; --display.contentWidth * 0.5;
-	canvas.y = y; --display.contentHeight * 0.5;
+	canvas.x = x;
+	canvas.y = y;
 	repositionLayers(canvas);
 
 	-- public methods

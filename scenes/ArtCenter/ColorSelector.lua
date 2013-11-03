@@ -104,7 +104,7 @@ local function noColorVisible(self, visible)
 		for i=2,self.content.numChildren do
 			self.content[i].y = self.content[i].y + self.shiftDistance;
 		end
-	elseif (self.content[1].isVisible) then
+	elseif ((not visible) and (self.content[1].isVisible)) then
 		self.content[1].isVisible = false;
 
 		for i=2,self.content.numChildren do

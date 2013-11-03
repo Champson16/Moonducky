@@ -22,6 +22,7 @@ FreehandDraw.a = 0.05;
 FreehandDraw.arbRotate = true;
 
 FreehandDraw.drawLine = function(parent, x0, y0, x1, y1)
+	if (not FreehandDraw.graphic.image) then return; end
 	local steep = false;
 	if (math_abs(y1 - y0) > math_abs(x1 - x0)) then steep = true; end
 
@@ -71,7 +72,14 @@ FreehandDraw.drawLine = function(parent, x0, y0, x1, y1)
 	parent:invalidate();
 end
 
-FreehandDraw.onCanvasTouch = function(self, event)
+FreehandDraw.onCanvasTouch = function(self, e)
+	if (not FreehandDraw.graphic.image) then return; end
+
+	local event = {};
+	for k,v in pairs(e) do
+		event[k] = v;
+	end
+
 	event.x = event.x - self.parent.x;
 	event.y = event.y - self.parent.y;
 
@@ -97,9 +105,19 @@ FreehandDraw.onCanvasTouch = function(self, event)
 				xMax = self.parent.layerDrawing.contentBounds.xMax,
 				yMax = self.parent.layerDrawing.contentBounds.yMax
 			};
+
+			-- hide non-drawing layers before doing screen capture
 			self.parent.layerBgImage.isVisible = false;
+			self.parent.layerObjects.isVisible = false;
+			self.parent.layerSelection.isVisible = false;
+
 			local capture = display.captureBounds(bounds);
+
+			-- re-show non-drawing layers
 			self.parent.layerBgImage.isVisible = true;
+			self.parent.layerObjects.isVisible = true;
+			self.parent.layerSelection.isVisible = true;
+
 			capture.x = 0;
 			capture.y = 0;
 			self.parent.drawingBuffer.group:insert(capture);
@@ -129,6 +147,7 @@ FreehandDraw.onCanvasTouch = function(self, event)
 			end, 1);
 
 			self.parent.layerBgImage:toFront();
+			self.parent.layerObjects:toFront();
 			--]]
 		end
 	end

@@ -12,16 +12,25 @@ local ToolSelector = {};
 local function onButtonRelease(event)
 	local self = event.target;
 	local scene = self._scene;
+	if ((scene.mode == scene.modes["BACKGROUND_SELECTION"]) and (self.mode == "BACKGROUND_SELECTION")) then return; end
+
 	scene.mode = scene.modes[self.mode];
 	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.module);
 
 	-- show/hide sub-tool selection indicator
-	if (require('scenes.ArtCenter.SubToolSelector').selection.isActive) then
-		require('scenes.ArtCenter.SubToolSelector').selection.isVisible = self.subToolSelection;
+	local selection = require('scenes.ArtCenter.SubToolSelector').selection;
+	if (selection.isActive) then
+		selection.isVisible = self.subToolSelection;
 	end
 
 	-- show/hide 'No Color' option in the color palette
 	scene.colorSelector:noColorVisible(self.noColorVisible);
+
+	-- de-select any selected shape or stamp
+	if (scene.objectSelection) then
+		scene.objectSelection:removeSelf();
+		scene.objectSelection = nil;
+	end
 
 	-- restore selected tool's properties
 	if (scene.mode == scene.modes["FREEHAND_DRAW"]) then

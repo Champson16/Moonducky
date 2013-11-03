@@ -128,9 +128,50 @@
 	},
 	{
 		"id": "StampsPalette",
+		"module": "StampPlacement",
 		"mode": "STAMP_PLACEMENT",
 		"subToolSelection": false,
-		"subtools": []
+		"noColorVisible": true,
+		"subtools": [{
+			"id": "AnimalBird",
+			"width": 486,
+			"height": 310
+		},
+		{
+			"id": "AnimalDog",
+			"width": 499,
+			"height": 368
+		},
+		{
+			"id": "AnimalElephant",
+			"width": 564,
+			"height": 477
+		},
+		{
+			"id": "AnimalHorse",
+			"width": 943,
+			"height": 655
+		},
+		{
+			"id": "AnimalTeddyBear",
+			"width": 447,
+			"height": 529
+		},
+		{
+			"id": "BuildingBarn",
+			"width": 640,
+			"height": 487
+		},
+		{
+			"id": "BuildingCabin",
+			"width": 604,
+			"height": 646
+		},
+		{
+			"id": "BuildingHouseThreeStory",
+			"width": 337,
+			"height": 599
+		}]
 	},
 	{
 		"id": "TextPalette",

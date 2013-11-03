@@ -3,6 +3,10 @@
 -- main.lua
 --
 -----------------------------------------------------------------------------------------
+system.activate( "multitouch" )
+require("modules.multitouch")
+require("modules.pinchlib")
+
 local storyboard = require('modules.stage');
 
 _G.APP_ID = 'com.fatredcouch.moonducky.songstudio.artcenter';
