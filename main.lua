@@ -10,7 +10,7 @@ require("modules.pinchlib")
 local storyboard = require('modules.stage');
 
 _G.APP_ID = 'com.fatredcouch.moonducky.songstudio.artcenter';
-_G.APP_VERSION = '0.0.5';
+_G.APP_VERSION = '0.0.6';
 
 -- TODO: once display.captureBounds() works properly on device, compatibility drawing mode will no longer be needed
 if (system.getInfo("environment") == "simulator") then
