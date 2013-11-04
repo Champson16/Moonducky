@@ -35,29 +35,40 @@ local function onEraserButtonRelease(event)
 	local scene = self._scene;
 	if ((scene.mode == scene.modes.ERASE) or (scene.mode == scene.modes.BACKGROUND_SELECTION)) then return; end
 
-	-- Save prior settings (in case different color is selected)
-	scene.selectedTool.old_r = scene.selectedTool.r;
-	scene.selectedTool.old_g = scene.selectedTool.g;
-	scene.selectedTool.old_b = scene.selectedTool.b;
-	scene.selectedTool.old_a = scene.selectedTool.a;
-	scene.selectedTool.old_image = scene.selectedTool.graphic.image;
-	scene.selectedTool.old_width = scene.selectedTool.graphic.width;
-	scene.selectedTool.old_height = scene.selectedTool.graphic.height;
-	scene.selectedTool.old_arbRotate = scene.selectedTool.arbRotate;
+	if (scene.mode == scene.modes.FREEHAND_DRAW) then
+		-- Save prior settings (in case different color is selected)
+		scene.selectedTool.old_r = scene.selectedTool.r;
+		scene.selectedTool.old_g = scene.selectedTool.g;
+		scene.selectedTool.old_b = scene.selectedTool.b;
+		scene.selectedTool.old_a = scene.selectedTool.a;
+		scene.selectedTool.old_image = scene.selectedTool.graphic.image;
+		scene.selectedTool.old_width = scene.selectedTool.graphic.width;
+		scene.selectedTool.old_height = scene.selectedTool.graphic.height;
+		scene.selectedTool.old_arbRotate = scene.selectedTool.arbRotate;
 
-	-- Eraser settings
-	scene.selectedTool = require(const.TOOLS.FreehandDraw);
-	scene.selectedTool.r = .956862745;
-	scene.selectedTool.g = .956862745;
-	scene.selectedTool.b = .956862745;
-	scene.selectedTool.a = 1.0;
-	scene.selectedTool.graphic.image = 'assets/images/UX/FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush1.png';
-	scene.selectedTool.graphic.width = 38;
-	scene.selectedTool.graphic.height = 38;
-	scene.selectedTool.arbRotate = true;
-	scene.mode = scene.modes.ERASE;
+		-- Eraser settings
+		scene.selectedTool = require(const.TOOLS.FreehandDraw);
+		scene.selectedTool.r = .956862745;
+		scene.selectedTool.g = .956862745;
+		scene.selectedTool.b = .956862745;
+		scene.selectedTool.a = 1.0;
+		scene.selectedTool.graphic.image = 'assets/images/UX/FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush1.png';
+		scene.selectedTool.graphic.width = 38;
+		scene.selectedTool.graphic.height = 38;
+		scene.selectedTool.arbRotate = true;
+		scene.mode = scene.modes.ERASE;
 
-	SubToolSelector.selection.isVisible = false;
+		SubToolSelector.selection.isVisible = false;
+	else
+		-- delete selected stamp or shape
+		if ((scene.objectSelection) and (scene.objectSelection.selectedObject)) then
+			scene.objectSelection.selectedObject:removeSelf();
+			scene.objectSelection.selectedObject = nil;
+			
+			scene.objectSelection:removeSelf();
+			scene.objectSelection = nil;
+		end
+	end
 end
 
 local function onCreateScene(event)
