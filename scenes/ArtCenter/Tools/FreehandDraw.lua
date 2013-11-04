@@ -97,59 +97,7 @@ FreehandDraw.onCanvasTouch = function(self, e)
 	
 	elseif (event.phase == 'ended') or (event.phase == 'cancelled') then
 		FreehandDraw.points = nil;
-
-		if (not _G.COMPAT_DRAWING_MODE) then
-			local bounds = {
-				xMin = self.parent.layerDrawing.contentBounds.xMin,
-				yMin = self.parent.layerDrawing.contentBounds.yMin,
-				xMax = self.parent.layerDrawing.contentBounds.xMax,
-				yMax = self.parent.layerDrawing.contentBounds.yMax
-			};
-
-			-- hide non-drawing layers before doing screen capture
-			self.parent.layerBgImage.isVisible = false;
-			self.parent.layerObjects.isVisible = false;
-			self.parent.layerSelection.isVisible = false;
-
-			local capture = display.captureBounds(bounds);
-
-			-- re-show non-drawing layers
-			self.parent.layerBgImage.isVisible = true;
-			self.parent.layerObjects.isVisible = true;
-			self.parent.layerSelection.isVisible = true;
-
-			capture.x = 0;
-			capture.y = 0;
-			self.parent.drawingBuffer.group:insert(capture);
-			self.parent.drawingBuffer:invalidate();
-
-			for i=self.parent.layerDrawing.group.numChildren,1,-1 do
-				self.parent.layerDrawing.group[i]:removeSelf();
-				self.parent.layerDrawing.group[i] = nil;
-			end
-			self.parent.layerDrawing:invalidate();
-			collectgarbage("collect");
-		else
-			-- [[ TODO: once display.captureBounds works on device, remove the following
-			self.parent.layerDrawing = display.newSnapshot(self.parent.width, self.parent.height);
-			self.parent.layerDrawing.x = self.parent.x;
-			self.parent.layerDrawing.y = self.parent.y;
-			self.parent.snapshots[#self.parent.snapshots+1] = self.parent.layerDrawing;
-			
-			timer.performWithDelay(20, function()
-				local previousSnapshotGroup = self.parent.snapshots[#self.parent.snapshots-1].group;
-				local num = previousSnapshotGroup.numChildren;
-				for i=previousSnapshotGroup.numChildren,1,-1 do
-					previousSnapshotGroup[i]:removeSelf();
-					previousSnapshotGroup[i] = nil;
-				end
-				collectgarbage("collect");
-			end, 1);
-
-			self.parent.layerBgImage:toFront();
-			self.parent.layerObjects:toFront();
-			--]]
-		end
+		self.parent.layerDrawing:invalidate();
 	end
 end
 

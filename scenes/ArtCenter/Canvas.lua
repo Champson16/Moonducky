@@ -3,8 +3,8 @@ local ArtCenter = require('scenes.ArtCenter.Scene');
 
 local eraserColor = ArtCenter.DEFAULT_CANVAS_COLOR;
 
-local function fillBackground(self, r, g, b)
-	self.layerBgColor.bg:setFillColor(r, g, b);
+local function fillBackground(self, r, g, b, a)
+	self.layerBgColor.bg:setFillColor(r, g, b, a or 1.0);
 end
 
 local function onCanvasTouch(event)
@@ -47,28 +47,14 @@ local function repositionLayers(self)
 		self[i].x = -(self.x);
 		self[i].y = -(self.y);
 	end
-
-	-- TODO: once display.captureBounds works on device, uncoment the following:
-	if (not _G.COMPAT_DRAWING_MODE) then
-		self.drawingBuffer.x = self.x;
-		self.drawingBuffer.y = self.y;
-	end
 end
 
 Canvas.new = function(width, height, x, y)
 	local canvas = display.newContainer(width, height);
 	canvas.layerBgColor = display.newGroup(); canvas:insert(canvas.layerBgColor);
 
-	if (not _G.COMPAT_DRAWING_MODE) then
-		canvas.drawingBuffer = display.newSnapshot(width, height); -- TODO: uncomment this line once display.captureBounds works on device
-	end
 	canvas.layerDrawing = display.newSnapshot(width, height);
-
-	-- TODO: once display.captureBounds() works on device, remove the following lines:
-	if (_G.COMPAT_DRAWING_MODE) then
-		canvas.snapshots = {};
-		table.insert(canvas.snapshots, canvas.layerDrawing);
-	end
+	canvas.layerDrawing.canvasMode = "discard";
 
 	canvas.layerBgImage = display.newSnapshot(width, height); --canvas:insert(canvas.layerBgImage);
 	canvas.layerObjects = display.newContainer(width, height); --canvas:insert(canvas.layerObjects);

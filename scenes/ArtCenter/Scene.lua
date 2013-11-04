@@ -219,6 +219,7 @@ local function onShake(event)
 
 	if event.isShake then
 		-- Device was shaken, clear the canvas
+		--[[
 		if (not _G.COMPAT_DRAWING_MODE) then
 			for i=canvas.drawingBuffer.group.numChildren,1,-1 do
 				canvas.drawingBuffer.group[i]:removeSelf();
@@ -236,6 +237,7 @@ local function onShake(event)
 			canvas.snapshots[1] = lastItem;
 			collectgarbage("collect");
 		end
+		--]]
 	end
 end
 
