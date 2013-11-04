@@ -146,7 +146,14 @@ SubToolSelector.new = function(scene, id, width, height)
 			btnBgColor = { 1.0, 1.0, 1.0, 1.0 };
 
 		elseif (toolData.module == "FreehandDraw") then
-			image = 'assets/images/UX/FRC_UX_ArtCenter_' .. id .. '_Brush_' .. subToolButtons[i].id .. '.png';
+			if (not subToolButtons[i].icon) then
+				image = 'assets/images/UX/FRC_UX_ArtCenter_' .. id .. '_Brush_' .. subToolButtons[i].id .. '.png';
+			else
+				image = 'assets/images/UX/FRC_UX_ArtCenter_' .. id .. '_Icon_' .. subToolButtons[i].id .. '.png';
+			end
+
+			print(image);
+
 			onButtonRelease = onFreehandButtonRelease;
 			btnWidth = BUTTON_WIDTH;
 			btnHeight = BUTTON_HEIGHT;

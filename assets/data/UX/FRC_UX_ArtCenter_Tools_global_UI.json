@@ -19,48 +19,63 @@
 		"subToolSelection": true,
 		"subtools": [{
 			"id": "Pencil",
+			"icon": true,
 			"alpha": 0.1,
 			"arbRotate": true,
 			"brushSizes": [3, 5, 8]
 		},
 		{
 			"id": "BallpointPen",
+			"icon": true,
 			"alpha": 0.8,
 			"arbRotate": true,
-			"brushSizes": [5, 8, 11]
+			"brushSizes": [3, 6, 9]
 		},
 		{
 			"id": "FeltPen",
+			"icon": true,
+			"alpha": 0.4,
+			"arbRotate": false,
+			"brushSizes": [5, 7, 9]
+		},
+		{
+			"id": "DryEraseMarker",
+			"icon": true,
 			"alpha": 0.4,
 			"arbRotate": false,
 			"brushSizes": [7, 10, 13]
 		},
 		{
-			"id": "Assorted1",
-			"alpha": 0.4,
+			"id": "HiLiter",
+			"icon": true,
+			"alpha": 0.1,
 			"arbRotate": false,
-			"brushSizes": [7, 10, 13]
+			"brushSizes": [13, 16, 19]
 		},
 		{
-			"id": "Assorted2",
+			"id": "Pastel",
+			"icon": true,
 			"alpha": 0.4,
 			"arbRotate": true,
 			"brushSizes": [7, 10, 13]
 		},
 		{
-			"id": "Assorted3",
+			"id": "Crayon",
+			"icon": true,
 			"alpha": 0.4,
 			"arbRotate": true,
 			"brushSizes": [7, 10, 13]
 		},
 		{
-			"id": "Assorted4",
+			"id": "MagicMarker",
+			"icon": true,
 			"alpha": 0.4,
 			"arbRotate": false,
 			"brushSizes": [7, 10, 13]
 		},
 		{
-			"id": "Assorted5",
+			"id": "Charcoal",
+			"icon": true,
 			"alpha": 0.4,
 			"arbRotate": true,
 			"brushSizes": [7, 10, 13]
