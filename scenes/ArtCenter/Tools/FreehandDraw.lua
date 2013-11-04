@@ -11,7 +11,7 @@ local FreehandDraw = {};
 FreehandDraw.graphic = {
 	image = 'assets/images/UX/FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush1.png',
 	width = 40,
-	height = 40	
+	height = 40
 };
 
 FreehandDraw.r = 1.0;

@@ -86,6 +86,7 @@ local function onButtonRelease(event)
 
 			if ((self.r == scene.DEFAULT_CANVAS_COLOR) and (self.g == scene.DEFAULT_CANVAS_COLOR) and (self.b == scene.DEFAULT_CANVAS_COLOR)) then
 				if (scene.mode == scene.modes.SHAPE_PLACEMENT) then
+					obj:setFillColor(self.r, self.g, self.b, 0);
 					obj:setStrokeColor(0, 0, 0, 1.0);
 					obj.strokeWidth = 5;
 				else

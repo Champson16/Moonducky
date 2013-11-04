@@ -55,9 +55,38 @@ local function onBackgroundButtonRelease(event)
 	bgImageLayer:invalidate();
 end
 
+local function onFreehandButtonPress(event)
+	local self = event.target;
+	local scene = self._scene;
+
+	self.popoverTimer = timer.performWithDelay(500, function()
+		self.popoverTimer = nil;
+			
+		--[[
+		local group = ui.scrollContainer.new({
+			width = 400,
+			height = 132,
+			yScroll = false,
+			leftPadding = 16,
+			rightPadding = 16,
+			bgColor = { 0.14, 0.14, 0.14 },
+			borderRadius = 11,
+			borderWidth = 6,
+			borderColor = { 0, 0, 0, 1.0 }
+		});
+		--]]
+
+	end, 1);
+end
+
 local function onFreehandButtonRelease(event)
 	local self = event.target;
 	local scene = self._scene;
+
+	if (self.popoverTimer) then
+		timer.cancel(self.popoverTimer);
+		self.popoverTimer = nil;
+	end
 
 	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
 	scene.mode = scene.modes[self.toolMode];
@@ -117,6 +146,7 @@ local function onShapeButtonRelease(event)
 	canvas.layerObjects:insert(shapeGroup);
 
 	if ((scene.currentColor.preview.r == scene.DEFAULT_CANVAS_COLOR) and (scene.currentColor.preview.g == scene.DEFAULT_CANVAS_COLOR) and (scene.currentColor.preview.b == scene.DEFAULT_CANVAS_COLOR)) then
+		shape:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 0);
 		shape:setStrokeColor(0, 0, 0, 1.0);
 		shape.strokeWidth = 5;
 	else
@@ -245,6 +275,18 @@ SubToolSelector.new = function(scene, id, width, height)
 			pressAlpha = 0.5,
 			bgColor = btnBgColor
 		});
+
+		if (toolData.module == 'FreehandDraw') then
+			button:addEventListener('press', onFreehandButtonPress);
+			button:addEventListener('pressoutside', function(event)
+				local self = event.target;
+				if (self.popoverTimer) then
+					timer.cancel(self.popoverTimer);
+					self.popoverTimer = nil;
+				end
+			end);
+		end
+
 		button:addEventListener('release', onButtonRelease);
 		button._scene = scene;
 		button.anchorY = 0.5;

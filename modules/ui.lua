@@ -141,7 +141,7 @@ ui.button.new = function(args)
 	elseif (options.shapeDown) then
 		options.width = options.width - 10;
 		options.height = options.height - 10;
-		
+
 		local vertices = {};
 		for i=1,#options.shapeDown do
 			if ((i % 2) == 0) then
@@ -232,6 +232,12 @@ ui.button.touch = function(event)
 					self:press();
 				else
 					self:release();
+					self:dispatchEvent({
+						name = "pressoutside",
+						target = self,
+						x = event.x,
+						y = event.y
+					});
 				end
 			else
 				if (self._touchTimer) then
