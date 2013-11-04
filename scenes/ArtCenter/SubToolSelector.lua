@@ -14,6 +14,19 @@ SubToolSelector.selection.isVisible = false;
 SubToolSelector.selection.isActive = false;
 SubToolSelector.selection.alpha = 0.80;
 
+local function selectObject(scene, obj)
+	local canvas = scene.canvas;
+
+	-- create object selection polygon
+	if (scene.objectSelection) then scene.objectSelection:removeSelf(); end
+	local padding = 5;
+	scene.objectSelection = display.newPolygon(canvas.layerSelection, obj.x, obj.y, { -obj.contentWidth*0.5-padding,-obj.contentHeight*0.5-padding, obj.contentWidth*0.5+padding,-obj.contentHeight*0.5-padding, obj.contentWidth*0.5+padding,obj.contentHeight*0.5+padding, -obj.contentWidth*0.5-padding,obj.contentHeight*0.5+padding });
+	scene.objectSelection:setStrokeColor(scene.selectedTool.SELECTION_COLOR[1], scene.selectedTool.SELECTION_COLOR[2], scene.selectedTool.SELECTION_COLOR[3]);
+	scene.objectSelection.strokeWidth = 3;
+	scene.objectSelection:setFillColor(1.0, 1.0, 1.0, 0);
+	scene.objectSelection.selectedObject = obj;
+end
+
 local function onBackgroundButtonRelease(event)
 	local self = event.target;
 	local scene = self._scene;
@@ -90,7 +103,12 @@ local function onShapeButtonRelease(event)
 
 	-- place shape on canvas
 	local shapeGroup = display.newGroup();
-	local shape = display.newPolygon(shapeGroup, 0, 0, vertices);
+	local shape;
+	if (#vertices > 1) then
+		shape = display.newPolygon(shapeGroup, 0, 0, vertices);
+	else
+		shape = display.newCircle(shapeGroup, 0, 0, size);
+	end
 	shape:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
 	shape.isHitTestable = true;
 	shapeGroup.toolMode = self.toolMode;
@@ -98,7 +116,15 @@ local function onShapeButtonRelease(event)
 	shapeGroup:addEventListener('multitouch', tool.onShapePinch);
 	canvas.layerObjects:insert(shapeGroup);
 
+	if ((scene.currentColor.preview.r == scene.DEFAULT_CANVAS_COLOR) and (scene.currentColor.preview.g == scene.DEFAULT_CANVAS_COLOR) and (scene.currentColor.preview.b == scene.DEFAULT_CANVAS_COLOR)) then
+		shape:setStrokeColor(0, 0, 0, 1.0);
+		shape.strokeWidth = 5;
+	else
+		shape.strokeWidth = 0;
+	end
+
 	shapeGroup._scene = scene;
+	selectObject(scene, shapeGroup);
 end
 
 local function onStampButtonRelease(event)
@@ -132,6 +158,7 @@ local function onStampButtonRelease(event)
 	canvas.layerObjects:insert(stampGroup);
 
 	stampGroup._scene = scene;
+	selectObject(scene, stampGroup);
 end
 
 SubToolSelector.new = function(scene, id, width, height)

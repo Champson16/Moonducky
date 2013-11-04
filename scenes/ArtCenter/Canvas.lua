@@ -1,7 +1,7 @@
 local Canvas = {};
 local ArtCenter = require('scenes.ArtCenter.Scene');
 
-local eraserColor = { .956862745, .956862745, .956862745 };
+local eraserColor = ArtCenter.DEFAULT_CANVAS_COLOR;
 
 local function fillBackground(self, r, g, b)
 	self.layerBgColor.bg:setFillColor(r, g, b);
@@ -77,7 +77,7 @@ Canvas.new = function(width, height, x, y)
 
 	-- background for layerBgColor layer
 	local bgRect = display.newRect(0, 0, width, height);
-	bgRect:setFillColor(eraserColor[1], eraserColor[2], eraserColor[3]);
+	bgRect:setFillColor(eraserColor, eraserColor, eraserColor);
 	canvas.layerBgColor:insert(bgRect, true);
 	canvas.layerBgColor.bg = bgRect;
 	canvas.layerBgColor:addEventListener("multitouch", onCanvasTouch);

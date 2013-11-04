@@ -113,6 +113,9 @@ ui.button.new = function(args)
 	if (options.imageUp) then
 		view.up = display.newImageRect(options.imageUp, options.width, options.height);
 	elseif (options.shapeUp) then
+		options.width = options.width - 10;
+		options.height = options.height - 10;
+
 		local vertices = {};
 		for i=1,#options.shapeUp do
 			if ((i % 2) == 0) then
@@ -121,7 +124,11 @@ ui.button.new = function(args)
 				table.insert(vertices, options.shapeUp[i] * (options.width * 0.5));
 			end
 		end
-		view.up = display.newPolygon(0, 0, vertices);
+		if (#vertices > 1) then
+			view.up = display.newPolygon(0, 0, vertices);
+		else
+			view.up = display.newCircle(0, 0, options.width * 0.5);
+		end
 		view.up:setFillColor(1.0, 1.0, 1.0, 0);
 		view.up:setStrokeColor(1.0, 1.0, 1.0, 1.0);
 		view.up.strokeWidth = 5;
@@ -132,6 +139,9 @@ ui.button.new = function(args)
 	if (options.imageDown) then
 		view.down = display.newImageRect(options.imageDown, options.width, options.height);
 	elseif (options.shapeDown) then
+		options.width = options.width - 10;
+		options.height = options.height - 10;
+		
 		local vertices = {};
 		for i=1,#options.shapeDown do
 			if ((i % 2) == 0) then
@@ -140,7 +150,11 @@ ui.button.new = function(args)
 				table.insert(vertices, options.shapeDown[i] * (options.width * 0.5));
 			end
 		end
-		view.down = display.newPolygon(0, 0, vertices);
+		if (#vertices > 1) then
+			view.down = display.newPolygon(0, 0, vertices);
+		else
+			view.down = display.newCircle(0, 0, options.width);
+		end
 		view.down:setFillColor(1.0, 1.0, 1.0, 0);
 		view.down:setStrokeColor(0, 0, 0, 1.0);
 		view.down.strokeWidth = 5;

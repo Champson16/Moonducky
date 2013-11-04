@@ -11,6 +11,8 @@ local Stamp = {};
 local SELECTION_COLOR = { 0, 0.5, 1.0 };
 local MIN_STAMP_SIZE = 88;
 
+Stamp.SELECTION_COLOR = SELECTION_COLOR;
+
 Stamp.onCanvasTouch = function(self, event)
 	local scene = ArtCenter;
 

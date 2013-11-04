@@ -21,6 +21,8 @@ local canvas_width = screenW - ((const.SELECTOR_SIZE * 2) + (const.ELEMENT_PADDI
 local canvas_height = screenH - ((const.SELECTOR_SIZE * 0.8) + 0);
 local canvas_top = 42;
 
+ArtCenter.DEFAULT_CANVAS_COLOR = .956862745;
+
 ArtCenter.modes = {
 	FREEHAND_DRAW = 1,
 	BACKGROUND_SELECTION = 2,
