@@ -9,9 +9,10 @@ local BUTTON_HEIGHT = 50;
 local BUTTON_PADDING = 44;
 
 local SubToolSelector = {};
-SubToolSelector.selection = display.newImageRect('assets/images/selected.png', 48, 48);
+SubToolSelector.selection = display.newImageRect('assets/images/selected.png', 86, 86);
 SubToolSelector.selection.isVisible = false;
 SubToolSelector.selection.isActive = false;
+SubToolSelector.selection.alpha = 0.80;
 
 local function onBackgroundButtonRelease(event)
 	local self = event.target;
@@ -148,15 +149,15 @@ SubToolSelector.new = function(scene, id, width, height)
 		elseif (toolData.module == "FreehandDraw") then
 			if (not subToolButtons[i].icon) then
 				image = 'assets/images/UX/FRC_UX_ArtCenter_' .. id .. '_Brush_' .. subToolButtons[i].id .. '.png';
+				btnWidth = BUTTON_WIDTH;
+				btnHeight = BUTTON_HEIGHT;
 			else
 				image = 'assets/images/UX/FRC_UX_ArtCenter_' .. id .. '_Icon_' .. subToolButtons[i].id .. '.png';
+				btnWidth = 80;
+				btnHeight = 80;
 			end
 
-			print(image);
-
 			onButtonRelease = onFreehandButtonRelease;
-			btnWidth = BUTTON_WIDTH;
-			btnHeight = BUTTON_HEIGHT;
 
 		elseif (toolData.module == "StampPlacement") then
 			image = 'assets/images/UX/FRC_UX_ArtCenter_Stamp_' .. subToolButtons[i].id .. '.png';
