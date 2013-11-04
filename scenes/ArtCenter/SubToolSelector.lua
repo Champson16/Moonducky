@@ -2,6 +2,7 @@ local ui = require('modules.ui');
 local data = require('modules.data');
 local layout = require('modules.layout');
 local screenW, screenH = layout.getScreenDimensions();
+local math_floor = math.floor;
 
 local DATA_PATH = 'assets/data/UX/FRC_UX_ArtCenter_Tools_global_UI.json';
 local BUTTON_WIDTH = 50;
@@ -55,27 +56,106 @@ local function onBackgroundButtonRelease(event)
 	bgImageLayer:invalidate();
 end
 
+-- Brush size (modal) popover for freehand sub-tools
+local function newBrushSizePopover(scene, brushButton)
+	local screenW, screenH = layout.getScreenDimensions();
+
+	if (scene.brushSizePopover) then scene.brushSizePopover:removeSelf(); end
+
+	-- create a full-screen rect to "modalize" the popover (touching it will close the popover)
+	local modalRect = display.newRect(-((screenW - display.contentWidth) * 0.5), -((screenH - display.contentHeight) * 0.5), screenW, screenH);
+	modalRect.anchorX = 0;
+	modalRect.anchorY = 0;
+	modalRect.isVisible = false;
+	modalRect.isHitTestable = true;
+	modalRect:addEventListener('touch', function(event)
+		if (event.phase == "began") then
+			modalRect:removeSelf();
+			modalRect = nil;
+
+			if (scene.brushSizePopover) then
+				scene.brushSizePopover:removeSelf();
+				scene.brushSizePopover = nil;
+			end
+		end
+		return false;
+	end);
+
+	-- create group to hold popover elements
+	scene.brushSizePopover = display.newGroup();
+
+	local brushLeft = brushButton.contentBounds.xMin;
+	local brushY = brushButton.contentBounds.yMin + (brushButton.contentHeight * 0.5);
+
+	local focusRect = display.newRect(scene.brushSizePopover, 0, 0, 32, 32);
+	focusRect:setFillColor(0.27, 0.27, 0.27, 1.0);
+	focusRect.rotation = 45;
+	focusRect.x = brushLeft - (focusRect.contentWidth * 0.5) - 5;
+	focusRect.y = brushY;
+
+	local bgRect = display.newRoundedRect(scene.brushSizePopover, 0, 0, 210, 210, 11);
+	bgRect:setFillColor(0.27, 0.27, 0.27, 1.0);
+	bgRect.x = brushLeft - (bgRect.width * 0.5) - 25;
+	bgRect.y = brushY;
+
+	-- container will show a preview of the brush at it's selected size
+	local preview_padding = 8;
+	local preview = display.newContainer(scene.brushSizePopover, bgRect.width - (preview_padding * 2), (bgRect.height - (preview_padding * 2)) * 0.75 );
+	local previewBg = display.newRoundedRect(0, 0, preview.width, preview.height, 11);
+	previewBg:setFillColor(.133333333, .133333333, .133333333);
+	preview:insert(previewBg, true);
+	preview.x = bgRect.x;
+	preview.y = bgRect.y + (preview_padding) - ((bgRect.height - preview.height) * 0.5);
+
+	local size = brushButton.currentSize or scene.selectedTool.graphic.width;
+	local brushPreview = display.newImageRect(preview, brushButton.up._path, brushButton.up.contentWidth, brushButton.up.contentHeight);
+	brushPreview.xScale = size / brushButton.up.contentWidth;
+	brushPreview.yScale = brushPreview.xScale;
+
+	-- create slider to control brush size
+	local slider = ui.slider.new({
+		width = preview.width,
+		min = brushButton.minSize,
+		max = brushButton.maxSize,
+		startValue = size
+	});
+	brushButton.currentSize = slider.value;
+	scene.brushSizePopover:insert(slider);
+	slider.x = preview.x;
+	slider.y = preview.contentBounds.yMax + ((bgRect.contentBounds.yMax - preview.contentBounds.yMax) * 0.5);
+	slider:addEventListener("change", function(e)
+		local value = math_floor(e.value);
+		brushPreview.xScale = value / brushButton.up.contentWidth;
+		brushPreview.yScale = brushPreview.xScale;
+
+		scene.selectedTool.graphic.width = value;
+		scene.selectedTool.graphic.height = value;
+		brushButton.currentSize = value;
+	end);
+
+	-- ensure the popup doesn't go above or below screen bounds
+	if (scene.brushSizePopover.contentBounds.yMin < 10) then
+		focusRect.y = brushY + (brushButton.contentHeight * 0.5) - 5;
+		bgRect.y = bgRect.y + -(scene.brushSizePopover.contentBounds.yMin) + 10;
+
+	elseif (scene.brushSizePopover.contentBounds.yMax > (screenH - 10)) then
+		focusRect.y = brushY - (brushButton.contentHeight * 0.5) + 5;
+		bgRect.y = bgRect.y - (scene.brushSizePopover.contentBounds.yMax - screenH) - 10;
+	end
+end
+
+-- For sizeable brushes, brush size adjuster popover will show up if brush is held down for 0.5 seconds or more
 local function onFreehandButtonPress(event)
 	local self = event.target;
 	local scene = self._scene;
 
 	self.popoverTimer = timer.performWithDelay(500, function()
 		self.popoverTimer = nil;
-			
-		--[[
-		local group = ui.scrollContainer.new({
-			width = 400,
-			height = 132,
-			yScroll = false,
-			leftPadding = 16,
-			rightPadding = 16,
-			bgColor = { 0.14, 0.14, 0.14 },
-			borderRadius = 11,
-			borderWidth = 6,
-			borderColor = { 0, 0, 0, 1.0 }
+		self:dispatchEvent({
+			name = "release",
+			target = self,
 		});
-		--]]
-
+		newBrushSizePopover(scene, self);
 	end, 1);
 end
 
@@ -278,13 +358,21 @@ SubToolSelector.new = function(scene, id, width, height)
 
 		if (toolData.module == 'FreehandDraw') then
 			button:addEventListener('press', onFreehandButtonPress);
-			button:addEventListener('pressoutside', function(event)
+
+			local function cancelPopupTimer(event)
 				local self = event.target;
 				if (self.popoverTimer) then
 					timer.cancel(self.popoverTimer);
 					self.popoverTimer = nil;
 				end
-			end);
+			end
+			button:addEventListener('pressoutside', cancelPopupTimer);
+			button:addEventListener('moved', cancelPopupTimer);
+
+			-- brush size properties
+			button.defaultSize = subToolButtons[i].defaultSize; -- subToolButtons[i].brushSizes[1];
+			button.minSize = subToolButtons[i].minSize; -- subToolButtons[i].brushSizes[1];
+			button.maxSize = subToolButtons[i].maxSize; -- subToolButtons[i].brushSizes[#subToolButtons[i].brushSizes];
 		end
 
 		button:addEventListener('release', onButtonRelease);
