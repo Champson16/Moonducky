@@ -137,9 +137,18 @@
 	},
 	{
 		"id": "ShapesPalette",
+		"module": "ShapePlacement",
 		"mode": "SHAPE_PLACEMENT",
 		"subToolSelection": false,
-		"subtools": []
+		"noColorVisible": true,
+		"subtools": [{
+			"id": "triangle",
+			"vertices": [-1.0,1.0, 0,-1.0, 1.0,1.0]
+		},
+		{
+			"id": "square",
+			"vertices": [-1.0,1.0, -1.0,-1.0, 1.0,-1.0, 1.0, 1.0]
+		}]
 	},
 	{
 		"id": "StampsPalette",

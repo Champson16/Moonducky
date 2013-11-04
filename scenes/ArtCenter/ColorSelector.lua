@@ -8,8 +8,9 @@ local BLANK_COLOR_PATH = 'assets/images/UX/FRC_UX_ArtCenter_Color_Blank.png';
 local BUTTON_WIDTH = 64;
 local BUTTON_HEIGHT = 64;
 local BUTTON_PADDING = 16;
+local DEFAULT_CANVAS_COLOR = { .956862745, .956862745, .956862745 };
 
-local ColorSelector = {};
+local ColorSelector = {}; 
 
 local function HexToRGB(color)
 	local newcolor = {
@@ -77,6 +78,23 @@ local function onButtonRelease(event)
 	elseif (scene.mode == scene.modes.BACKGROUND_SELECTION) then
 		scene.canvas:fillBackground(self.r, self.g, self.b);
 		showSelectedColor = false;
+	
+	elseif ((scene.mode == scene.modes.SHAPE_PLACEMENT) or (scene.mode == scene.modes.STAMP_PLACEMENT)) then
+		if ((scene.objectSelection) and (scene.objectSelection.selectedObject)) then
+			local obj = scene.objectSelection.selectedObject[1];
+			obj:setFillColor(self.r, self.g, self.b, 1.0);
+
+			if ((self.r == DEFAULT_CANVAS_COLOR[1]) and (self.g == DEFAULT_CANVAS_COLOR[2]) and (self.b == DEFAULT_CANVAS_COLOR[3])) then
+				if (scene.mode == scene.modes.SHAPE_PLACEMENT) then
+					obj:setStrokeColor(0, 0, 0, 1.0);
+					obj.strokeWidth = 5;
+				else
+					obj:setFillColor(1.0, 1.0, 1.0, 1.0);
+				end
+			elseif (scene.mode == scene.modes.SHAPE_PLACEMENT) then
+				obj.strokeWidth = 0;
+			end
+		end
 	end
 
 	if (showSelectedColor) then
@@ -167,9 +185,9 @@ ColorSelector.new = function(scene, width, height)
 			noColor.isVisible = false;
 
 			noColor._parent = group;
-			noColor.r = .956862745;
-			noColor.g = .956862745;
-			noColor.b = .956862745;
+			noColor.r = DEFAULT_CANVAS_COLOR[1];
+			noColor.g = DEFAULT_CANVAS_COLOR[2];
+			noColor.b = DEFAULT_CANVAS_COLOR[3];
 			noColor:addEventListener('release', onButtonRelease);
 			group:insert(noColor);
 		end

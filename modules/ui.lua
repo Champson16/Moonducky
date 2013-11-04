@@ -58,8 +58,8 @@ end
 -- Simple button with up and down states.
 ui.button = {};
 ui.button.required = {
-	imageUp = "string",
-	imageDown = "string",
+	--imageUp = "string",
+	--imageDown = "string",
 	width = "number",
 	height = "number"
 };
@@ -110,9 +110,43 @@ ui.button.new = function(args)
 	view.bg:setFillColor(options.bgColor[1], options.bgColor[2], options.bgColor[3], options.bgColor[4] or 0);
 	view:insert(view.bg, true);
 
-	view.up = display.newImageRect(options.imageUp, options.width, options.height);
+	if (options.imageUp) then
+		view.up = display.newImageRect(options.imageUp, options.width, options.height);
+	elseif (options.shapeUp) then
+		local vertices = {};
+		for i=1,#options.shapeUp do
+			if ((i % 2) == 0) then
+				table.insert(vertices, options.shapeUp[i] * (options.height * 0.5));
+			else
+				table.insert(vertices, options.shapeUp[i] * (options.width * 0.5));
+			end
+		end
+		view.up = display.newPolygon(0, 0, vertices);
+		view.up:setFillColor(1.0, 1.0, 1.0, 0);
+		view.up:setStrokeColor(1.0, 1.0, 1.0, 1.0);
+		view.up.strokeWidth = 5;
+		view.up.isHitTestable = true;
+	end
 	view:insert(view.up, true);
-	view.down = display.newImageRect(options.imageDown, options.width, options.height);
+
+	if (options.imageDown) then
+		view.down = display.newImageRect(options.imageDown, options.width, options.height);
+	elseif (options.shapeDown) then
+		local vertices = {};
+		for i=1,#options.shapeDown do
+			if ((i % 2) == 0) then
+				table.insert(vertices, options.shapeDown[i] * (options.height * 0.5));
+			else
+				table.insert(vertices, options.shapeDown[i] * (options.width * 0.5));
+			end
+		end
+		view.down = display.newPolygon(0, 0, vertices);
+		view.down:setFillColor(1.0, 1.0, 1.0, 0);
+		view.down:setStrokeColor(0, 0, 0, 1.0);
+		view.down.strokeWidth = 5;
+		view.down.isHitTestable = true;
+	end
+
 	view.down.isVisible = false;
 	view:insert(view.down, true);
 

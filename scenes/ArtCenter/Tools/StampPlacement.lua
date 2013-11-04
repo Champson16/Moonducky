@@ -73,7 +73,7 @@ Stamp.onStampPinch = function(e)
 	local self = e.target;
 	local scene = self._scene;
 	local canvas = scene.canvas;
-	if (scene.mode ~= scene.modes.STAMP_PLACEMENT) then return false; end
+	if (scene.mode ~= scene.modes[self.toolMode]) then return false; end
 
 	local padding = 5;
 
@@ -85,7 +85,7 @@ Stamp.onStampPinch = function(e)
 		self.markX = self.x;
 		self.markY = self.y;
 		self.minSize = MIN_STAMP_SIZE;
-		self.maxSize = math.floor((canvas.width + canvas.height) * 0.5);
+		self.maxSize = math.floor((canvas.width + canvas.height) * 0.5) * 2;
 
 		-- create object selection polygon
 		if (scene.objectSelection) then scene.objectSelection:removeSelf(); end

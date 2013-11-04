@@ -72,13 +72,40 @@ local function onFreehandButtonRelease(event)
 	scene.colorSelector:changeColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b);
 end
 
-local function onStampButtonRelease(event)
+local function onShapeButtonRelease(event)
 	local self = event.target;
 	local scene = self._scene;
 	local canvas = scene.canvas;
 
 	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
 	scene.mode = scene.modes[self.toolMode];
+
+	local tool = scene.selectedTool;
+
+	local size = 100;
+	local vertices = {};
+	for i=1,#self.vertices do
+		table.insert(vertices, size * self.vertices[i]);
+	end
+
+	-- place shape on canvas
+	local shapeGroup = display.newGroup();
+	local shape = display.newPolygon(shapeGroup, 0, 0, vertices);
+	shape:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
+	
+	shapeGroup.toolMode = self.toolMode;
+	shapeGroup:addEventListener('multitouch', tool.onShapePinch);
+	canvas.layerObjects:insert(shapeGroup);
+
+	shapeGroup._scene = scene;
+end
+
+local function onStampButtonRelease(event)
+	local self = event.target;
+	local scene = self._scene;
+	local canvas = scene.canvas;
+
+	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
 
 	local tool = scene.selectedTool;
 
@@ -99,7 +126,7 @@ local function onStampButtonRelease(event)
 		stamp.yScale = scaleY;
 	end
 
-	--stampGroup:addEventListener('touch', tool.onStampTouch);
+	stampGroup.toolMode = self.toolMode;
 	stampGroup:addEventListener('multitouch', tool.onStampPinch);
 	canvas.layerObjects:insert(stampGroup);
 
@@ -135,7 +162,7 @@ SubToolSelector.new = function(scene, id, width, height)
 	local yPos = -(height * 0.5);
 
 	for i=1,#subToolButtons do
-		local image, onButtonRelease, btnWidth, btnHeight, btnPadding, btnBgColor;
+		local image, shape, onButtonRelease, btnWidth, btnHeight, btnPadding, btnBgColor;
 
 		btnPadding = BUTTON_PADDING;
 
@@ -159,6 +186,14 @@ SubToolSelector.new = function(scene, id, width, height)
 
 			onButtonRelease = onFreehandButtonRelease;
 
+		elseif (toolData.module == "ShapePlacement") then
+			image = nil;
+			shape = subToolButtons[i].vertices;
+			onButtonRelease = onShapeButtonRelease;
+			btnWidth = 80;
+			btnHeight = 80;
+			btnPadding = BUTTON_PADDING + 16;
+
 		elseif (toolData.module == "StampPlacement") then
 			image = 'assets/images/UX/FRC_UX_ArtCenter_Stamp_' .. subToolButtons[i].id .. '.png';
 			onButtonRelease = onStampButtonRelease;
@@ -175,6 +210,8 @@ SubToolSelector.new = function(scene, id, width, height)
 			id = subToolButtons[i].id,
 			imageUp = image,
 			imageDown = image,
+			shapeUp = shape,
+			shapeDown = shape,
 			width = btnWidth,
 			height = btnHeight,
 			pressAlpha = 0.5,
@@ -197,6 +234,7 @@ SubToolSelector.new = function(scene, id, width, height)
 		button.brushSizes = subToolButtons[i].brushSizes or {};
 		button.stampWidth = subToolButtons[i].width or nil;
 		button.stampHeight = subToolButtons[i].height or nil;
+		button.vertices = subToolButtons[i].vertices or nil;
 		group:insert(button);
 
 		local num = display.newText(i, 0, 0, native.systemFontBold, 12);
