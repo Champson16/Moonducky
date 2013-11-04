@@ -92,8 +92,9 @@ local function onShapeButtonRelease(event)
 	local shapeGroup = display.newGroup();
 	local shape = display.newPolygon(shapeGroup, 0, 0, vertices);
 	shape:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
-	
+	shape.isHitTestable = true;
 	shapeGroup.toolMode = self.toolMode;
+	shapeGroup.isHitTestable = true;
 	shapeGroup:addEventListener('multitouch', tool.onShapePinch);
 	canvas.layerObjects:insert(shapeGroup);
 
