@@ -65,7 +65,18 @@ function doPinchZoom( img, points, suppressRotation, suppressScaling, suppressTr
 		-- apply pinch...
 		if (not suppressTranslation) then img.x, img.y = x, y end
 		img.rotation = img.rotation + newdata.rotation
-		img.xScale, img.yScale = img.xScale * newdata.scalefactor, img.yScale * newdata.scalefactor
+		if (img.minSize) then
+			if (((img.width * (img.xScale * newdata.scalefactor)) <= img.minSize) or ((img.height * (img.yScale * newdata.scalefactor)) <= img.minSize)) then
+				newdata.scalefactor = 1;
+			end
+		end
+
+		if (img.maxSize) then
+			if (((img.width * (img.xScale * newdata.scalefactor)) >= img.maxSize) or ((img.height * (img.yScale * newdata.scalefactor)) >= img.maxSize)) then
+				newdata.scalefactor = 1;
+			end
+		end
+		img.xScale, img.yScale = img.xScale * newdata.scalefactor, img.yScale * newdata.scalefactor;
 	end
 	
 	-- store new data

@@ -9,6 +9,7 @@ local math_abs = math.abs;
 local Stamp = {};
 
 local SELECTION_COLOR = { 0, 0.5, 1.0 };
+local MIN_STAMP_SIZE = 88;
 
 Stamp.onCanvasTouch = function(self, event)
 	local scene = ArtCenter;
@@ -81,9 +82,10 @@ Stamp.onStampPinch = function(e)
 		doPinchZoom( e.target, e.list );
 
 		self._hasFocus = true;
-
 		self.markX = self.x;
 		self.markY = self.y;
+		self.minSize = MIN_STAMP_SIZE;
+		self.maxSize = math.floor((canvas.width + canvas.height) * 0.5);
 
 		-- create object selection polygon
 		if (scene.objectSelection) then scene.objectSelection:removeSelf(); end

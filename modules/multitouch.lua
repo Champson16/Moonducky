@@ -6,7 +6,7 @@ require("modules.eventlib")
 --[[ internal values ]]--
 
 local stage = display.getCurrentStage()
-local isSim = false; --system.getInfo( "environment" ) == "simulator"
+local isSim = system.getInfo( "environment" ) == "simulator"
 local trackgroup = nil
 local simAlpha = 0.5;
 
