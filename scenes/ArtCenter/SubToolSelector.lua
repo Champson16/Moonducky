@@ -173,8 +173,8 @@ local function onFreehandButtonRelease(event)
 
 	local tool = scene.selectedTool;
 	tool.graphic.image = 'assets/images/UX/FRC_UX_ArtCenter_' .. self.parentId .. '_Brush_' .. self.id .. '.png';
-	tool.graphic.width = self.brushSizes[1];
-	tool.graphic.height = self.brushSizes[1];
+	tool.graphic.width = self.currentSize or self.defaultSize;
+	tool.graphic.height = self.currentSize or self.defaultSize;
 	tool.a = self.brushAlpha;
 	tool.arbRotate = self.arbRotate;
 
