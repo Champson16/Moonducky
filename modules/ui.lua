@@ -225,7 +225,7 @@ ui.button.touch = function(event)
 			-- handle case where user pressed the button, but then begins to drag a scroller
 			local dx = math_abs(event.x - self._startX);
 			local dy = math_abs(event.y - self._startY);
-			local thresh = 5;
+			local thresh = 10;
 			local eventPassedToScroller;
 			if ((dx < thresh) and (dy < thresh)) then
 				if (isWithinBounds) then
