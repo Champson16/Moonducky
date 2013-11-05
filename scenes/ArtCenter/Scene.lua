@@ -6,6 +6,7 @@ local ToolSelector = require('scenes.ArtCenter.ToolSelector');
 local BackgroundArtSelector = require('scenes.ArtCenter.BackgroundArtSelector');
 local SubToolSelector = require('scenes.ArtCenter.SubToolSelector');
 local ColorSelector = require('scenes.ArtCenter.ColorSelector');
+local TextureSelector = require('scenes.ArtCenter.TextureSelector');
 
 local const = {};
 const.CANVAS_BORDER = 3;
@@ -71,6 +72,14 @@ local function onEraserButtonRelease(event)
 			scene.objectSelection = nil;
 		end
 	end
+end
+
+local function onColorSampleRelease(event)
+	local self = event.target;
+	local scene = ArtCenter;
+
+	scene.textureSelector.isVisible = not scene.textureSelector.isVisible;
+	scene.colorSelector.isVisible = not scene.colorSelector.isVisible;
 end
 
 local function onCreateScene(event)
@@ -176,6 +185,11 @@ local function onCreateScene(event)
 	self.colorSelector.x = -((screenW - display.contentWidth) * 0.5) + (self.colorSelector.width * 0.5) - 6 - self.colorSelector.contentWidth;
 	self.colorSelector.y = (display.contentHeight * 0.5) + canvas_top + ((const.SELECTOR_SIZE + const.ELEMENT_PADDING) * 0.5);
 
+	self.textureSelector = TextureSelector.new(self, const.SELECTOR_SIZE + (const.ELEMENT_PADDING * 0.5), self.canvasHeight - (const.SELECTOR_SIZE + const.ELEMENT_PADDING) + (const.CANVAS_BORDER * 2));
+	self.textureSelector.x = -((screenW - display.contentWidth) * 0.5) + (self.textureSelector.width * 0.5) - 6 - self.textureSelector.contentWidth;
+	self.textureSelector.y = (display.contentHeight * 0.5) + canvas_top + ((const.SELECTOR_SIZE + const.ELEMENT_PADDING) * 0.5);
+	self.textureSelector.isVisible = false;
+
 	-- CURRENT COLOR/TEXTURE (LEFT/TOP)
 	self.currentColor = display.newGroup();
 	local currentColorBg = display.newRoundedRect(self.currentColor, 0, 0, self.colorSelector.width - (const.CANVAS_BORDER * 2), self.colorSelector.width - (const.CANVAS_BORDER * 2), 11*0.5);
@@ -191,8 +205,17 @@ local function onCreateScene(event)
 		height = 100,
 		pressAlpha = 0.5
 	});
+	self.currentColor.preview:addEventListener('release', onColorSampleRelease);
 	self.currentColor:insert(self.currentColor.preview);
 	view:insert(self.currentColor);
+
+	self.currentColor.texturePreview = display.newCircle(0, 0, 50);
+	self.currentColor.texturePreview:setFillColor(1.0, 1.0, 1.0, 0.5);
+	self.currentColor.texturePreview:setStrokeColor(0, 0, 0, 1.0);
+	self.currentColor.texturePreview.strokeWidth = 5;
+	self.currentColor.texturePreview._imagePath = 'assets/images/UX/FRC_UX_ArtCenter_Texture_Blank.jpg';
+	self.currentColor.texturePreview.id = "Blank";
+	self.currentColor:insert(self.currentColor.texturePreview);
 
 	-- set selected tool
 	self.selectedTool = require(const.TOOLS.BackgroundImage);
@@ -274,6 +297,19 @@ local function onEnterScene(event)
 				time = bounceTime,
 				delay = bounceDelay,
 				x = -((screenW - display.contentWidth) * 0.5) + (self.colorSelector.width * 0.5) - 6
+			});
+		end
+	});
+
+	self.textureSelectorTransition = transition.to(self.textureSelector, {
+		time = slideTime,
+		x = -((screenW - display.contentWidth) * 0.5) + (self.textureSelector.width * 0.5) - 6 + slidePastDistance,
+		transition = ease,
+		onComplete = function()
+			self.textureSelectorTransition = transition.to(self.textureSelector, {
+				time = bounceTime,
+				delay = bounceDelay,
+				x = -((screenW - display.contentWidth) * 0.5) + (self.textureSelector.width * 0.5) - 6
 			});
 		end
 	});

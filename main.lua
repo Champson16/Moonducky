@@ -14,6 +14,8 @@ _G.APP_VERSION = '0.0.10';
 
 display.setStatusBar(display.HiddenStatusBar);
 display.setDefault("background", 0.5, 0.5, 0.5);
+display.setDefault("textureWrapX", "repeat");
+display.setDefault("textureWrapY", "repeat");
 math.randomseed( os.time() )  -- make math.random() more random
 
 storyboard.gotoScene('scenes.ArtCenter.Scene');

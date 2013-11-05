@@ -7,6 +7,18 @@ local function fillBackground(self, r, g, b, a)
 	self.layerBgColor.bg:setFillColor(r, g, b, a or 1.0);
 end
 
+local function setBackgroundTexture(self, imagePath)
+	if (imagePath) then
+		self.layerBgColor.bg.fill = { type="image", filename=imagePath };
+
+		-- The following has no effect ... Corona bug?
+		self.layerBgColor.bg.fill.scaleX = 0.1;
+		self.layerBgColor.bg.fill.scaleY = 0.1;
+	else
+		self.layerBgColor.bg.fill = nil;
+	end
+end
+
 local function onCanvasTouch(event)
 	if ((not ArtCenter) or (not ArtCenter.selectedTool)) then return; end
 	local self = event.target;
@@ -74,6 +86,7 @@ Canvas.new = function(width, height, x, y)
 
 	-- public methods
 	canvas.fillBackground = fillBackground;
+	canvas.setBackgroundTexture = setBackgroundTexture;
 	canvas.repositionLayers = repositionLayers;
 
 	return canvas;

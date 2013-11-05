@@ -76,21 +76,28 @@ local function onButtonRelease(event)
 
 	elseif (scene.mode == scene.modes.BACKGROUND_SELECTION) then
 		scene.canvas:fillBackground(self.r, self.g, self.b);
-		showSelectedColor = false;
+		showSelectedColor = true;
 	
 	elseif ((scene.mode == scene.modes.SHAPE_PLACEMENT) or (scene.mode == scene.modes.STAMP_PLACEMENT)) then
 
 		if ((scene.objectSelection) and (scene.objectSelection.selectedObject)) then
 			local obj = scene.objectSelection.selectedObject[1];
+			if (scene.mode == scene.modes.SHAPE_PLACEMENT) then
+				obj.fill = { type="image", filename=scene.currentColor.texturePreview._imagePath };
+			end
 			obj:setFillColor(self.r, self.g, self.b, 1.0);
 
 			if ((self.r == scene.DEFAULT_CANVAS_COLOR) and (self.g == scene.DEFAULT_CANVAS_COLOR) and (self.b == scene.DEFAULT_CANVAS_COLOR)) then
-				if (scene.mode == scene.modes.SHAPE_PLACEMENT) then
+				if ((scene.mode == scene.modes.SHAPE_PLACEMENT) and (scene.currentColor.texturePreview.id == "Blank")) then
 					obj:setFillColor(self.r, self.g, self.b, 0);
 					obj:setStrokeColor(0, 0, 0, 1.0);
 					obj.strokeWidth = 5;
 				else
-					obj:setFillColor(1.0, 1.0, 1.0, 1.0);
+					if (scene.mode == scene.modes.SHAPE_PLACEMENT) then
+						obj:setFillColor(self.r, self.g, self.b, 1.0);
+					else
+						obj:setFillColor(1.0, 1.0, 1.0, 1.0);
+					end
 				end
 			elseif (scene.mode == scene.modes.SHAPE_PLACEMENT) then
 				obj.strokeWidth = 0;
@@ -115,6 +122,12 @@ local function changeColor(self, r, g, b)
 	self._scene.currentColor.preview.r = r;
 	self._scene.currentColor.preview.g = g;
 	self._scene.currentColor.preview.b = b;
+
+	if ((r == self._scene.DEFAULT_CANVAS_COLOR) and (g == self._scene.DEFAULT_CANVAS_COLOR) and (b == self._scene.DEFAULT_CANVAS_COLOR)) then
+		self._scene.currentColor.texturePreview:setFillColor(1.0, 1.0, 1.0, 1.0);
+	else
+		self._scene.currentColor.texturePreview:setFillColor(r, g, b, 0.25);
+	end
 end
 
 local function noColorVisible(self, visible)

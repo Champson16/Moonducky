@@ -221,7 +221,9 @@ local function onShapeButtonRelease(event)
 	else
 		shape = display.newCircle(shapeGroup, 0, 0, size);
 	end
+	shape.fill = { type="image", filename=scene.currentColor.texturePreview._imagePath };
 	shape:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
+
 	shape.isHitTestable = true;
 	shapeGroup.toolMode = self.toolMode;
 	shapeGroup.isHitTestable = true;
@@ -229,9 +231,17 @@ local function onShapeButtonRelease(event)
 	canvas.layerObjects:insert(shapeGroup);
 
 	if ((scene.currentColor.preview.r == scene.DEFAULT_CANVAS_COLOR) and (scene.currentColor.preview.g == scene.DEFAULT_CANVAS_COLOR) and (scene.currentColor.preview.b == scene.DEFAULT_CANVAS_COLOR)) then
-		shape:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 0);
-		shape:setStrokeColor(0, 0, 0, 1.0);
-		shape.strokeWidth = 5;
+		local a = 1.0;
+		local strokeWidth;
+		if (scene.currentColor.texturePreview.id == "Blank") then
+			a = 0;
+			strokeWidth = 5;
+		end
+		shape:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, a);
+		if (strokeWidth) then
+			shape:setStrokeColor(0, 0, 0, 1.0);
+			shape.strokeWidth = strokeWidth;
+		end
 	else
 		shape.strokeWidth = 0;
 	end

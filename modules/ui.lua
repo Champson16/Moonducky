@@ -187,6 +187,13 @@ ui.button.new = function(args)
 		view.up:setStrokeColor(1.0, 1.0, 1.0, 1.0);
 		view.up.strokeWidth = 5;
 		view.up.isHitTestable = true;
+
+	elseif (options.rect) then
+		view.up = display.newRoundedRect(0, 0, options.width, options.height, 11);
+		view.up:setFillColor(options.bgColor[1], options.bgColor[2], options.bgColor[3], 1.0);
+		view.up:setStrokeColor(0, 0, 0, 1.0);
+		view.up.strokeWidth = 10;
+		view.up.isHitTestable = true;
 	end
 	view:insert(view.up, true);
 
@@ -214,6 +221,13 @@ ui.button.new = function(args)
 		view.down:setFillColor(1.0, 1.0, 1.0, 0);
 		view.down:setStrokeColor(0, 0, 0, 1.0);
 		view.down.strokeWidth = 5;
+		view.down.isHitTestable = true;
+
+	elseif (options.rect) then
+		view.down = display.newRoundedRect(0, 0, options.width, options.height, 11);
+		view.down:setFillColor(options.bgColor[1], options.bgColor[2], options.bgColor[3], 1.0);
+		view.down:setStrokeColor(0, 0, 0, 1.0);
+		view.down.strokeWidth = 10;
 		view.down.isHitTestable = true;
 	end
 

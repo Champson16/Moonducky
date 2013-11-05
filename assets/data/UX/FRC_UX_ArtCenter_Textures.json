@@ -1,0 +1,71 @@
+{
+	"textures": [{
+		"id": "Blank"
+	},
+	{
+		"id": "Brick"
+	},
+	{
+		"id": "Carpet"
+	},
+	{
+		"id": "CrinkledCotton"
+	},
+	{
+		"id": "Concrete04"
+	},
+	{
+		"id": "Concrete12"
+	},
+	{
+		"id": "Hassien"
+	},
+	{
+		"id": "Leather01"
+	},
+	{
+		"id": "Leather02"
+	},
+	{
+		"id": "MarbleTiles"
+	},
+	{
+		"id": "PavementStones"
+	},
+	{
+		"id": "Polystyrene"
+	},
+	{
+		"id": "Rock03"
+	},
+	{
+		"id": "Rock08"
+	},
+	{
+		"id": "Rubber"
+	},
+	{
+		"id": "Hair"
+	},
+	{
+		"id": "Suede"
+	},
+	{
+		"id": "RoofDiagonal"
+	},
+	{
+		"id": "WeededGrass"
+	},
+	{
+		"id": "Wood02"
+	},
+	{
+		"id": "Wood11"
+	},
+	{
+		"id": "WoodPlanks"
+	},
+	{
+		"id": "Wool"
+	},]
+}
