@@ -71,6 +71,7 @@ local function onEraserButtonRelease(event)
 			
 			scene.objectSelection:removeSelf();
 			scene.objectSelection = nil;
+			scene.eraserGroup.button:setDisabledState(true);
 		end
 	end
 end
