@@ -361,6 +361,8 @@ ui.button.touch = function(event)
 			end
 
 		elseif ((event.phase == "ended") or (event.phase == "cancelled")) then
+			self:release();
+			
 			if (self._touchTimer) then
 				timer.cancel(self._touchTimer);
 				self._touchTimer = nil;
@@ -382,11 +384,11 @@ ui.button.touch = function(event)
 				});
 			end
 
-			self:release();
 			display.getCurrentStage():setFocus(nil);
 			self._hasFocus = false;
 		end
 		return true;
+
 	elseif ((event.phase == "moved") and(self._startX) and (self._startY)) then
 		-- simple touches can sometimes caused "moved" phase to occur due to sensitive touch screens,
 		-- so ensure finger moved at least a few pixelsfrom start of touch location to consider it moved
