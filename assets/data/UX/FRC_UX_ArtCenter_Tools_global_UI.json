@@ -116,6 +116,14 @@
 		"subtools": [{
 			"id": "PaintBrush1",
 			"alpha": 0.05,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush1",
+			"alpha": 0.05,
 			"arbRotate": true,
 			"brushSizes": [40, 50, 60],
 			"defaultSize": 40,
@@ -131,8 +139,26 @@
 			"maxSize": 60
 		},
 		{
+			"id": "PaintBrush2",
+			"alpha": 0.05,
+			"arbRotate": true,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
 			"id": "PaintBrush3",
 			"alpha": 0.05,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush3",
+			"alpha": 0.05,
+			"arbRotate": true,
 			"brushSizes": [40, 50, 60],
 			"defaultSize": 40,
 			"minSize": 39,
@@ -147,8 +173,26 @@
 			"maxSize": 60
 		},
 		{
+			"id": "PaintBrush4",
+			"alpha": 0.5,
+			"arbRotate": true,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
 			"id": "PaintBrush5",
 			"alpha": 0.08,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush5",
+			"alpha": 0.08,
+			"arbRotate": true,
 			"brushSizes": [40, 50, 60],
 			"defaultSize": 40,
 			"minSize": 39,
@@ -163,7 +207,33 @@
 			"maxSize": 60
 		},
 		{
+			"id": "PaintBrush6",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
 			"id": "PaintBrush7",
+			"alpha": 0.08,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush7",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush8",
 			"alpha": 0.08,
 			"brushSizes": [40, 50, 60],
 			"defaultSize": 40,
@@ -173,6 +243,7 @@
 		{
 			"id": "PaintBrush8",
 			"alpha": 0.08,
+			"arbRotate": true,
 			"brushSizes": [40, 50, 60],
 			"defaultSize": 40,
 			"minSize": 39,
@@ -193,8 +264,26 @@
 			"maxSize": 70
 		},
 		{
+			"id": "Fancy1",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
 			"id": "Fancy2",
 			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy2",
+			"alpha": 0.08,
+			"arbRotate": true,
 			"brushSizes": [30, 50, 70],
 			"defaultSize": 30,
 			"minSize": 29,
@@ -209,8 +298,26 @@
 			"maxSize": 70
 		},
 		{
+			"id": "Fancy3",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
 			"id": "Fancy4",
 			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy4",
+			"alpha": 0.08,
+			"arbRotate": true,
 			"brushSizes": [30, 50, 70],
 			"defaultSize": 30,
 			"minSize": 29,
@@ -225,8 +332,26 @@
 			"maxSize": 70
 		},
 		{
+			"id": "Fancy5",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
 			"id": "Fancy6",
 			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy6",
+			"alpha": 0.08,
+			"arbRotate": true,
 			"brushSizes": [30, 50, 70],
 			"defaultSize": 30,
 			"minSize": 29,
@@ -241,8 +366,26 @@
 			"maxSize": 70
 		},
 		{
+			"id": "Fancy7",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
 			"id": "Fancy8",
 			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy8",
+			"alpha": 0.08,
+			"arbRotate": true,
 			"brushSizes": [30, 50, 70],
 			"defaultSize": 30,
 			"minSize": 29,
@@ -257,8 +400,26 @@
 			"maxSize": 70
 		},
 		{
+			"id": "Fancy9",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
 			"id": "Fancy10",
 			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy10",
+			"alpha": 0.08,
+			"arbRotate": true,
 			"brushSizes": [30, 50, 70],
 			"defaultSize": 30,
 			"minSize": 29,
@@ -273,8 +434,26 @@
 			"maxSize": 70
 		},
 		{
+			"id": "Fancy11",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
 			"id": "Fancy12",
 			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy12",
+			"alpha": 0.08,
+			"arbRotate": true,
 			"brushSizes": [30, 50, 70],
 			"defaultSize": 30,
 			"minSize": 29,
@@ -289,8 +468,26 @@
 			"maxSize": 70
 		},
 		{
+			"id": "Fancy13",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
 			"id": "Fancy14",
 			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy14",
+			"alpha": 0.08,
+			"arbRotate": true,
 			"brushSizes": [30, 50, 70],
 			"defaultSize": 30,
 			"minSize": 29,
@@ -305,8 +502,26 @@
 			"maxSize": 70
 		},
 		{
+			"id": "Fancy15",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
 			"id": "Fancy16",
 			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy16",
+			"alpha": 0.08,
+			"arbRotate": true,
 			"brushSizes": [30, 50, 70],
 			"defaultSize": 30,
 			"minSize": 29,
