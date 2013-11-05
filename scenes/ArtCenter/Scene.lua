@@ -171,6 +171,8 @@ local function onCreateScene(event)
 	self.eraserGroup.button = ui.button.new({
 		imageUp = "assets/images/UX/FRC_UX_ArtCenter_Eraser.png",
 		imageDown = "assets/images/UX/FRC_UX_ArtCenter_Eraser.png",
+		focusState = "assets/images/UX/FRC_UX_ArtCenter_Eraser_focused.png",
+		disabled = "assets/images/UX/FRC_UX_ArtCenter_Eraser_disabled.png",
 		width = 100,
 		height = 100,
 		pressAlpha = 0.5
@@ -219,6 +221,7 @@ local function onCreateScene(event)
 
 	-- set selected tool button
 	self.toolSelector[1]:setFocusState(true);
+	self.eraserGroup.button:setDisabledState(true); -- eraser is disabled in background selection mode
 
 	-- set selected sub-tool
 	self.selectedTool = require(const.TOOLS.BackgroundImage);

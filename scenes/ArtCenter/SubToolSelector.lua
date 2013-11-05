@@ -29,6 +29,9 @@ local function selectObject(scene, obj)
 	scene.objectSelection.rotation = obj.rotation;
 	scene.objectSelection.x = obj.x;
 	scene.objectSelection.y = obj.y;
+
+	scene.eraserGroup.button:setFocusState(false);
+	scene.eraserGroup.button:setDisabledState(false);
 end
 
 local function onBackgroundButtonRelease(event)
@@ -37,6 +40,7 @@ local function onBackgroundButtonRelease(event)
 
 	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
 	scene.mode = scene.modes[self.toolMode];
+	scene.eraserGroup.button:setFocusState(false);
 
 	local bgImageLayer = scene.canvas.layerBgImage;
 	local imageFile = 'assets/images/UX/MDSS_UX_ArtCenter_Backdrop_' .. self.id .. '.png'
@@ -173,6 +177,7 @@ local function onFreehandButtonRelease(event)
 
 	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
 	scene.mode = scene.modes[self.toolMode];
+	scene.eraserGroup.button:setFocusState(false);
 
 	local tool = scene.selectedTool;
 	tool.graphic.image = 'assets/images/UX/FRC_UX_ArtCenter_' .. self.parentId .. '_Brush_' .. self.id .. '.png';
@@ -204,6 +209,7 @@ local function onShapeButtonRelease(event)
 
 	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
 	scene.mode = scene.modes[self.toolMode];
+	scene.eraserGroup.button:setFocusState(false);
 
 	local tool = scene.selectedTool;
 
@@ -256,6 +262,7 @@ local function onStampButtonRelease(event)
 	local canvas = scene.canvas;
 
 	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
+	scene.eraserGroup.button:setFocusState(false);
 
 	local tool = scene.selectedTool;
 

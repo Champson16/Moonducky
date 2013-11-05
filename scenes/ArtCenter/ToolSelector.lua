@@ -16,6 +16,12 @@ local function onButtonRelease(event)
 
 	scene.mode = scene.modes[self.mode];
 	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.module);
+	scene.eraserGroup.button:setFocusState(false);
+	if ((self.mode == "STAMP_PLACEMENT") or (self.mode == "SHAPE_PLACEMENT") or (self.mode == "BACKGROUND_SELECTION")) then
+		scene.eraserGroup.button:setDisabledState(true);
+	else
+		scene.eraserGroup.button:setDisabledState(false);
+	end
 
 	-- set focus state for this button and other tool button siblings
 	for i=1,self.parent.numChildren do

@@ -466,9 +466,11 @@ ui.button.setDisabledState = function(self, disabled)
 	if (disabled) then
 		self.disabled.isVisible = true;
 		self.focusState.isVisible = false;
+		self.up.isVisible = false;
 		self.isDisabled = true;
 	else
 		self.disabled.isVisible = false;
+		self.up.isVisible = true;
 		self.isDisabled = false;
 	end
 end

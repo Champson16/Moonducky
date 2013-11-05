@@ -20,6 +20,7 @@ Stamp.onCanvasTouch = function(self, event)
 		if (scene.objectSelection) then
 			scene.objectSelection:removeSelf();
 			scene.objectSelection = nil;
+			scene.eraserGroup.button:setDisabledState(true);
 		end
 	end
 
@@ -54,6 +55,7 @@ Stamp.onStampPinch = function(e)
 		scene.objectSelection.rotation = self.rotation;
 		scene.objectSelection.x = self.x;
 		scene.objectSelection.y = self.y;
+		scene.eraserGroup.button:setDisabledState(false);
 
 		self:toFront();
 
@@ -67,6 +69,7 @@ Stamp.onStampPinch = function(e)
 				scene.objectSelection.y = self.y;
 				scene.objectSelection.rotation = self.rotation;
 				scene.objectSelection.isVisible = false;
+				scene.eraserGroup.button:setDisabledState(true);
 			end
 		else
 			doPinchZoom( e.target, {} );
@@ -81,6 +84,7 @@ Stamp.onStampPinch = function(e)
 			scene.objectSelection.rotation = self.rotation;
 			scene.objectSelection.x = self.x;
 			scene.objectSelection.y = self.y;
+			scene.eraserGroup.button:setDisabledState(false);
 
 			self._hasFocus = false;
 		end
