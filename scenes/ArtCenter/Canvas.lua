@@ -5,6 +5,7 @@ local eraserColor = ArtCenter.DEFAULT_CANVAS_COLOR;
 
 local function fillBackground(self, r, g, b, a)
 	self.layerBgColor.bg:setFillColor(r, g, b, a or 1.0);
+	self.layerBgColor.bg.r, self.layerBgColor.bg.g, self.layerBgColor.bg.b = r, g, b;
 end
 
 local function setBackgroundTexture(self, imagePath)
@@ -78,6 +79,7 @@ Canvas.new = function(width, height, x, y)
 	bgRect:setFillColor(eraserColor, eraserColor, eraserColor);
 	canvas.layerBgColor:insert(bgRect, true);
 	canvas.layerBgColor.bg = bgRect;
+	canvas.layerBgColor.bg.r, canvas.layerBgColor.bg.g, canvas.layerBgColor.bg.b = eraserColor, eraserColor, eraserColor;
 	canvas.layerBgColor:addEventListener("multitouch", onCanvasTouch);
 
 	canvas.x = x;
