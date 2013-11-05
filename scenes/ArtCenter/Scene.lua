@@ -217,7 +217,10 @@ local function onCreateScene(event)
 	self.currentColor.texturePreview.id = "Blank";
 	self.currentColor:insert(self.currentColor.texturePreview);
 
-	-- set selected tool
+	-- set selected tool button
+	self.toolSelector[1]:setFocusState(true);
+
+	-- set selected sub-tool
 	self.selectedTool = require(const.TOOLS.BackgroundImage);
 	self.subToolSelectors[1].content[1]:dispatchEvent({
 		name = "release",

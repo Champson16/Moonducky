@@ -230,9 +230,28 @@ ui.button.new = function(args)
 		view.down.strokeWidth = 10;
 		view.down.isHitTestable = true;
 	end
-
 	view.down.isVisible = false;
 	view:insert(view.down, true);
+
+	if (options.disabled) then
+		view.disabled = display.newImageRect(options.disabled, options.width, options.height);
+		view.disabled._path = options.disabled;
+		view.disabled.isVisible = false;
+		view.disabled.isVisible = false;
+		view:insert(view.disabled, true);
+	else
+		view.disabled = {};
+	end
+
+	if (options.focusState) then
+		view.focusState = display.newImageRect(options.focusState, options.width, options.height);
+		view.focusState._path = options.focusState;
+		view.focusState.isVisible = false;
+		view.focusState.isVisible = false;
+		view:insert(view.focusState, true);
+	else
+		view.focusState = {};
+	end
 
 	-- add button touch listener to handle up/down state switching
 	view:addEventListener("touch", ui.button.touch);
@@ -244,6 +263,8 @@ ui.button.new = function(args)
 	view.x = options.x;
 	view.y = options.y;
 	view.pressAlpha = options.pressAlpha;
+	view.setFocusState = ui.button.setFocusState;
+	view.setDisabledState = ui.button.setDisabledState;
 
 	if (onPress) then
 		view:addEventListener('press', onPress);
@@ -262,6 +283,7 @@ ui.button.touch = function(event)
 	local self = event.target;
 	local bounds = self.contentBounds;
 	local isWithinBounds = bounds.xMin <= event.x and bounds.xMax >= event.x and bounds.yMin <= event.y and bounds.yMax >= event.y;
+	if (self.isDisabled) then return true; end
 
 	if (event.phase == "began") then
 		self._startX = event.x;
@@ -402,6 +424,11 @@ ui.button.touch = function(event)
 end
 
 ui.button.release = function(self, callback)
+	if (self.focused) then
+		self.focusState.isVisible = true;
+	else
+		self.focusState.isVisible = false;
+	end
 	self.up.isVisible = true;
 	self.down.isVisible = false;
 	self.bg.isVisible = true;
@@ -413,6 +440,7 @@ ui.button.release = function(self, callback)
 end
 
 ui.button.press = function(self, callback)
+	self.focusState.isVisible = false;
 	self.up.isVisible = false;
 	self.down.isVisible = true;
 	self.down.alpha = self.pressAlpha;
@@ -420,6 +448,28 @@ ui.button.press = function(self, callback)
 
 	if ((callback) and (type(callback) == "function")) then
 		callback();
+	end
+end
+
+ui.button.setFocusState = function(self, focused)
+	if (focused) then
+		self.focusState.isVisible = true;
+		self.disabled.isVisible = false;
+		self.focused = true;
+	else
+		self.focusState.isVisible = false;
+		self.focused = false;
+	end
+end
+
+ui.button.setDisabledState = function(self, disabled)
+	if (disabled) then
+		self.disabled.isVisible = true;
+		self.focusState.isVisible = false;
+		self.isDisabled = true;
+	else
+		self.disabled.isVisible = false;
+		self.isDisabled = false;
 	end
 end
 

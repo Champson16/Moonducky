@@ -17,6 +17,15 @@ local function onButtonRelease(event)
 	scene.mode = scene.modes[self.mode];
 	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.module);
 
+	-- set focus state for this button and other tool button siblings
+	for i=1,self.parent.numChildren do
+		if (self.parent[i] == self) then
+			self.parent[i]:setFocusState(true);
+		else
+			self.parent[i]:setFocusState(false);
+		end
+	end
+
 	-- show/hide sub-tool selection indicator
 	local selection = require('scenes.ArtCenter.SubToolSelector').selection;
 	if (selection.isActive) then
@@ -62,6 +71,8 @@ ToolSelector.new = function(scene, height)
 			id = toolButtons[i].id,
 			imageUp = 'assets/images/UX/FRC_UX_ArtCenter_Icon_' .. toolButtons[i].id .. '_up.png',
 			imageDown = 'assets/images/UX/FRC_UX_ArtCenter_Icon_' .. toolButtons[i].id .. '_down.png',
+			focusState = 'assets/images/UX/FRC_UX_ArtCenter_Icon_' .. toolButtons[i].id .. '_focused.png',
+			disabled = 'assets/images/UX/FRC_UX_ArtCenter_Icon_' .. toolButtons[i].id .. '_disabled.png',
 			width = BUTTON_WIDTH,
 			height = BUTTON_HEIGHT
 		});
@@ -78,6 +89,11 @@ ToolSelector.new = function(scene, height)
 		button._scene = scene;
 		button:addEventListener('release', onButtonRelease);
 		group:insert(button);
+
+		-- disable text button
+		if (i == #toolButtons) then
+			button:setDisabledState(true);
+		end
 	end
 
 	if (scene) then scene.view:insert(group); end

@@ -276,10 +276,5 @@
 		"id": "TextPalette",
 		"subToolSelection": false,
 		"subtools": []
-	},
-	{
-		"id": "SpecialFX",
-		"subToolSelection": false,
-		"subtools": []
 	}]
 }
