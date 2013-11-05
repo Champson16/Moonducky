@@ -20,7 +20,7 @@ local function onButtonRelease(event)
 		scene.canvas:fillBackground(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
 		showSelectedTexture = true;
 	
-	elseif ((scene.mode == scene.modes.SHAPE_PLACEMENT) or (scene.mode == scene.modes.STAMP_PLACEMENT)) then
+	elseif (scene.mode == scene.modes.SHAPE_PLACEMENT) then
 
 		if ((scene.objectSelection) and (scene.objectSelection.selectedObject)) then
 			local obj = scene.objectSelection.selectedObject[1];
