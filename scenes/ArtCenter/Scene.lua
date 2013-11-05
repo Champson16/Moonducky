@@ -133,10 +133,10 @@ local function onCreateScene(event)
 	local canvas_border = display.newRoundedRect(0, 0, canvas_width + (const.CANVAS_BORDER * 2), canvas_height + (const.CANVAS_BORDER * 2), 4);
 	canvas_border:setFillColor(0, 0, 0, 1.0);
 	canvas_border.x = display.contentWidth * 0.5;
-	canvas_border.y = (display.contentHeight * 0.5) + canvas_top + canvas_height;
+	canvas_border.y = (display.contentHeight * 0.5) + canvas_top + canvas_height + 100;
 	view:insert(canvas_border);
 
-	local canvas = require('scenes.ArtCenter.Canvas').new(canvas_width, canvas_height, display.contentWidth * 0.5, (display.contentHeight * 0.5) + canvas_top + canvas_height);
+	local canvas = require('scenes.ArtCenter.Canvas').new(canvas_width, canvas_height, display.contentWidth * 0.5, (display.contentHeight * 0.5) + canvas_top + canvas_height + 100);
 	view:insert(canvas);
 	canvas.border = canvas_border;
 	self.canvas = canvas;
@@ -144,15 +144,17 @@ local function onCreateScene(event)
 	-- TOOL SELECTOR BUTTONS (TOP)
 	self.toolSelector = ToolSelector.new(self, 100);
 	self.toolSelector.x = (display.contentWidth * 0.5);
-	self.toolSelector.y = -(self.toolSelector.contentHeight);
+	self.toolSelector.y = -(self.toolSelector.contentHeight) - 25;
 
 	-- SUB-TOOL SELECTORS (RIGHT/TOP)
 	self.subToolSelectors = {};
 	for i=1,self.toolSelector.buttons.numChildren do
 		self.subToolSelectors[i] = SubToolSelector.new(self, self.toolSelector.buttons[i].id, const.SELECTOR_SIZE + (const.ELEMENT_PADDING * 0.5), self.canvasHeight - (const.SELECTOR_SIZE + const.ELEMENT_PADDING) + (const.CANVAS_BORDER * 2));
 		self.subToolSelectors[i].x = screenW - ((screenW - display.contentWidth) * 0.5) - (self.subToolSelectors[i].width * 0.5) + 6;
+
+		-- move first sub-tool selector off-screen since it needs to slide in
 		if (i == 1) then
-			self.subToolSelectors[i].x = self.subToolSelectors[i].x + self.subToolSelectors[i].contentWidth;
+			self.subToolSelectors[i].x = self.subToolSelectors[i].x + self.subToolSelectors[i].contentWidth + 25;
 		end
 		self.subToolSelectors[i].y = (display.contentHeight * 0.5) + canvas_top - ((const.SELECTOR_SIZE + const.ELEMENT_PADDING) * 0.5);
 
@@ -168,7 +170,7 @@ local function onCreateScene(event)
 	eraserGroupBg:setFillColor(0.14, 0.14, 0.14, 1.0);
 	eraserGroupBg:setStrokeColor(0, 0, 0, 1.0);
 	eraserGroupBg.strokeWidth = 3;
-	self.eraserGroup.x = screenW - ((screenW - display.contentWidth) * 0.5) - (self.subToolSelectors[1].width * 0.5) + 6 + self.eraserGroup.contentWidth;
+	self.eraserGroup.x = screenW - ((screenW - display.contentWidth) * 0.5) - (self.subToolSelectors[1].width * 0.5) + 6 + self.eraserGroup.contentWidth + 25;
 	self.eraserGroup.y = self.subToolSelectors[1].contentBounds.yMax + (self.eraserGroup.contentHeight * 0.5) + (const.CANVAS_BORDER * 2);
 	self.eraserGroup.button = ui.button.new({
 		imageUp = "assets/images/UX/FRC_UX_ArtCenter_Eraser.png",
@@ -186,11 +188,11 @@ local function onCreateScene(event)
 
 	-- COLOR PALETTE (LEFT/BOTTOM)
 	self.colorSelector = ColorSelector.new(self, const.SELECTOR_SIZE + (const.ELEMENT_PADDING * 0.5), self.canvasHeight - (const.SELECTOR_SIZE + const.ELEMENT_PADDING) + (const.CANVAS_BORDER * 2));
-	self.colorSelector.x = -((screenW - display.contentWidth) * 0.5) + (self.colorSelector.width * 0.5) - 6 - self.colorSelector.contentWidth;
+	self.colorSelector.x = -((screenW - display.contentWidth) * 0.5) + (self.colorSelector.width * 0.5) - 6 - self.colorSelector.contentWidth - 25;
 	self.colorSelector.y = (display.contentHeight * 0.5) + canvas_top + ((const.SELECTOR_SIZE + const.ELEMENT_PADDING) * 0.5);
 
 	self.textureSelector = TextureSelector.new(self, const.SELECTOR_SIZE + (const.ELEMENT_PADDING * 0.5), self.canvasHeight - (const.SELECTOR_SIZE + const.ELEMENT_PADDING) + (const.CANVAS_BORDER * 2));
-	self.textureSelector.x = -((screenW - display.contentWidth) * 0.5) + (self.textureSelector.width * 0.5) - 6 - self.textureSelector.contentWidth;
+	self.textureSelector.x = -((screenW - display.contentWidth) * 0.5) + (self.textureSelector.width * 0.5) - 6 - self.textureSelector.contentWidth - 25;
 	self.textureSelector.y = (display.contentHeight * 0.5) + canvas_top + ((const.SELECTOR_SIZE + const.ELEMENT_PADDING) * 0.5);
 	self.textureSelector.isVisible = false;
 
@@ -273,11 +275,11 @@ local function onShake(event)
 end
 
 local function slideInControls(self)
-	local slideTime = 800;
-	local bounceTime = 100;
+	local slideTime = 500;
+	local bounceTime = 150;
 	local bounceDelay = 50;
 	local slidePastDistance = 20;
-	local ease = easing.inOutQuad;
+	local ease = easing.linear;
 
 	-- SLIDE IN TOOL SELECTOR FROM TOP
 	self.toolSelectorTransition = transition.to(self.toolSelector, {
@@ -363,6 +365,7 @@ local function slideInControls(self)
 
 	-- SLIDE IN THE DRAWING CANVAS FROM BOTTOM
 	self.canvasTransition = transition.to(self.canvas, {
+		delay = slideTime * 0.25,
 		time = slideTime + bounceDelay,
 		y = (display.contentHeight * 0.5) + canvas_top - slidePastDistance,
 		transition = ease,
@@ -379,6 +382,7 @@ local function slideInControls(self)
 	});
 
 	self.canvasBorderTransition = transition.to(self.canvas.border, {
+		delay = slideTime * 0.25,
 		time = slideTime + bounceDelay,
 		y = (display.contentHeight * 0.5) + canvas_top - slidePastDistance,
 		transition = ease,
