@@ -147,8 +147,8 @@ local function onCreateScene(event)
 
 	-- SUB-TOOL SELECTORS (RIGHT/TOP)
 	self.subToolSelectors = {};
-	for i=1,self.toolSelector.numChildren do
-		self.subToolSelectors[i] = SubToolSelector.new(self, self.toolSelector[i].id, const.SELECTOR_SIZE + (const.ELEMENT_PADDING * 0.5), self.canvasHeight - (const.SELECTOR_SIZE + const.ELEMENT_PADDING) + (const.CANVAS_BORDER * 2));
+	for i=1,self.toolSelector.buttons.numChildren do
+		self.subToolSelectors[i] = SubToolSelector.new(self, self.toolSelector.buttons[i].id, const.SELECTOR_SIZE + (const.ELEMENT_PADDING * 0.5), self.canvasHeight - (const.SELECTOR_SIZE + const.ELEMENT_PADDING) + (const.CANVAS_BORDER * 2));
 		self.subToolSelectors[i].x = screenW - ((screenW - display.contentWidth) * 0.5) - (self.subToolSelectors[i].width * 0.5) + 6;
 		if (i == 1) then
 			self.subToolSelectors[i].x = self.subToolSelectors[i].x + self.subToolSelectors[i].contentWidth;
@@ -221,7 +221,7 @@ local function onCreateScene(event)
 	self.currentColor:insert(self.currentColor.texturePreview);
 
 	-- set selected tool button
-	self.toolSelector[1]:setFocusState(true);
+	self.toolSelector.buttons[1]:setFocusState(true);
 	self.eraserGroup.button:setDisabledState(true); -- eraser is disabled in background selection mode
 
 	-- set selected sub-tool

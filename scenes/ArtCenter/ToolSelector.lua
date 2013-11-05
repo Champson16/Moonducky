@@ -72,6 +72,9 @@ ToolSelector.new = function(scene, height)
 	local toolData = data.readJSON(DATA_PATH);
 	local toolButtons = toolData.tools;
 
+	group.buttons = display.newGroup();
+	group:insert(group.buttons);
+
 	for i=1,#toolButtons do
 		local button = ui.button.new({
 			id = toolButtons[i].id,
@@ -94,7 +97,7 @@ ToolSelector.new = function(scene, height)
 		button.y = 0;
 		button._scene = scene;
 		button:addEventListener('release', onButtonRelease);
-		group:insert(button);
+		group.buttons:insert(button);
 
 		-- disable text button
 		if (i == #toolButtons) then
