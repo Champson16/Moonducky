@@ -60,6 +60,7 @@ local function onEraserButtonRelease(event)
 		scene.selectedTool.graphic.height = 38;
 		scene.selectedTool.arbRotate = true;
 		scene.mode = scene.modes.ERASE;
+		scene.eraserGroup.button:setFocusState(true);
 
 		SubToolSelector.selection.isVisible = false;
 	else
