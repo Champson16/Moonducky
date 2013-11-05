@@ -46,12 +46,14 @@ Stamp.onStampPinch = function(e)
 
 		-- create object selection polygon
 		if (scene.objectSelection) then scene.objectSelection:removeSelf(); end
-		scene.objectSelection = display.newPolygon(canvas.layerSelection, self.x, self.y, { -((self.width * self.xScale) * 0.5)-padding,-((self.width * self.xScale) * 0.5)-padding, ((self.width * self.xScale) * 0.5)+padding,-((self.height * self.yScale) * 0.5)-padding, ((self.width * self.xScale) * 0.5)+padding,((self.height * self.yScale) * 0.5)+padding, -((self.width * self.xScale) * 0.5)-padding,((self.height * self.yScale) * 0.5)+padding });
+		scene.objectSelection = display.newRect(canvas.layerSelection, self.x - ((self.width * self.xScale) * 0.5) - padding, self.y - ((self.height * self.yScale) * 0.5) - padding, self.width * self.xScale + (padding * 2), self.height * self.yScale + (padding * 2));
 		scene.objectSelection:setStrokeColor(SELECTION_COLOR[1], SELECTION_COLOR[2], SELECTION_COLOR[3]);
 		scene.objectSelection.strokeWidth = 3;
 		scene.objectSelection:setFillColor(1.0, 1.0, 1.0, 0);
 		scene.objectSelection.selectedObject = self;
 		scene.objectSelection.rotation = self.rotation;
+		scene.objectSelection.x = self.x;
+		scene.objectSelection.y = self.y;
 
 		self:toFront();
 
@@ -71,12 +73,14 @@ Stamp.onStampPinch = function(e)
 			
 			-- create object selection polygon
 			if (scene.objectSelection) then scene.objectSelection:removeSelf(); end
-			scene.objectSelection = display.newPolygon(canvas.layerSelection, self.x, self.y, { -((self.width * self.xScale) * 0.5)-padding,-((self.width * self.xScale) * 0.5)-padding, ((self.width * self.xScale) * 0.5)+padding,-((self.height * self.yScale) * 0.5)-padding, ((self.width * self.xScale) * 0.5)+padding,((self.height * self.yScale) * 0.5)+padding, -((self.width * self.xScale) * 0.5)-padding,((self.height * self.yScale) * 0.5)+padding });
+			scene.objectSelection = display.newRect(canvas.layerSelection, self.x - ((self.width * self.xScale) * 0.5) - padding, self.y - ((self.height * self.yScale) * 0.5) - padding, self.width * self.xScale + (padding * 2), self.height * self.yScale + (padding * 2));
 			scene.objectSelection:setStrokeColor(SELECTION_COLOR[1], SELECTION_COLOR[2], SELECTION_COLOR[3]);
 			scene.objectSelection.strokeWidth = 3;
 			scene.objectSelection:setFillColor(1.0, 1.0, 1.0, 0);
 			scene.objectSelection.selectedObject = self;
 			scene.objectSelection.rotation = self.rotation;
+			scene.objectSelection.x = self.x;
+			scene.objectSelection.y = self.y;
 
 			self._hasFocus = false;
 		end

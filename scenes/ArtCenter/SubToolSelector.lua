@@ -21,11 +21,14 @@ local function selectObject(scene, obj)
 	-- create object selection polygon
 	if (scene.objectSelection) then scene.objectSelection:removeSelf(); end
 	local padding = 5;
-	scene.objectSelection = display.newPolygon(canvas.layerSelection, obj.x, obj.y, { -obj.contentWidth*0.5-padding,-obj.contentHeight*0.5-padding, obj.contentWidth*0.5+padding,-obj.contentHeight*0.5-padding, obj.contentWidth*0.5+padding,obj.contentHeight*0.5+padding, -obj.contentWidth*0.5-padding,obj.contentHeight*0.5+padding });
+	scene.objectSelection = display.newRect(canvas.layerSelection, obj.x - ((obj.width * obj.xScale) * 0.5) - padding, obj.y - ((obj.height * obj.yScale) * 0.5) - padding, obj.width * obj.xScale + (padding * 2), obj.height * obj.yScale + (padding * 2));
 	scene.objectSelection:setStrokeColor(scene.selectedTool.SELECTION_COLOR[1], scene.selectedTool.SELECTION_COLOR[2], scene.selectedTool.SELECTION_COLOR[3]);
 	scene.objectSelection.strokeWidth = 3;
 	scene.objectSelection:setFillColor(1.0, 1.0, 1.0, 0);
 	scene.objectSelection.selectedObject = obj;
+	scene.objectSelection.rotation = obj.rotation;
+	scene.objectSelection.x = obj.x;
+	scene.objectSelection.y = obj.y;
 end
 
 local function onBackgroundButtonRelease(event)
