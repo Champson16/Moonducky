@@ -143,7 +143,7 @@ local function onCreateScene(event)
 
 	-- TOOL SELECTOR BUTTONS (TOP)
 	self.toolSelector = ToolSelector.new(self, 100);
-	self.toolSelector.x = (display.contentWidth * 0.5) - (self.toolSelector.contentWidth * 0.5);
+	self.toolSelector.x = (display.contentWidth * 0.5);
 	self.toolSelector.y = const.ELEMENT_PADDING * 0.5;
 
 	-- SUB-TOOL SELECTORS (RIGHT/TOP)

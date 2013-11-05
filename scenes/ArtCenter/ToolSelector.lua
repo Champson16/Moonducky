@@ -4,7 +4,7 @@ local data = require('modules.data');
 local DATA_PATH = 'assets/data/UX/FRC_UX_ArtCenter_Tools_global_UI.json';
 local BUTTON_WIDTH = 75;
 local BUTTON_HEIGHT = 75;
-local BUTTON_PADDING = 8;
+local BUTTON_PADDING = 12;
 
 local ToolSelector = {};
 
@@ -72,6 +72,14 @@ ToolSelector.new = function(scene, height)
 	local toolData = data.readJSON(DATA_PATH);
 	local toolButtons = toolData.tools;
 
+	local bg = display.newRoundedRect(0, 0, (BUTTON_WIDTH * #toolButtons) + ((BUTTON_PADDING + 3) * (#toolButtons)), BUTTON_HEIGHT + BUTTON_PADDING * 2, 11);
+	bg:setFillColor(0.14, 0.14, 0.14, 1.0);
+	bg:setStrokeColor(0, 0, 0, 1.0);
+	bg.strokeWidth = 3;
+	bg.x = -((BUTTON_PADDING + 3) * 0.5);
+	bg.y = bg.height * 0.5 - (BUTTON_PADDING * 0.5) - (BUTTON_PADDING) + 1;
+	group:insert(bg);
+
 	group.buttons = display.newGroup();
 	group:insert(group.buttons);
 
@@ -93,7 +101,7 @@ ToolSelector.new = function(scene, height)
 
 		button.anchorX = 0;
 		button.anchorY = 0;
-		button.x = (i-1) * (BUTTON_WIDTH + BUTTON_PADDING);
+		button.x = -(((BUTTON_WIDTH + BUTTON_PADDING) * #toolButtons) * 0.5) + (i-1) * (BUTTON_WIDTH + BUTTON_PADDING);
 		button.y = 0;
 		button._scene = scene;
 		button:addEventListener('release', onButtonRelease);
