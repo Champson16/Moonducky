@@ -144,7 +144,7 @@ local function onCreateScene(event)
 	-- TOOL SELECTOR BUTTONS (TOP)
 	self.toolSelector = ToolSelector.new(self, 100);
 	self.toolSelector.x = (display.contentWidth * 0.5);
-	self.toolSelector.y = const.ELEMENT_PADDING * 0.5;
+	self.toolSelector.y = -(self.toolSelector.contentHeight);
 
 	-- SUB-TOOL SELECTORS (RIGHT/TOP)
 	self.subToolSelectors = {};
@@ -272,15 +272,26 @@ local function onShake(event)
 	end
 end
 
-local function onEnterScene(event)
-	print('ArtCenter:enterScene');
-	local self = event.target;
-
-	local slideTime = 500;
+local function slideInControls(self)
+	local slideTime = 800;
 	local bounceTime = 100;
 	local bounceDelay = 50;
 	local slidePastDistance = 20;
-	local ease = easing.inOutExpo;
+	local ease = easing.inOutQuad;
+
+	-- SLIDE IN TOOL SELECTOR FROM TOP
+	self.toolSelectorTransition = transition.to(self.toolSelector, {
+		time = slideTime,
+		y = const.ELEMENT_PADDING * 0.5 + slidePastDistance,
+		transition = ease,
+		onComplete = function()
+			self.toolSelectorTransition = transition.to(self.toolSelector, {
+				time = bounceTime,
+				delay = bounceDelay,
+				y = const.ELEMENT_PADDING * 0.5
+			});
+		end
+	});
 
 	-- SLIDE IN CURRENT COLOR AND COLOR PALETTE FROM THE LEFT
 	self.currentColorTransition = transition.to(self.currentColor, {
@@ -382,6 +393,14 @@ local function onEnterScene(event)
 
 	-- Create a runtime listener for the shake event
 	Runtime:addEventListener("accelerometer", onShake)
+end
+
+local function onEnterScene(event)
+	print('ArtCenter:enterScene');
+	local self = event.target;
+	timer.performWithDelay(300, function()
+		slideInControls(self);
+	end, 1);
 end
 
 local function onDidExitScene(event)
