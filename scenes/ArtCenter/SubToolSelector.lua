@@ -7,7 +7,7 @@ local math_floor = math.floor;
 local DATA_PATH = 'assets/data/UX/FRC_UX_ArtCenter_Tools_global_UI.json';
 local BUTTON_WIDTH = 50;
 local BUTTON_HEIGHT = 50;
-local BUTTON_PADDING = 44;
+local BUTTON_PADDING = 8;
 
 local SubToolSelector = {};
 SubToolSelector.selection = display.newImageRect('assets/images/selected.png', 86, 86);
@@ -358,13 +358,12 @@ SubToolSelector.new = function(scene, id, width, height)
 			btnWidth = 80;
 			btnHeight = subToolButtons[i].height * (80/subToolButtons[i].width);
 			btnPadding = BUTTON_PADDING + 16;
-
-			if btnHeight < 80 then btnHeight = 80; end
 		end
 
 		btnHeight = btnHeight or BUTTON_HEIGHT;
 
-		yPos = yPos + (btnHeight * 0.5) + 16;
+		--yPos = yPos + (btnHeight * 0.5) + 16;
+		yPos = yPos + 16;
 
 		local button = ui.button.new({
 			id = subToolButtons[i].id,
@@ -377,6 +376,7 @@ SubToolSelector.new = function(scene, id, width, height)
 			pressAlpha = 0.5,
 			bgColor = btnBgColor
 		});
+		button.anchorY = 0;
 
 		if (toolData.module == 'FreehandDraw') then
 			button:addEventListener('press', onFreehandButtonPress);
@@ -399,11 +399,10 @@ SubToolSelector.new = function(scene, id, width, height)
 
 		button:addEventListener('release', onButtonRelease);
 		button._scene = scene;
-		button.anchorY = 0.5;
 		button.x = -6;
 		button.y = yPos; -- -(height * 0.5) + (button.height * 0.5) + 16 + (i-1) * (BUTTON_HEIGHT + BUTTON_PADDING);
 
-		yPos = yPos + btnPadding;
+		yPos = yPos + btnHeight + btnPadding;
 
 		-- brush attributes
 		button.parentId = id;
