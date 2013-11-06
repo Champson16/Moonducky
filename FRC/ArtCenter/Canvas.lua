@@ -1,5 +1,5 @@
 local Canvas = {};
-local ArtCenter = require('scenes.ArtCenter.Scene');
+local ArtCenter = require('FRC.ArtCenter.Scene');
 
 local eraserColor = ArtCenter.DEFAULT_CANVAS_COLOR;
 

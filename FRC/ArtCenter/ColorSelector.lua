@@ -72,7 +72,7 @@ local function onButtonRelease(event)
 		scene.selectedTool.graphic.width = scene.selectedTool.old_width;
 		scene.selectedTool.graphic.height = scene.selectedTool.old_height;
 		scene.selectedTool.arbRotate = scene.selectedTool.old_arbRotate;
-		require('scenes.ArtCenter.SubToolSelector').selection.isVisible = true;
+		require('FRC.ArtCenter.SubToolSelector').selection.isVisible = true;
 
 	elseif (scene.mode == scene.modes.BACKGROUND_SELECTION) then
 		scene.canvas:fillBackground(self.r, self.g, self.b);

@@ -38,7 +38,7 @@ local function onBackgroundButtonRelease(event)
 	local self = event.target;
 	local scene = self._scene;
 
-	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
+	scene.selectedTool = require('FRC.ArtCenter.Tools.' .. self.toolModule);
 	scene.mode = scene.modes[self.toolMode];
 	scene.eraserGroup.button:setFocusState(false);
 
@@ -175,7 +175,7 @@ local function onFreehandButtonRelease(event)
 		self.popoverTimer = nil;
 	end
 
-	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
+	scene.selectedTool = require('FRC.ArtCenter.Tools.' .. self.toolModule);
 	scene.mode = scene.modes[self.toolMode];
 	scene.eraserGroup.button:setFocusState(false);
 
@@ -207,7 +207,7 @@ local function onShapeButtonRelease(event)
 	local scene = self._scene;
 	local canvas = scene.canvas;
 
-	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
+	scene.selectedTool = require('FRC.ArtCenter.Tools.' .. self.toolModule);
 	scene.mode = scene.modes[self.toolMode];
 	scene.eraserGroup.button:setFocusState(false);
 
@@ -261,7 +261,7 @@ local function onStampButtonRelease(event)
 	local scene = self._scene;
 	local canvas = scene.canvas;
 
-	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.toolModule);
+	scene.selectedTool = require('FRC.ArtCenter.Tools.' .. self.toolModule);
 	scene.eraserGroup.button:setFocusState(false);
 
 	local tool = scene.selectedTool;

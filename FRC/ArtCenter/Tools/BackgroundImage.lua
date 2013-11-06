@@ -1,4 +1,4 @@
-local ArtCenter = require('scenes.ArtCenter.Scene');
+local ArtCenter = require('FRC.ArtCenter.Scene');
 local layout = require('modules.layout');
 local screenW, screenH = layout.getScreenDimensions();
 local math_random = math.random;

@@ -15,7 +15,7 @@ local function onButtonRelease(event)
 	if ((scene.mode == scene.modes["BACKGROUND_SELECTION"]) and (self.mode == "BACKGROUND_SELECTION")) then return; end
 
 	scene.mode = scene.modes[self.mode];
-	scene.selectedTool = require('scenes.ArtCenter.Tools.' .. self.module);
+	scene.selectedTool = require('FRC.ArtCenter.Tools.' .. self.module);
 	scene.eraserGroup.button:setFocusState(false);
 	if ((self.mode == "STAMP_PLACEMENT") or (self.mode == "SHAPE_PLACEMENT") or (self.mode == "BACKGROUND_SELECTION")) then
 		scene.eraserGroup.button:setDisabledState(true);
@@ -33,7 +33,7 @@ local function onButtonRelease(event)
 	end
 
 	-- show/hide sub-tool selection indicator
-	local selection = require('scenes.ArtCenter.SubToolSelector').selection;
+	local selection = require('FRC.ArtCenter.SubToolSelector').selection;
 	if (selection.isActive) then
 		selection.isVisible = self.subToolSelection;
 	end

@@ -2,11 +2,11 @@ local storyboard = require('modules.stage');
 local layout = require('modules.layout');
 local ArtCenter = storyboard.newScene();
 local ui = require('modules.ui');
-local ToolSelector = require('scenes.ArtCenter.ToolSelector');
-local BackgroundArtSelector = require('scenes.ArtCenter.BackgroundArtSelector');
-local SubToolSelector = require('scenes.ArtCenter.SubToolSelector');
-local ColorSelector = require('scenes.ArtCenter.ColorSelector');
-local TextureSelector = require('scenes.ArtCenter.TextureSelector');
+local ToolSelector = require('FRC.ArtCenter.ToolSelector');
+local BackgroundArtSelector = require('FRC.ArtCenter.BackgroundArtSelector');
+local SubToolSelector = require('FRC.ArtCenter.SubToolSelector');
+local ColorSelector = require('FRC.ArtCenter.ColorSelector');
+local TextureSelector = require('FRC.ArtCenter.TextureSelector');
 
 local const = {};
 const.CANVAS_BORDER = 3;
@@ -14,8 +14,8 @@ const.SELECTOR_SIZE = 130;		-- width for vertical selectors; height for horizont
 const.ELEMENT_PADDING = 4;		-- spacing between elements (such as drawing canvas, selectors, etc.)
 
 const.TOOLS = {};
-const.TOOLS.BackgroundImage = 'scenes.ArtCenter.Tools.BackgroundImage';
-const.TOOLS.FreehandDraw = 'scenes.ArtCenter.Tools.FreehandDraw';
+const.TOOLS.BackgroundImage = 'FRC.ArtCenter.Tools.BackgroundImage';
+const.TOOLS.FreehandDraw = 'FRC.ArtCenter.Tools.FreehandDraw';
 
 local screenW, screenH = layout.getScreenDimensions();
 local canvas_width = screenW - ((const.SELECTOR_SIZE * 2) + (const.ELEMENT_PADDING * 2));
@@ -136,7 +136,7 @@ local function onCreateScene(event)
 	canvas_border.y = (display.contentHeight * 0.5) + canvas_top + canvas_height + 100;
 	view:insert(canvas_border);
 
-	local canvas = require('scenes.ArtCenter.Canvas').new(canvas_width, canvas_height, display.contentWidth * 0.5, (display.contentHeight * 0.5) + canvas_top + canvas_height + 100);
+	local canvas = require('FRC.ArtCenter.Canvas').new(canvas_width, canvas_height, display.contentWidth * 0.5, (display.contentHeight * 0.5) + canvas_top + canvas_height + 100);
 	view:insert(canvas);
 	canvas.border = canvas_border;
 	self.canvas = canvas;

@@ -18,5 +18,5 @@ display.setDefault("background", 0.5, 0.5, 0.5);
 --display.setDefault("textureWrapY", "repeat");
 math.randomseed( os.time() )  -- make math.random() more random
 
-storyboard.gotoScene('scenes.ArtCenter.Scene');
---storyboard.gotoScene('scenes.uitest');
+storyboard.gotoScene('FRC.ArtCenter.Scene');
+--storyboard.gotoScene('FRC.uitest');

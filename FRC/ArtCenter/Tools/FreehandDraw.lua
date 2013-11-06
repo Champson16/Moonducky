@@ -1,4 +1,4 @@
-local ArtCenter = require('scenes.ArtCenter.Scene');
+local ArtCenter = require('FRC.ArtCenter.Scene');
 local layout = require('modules.layout');
 local screenW, screenH = layout.getScreenDimensions();
 local math_random = math.random;
@@ -44,31 +44,29 @@ FreehandDraw.drawLine = function(parent, x0, y0, x1, y1)
 	if (y0 < y1) then ystep = 1 else ystep = -1 end
 
 	for x=x0,x1 do
-		if ((x % 2) == 0) then
-			c = display.newImage(FreehandDraw.graphic.image);
-			c.xScale = FreehandDraw.graphic.width / c.width;
-			c.yScale = FreehandDraw.graphic.height / c.height;
-			c:setFillColor(FreehandDraw.r, FreehandDraw.g, FreehandDraw.b, FreehandDraw.a);
-			c.anchorX = 0.5; c.anchorY = 0.5;
-			
-			if (steep) then
-				c.x = y; c.y = x;
-			else
-				c.x = x; c.y = y;
-			end
+		c = display.newImage(FreehandDraw.graphic.image);
+		c.xScale = FreehandDraw.graphic.width / c.width;
+		c.yScale = FreehandDraw.graphic.height / c.height;
+		c:setFillColor(FreehandDraw.r, FreehandDraw.g, FreehandDraw.b, FreehandDraw.a);
+		c.anchorX = 0.5; c.anchorY = 0.5;
+		
+		if (steep) then
+			c.x = y; c.y = x;
+		else
+			c.x = x; c.y = y;
+		end
 
-			if (FreehandDraw.arbRotate) then
-				c.rotation = math_random(0,359);
-			end
+		if (FreehandDraw.arbRotate) then
+			c.rotation = math_random(0,359);
+		end
 
-			local parentGroup = parent.group or parent;
-			parentGroup:insert(c);
+		local parentGroup = parent.group or parent;
+		parentGroup:insert(c);
 
-			err = err - deltay;
-			if (err < 0) then
-				y = y + ystep;
-				err = err + deltax;
-			end
+		err = err - deltay;
+		if (err < 0) then
+			y = y + ystep;
+			err = err + deltax;
 		end
 	end
 	parent:invalidate();
