@@ -612,6 +612,61 @@
 			"id": "BuildingHouseThreeStory",
 			"width": 337,
 			"height": 599
+		},
+		{
+			"id": "BuildingHouseTwoStory",
+			"width": 403,
+			"height": 421
+		},
+		{
+			"id": "BuildingSkyscraper",
+			"width": 403,
+			"height": 421
+		},
+		{
+			"id": "BuildingWarehouse",
+			"width": 554,
+			"height": 962
+		},
+		{
+			"id": "EnvironmentMountains",
+			"width": 1425,
+			"height": 324
+		},
+		{
+			"id": "EnvironmentSun",
+			"width": 630,
+			"height": 552
+		},
+		{
+			"id": "ObjectLollipop",
+			"width": 289,
+			"height": 490
+		},
+		{
+			"id": "ObjectUmbrella",
+			"width": 436,
+			"height": 491
+		},
+		{
+			"id": "TreeApple",
+			"width": 540,
+			"height": 555
+		},
+		{
+			"id": "TreePear",
+			"width": 588,
+			"height": 945
+		},
+		{
+			"id": "TreePine",
+			"width": 588,
+			"height": 945
+		},
+		{
+			"id": "TreeSimple",
+			"width": 395,
+			"height": 540
 		}]
 	},
 	{

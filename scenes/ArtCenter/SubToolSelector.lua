@@ -358,6 +358,8 @@ SubToolSelector.new = function(scene, id, width, height)
 			btnWidth = 80;
 			btnHeight = subToolButtons[i].height * (80/subToolButtons[i].width);
 			btnPadding = BUTTON_PADDING + 16;
+
+			if btnHeight < 80 then btnHeight = 80; end
 		end
 
 		btnHeight = btnHeight or BUTTON_HEIGHT;
