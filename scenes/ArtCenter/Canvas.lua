@@ -12,9 +12,9 @@ local function setBackgroundTexture(self, imagePath)
 	if (imagePath) then
 		self.layerBgColor.bg.fill = { type="image", filename=imagePath };
 
-		-- The following has no effect ... Corona bug?
-		self.layerBgColor.bg.fill.scaleX = 0.25;
-		self.layerBgColor.bg.fill.scaleY = 0.25;
+		-- Uncomment the following once texture repeating works on device (Corona bug)
+		--self.layerBgColor.bg.fill.scaleX = 0.25;
+		--self.layerBgColor.bg.fill.scaleY = 0.25;
 	else
 		self.layerBgColor.bg.fill = nil;
 	end
