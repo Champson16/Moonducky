@@ -27,10 +27,9 @@ ArtCenter.DEFAULT_CANVAS_COLOR = .956862745;
 ArtCenter.modes = {
 	FREEHAND_DRAW = 1,
 	BACKGROUND_SELECTION = 2,
-	OBJECT_SELECTION = 3,
-	SHAPE_PLACEMENT = 4,
-	STAMP_PLACEMENT = 5,
-	ERASE = 6
+	SHAPE_PLACEMENT = 3,
+	STAMP_PLACEMENT = 4,
+	ERASE = 5
 };
 
 local function onEraserButtonRelease(event)
