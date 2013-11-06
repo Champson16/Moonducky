@@ -7,7 +7,7 @@ local math_floor = math.floor;
 local DATA_PATH = 'assets/data/UX/FRC_UX_ArtCenter_Tools_global_UI.json';
 local BUTTON_WIDTH = 50;
 local BUTTON_HEIGHT = 50;
-local BUTTON_PADDING = 8;
+local BUTTON_PADDING = 15;
 
 local SubToolSelector = {};
 SubToolSelector.selection = display.newImageRect('assets/images/selected.png', 86, 86);
@@ -195,7 +195,7 @@ local function onFreehandButtonRelease(event)
 	self.parent:insert(SubToolSelector.selection);
 	SubToolSelector.selection.isVisible = true;
 	SubToolSelector.selection.x = self.x;
-	SubToolSelector.selection.y = self.y;
+	SubToolSelector.selection.y = self.y + (SubToolSelector.selection.contentHeight * 0.5) - 16;
 	SubToolSelector.selection.isActive = true;
 
 	-- set color for tool to match currently selected color (in case eraser was previously selected)
@@ -421,7 +421,7 @@ SubToolSelector.new = function(scene, id, width, height)
 		num.anchorX = 0.5;
 		num.anchorY = 0.5;
 		num.x = button.x + (button.width * 0.5) + 8;
-		num.y = button.y + (button.height * 0.5) - 2;
+		num.y = button.y + (button.height) - 5;
 		group:insert(num);
 	end
 
