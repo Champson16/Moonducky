@@ -1,15 +1,9 @@
+local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
 local ui = require('FRC_Modules.FRC_UI.FRC_UI');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_ArtCenter_SubToolSelector = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_SubToolSelector');
 
-local DATA_PATH = 'FRC_Assets/FRC_ArtCenter/Data/FRC_ArtCenter_Colors.json';
-local NO_COLOR_PATH = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Color_NoColor.png';
-local BLANK_COLOR_PATH = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Color_Blank.png';
-local BUTTON_WIDTH = 64;
-local BUTTON_HEIGHT = 64;
-local BUTTON_PADDING = 16;
-
-local ColorSelector = {}; 
+local FRC_ArtCenter_ColorSelector = {}; 
 
 local function HexToRGB(color)
 	local newcolor = {
@@ -65,6 +59,7 @@ local function onButtonRelease(event)
 	local self = event.target;
 	local scene = self._scene;
 	local showSelectedColor = true;
+	local canvasColor = FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR
 
 	if (scene.mode == scene.modes.ERASE) then
 		scene.selectedTool.a = scene.selectedTool.old_a;
@@ -87,7 +82,7 @@ local function onButtonRelease(event)
 			end
 			obj:setFillColor(self.r, self.g, self.b, 1.0);
 
-			if ((self.r == scene.DEFAULT_CANVAS_COLOR) and (self.g == scene.DEFAULT_CANVAS_COLOR) and (self.b == scene.DEFAULT_CANVAS_COLOR)) then
+			if ((self.r == canvasColor) and (self.g == canvasColor) and (self.b == canvasColor)) then
 				if ((scene.mode == scene.modes.SHAPE_PLACEMENT) and (scene.currentColor.texturePreview.id == "Blank")) then
 					obj:setFillColor(self.r, self.g, self.b, 0);
 					obj:setStrokeColor(0, 0, 0, 1.0);
@@ -112,6 +107,7 @@ local function onButtonRelease(event)
 end
 
 local function changeColor(self, r, g, b)
+	local canvasColor = FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR;
 	local tool = self._scene.selectedTool;
 	tool.r = r;
 	tool.g = g;
@@ -123,7 +119,7 @@ local function changeColor(self, r, g, b)
 	self._scene.currentColor.preview.g = g;
 	self._scene.currentColor.preview.b = b;
 
-	if ((r == self._scene.DEFAULT_CANVAS_COLOR) and (g == self._scene.DEFAULT_CANVAS_COLOR) and (b == self._scene.DEFAULT_CANVAS_COLOR)) then
+	if ((r == canvasColor) and (g == canvasColor) and (b == canvasColor)) then
 		self._scene.currentColor.texturePreview:setFillColor(1.0, 1.0, 1.0, 1.0);
 	else
 		self._scene.currentColor.texturePreview:setFillColor(r, g, b, 0.25);
@@ -146,7 +142,12 @@ local function noColorVisible(self, visible)
 	end
 end
 
-ColorSelector.new = function(scene, width, height)
+FRC_ArtCenter_ColorSelector.new = function(scene, width, height)
+	local BUTTON_WIDTH = FRC_ArtCenter_Settings.UI.COLOR_WIDTH;
+	local BUTTON_HEIGHT = FRC_ArtCenter_Settings.UI.COLOR_HEIGHT;
+	local BUTTON_PADDING = FRC_ArtCenter_Settings.UI.COLOR_PADDING;
+
+	local canvasColor = FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR
 	local group = ui.scrollContainer.new({
 		width = width,
 		height = height,
@@ -158,7 +159,7 @@ ColorSelector.new = function(scene, width, height)
 		borderWidth = 6,
 		borderColor = { 0, 0, 0, 1.0 }
 	});
-	local colorData = FRC_DataLib.readJSON(DATA_PATH).colors;
+	local colorData = FRC_DataLib.readJSON(FRC_ArtCenter_Settings.DATA.COLORS).colors;
 	local colors = {};
 
 	for i=1,#colorData do
@@ -170,8 +171,8 @@ ColorSelector.new = function(scene, width, height)
 		local c = colors[i];
 		local button = ui.button.new({
 			id = i,
-			imageUp = BLANK_COLOR_PATH,
-			imageDown = BLANK_COLOR_PATH,
+			imageUp = FRC_ArtCenter_Settings.UI.BLANK_COLOR,
+			imageDown = FRC_ArtCenter_Settings.UI.BLANK_COLOR,
 			width = BUTTON_WIDTH,
 			height = BUTTON_HEIGHT
 		});
@@ -185,8 +186,8 @@ ColorSelector.new = function(scene, width, height)
 		if (i == 1) then
 			local noColor = ui.button.new({
 				id = i,
-				imageUp = NO_COLOR_PATH,
-				imageDown = NO_COLOR_PATH,
+				imageUp = FRC_ArtCenter_Settings.UI.NOCOLOR_COLOR,
+				imageDown = FRC_ArtCenter_Settings.UI.NOCOLOR_COLOR,
 				width = BUTTON_WIDTH,
 				height = BUTTON_HEIGHT
 			});
@@ -198,9 +199,9 @@ ColorSelector.new = function(scene, width, height)
 			noColor.isVisible = false;
 
 			noColor._parent = group;
-			noColor.r = scene.DEFAULT_CANVAS_COLOR;
-			noColor.g = scene.DEFAULT_CANVAS_COLOR;
-			noColor.b = scene.DEFAULT_CANVAS_COLOR;
+			noColor.r = canvasColor;
+			noColor.g = canvasColor;
+			noColor.b = canvasColor;
 			noColor:addEventListener('release', onButtonRelease);
 			group:insert(noColor);
 		end
@@ -224,4 +225,4 @@ ColorSelector.new = function(scene, width, height)
 	return group;
 end
 
-return ColorSelector;
+return FRC_ArtCenter_ColorSelector;

@@ -1,7 +1,6 @@
-local Canvas = {};
+local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
 local FRC_ArtCenter_Scene = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Scene');
-
-local eraserColor = FRC_ArtCenter_Scene.DEFAULT_CANVAS_COLOR;
+local Canvas = {};
 
 local function fillBackground(self, r, g, b, a)
 	self.layerBgColor.bg:setFillColor(r, g, b, a or 1.0);
@@ -63,6 +62,7 @@ local function repositionLayers(self)
 end
 
 Canvas.new = function(width, height, x, y)
+	local eraserColor = FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR;
 	local canvas = display.newContainer(width, height);
 	canvas.layerBgColor = display.newGroup(); canvas:insert(canvas.layerBgColor);
 

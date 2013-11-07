@@ -1,3 +1,4 @@
+local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
 local FRC_SceneManager = require('FRC_Modules.FRC_SceneManager.FRC_SceneManager');
 local layout = require('FRC_Modules.FRC_Layout.FRC_Layout');
 local FRC_ArtCenter_Scene = FRC_SceneManager.newScene();
@@ -9,35 +10,11 @@ local FRC_ArtCenter_TextureSelector = require('FRC_Modules.FRC_ArtCenter.FRC_Art
 local FRC_ArtCenter_Tool_FreehandDraw = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Tool_FreehandDraw');
 local FRC_ArtCenter_Tool_BackgroundImage = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Tool_BackgroundImage');
 
-local const = {};
-const.CANVAS_BORDER = 3;
-const.SELECTOR_SIZE = 130;		-- width for vertical selectors; height for horizontal selectors
-const.ELEMENT_PADDING = 4;		-- spacing between elements (such as drawing canvas, selectors, etc.)
-
 local screenW, screenH = layout.getScreenDimensions();
-local canvas_width = screenW - ((const.SELECTOR_SIZE * 2) + (const.ELEMENT_PADDING * 2));
-local canvas_height = screenH - ((const.SELECTOR_SIZE * 0.8) + 0);
-local canvas_top = 42;
+local canvas_width = screenW - ((FRC_ArtCenter_Settings.UI.SELECTOR_WIDTH * 2) + (FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 2));
+local canvas_height = screenH - ((FRC_ArtCenter_Settings.UI.SELECTOR_WIDTH * 0.8) + 0);
 
-FRC_ArtCenter_Scene.DEFAULT_CANVAS_COLOR = .956862745;
-
-FRC_ArtCenter_Scene.modes = {
-	FREEHAND_DRAW = 1,
-	BACKGROUND_SELECTION = 2,
-	SHAPE_PLACEMENT = 3,
-	STAMP_PLACEMENT = 4,
-	ERASE = 5
-};
-
-local ERASER_BRUSH = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush1.png';
-local ERASER_BUTTON_IMAGE = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Eraser.png';
-local ERASER_BUTTON_IMAGE_FOCUSED = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Eraser_focused.png';
-local ERASER_BUTTON_IMAGE_DISABLED = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Eraser_disabled.png';
-local SCENE_BACKGROUND_IMAGE = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Background_global_main.jpg';
-local SCENE_BACKGROUND_WIDTH = display.contentWidth;
-local SCENE_BACKGROUND_HEIGHT = display.contentHeight;
-local COLOR_PREVIEW_IMAGE = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Color_Blank.png';
-local BLANK_TEXTURE_IMAGE = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Texture_Blank.jpg';
+FRC_ArtCenter_Scene.modes = FRC_ArtCenter_Settings.MODES;
 
 local function onEraserButtonRelease(event)
 	local self = event.target;
@@ -57,11 +34,11 @@ local function onEraserButtonRelease(event)
 
 		-- Eraser settings
 		scene.selectedTool = FRC_ArtCenter_Tool_FreehandDraw;
-		scene.selectedTool.r = .956862745;
-		scene.selectedTool.g = .956862745;
-		scene.selectedTool.b = .956862745;
+		scene.selectedTool.r = FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR;
+		scene.selectedTool.g = FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR;
+		scene.selectedTool.b = FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR;
 		scene.selectedTool.a = 1.0;
-		scene.selectedTool.graphic.image = ERASER_BRUSH;
+		scene.selectedTool.graphic.image = FRC_ArtCenter_Settings.UI.ERASER_BRUSH;
 		scene.selectedTool.graphic.width = 38;
 		scene.selectedTool.graphic.height = 38;
 		scene.selectedTool.arbRotate = true;
@@ -105,7 +82,7 @@ local function onCreateScene(event)
 	FRC_ArtCenter_Scene.canvasWidth = canvas_width;
 	FRC_ArtCenter_Scene.canvasHeight = canvas_height;
 
-	local background = display.newImageRect(SCENE_BACKGROUND_IMAGE, SCENE_BACKGROUND_WIDTH, SCENE_BACKGROUND_HEIGHT);
+	local background = display.newImageRect(FRC_ArtCenter_Settings.UI.SCENE_BACKGROUND_IMAGE, FRC_ArtCenter_Settings.UI.SCENE_BACKGROUND_WIDTH, FRC_ArtCenter_Settings.UI.SCENE_BACKGROUND_HEIGHT);
 	background.anchorX = 0.5;
 	background.anchorY = 0.5;
 	background.alpha = 0.2;
@@ -122,8 +99,8 @@ local function onCreateScene(event)
 		height = 75
 	});
 	view:insert(actionButton);
-	layout.alignToLeft(actionButton, const.ELEMENT_PADDING);
-	layout.alignToTop(actionButton, const.ELEMENT_PADDING * 0.5);
+	layout.alignToLeft(actionButton, FRC_ArtCenter_Settings.UI.ELEMENT_PADDING);
+	layout.alignToTop(actionButton, FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 0.5);
 
 	local settingsButton = ui.button.new({
 		imageUp = 'AppAssets/Images/FRC_UX_ArtCenter_Icon_SettingsBar_up.png',
@@ -132,17 +109,17 @@ local function onCreateScene(event)
 		height = 75
 	});
 	view:insert(settingsButton);
-	layout.alignToRight(settingsButton, const.ELEMENT_PADDING);
-	layout.alignToTop(settingsButton, const.ELEMENT_PADDING * 0.5);
+	layout.alignToRight(settingsButton, FRC_ArtCenter_Settings.UI.ELEMENT_PADDING);
+	layout.alignToTop(settingsButton, FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 0.5);
 
 	-- DRAWING CANVAS (and border)
-	local canvas_border = display.newRoundedRect(0, 0, canvas_width + (const.CANVAS_BORDER * 2), canvas_height + (const.CANVAS_BORDER * 2), 4);
+	local canvas_border = display.newRoundedRect(0, 0, canvas_width + (FRC_ArtCenter_Settings.UI.CANVAS_BORDER * 2), canvas_height + (FRC_ArtCenter_Settings.UI.CANVAS_BORDER * 2), 4);
 	canvas_border:setFillColor(0, 0, 0, 1.0);
 	canvas_border.x = display.contentWidth * 0.5;
-	canvas_border.y = (display.contentHeight * 0.5) + canvas_top + canvas_height + 100;
+	canvas_border.y = (display.contentHeight * 0.5) + FRC_ArtCenter_Settings.UI.CANVAS_TOP_MARGIN + canvas_height + 100;
 	view:insert(canvas_border);
 
-	local canvas = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Canvas').new(canvas_width, canvas_height, display.contentWidth * 0.5, (display.contentHeight * 0.5) + canvas_top + canvas_height + 100);
+	local canvas = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Canvas').new(canvas_width, canvas_height, display.contentWidth * 0.5, (display.contentHeight * 0.5) + FRC_ArtCenter_Settings.UI.CANVAS_TOP_MARGIN + canvas_height + 100);
 	view:insert(canvas);
 	canvas.border = canvas_border;
 	self.canvas = canvas;
@@ -155,14 +132,14 @@ local function onCreateScene(event)
 	-- SUB-TOOL SELECTORS (RIGHT/TOP)
 	self.subToolSelectors = {};
 	for i=1,self.toolSelector.buttons.numChildren do
-		self.subToolSelectors[i] = FRC_ArtCenter_SubToolSelector.new(self, self.toolSelector.buttons[i].id, const.SELECTOR_SIZE + (const.ELEMENT_PADDING * 0.5), self.canvasHeight - (const.SELECTOR_SIZE + const.ELEMENT_PADDING) + (const.CANVAS_BORDER * 2));
+		self.subToolSelectors[i] = FRC_ArtCenter_SubToolSelector.new(self, self.toolSelector.buttons[i].id, FRC_ArtCenter_Settings.UI.SELECTOR_WIDTH + (FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 0.5), self.canvasHeight - (FRC_ArtCenter_Settings.UI.SELECTOR_WIDTH + FRC_ArtCenter_Settings.UI.ELEMENT_PADDING) + (FRC_ArtCenter_Settings.UI.CANVAS_BORDER * 2));
 		self.subToolSelectors[i].x = screenW - ((screenW - display.contentWidth) * 0.5) - (self.subToolSelectors[i].width * 0.5) + 6;
 
 		-- move first sub-tool selector off-screen since it needs to slide in
 		if (i == 1) then
 			self.subToolSelectors[i].x = self.subToolSelectors[i].x + self.subToolSelectors[i].contentWidth + 25;
 		end
-		self.subToolSelectors[i].y = (display.contentHeight * 0.5) + canvas_top - ((const.SELECTOR_SIZE + const.ELEMENT_PADDING) * 0.5);
+		self.subToolSelectors[i].y = (display.contentHeight * 0.5) + FRC_ArtCenter_Settings.UI.CANVAS_TOP_MARGIN - ((FRC_ArtCenter_Settings.UI.SELECTOR_WIDTH + FRC_ArtCenter_Settings.UI.ELEMENT_PADDING) * 0.5);
 
 		if (i ~= 1) then
 			self.subToolSelectors[i].isVisible = false;
@@ -170,19 +147,19 @@ local function onCreateScene(event)
 	end
 
 	-- ERASER TOOL
-	local subToolWidth = self.subToolSelectors[1].width - (const.ELEMENT_PADDING * 2);
+	local subToolWidth = self.subToolSelectors[1].width - (FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 2);
 	self.eraserGroup = display.newGroup();
-	local eraserGroupBg = display.newRoundedRect(self.eraserGroup, 0, 0, subToolWidth + (const.ELEMENT_PADDING), subToolWidth, 11*0.5);
+	local eraserGroupBg = display.newRoundedRect(self.eraserGroup, 0, 0, subToolWidth + (FRC_ArtCenter_Settings.UI.ELEMENT_PADDING), subToolWidth, 11*0.5);
 	eraserGroupBg:setFillColor(0.14, 0.14, 0.14, 1.0);
 	eraserGroupBg:setStrokeColor(0, 0, 0, 1.0);
 	eraserGroupBg.strokeWidth = 3;
 	self.eraserGroup.x = screenW - ((screenW - display.contentWidth) * 0.5) - (self.subToolSelectors[1].width * 0.5) + 6 + self.eraserGroup.contentWidth + 25;
-	self.eraserGroup.y = self.subToolSelectors[1].contentBounds.yMax + (self.eraserGroup.contentHeight * 0.5) + (const.CANVAS_BORDER * 2);
+	self.eraserGroup.y = self.subToolSelectors[1].contentBounds.yMax + (self.eraserGroup.contentHeight * 0.5) + (FRC_ArtCenter_Settings.UI.CANVAS_BORDER * 2);
 	self.eraserGroup.button = ui.button.new({
-		imageUp = ERASER_BUTTON_IMAGE,
-		imageDown = ERASER_BUTTON_IMAGE,
-		focusState = ERASER_BUTTON_IMAGE_FOCUSED,
-		disabled = ERASER_BUTTON_IMAGE_DISABLED,
+		imageUp = FRC_ArtCenter_Settings.UI.ERASER_BUTTON_IMAGE,
+		imageDown = FRC_ArtCenter_Settings.UI.ERASER_BUTTON_IMAGE,
+		focusState = FRC_ArtCenter_Settings.UI.ERASER_BUTTON_IMAGE_FOCUSED,
+		disabled = FRC_ArtCenter_Settings.UI.ERASER_BUTTON_IMAGE_DISABLED,
 		width = 100,
 		height = 100,
 		pressAlpha = 0.5
@@ -193,26 +170,26 @@ local function onCreateScene(event)
 	view:insert(self.eraserGroup);
 
 	-- COLOR PALETTE (LEFT/BOTTOM)
-	self.colorSelector = FRC_ArtCenter_ColorSelector.new(self, const.SELECTOR_SIZE + (const.ELEMENT_PADDING * 0.5), self.canvasHeight - (const.SELECTOR_SIZE + const.ELEMENT_PADDING) + (const.CANVAS_BORDER * 2));
+	self.colorSelector = FRC_ArtCenter_ColorSelector.new(self, FRC_ArtCenter_Settings.UI.SELECTOR_WIDTH + (FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 0.5), self.canvasHeight - (FRC_ArtCenter_Settings.UI.SELECTOR_WIDTH + FRC_ArtCenter_Settings.UI.ELEMENT_PADDING) + (FRC_ArtCenter_Settings.UI.CANVAS_BORDER * 2));
 	self.colorSelector.x = -((screenW - display.contentWidth) * 0.5) + (self.colorSelector.width * 0.5) - 6 - self.colorSelector.contentWidth - 25;
-	self.colorSelector.y = (display.contentHeight * 0.5) + canvas_top + ((const.SELECTOR_SIZE + const.ELEMENT_PADDING) * 0.5);
+	self.colorSelector.y = (display.contentHeight * 0.5) + FRC_ArtCenter_Settings.UI.CANVAS_TOP_MARGIN + ((FRC_ArtCenter_Settings.UI.SELECTOR_WIDTH + FRC_ArtCenter_Settings.UI.ELEMENT_PADDING) * 0.5);
 
-	self.textureSelector = FRC_ArtCenter_TextureSelector.new(self, const.SELECTOR_SIZE + (const.ELEMENT_PADDING * 0.5), self.canvasHeight - (const.SELECTOR_SIZE + const.ELEMENT_PADDING) + (const.CANVAS_BORDER * 2));
+	self.textureSelector = FRC_ArtCenter_TextureSelector.new(self, FRC_ArtCenter_Settings.UI.SELECTOR_WIDTH + (FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 0.5), self.canvasHeight - (FRC_ArtCenter_Settings.UI.SELECTOR_WIDTH + FRC_ArtCenter_Settings.UI.ELEMENT_PADDING) + (FRC_ArtCenter_Settings.UI.CANVAS_BORDER * 2));
 	self.textureSelector.x = -((screenW - display.contentWidth) * 0.5) + (self.textureSelector.width * 0.5) - 6 - self.textureSelector.contentWidth - 25;
-	self.textureSelector.y = (display.contentHeight * 0.5) + canvas_top + ((const.SELECTOR_SIZE + const.ELEMENT_PADDING) * 0.5);
+	self.textureSelector.y = (display.contentHeight * 0.5) + FRC_ArtCenter_Settings.UI.CANVAS_TOP_MARGIN + ((FRC_ArtCenter_Settings.UI.SELECTOR_WIDTH + FRC_ArtCenter_Settings.UI.ELEMENT_PADDING) * 0.5);
 	self.textureSelector.isVisible = false;
 
 	-- CURRENT COLOR/TEXTURE (LEFT/TOP)
 	self.currentColor = display.newGroup();
-	local currentColorBg = display.newRoundedRect(self.currentColor, 0, 0, self.colorSelector.width - (const.CANVAS_BORDER * 2), self.colorSelector.width - (const.CANVAS_BORDER * 2), 11*0.5);
+	local currentColorBg = display.newRoundedRect(self.currentColor, 0, 0, self.colorSelector.width - (FRC_ArtCenter_Settings.UI.CANVAS_BORDER * 2), self.colorSelector.width - (FRC_ArtCenter_Settings.UI.CANVAS_BORDER * 2), 11*0.5);
 	currentColorBg:setFillColor(0.14, 0.14, 0.14, 1.0);
 	currentColorBg:setStrokeColor(0, 0, 0, 1.0);
 	currentColorBg.strokeWidth = 3;
 	self.currentColor.x = self.colorSelector.x;
-	self.currentColor.y = self.subToolSelectors[1].contentBounds.yMin + (self.currentColor.contentHeight * 0.5) + (const.CANVAS_BORDER * 0.5);
+	self.currentColor.y = self.subToolSelectors[1].contentBounds.yMin + (self.currentColor.contentHeight * 0.5) + (FRC_ArtCenter_Settings.UI.CANVAS_BORDER * 0.5);
 	self.currentColor.preview = ui.button.new({
-		imageUp = COLOR_PREVIEW_IMAGE,
-		imageDown = COLOR_PREVIEW_IMAGE,
+		imageUp = FRC_ArtCenter_Settings.UI.COLOR_PREVIEW_IMAGE,
+		imageDown = FRC_ArtCenter_Settings.UI.COLOR_PREVIEW_IMAGE,
 		width = 100,
 		height = 100,
 		pressAlpha = 0.5
@@ -225,7 +202,7 @@ local function onCreateScene(event)
 	self.currentColor.texturePreview:setFillColor(1.0, 1.0, 1.0, 0.5);
 	self.currentColor.texturePreview:setStrokeColor(0, 0, 0, 1.0);
 	self.currentColor.texturePreview.strokeWidth = 5;
-	self.currentColor.texturePreview._imagePath = BLANK_TEXTURE_IMAGE;
+	self.currentColor.texturePreview._imagePath = FRC_ArtCenter_Settings.UI.BLANK_TEXTURE_IMAGE;
 	self.currentColor.texturePreview.id = "Blank";
 	self.currentColor:insert(self.currentColor.texturePreview);
 
@@ -290,13 +267,13 @@ local function slideInControls(self)
 	-- SLIDE IN TOOL SELECTOR FROM TOP
 	self.toolSelectorTransition = transition.to(self.toolSelector, {
 		time = slideTime,
-		y = const.ELEMENT_PADDING * 0.5 + slidePastDistance,
+		y = FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 0.5 + slidePastDistance,
 		transition = ease,
 		onComplete = function()
 			self.toolSelectorTransition = transition.to(self.toolSelector, {
 				time = bounceTime,
 				delay = bounceDelay,
-				y = const.ELEMENT_PADDING * 0.5
+				y = FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 0.5
 			});
 		end
 	});
@@ -373,13 +350,13 @@ local function slideInControls(self)
 	self.canvasTransition = transition.to(self.canvas, {
 		delay = slideTime * 0.25,
 		time = slideTime + bounceDelay,
-		y = (display.contentHeight * 0.5) + canvas_top - slidePastDistance,
+		y = (display.contentHeight * 0.5) + FRC_ArtCenter_Settings.UI.CANVAS_TOP_MARGIN - slidePastDistance,
 		transition = ease,
 		onComplete = function()
 			self.canvasTransition = transition.to(self.canvas, {
 				delay = bounceDelay,
 				time = bounceTime,
-				y = (display.contentHeight * 0.5) + canvas_top,
+				y = (display.contentHeight * 0.5) + FRC_ArtCenter_Settings.UI.CANVAS_TOP_MARGIN,
 				onComplete = function()
 					self.canvas:repositionLayers();
 				end
@@ -390,13 +367,13 @@ local function slideInControls(self)
 	self.canvasBorderTransition = transition.to(self.canvas.border, {
 		delay = slideTime * 0.25,
 		time = slideTime + bounceDelay,
-		y = (display.contentHeight * 0.5) + canvas_top - slidePastDistance,
+		y = (display.contentHeight * 0.5) + FRC_ArtCenter_Settings.UI.CANVAS_TOP_MARGIN - slidePastDistance,
 		transition = ease,
 		onComplete = function()
 			self.canvasBorderTransition = transition.to(self.canvas.border, {
 				delay = bounceDelay,
 				time = bounceTime,
-				y = (display.contentHeight * 0.5) + canvas_top
+				y = (display.contentHeight * 0.5) + FRC_ArtCenter_Settings.UI.CANVAS_TOP_MARGIN
 			});
 		end
 	});

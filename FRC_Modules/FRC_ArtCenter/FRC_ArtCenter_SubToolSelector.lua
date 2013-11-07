@@ -1,22 +1,11 @@
+local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
 local ui = require('FRC_Modules.FRC_UI.FRC_UI');
 local FRC_DataLib1 = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_Layout = require('FRC_Modules.FRC_Layout.FRC_Layout');
 local screenW, screenH = FRC_Layout.getScreenDimensions();
 local math_floor = math.floor;
 
-local DATA_PATH = 'FRC_Assets/FRC_ArtCenter/Data/FRC_ArtCenter_Tools.json';
-local SELECTION_IMAGE = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_SubToolSelection.png';
-local SELECTION_IMAGE_WIDTH = 86;
-local SELECTION_IMAGE_HEIGHT = 86;
-local BUTTON_WIDTH = 50;
-local BUTTON_HEIGHT = 50;
-local BUTTON_PADDING = 15;
-
-local SubToolSelector = {};
-SubToolSelector.selection = display.newImageRect(SELECTION_IMAGE, SELECTION_IMAGE_WIDTH, SELECTION_IMAGE_HEIGHT);
-SubToolSelector.selection.isVisible = false;
-SubToolSelector.selection.isActive = false;
-SubToolSelector.selection.alpha = 0.80;
+local FRC_ArtCenter_SubToolSelector = {};
 
 local function selectObject(scene, obj)
 	local canvas = scene.canvas;
@@ -46,7 +35,7 @@ local function onBackgroundButtonRelease(event)
 	scene.eraserGroup.button:setFocusState(false);
 
 	local bgImageLayer = scene.canvas.layerBgImage;
-	local imageFile = 'FRC_Assets/FRC_ArtCenter/Images/' .. self.imageFile;
+	local imageFile = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. self.imageFile;
 
 	if (bgImageLayer.group.numChildren > 0) then
 		bgImageLayer.group[1]:removeSelf();
@@ -183,7 +172,7 @@ local function onFreehandButtonRelease(event)
 	scene.eraserGroup.button:setFocusState(false);
 
 	local tool = scene.selectedTool;
-	tool.graphic.image = 'FRC_Assets/FRC_ArtCenter/Images/' .. self.imageFile;
+	tool.graphic.image = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. self.imageFile;
 	tool.graphic.width = self.currentSize or self.defaultSize;
 	tool.graphic.height = self.currentSize or self.defaultSize;
 	tool.a = self.brushAlpha;
@@ -195,11 +184,11 @@ local function onFreehandButtonRelease(event)
 	scene.freehandAlpha = tool.a;
 	scene.freehandArbRotate = tool.arbRotate;
 
-	self.parent:insert(SubToolSelector.selection);
-	SubToolSelector.selection.isVisible = true;
-	SubToolSelector.selection.x = self.x;
-	SubToolSelector.selection.y = self.y + (SubToolSelector.selection.contentHeight * 0.5) - 16;
-	SubToolSelector.selection.isActive = true;
+	self.parent:insert(FRC_ArtCenter_SubToolSelector.selection);
+	FRC_ArtCenter_SubToolSelector.selection.isVisible = true;
+	FRC_ArtCenter_SubToolSelector.selection.x = self.x;
+	FRC_ArtCenter_SubToolSelector.selection.y = self.y + (FRC_ArtCenter_SubToolSelector.selection.contentHeight * 0.5) - 16;
+	FRC_ArtCenter_SubToolSelector.selection.isActive = true;
 
 	-- set color for tool to match currently selected color (in case eraser was previously selected)
 	scene.colorSelector:changeColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b);
@@ -239,7 +228,8 @@ local function onShapeButtonRelease(event)
 	shapeGroup:addEventListener('multitouch', tool.onShapePinch);
 	canvas.layerObjects:insert(shapeGroup);
 
-	if ((scene.currentColor.preview.r == scene.DEFAULT_CANVAS_COLOR) and (scene.currentColor.preview.g == scene.DEFAULT_CANVAS_COLOR) and (scene.currentColor.preview.b == scene.DEFAULT_CANVAS_COLOR)) then
+	local canvasColor = FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR;
+	if ((scene.currentColor.preview.r == canvasColor) and (scene.currentColor.preview.g == canvasColor) and (scene.currentColor.preview.b == canvasColor)) then
 		local a = 1.0;
 		local strokeWidth;
 		if (scene.currentColor.texturePreview.id == "Blank") then
@@ -269,7 +259,7 @@ local function onStampButtonRelease(event)
 
 	local tool = scene.selectedTool;
 
-	local image = 'FRC_Assets/FRC_ArtCenter/Images/' .. self.imageFile;
+	local image = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. self.imageFile;
 	local size = 150;
 
 	-- place stamp on canvas
@@ -294,7 +284,14 @@ local function onStampButtonRelease(event)
 	selectObject(scene, stampGroup);
 end
 
-SubToolSelector.new = function(scene, id, width, height)
+FRC_ArtCenter_SubToolSelector.new = function(scene, id, width, height)
+	if (not FRC_ArtCenter_SubToolSelector.selection) then
+		FRC_ArtCenter_SubToolSelector.selection = display.newImageRect(FRC_ArtCenter_Settings.UI.SUBTOOL_SELECTION_IMAGE, FRC_ArtCenter_Settings.UI.SUBTOOL_SELECTION_WIDTH, FRC_ArtCenter_Settings.UI.SUBTOOL_SELECTION_HEIGHT);
+		FRC_ArtCenter_SubToolSelector.selection.isVisible = false;
+		FRC_ArtCenter_SubToolSelector.selection.isActive = false;
+		FRC_ArtCenter_SubToolSelector.selection.alpha = 0.80;
+	end
+
 	local group = ui.scrollContainer.new({
 		width = width,
 		height = height,
@@ -307,7 +304,7 @@ SubToolSelector.new = function(scene, id, width, height)
 		borderColor = { 0, 0, 0, 1.0 }
 	});
 	
-	local toolData = FRC_DataLib1.readJSON(DATA_PATH);
+	local toolData = FRC_DataLib1.readJSON(FRC_ArtCenter_Settings.DATA.TOOLS);
 	local toolButtons = toolData.tools;
 	local toolData, subToolButtons;
 
@@ -321,6 +318,9 @@ SubToolSelector.new = function(scene, id, width, height)
 	if (not subToolButtons) then return; end
 
 	local yPos = -(height * 0.5);
+	local BUTTON_WIDTH = FRC_ArtCenter_Settings.UI.SUBTOOL_DEFAULT_BUTTON_SIZE;
+	local BUTTON_HEIGHT = FRC_ArtCenter_Settings.UI.SUBTOOL_DEFAULT_BUTTON_SIZE;
+	local BUTTON_PADDING = FRC_ArtCenter_Settings.UI.SUBTOOL_BUTTON_PADDING;
 
 	for i=1,#subToolButtons do
 		local image, shape, onButtonRelease, btnWidth, btnHeight, btnPadding, btnBgColor;
@@ -328,21 +328,21 @@ SubToolSelector.new = function(scene, id, width, height)
 		btnPadding = BUTTON_PADDING;
 
 		if (toolData.module == "FRC_ArtCenter_Tool_BackgroundImage") then
-			image = 'FRC_Assets/FRC_ArtCenter/Images/' .. subToolButtons[i].imageFile;
+			image = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. subToolButtons[i].imageFile;
 			onButtonRelease = onBackgroundButtonRelease;
-			btnWidth = 80;
-			btnHeight = 53;
-			btnBgColor = { 1.0, 1.0, 1.0, 1.0 };
+			btnWidth = FRC_ArtCenter_Settings.UI.BACKGROUND_SUBTOOL_BUTTON_WIDTH;
+			btnHeight = FRC_ArtCenter_Settings.UI.BACKGROUND_SUBTOOL_BUTTON_HEIGHT;
+			btnBgColor = FRC_ArtCenter_Settings.UI.BACKGROUND_SUBTOOL_BUTTON_BGCOLOR;
 
 		elseif (toolData.module == "FRC_ArtCenter_Tool_FreehandDraw") then
 			if (not subToolButtons[i].iconFile) then
-				image = 'FRC_Assets/FRC_ArtCenter/Images/' .. subToolButtons[i].imageFile;
-				btnWidth = BUTTON_WIDTH;
-				btnHeight = BUTTON_HEIGHT;
+				image = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. subToolButtons[i].imageFile;
+				btnWidth = FRC_ArtCenter_Settings.UI.FREEHAND_SUBTOOL_BRUSH_BUTTON_SIZE;
+				btnHeight = FRC_ArtCenter_Settings.UI.FREEHAND_SUBTOOL_BRUSH_BUTTON_SIZE;
 			else
-				image = 'FRC_Assets/FRC_ArtCenter/Images/' .. subToolButtons[i].iconFile;
-				btnWidth = 80;
-				btnHeight = 80;
+				image = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. subToolButtons[i].iconFile;
+				btnWidth = FRC_ArtCenter_Settings.UI.FREEHAND_SUBTOOL_ICON_BUTTON_SIZE;
+				btnHeight = FRC_ArtCenter_Settings.UI.FREEHAND_SUBTOOL_ICON_BUTTON_SIZE;
 			end
 
 			onButtonRelease = onFreehandButtonRelease;
@@ -351,15 +351,15 @@ SubToolSelector.new = function(scene, id, width, height)
 			image = nil;
 			shape = subToolButtons[i].vertices;
 			onButtonRelease = onShapeButtonRelease;
-			btnWidth = 80;
-			btnHeight = 80;
+			btnWidth = FRC_ArtCenter_Settings.UI.SHAPE_SUBTOOL_BUTTON_SIZE;
+			btnHeight = FRC_ArtCenter_Settings.UI.SHAPE_SUBTOOL_BUTTON_SIZE;
 			btnPadding = BUTTON_PADDING + 16;
 
 		elseif (toolData.module == "FRC_ArtCenter_Tool_Stamps") then
-			image = 'FRC_Assets/FRC_ArtCenter/Images/' .. subToolButtons[i].imageFile;
+			image = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. subToolButtons[i].imageFile;
 			onButtonRelease = onStampButtonRelease;
-			btnWidth = 80;
-			btnHeight = subToolButtons[i].height * (80/subToolButtons[i].width);
+			btnWidth = FRC_ArtCenter_Settings.UI.STAMP_SUBTOOL_BUTTON_WIDTH;
+			btnHeight = subToolButtons[i].height * (btnWidth/subToolButtons[i].width);
 			btnPadding = BUTTON_PADDING + 16;
 		end
 
@@ -432,4 +432,4 @@ SubToolSelector.new = function(scene, id, width, height)
 	return group;
 end
 
-return SubToolSelector;
+return FRC_ArtCenter_SubToolSelector;

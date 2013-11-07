@@ -1,3 +1,4 @@
+local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
 local ui = require('FRC_Modules.FRC_UI.FRC_UI');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_ArtCenter_SubToolSelector = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_SubToolSelector');
@@ -87,10 +88,10 @@ FRC_ArtCenter_ToolSelector.new = function(scene, height)
 	for i=1,#toolButtons do
 		local button = ui.button.new({
 			id = toolButtons[i].id,
-			imageUp = 'FRC_Assets/FRC_ArtCenter/Images/' .. toolButtons[i].images.up,
-			imageDown = 'FRC_Assets/FRC_ArtCenter/Images/' .. toolButtons[i].images.down,
-			focusState = 'FRC_Assets/FRC_ArtCenter/Images/' .. toolButtons[i].images.focused,
-			disabled = 'FRC_Assets/FRC_ArtCenter/Images/' .. toolButtons[i].images.disabled,
+			imageUp = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. toolButtons[i].images.up,
+			imageDown = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. toolButtons[i].images.down,
+			focusState = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. toolButtons[i].images.focused,
+			disabled = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. toolButtons[i].images.disabled,
 			width = BUTTON_WIDTH,
 			height = BUTTON_HEIGHT
 		});

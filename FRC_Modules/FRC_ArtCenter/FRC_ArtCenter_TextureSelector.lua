@@ -1,10 +1,6 @@
+local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
 local ui = require('FRC_Modules.FRC_UI.FRC_UI');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
-
-local DATA_PATH = 'FRC_Assets/FRC_ArtCenter/Data/FRC_ArtCenter_Textures.json';
-local BUTTON_WIDTH = 100;
-local BUTTON_HEIGHT = 50;
-local BUTTON_PADDING = 16;
 
 local TextureSelector = {};
 
@@ -13,6 +9,7 @@ local function onButtonRelease(event)
 	local self = event.target;
 	local scene = self._scene;
 	local showSelectedTexture = true;
+	local canvasColor = FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR;
 
 	if (scene.mode == scene.modes.BACKGROUND_SELECTION) then
 		scene.canvas:setBackgroundTexture(self._texturePath);
@@ -25,7 +22,7 @@ local function onButtonRelease(event)
 			local obj = scene.objectSelection.selectedObject[1];
 			if (scene.mode == scene.modes.SHAPE_PLACEMENT) then
 				if (self.id == "Blank") then
-					if ((scene.currentColor.preview.r == scene.DEFAULT_CANVAS_COLOR) and (scene.currentColor.preview.g == scene.DEFAULT_CANVAS_COLOR) and (scene.currentColor.preview.g == scene.DEFAULT_CANVAS_COLOR)) then
+					if ((scene.currentColor.preview.r == canvasColor) and (scene.currentColor.preview.g == canvasColor) and (scene.currentColor.preview.g == canvasColor)) then
 						obj:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 0);
 						obj:setStrokeColor(0, 0, 0, 1.0);
 						obj.strokeWidth = 5;
@@ -58,8 +55,9 @@ local function setTexture(self, imagePath)
 		self._scene.currentColor.texturePreview._imagePath = imagePath;
 
 		local r, g, b = self._scene.currentColor.preview.r, self._scene.currentColor.preview.g, self._scene.currentColor.preview.b;
+		local canvasColor = FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR;
 
-		if ((r == self._scene.DEFAULT_CANVAS_COLOR) and (g == self._scene.DEFAULT_CANVAS_COLOR) and (b == self._scene.DEFAULT_CANVAS_COLOR)) then
+		if ((r == canvasColor) and (g == canvasColor) and (b == canvasColor)) then
 			self._scene.currentColor.texturePreview:setFillColor(1.0, 1.0, 1.0, 1.0);
 		else
 			self._scene.currentColor.texturePreview:setFillColor(r, g, b, 0.5);
@@ -70,6 +68,10 @@ local function setTexture(self, imagePath)
 end
 
 TextureSelector.new = function(scene, width, height)
+	local BUTTON_WIDTH = FRC_ArtCenter_Settings.UI.TEXTURE_WIDTH;
+	local BUTTON_HEIGHT = FRC_ArtCenter_Settings.UI.TEXTURE_HEIGHT;
+	local BUTTON_PADDING = FRC_ArtCenter_Settings.UI.TEXTURE_PADDING;
+
 	local group = ui.scrollContainer.new({
 		width = width,
 		height = height,
@@ -81,7 +83,7 @@ TextureSelector.new = function(scene, width, height)
 		borderWidth = 6,
 		borderColor = { 0, 0, 0, 1.0 }
 	});
-	local textures = FRC_DataLib.readJSON(DATA_PATH).textures;
+	local textures = FRC_DataLib.readJSON(FRC_ArtCenter_Settings.DATA.TEXTURES).textures;
 
 	for i=1,#textures do
 		local c = textures[i];
@@ -100,7 +102,7 @@ TextureSelector.new = function(scene, width, height)
 		button.x = 3;
 		button.y = -(height * 0.5) + (button.height * 0.5) + BUTTON_PADDING + (i-1) * (BUTTON_HEIGHT + BUTTON_PADDING);
 
-		button._texturePath = 'FRC_Assets/FRC_ArtCenter/Images/' .. textures[i].imageFile;
+		button._texturePath = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. textures[i].imageFile;
 		button.up.fill = { type="image", filename=button._texturePath };
 		button.down.fill = { type="image", filename=button._texturePath };
 		
