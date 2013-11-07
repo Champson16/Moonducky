@@ -99,6 +99,7 @@ local function onCreateScene(event)
 		height = 75
 	});
 	view:insert(actionButton);
+	
 	layout.alignToLeft(actionButton, FRC_ArtCenter_Settings.UI.ELEMENT_PADDING);
 	layout.alignToTop(actionButton, FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 0.5);
 

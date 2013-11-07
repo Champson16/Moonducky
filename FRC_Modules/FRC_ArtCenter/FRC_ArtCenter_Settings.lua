@@ -1,6 +1,6 @@
 local settings = {};
 
--- VARIABLE SETTINGS
+-- PER-APP CHANGEABLE SETTINGS
 
 settings.UI = {
 	IMAGE_BASE_PATH = 'FRC_Assets/FRC_ArtCenter/Images/',
