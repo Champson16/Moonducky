@@ -1,0 +1,797 @@
+{
+	"tools": [{
+		"id": "BackgroundImage",
+		"images": {
+			"up": "FRC_UX_ArtCenter_Icon_BackgroundImage_up.png",
+			"down": "FRC_UX_ArtCenter_Icon_BackgroundImage_down.png",
+			"focused": "FRC_UX_ArtCenter_Icon_BackgroundImage_focused.png",
+			"disabled": "FRC_UX_ArtCenter_Icon_BackgroundImage_disabled.png",
+		},
+		"module": "FRC_ArtCenter_Tool_BackgroundImage",
+		"mode": "BACKGROUND_SELECTION",
+		"subToolSelection": false,
+		"noColorVisible": true,
+		"subtools": [{
+			"id": "Blank",
+			"imageFile": "MDSS_UX_ArtCenter_Backdrop_Blank.png",
+		},
+		{
+			"id": "BarnStage",
+			"imageFile": "MDSS_UX_ArtCenter_Backdrop_BarnStage.png"
+		}]
+	},
+	{
+		"id": "FreehandDraw",
+		"images": {
+			"up": "FRC_UX_ArtCenter_Icon_FreehandDraw_up.png",
+			"down": "FRC_UX_ArtCenter_Icon_FreehandDraw_down.png",
+			"focused": "FRC_UX_ArtCenter_Icon_FreehandDraw_focused.png",
+			"disabled": "FRC_UX_ArtCenter_Icon_FreehandDraw_disabled.png",
+		},
+		"module": "FRC_ArtCenter_Tool_FreehandDraw",
+		"mode": "FREEHAND_DRAW",
+		"subToolSelection": true,
+		"subtools": [{
+			"id": "Pencil",
+			"imageFile": "FRC_UX_ArtCenter_FreehandDraw_Brush_Pencil.png",
+			"iconFile": "FRC_UX_ArtCenter_FreehandDraw_Icon_Pencil.png",
+			"alpha": 0.1,
+			"arbRotate": true,
+			"brushSizes": [3, 5, 8],
+			"defaultSize": 3,
+			"minSize": 2,
+			"maxSize": 8
+		},
+		{
+			"id": "BallpointPen",
+			"imageFile": "FRC_UX_ArtCenter_FreehandDraw_Brush_BallpointPen.png",
+			"iconFile": "FRC_UX_ArtCenter_FreehandDraw_Icon_BallpointPen.png",
+			"alpha": 0.8,
+			"arbRotate": true,
+			"brushSizes": [3, 6, 9],
+			"defaultSize": 3,
+			"minSize": 2,
+			"maxSize": 9
+		},
+		{
+			"id": "FeltPen",
+			"imageFile": "FRC_UX_ArtCenter_FreehandDraw_Brush_FeltPen.png",
+			"iconFile": "FRC_UX_ArtCenter_FreehandDraw_Icon_FeltPen.png",
+			"alpha": 0.4,
+			"arbRotate": false,
+			"brushSizes": [5, 7, 9],
+			"defaultSize": 5,
+			"minSize": 4,
+			"maxSize": 9
+		},
+		{
+			"id": "DryEraseMarker",
+			"imageFile": "FRC_UX_ArtCenter_FreehandDraw_Brush_DryEraseMarker.png",
+			"iconFile": "FRC_UX_ArtCenter_FreehandDraw_Icon_DryEraseMarker.png",
+			"alpha": 0.4,
+			"arbRotate": false,
+			"brushSizes": [7, 10, 13],
+			"defaultSize": 7,
+			"minSize": 6,
+			"maxSize": 13
+		},
+		{
+			"id": "HiLiter",
+			"imageFile": "FRC_UX_ArtCenter_FreehandDraw_Brush_HiLiter.png",
+			"iconFile": "FRC_UX_ArtCenter_FreehandDraw_Icon_HiLiter.png",
+			"alpha": 0.1,
+			"arbRotate": false,
+			"brushSizes": [13, 16, 19],
+			"defaultSize": 13,
+			"minSize": 12,
+			"maxSize": 19
+		},
+		{
+			"id": "Pastel",
+			"imageFile": "FRC_UX_ArtCenter_FreehandDraw_Brush_Pastel.png",
+			"iconFile": "FRC_UX_ArtCenter_FreehandDraw_Icon_Pastel.png",
+			"alpha": 0.4,
+			"arbRotate": true,
+			"brushSizes": [7, 10, 13],
+			"defaultSize": 7,
+			"minSize": 6,
+			"maxSize": 13
+		},
+		{
+			"id": "Crayon",
+			"imageFile": "FRC_UX_ArtCenter_FreehandDraw_Brush_Crayon.png",
+			"iconFile": "FRC_UX_ArtCenter_FreehandDraw_Icon_Crayon.png",
+			"alpha": 0.4,
+			"arbRotate": true,
+			"brushSizes": [7, 10, 13],
+			"defaultSize": 7,
+			"minSize": 6,
+			"maxSize": 13
+		},
+		{
+			"id": "MagicMarker",
+			"imageFile": "FRC_UX_ArtCenter_FreehandDraw_Brush_MagicMarker.png",
+			"iconFile": "FRC_UX_ArtCenter_FreehandDraw_Icon_MagicMarker.png",
+			"alpha": 0.4,
+			"arbRotate": false,
+			"brushSizes": [7, 10, 13],
+			"defaultSize": 7,
+			"minSize": 6,
+			"maxSize": 13
+		},
+		{
+			"id": "Charcoal",
+			"imageFile": "FRC_UX_ArtCenter_FreehandDraw_Brush_Charcoal.png",
+			"iconFile": "FRC_UX_ArtCenter_FreehandDraw_Icon_Charcoal.png",
+			"alpha": 0.4,
+			"arbRotate": true,
+			"brushSizes": [7, 10, 13],
+			"defaultSize": 7,
+			"minSize": 6,
+			"maxSize": 13
+		}]
+	},
+	{
+		"id": "FreehandPaintBasic",
+		"images": {
+			"up": "FRC_UX_ArtCenter_Icon_FreehandPaintBasic_up.png",
+			"down": "FRC_UX_ArtCenter_Icon_FreehandPaintBasic_down.png",
+			"focused": "FRC_UX_ArtCenter_Icon_FreehandPaintBasic_focused.png",
+			"disabled": "FRC_UX_ArtCenter_Icon_FreehandPaintBasic_disabled.png",
+		},
+		"module": "FRC_ArtCenter_Tool_FreehandDraw",
+		"mode": "FREEHAND_DRAW",
+		"subToolSelection": true,
+		"subtools": [{
+			"id": "PaintBrush1",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush1.png",
+			"alpha": 0.05,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush1",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush1.png",
+			"alpha": 0.05,
+			"arbRotate": true,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush2",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush2.png",
+			"alpha": 0.05,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush2",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush2.png",
+			"alpha": 0.05,
+			"arbRotate": true,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush3",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush3.png",
+			"alpha": 0.05,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush3",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush3.png",
+			"alpha": 0.05,
+			"arbRotate": true,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush4",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush4.png",
+			"alpha": 0.5,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush4",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush4.png",
+			"alpha": 0.5,
+			"arbRotate": true,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush5",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush5.png",
+			"alpha": 0.08,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush5",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush5.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush6",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush6.png",
+			"alpha": 0.08,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush6",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush6.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush7",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush7.png",
+			"alpha": 0.08,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush7",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush7.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush8",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush8.png",
+			"alpha": 0.08,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		},
+		{
+			"id": "PaintBrush8",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush8.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [40, 50, 60],
+			"defaultSize": 40,
+			"minSize": 39,
+			"maxSize": 60
+		}]
+	},
+	{
+		"id": "FreehandPaintFancy",
+		"images": {
+			"up": "FRC_UX_ArtCenter_Icon_FreehandPaintFancy_up.png",
+			"down": "FRC_UX_ArtCenter_Icon_FreehandPaintFancy_down.png",
+			"focused": "FRC_UX_ArtCenter_Icon_FreehandPaintFancy_focused.png",
+			"disabled": "FRC_UX_ArtCenter_Icon_FreehandPaintFancy_disabled.png",
+		},
+		"module": "FRC_ArtCenter_Tool_FreehandDraw",
+		"mode": "FREEHAND_DRAW",
+		"subToolSelection": true,
+		"subtools": [{
+			"id": "Fancy1",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy1.png",
+			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy1",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy1.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy2",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy2.png",
+			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy2",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy2.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy3",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy3.png",
+			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy3",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy3.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy4",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy4.png",
+			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy4",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy4.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy5",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy5.png",
+			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy5",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy5.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy6",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy6.png",
+			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy6",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy6.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy7",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy7.png",
+			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy7",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy7.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy8",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy8.png",
+			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy8",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy8.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy9",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy9.png",
+			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy9",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy9.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy10",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy10.png",
+			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy10",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy10.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy11",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy11.png",
+			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy11",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy11.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy12",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy12.png",
+			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy12",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy12.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy13",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy13.png",
+			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy13",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy13.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy14",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy14.png",
+			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy14",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy14.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy15",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy15.png",
+			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy15",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy15.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy16",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy16.png",
+			"alpha": 0.08,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		},
+		{
+			"id": "Fancy16",
+			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy16.png",
+			"alpha": 0.08,
+			"arbRotate": true,
+			"brushSizes": [30, 50, 70],
+			"defaultSize": 30,
+			"minSize": 29,
+			"maxSize": 70
+		}]
+	},
+	{
+		"id": "ShapesPalette",
+		"images": {
+			"up": "FRC_UX_ArtCenter_Icon_ShapesPalette_up.png",
+			"down": "FRC_UX_ArtCenter_Icon_ShapesPalette_down.png",
+			"focused": "FRC_UX_ArtCenter_Icon_ShapesPalette_focused.png",
+			"disabled": "FRC_UX_ArtCenter_Icon_ShapesPalette_disabled.png",
+		},
+		"module": "FRC_ArtCenter_Tool_Shapes",
+		"mode": "SHAPE_PLACEMENT",
+		"subToolSelection": false,
+		"noColorVisible": true,
+		"subtools": [{
+			"id": "triangle",
+			"vertices": [-1.0,1.0, 0,-1.0, 1.0,1.0]
+		},
+		{
+			"id": "square",
+			"vertices": [-0.90,0.90, -0.90,-0.90, 0.90,-0.90, 0.90, 0.90]
+		},
+		{
+			"id": "pentagon",
+			"vertices": [-0.5,1.0, -0.9,0, 0,-0.75, 0.9,0, 0.5,1.0]
+		},
+		{
+			"id": "hexagon",
+			"vertices": [-0.5,0.9, -1.0,0, -0.5,-0.9, 0.5,-0.9, 1.0,0, 0.5,0.9]
+		},
+		{
+			"id": "septagon",
+			"vertices": [-1.0,0.25, -0.75,-0.5, 0,-0.90, 0.75,-0.5, 1.0,0.25, 0.5,1.0, -0.5,1.0]
+		},
+		{
+			"id": "octagon",
+			"vertices": [-1.0,0.40, -1.0,-0.40, -0.40,-1.0, 0.40,-1.0, 1.0,-0.40, 1.0,0.40, 0.40,1.0, -0.40,1.0]
+		},
+		{
+			"id": "circle",
+			"vertices": [1]
+		},
+		{
+			"id": "star",
+			"vertices": [-0.5,0.25, -1.0,-0.2, -0.30,-0.30, 0,-0.90, 0.30,-0.30, 1.0,-0.2, 0.5,0.25, 0.60,0.90, 0,0.60, -0.60,0.90]
+		}]
+	},
+	{
+		"id": "StampsPalette",
+		"images": {
+			"up": "FRC_UX_ArtCenter_Icon_StampsPalette_up.png",
+			"down": "FRC_UX_ArtCenter_Icon_StampsPalette_down.png",
+			"focused": "FRC_UX_ArtCenter_Icon_StampsPalette_focused.png",
+			"disabled": "FRC_UX_ArtCenter_Icon_StampsPalette_disabled.png",
+		},
+		"module": "FRC_ArtCenter_Tool_Stamps",
+		"mode": "STAMP_PLACEMENT",
+		"subToolSelection": false,
+		"noColorVisible": true,
+		"subtools": [{
+			"id": "AnimalBird",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_AnimalBird.png",
+			"width": 486,
+			"height": 310
+		},
+		{
+			"id": "AnimalDog",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_AnimalDog.png",
+			"width": 499,
+			"height": 368
+		},
+		{
+			"id": "AnimalElephant",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_AnimalElephant.png",
+			"width": 564,
+			"height": 477
+		},
+		{
+			"id": "AnimalHorse",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_AnimalHorse.png",
+			"width": 943,
+			"height": 655
+		},
+		{
+			"id": "AnimalTeddyBear",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_AnimalTeddyBear.png",
+			"width": 447,
+			"height": 529
+		},
+		{
+			"id": "BuildingBarn",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_BuildingBarn.png",
+			"width": 640,
+			"height": 487
+		},
+		{
+			"id": "BuildingCabin",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_BuildingCabin.png",
+			"width": 604,
+			"height": 646
+		},
+		{
+			"id": "BuildingHouseThreeStory",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_BuildingHouseThreeStory.png",
+			"width": 337,
+			"height": 599
+		},
+		{
+			"id": "BuildingHouseTwoStory",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_BuildingHouseTwoStory.png",
+			"width": 403,
+			"height": 421
+		},
+		{
+			"id": "BuildingSkyscraper",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_BuildingSkyscraper.png",
+			"width": 403,
+			"height": 421
+		},
+		{
+			"id": "BuildingWarehouse",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_BuildingWarehouse.png",
+			"width": 554,
+			"height": 962
+		},
+		{
+			"id": "EnvironmentMountains",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_EnvironmentMountains.png",
+			"width": 1425,
+			"height": 324
+		},
+		{
+			"id": "EnvironmentSun",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_EnvironmentSun.png",
+			"width": 630,
+			"height": 552
+		},
+		{
+			"id": "ObjectLollipop",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_ObjectLollipop.png",
+			"width": 289,
+			"height": 490
+		},
+		{
+			"id": "ObjectUmbrella",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_ObjectUmbrella.png",
+			"width": 436,
+			"height": 491
+		},
+		{
+			"id": "TreeApple",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_TreeApple.png",
+			"width": 540,
+			"height": 555
+		},
+		{
+			"id": "TreePear",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_TreePear.png",
+			"width": 588,
+			"height": 945
+		},
+		{
+			"id": "TreePine",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_TreePine.png",
+			"width": 588,
+			"height": 945
+		},
+		{
+			"id": "TreeSimple",
+			"imageFile": "FRC_UX_ArtCenter_Stamp_TreeSimple.png",
+			"width": 395,
+			"height": 540
+		}]
+	},
+	{
+		"id": "TextPalette",
+		"images": {
+			"up": "FRC_UX_ArtCenter_Icon_TextPalette_up.png",
+			"down": "FRC_UX_ArtCenter_Icon_TextPalette_down.png",
+			"focused": "FRC_UX_ArtCenter_Icon_TextPalette_focused.png",
+			"disabled": "FRC_UX_ArtCenter_Icon_TextPalette_disabled.png",
+		},
+		"subToolSelection": false,
+		"subtools": []
+	}]
+}

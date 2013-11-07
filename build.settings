@@ -23,7 +23,8 @@ settings = {
 			MinimumOSVersion = "5.1.0",
 			UIViewControllerBasedStatusBarAppearance = false,
 			UIPrerenderedIcon = true, -- set to false for "shine" overlay
-			UIApplicationExitsOnSuspend = false
+			UIApplicationExitsOnSuspend = false,
+			CoronaUseIOS6LandscapeOnlyWorkaround = true, -- used to address landscape orientation/Apple Game center issues (not a problem now but good to protect against for later)
 
             --[[
             -- iOS app URL schemes:
