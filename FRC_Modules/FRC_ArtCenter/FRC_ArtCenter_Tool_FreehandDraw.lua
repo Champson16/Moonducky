@@ -69,8 +69,16 @@ FRC_ArtCenter_Tool_FreehandDraw.drawLine = function(parent, x0, y0, x1, y1)
 	parent:invalidate();
 end
 
+local c = 2;
 FRC_ArtCenter_Tool_FreehandDraw.onCanvasTouch = function(self, e)
 	if (not FRC_ArtCenter_Tool_FreehandDraw.graphic.image) then return; end
+	
+	if ((c % 2) == 0) then
+		c = 1;
+	else
+		c = c + 1;
+		return;
+	end
 
 	local event = {};
 	for k,v in pairs(e) do
@@ -95,6 +103,7 @@ FRC_ArtCenter_Tool_FreehandDraw.onCanvasTouch = function(self, e)
 	elseif (event.phase == 'ended') or (event.phase == 'cancelled') then
 		FRC_ArtCenter_Tool_FreehandDraw.points = nil;
 		self.parent.layerDrawing:invalidate();
+		c = 2;
 	end
 end
 
