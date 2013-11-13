@@ -9,6 +9,7 @@ local FRC_ArtCenter_ColorSelector = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCe
 local FRC_ArtCenter_TextureSelector = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_TextureSelector');
 local FRC_ArtCenter_Tool_FreehandDraw = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Tool_FreehandDraw');
 local FRC_ArtCenter_Tool_BackgroundImage = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Tool_BackgroundImage');
+local FRC_GlobalMenu = require('FRC_Modules.FRC_GlobalMenu.FRC_GlobalMenu');
 
 local screenW, screenH = layout.getScreenDimensions();
 local canvas_width = screenW - ((FRC_ArtCenter_Settings.UI.SELECTOR_WIDTH * 2) + (FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 2));
@@ -92,6 +93,7 @@ local function onCreateScene(event)
 	background.y = display.contentHeight * 0.5;
 	view:insert(background);
 
+	--[[
 	local actionButton = ui.button.new({
 		imageUp = 'AppAssets/Images/FRC_UX_ArtCenter_Icon_ActionBar_up.png',
 		imageDown = 'AppAssets/Images/FRC_UX_ArtCenter_Icon_ActionBar_down.png',
@@ -99,9 +101,21 @@ local function onCreateScene(event)
 		height = 75
 	});
 	view:insert(actionButton);
-	
-	layout.alignToLeft(actionButton, FRC_ArtCenter_Settings.UI.ELEMENT_PADDING);
-	layout.alignToTop(actionButton, FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 0.5);
+	--]]
+
+	local actionButton = FRC_GlobalMenu.new({
+		imageUp = 'AppAssets/Images/FRC_UX_ArtCenter_Icon_ActionBar_up.png',
+		imageDown = 'AppAssets/Images/FRC_UX_ArtCenter_Icon_ActionBar_down.png',
+		disabled = 'AppAssets/Images/FRC_UX_ArtCenter_Icon_ActionBar_disabled.png',
+		buttonWidth = 75,
+		buttonHeight = 75,
+		left = FRC_ArtCenter_Settings.UI.ELEMENT_PADDING,
+		top = FRC_ArtCenter_Settings.UI.ELEMENT_PADDING
+	});
+	view:insert(actionButton);
+
+	--layout.alignToLeft(actionButton, FRC_ArtCenter_Settings.UI.ELEMENT_PADDING);
+	--layout.alignToTop(actionButton, FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 0.5);
 
 	local settingsButton = ui.button.new({
 		imageUp = 'AppAssets/Images/FRC_UX_ArtCenter_Icon_SettingsBar_up.png',
