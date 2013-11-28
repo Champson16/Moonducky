@@ -30,6 +30,12 @@ FRC_ArtCenter_Tool_Stamps.onStampPinch = function(e)
 	local self = e.target;
 	local scene = self._scene;
 	local canvas = scene.canvas;
+	if ((scene.mode == scene.modes.FREEHAND_DRAW) or (scene.mode == scene.modes.ERASE)) then
+		e.name = 'multitouch';
+		e.target = scene.canvas.layerBgColor;
+		scene.canvas.onCanvasTouch(e);
+		return false;
+	end
 	if (scene.mode ~= scene.modes[self.toolMode]) then return false; end
 
 	local padding = STAMP_SELECTION_PADDING;
@@ -42,13 +48,14 @@ FRC_ArtCenter_Tool_Stamps.onStampPinch = function(e)
 		self.markX = self.x;
 		self.markY = self.y;
 		self.minSize = MIN_STAMP_SIZE;
-		self.maxSize = math.floor((canvas.width + canvas.height) * 0.5) * 2;
+		self.maxSize = math.floor(((canvas.width * 0.5) + (canvas.height * 0.5)) * 0.5) * 2;
 
 		-- create object selection polygon
 		if (scene.objectSelection) then scene.objectSelection:removeSelf(); end
 		scene.objectSelection = display.newRect(canvas.layerSelection, self.x - ((self.width * self.xScale) * 0.5) - padding, self.y - ((self.height * self.yScale) * 0.5) - padding, self.width * self.xScale + (padding * 2), self.height * self.yScale + (padding * 2));
 		scene.objectSelection:setStrokeColor(SELECTION_COLOR[1], SELECTION_COLOR[2], SELECTION_COLOR[3]);
-		scene.objectSelection.strokeWidth = 3;
+		scene.objectSelection.strokeWidth = 2;
+		scene.objectSelection.stroke.effect = "generator.marchingAnts"
 		scene.objectSelection:setFillColor(1.0, 1.0, 1.0, 0);
 		scene.objectSelection.selectedObject = self;
 		scene.objectSelection.rotation = self.rotation;
@@ -77,7 +84,8 @@ FRC_ArtCenter_Tool_Stamps.onStampPinch = function(e)
 			if (scene.objectSelection) then scene.objectSelection:removeSelf(); end
 			scene.objectSelection = display.newRect(canvas.layerSelection, self.x - ((self.width * self.xScale) * 0.5) - padding, self.y - ((self.height * self.yScale) * 0.5) - padding, self.width * self.xScale + (padding * 2), self.height * self.yScale + (padding * 2));
 			scene.objectSelection:setStrokeColor(SELECTION_COLOR[1], SELECTION_COLOR[2], SELECTION_COLOR[3]);
-			scene.objectSelection.strokeWidth = 3;
+			scene.objectSelection.strokeWidth = 2;
+			scene.objectSelection.stroke.effect = "generator.marchingAnts"
 			scene.objectSelection:setFillColor(1.0, 1.0, 1.0, 0);
 			scene.objectSelection.selectedObject = self;
 			scene.objectSelection.rotation = self.rotation;

@@ -20,6 +20,7 @@ local function setBackgroundTexture(self, imagePath)
 end
 
 local function onCanvasTouch(event)
+	require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter').notifyMenuBars();
 	if ((not FRC_ArtCenter_Scene) or (not FRC_ArtCenter_Scene.selectedTool)) then return; end
 	local self = event.target;
 
@@ -61,6 +62,28 @@ local function repositionLayers(self)
 	end
 end
 
+local function dispose(self)
+	self.layerBgColor:removeSelf();
+	self.layerBgColor = nil;
+
+	self.layerDrawing:removeSelf();
+	self.layerDrawing = nil;
+
+	self.layerBgImage:removeSelf();
+	self.layerBgImage = nil;
+
+	self.layerObjects:removeSelf();
+	self.layerObjects = nil;
+
+	self.layerSelection:removeSelf();
+	self.layerSelection = nil;
+
+	self.layerOverlay:removeSelf();
+	self.layerOverlay = nil;
+
+	self:removeSelf();
+end
+
 Canvas.new = function(width, height, x, y)
 	local eraserColor = FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR;
 	local canvas = display.newContainer(width, height);
@@ -69,7 +92,7 @@ Canvas.new = function(width, height, x, y)
 	canvas.layerDrawing = display.newSnapshot(width, height);
 	canvas.layerDrawing.canvasMode = "discard";
 
-	canvas.layerBgImage = display.newSnapshot(width, height); --canvas:insert(canvas.layerBgImage);
+	canvas.layerBgImage = display.newSnapshot(width, height); canvas.layerBgImage.canvasMode = "discard";
 	canvas.layerObjects = display.newContainer(width, height); --canvas:insert(canvas.layerObjects);
 	canvas.layerSelection = display.newContainer(width, height); 
 	canvas.layerOverlay = display.newGroup(); canvas:insert(canvas.layerOverlay);
@@ -81,6 +104,7 @@ Canvas.new = function(width, height, x, y)
 	canvas.layerBgColor.bg = bgRect;
 	canvas.layerBgColor.bg.r, canvas.layerBgColor.bg.g, canvas.layerBgColor.bg.b = eraserColor, eraserColor, eraserColor;
 	canvas.layerBgColor:addEventListener("multitouch", onCanvasTouch);
+	canvas.onCanvasTouch = onCanvasTouch;
 
 	canvas.x = x;
 	canvas.y = y;
@@ -90,6 +114,7 @@ Canvas.new = function(width, height, x, y)
 	canvas.fillBackground = fillBackground;
 	canvas.setBackgroundTexture = setBackgroundTexture;
 	canvas.repositionLayers = repositionLayers;
+	canvas.dispose = dispose;
 
 	return canvas;
 end

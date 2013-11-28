@@ -11,6 +11,37 @@ local function onButtonRelease(event)
 	local showSelectedTexture = true;
 	local canvasColor = FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR;
 
+	-- ensure all shape sub-tools reflect currently selected color/texture
+	local r, g, b = scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b;
+
+	for i=1,#scene.subToolSelectors do
+		if (scene.subToolSelectors[i].colorSubTools) then
+			for j=1,scene.subToolSelectors[i].content.numChildren do
+				if (scene.subToolSelectors[i].content[j].parentId) then
+					local obj = scene.subToolSelectors[i].content[j];
+					obj:setFill({ type="image", filename=self._texturePath });
+					obj:setFillColor(r, g, b, 1.0);
+
+					if ((r == canvasColor) and (g == canvasColor) and (b == canvasColor)) then
+						if (self.id == "Blank") then
+							obj:setFillColor(r, g, b, 0);
+
+						else
+							if (scene.mode == scene.modes.SHAPE_PLACEMENT) then
+								obj:setFillColor(r, g, b, 1.0);
+							else
+								obj:setFillColor(1.0, 1.0, 1.0, 1.0);
+							end
+						end
+					end
+					obj:setStrokeColor(0, 0, 0, 1.0);
+					obj:setStrokeWidth(5);
+				end
+			end
+		end
+	end
+
+	-- change texture for shape or stamp
 	if (scene.mode == scene.modes.BACKGROUND_SELECTION) then
 		scene.canvas:setBackgroundTexture(self._texturePath);
 		scene.canvas:fillBackground(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
@@ -46,6 +77,13 @@ local function onButtonRelease(event)
 	if (showSelectedTexture) then
 		scene.currentColor.texturePreview.id = self.id;
 		self._parent:setTexture(self._texturePath);
+
+		self:setStrokeColor(1.0, 0, 0);
+		for i=1,self.parent.numChildren do
+			if (self.parent[i] ~= self) then
+				self.parent[i]:setStrokeColor(0, 0, 0);
+			end
+		end
 	end
 end
 
@@ -78,9 +116,9 @@ TextureSelector.new = function(scene, width, height)
 		xScroll = false,
 		topPadding = BUTTON_PADDING,
 		bottomPadding = BUTTON_PADDING,
-		bgColor = { 0.14, 0.14, 0.14 },
+		bgColor = { 1.0, 1.0, 1.0, 0.75 },
 		borderRadius = 11,
-		borderWidth = 6,
+		borderWidth = 0,
 		borderColor = { 0, 0, 0, 1.0 }
 	});
 	local textures = FRC_DataLib.readJSON(FRC_ArtCenter_Settings.DATA.TEXTURES).textures;
@@ -93,7 +131,10 @@ TextureSelector.new = function(scene, width, height)
 			height = BUTTON_HEIGHT,
 			rect = true,
 			bgColor = { 1.0, 1.0, 1.0, 1.0 },
-			pressAlpha = 0.5
+			pressAlpha = 0.5,
+			onPress = function()
+				require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter').notifyMenuBars();
+			end
 		});
 		button.id = textures[i].id;
 		button._parent = group;
@@ -110,9 +151,20 @@ TextureSelector.new = function(scene, width, height)
 		button.up.fill.scaleY = BUTTON_WIDTH / BUTTON_HEIGHT;
 		button.down.fill.scaleX = 1.0;
 		button.down.fill.scaleY = BUTTON_WIDTH / BUTTON_HEIGHT;
+
+		button.disableTint = textures[i].disableTint;
+
+		if (not button.disableTint) then
+			button:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
+		end
 		
 		button:addEventListener('release', onButtonRelease);
 		group:insert(button);
+
+		-- Ensure first texture button is shown as selected
+		if (i == 1) then
+			button:setStrokeColor(1.0, 0, 0);
+		end
 	end
 
 	group.setTexture = setTexture;

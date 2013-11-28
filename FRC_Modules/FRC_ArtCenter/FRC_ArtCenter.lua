@@ -20,4 +20,9 @@ local function newScene(settings)
 end
 FRC_ArtCenter.newScene = newScene;
 
+FRC_ArtCenter.notifyMenuBars = function()
+	require('FRC_Modules.FRC_SettingsBar.FRC_SettingsBar'):dispatchEvent({ name="unrelatedTouch" });
+	require('FRC_Modules.FRC_SettingsBar.FRC_SettingsBar'):dispatchEvent({ name="unrelatedTouch" });
+end
+
 return FRC_ArtCenter;

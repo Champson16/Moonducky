@@ -57,6 +57,25 @@ local function onButtonRelease(event)
 		scene.selectedTool.a = scene.freehandAlpha;
 		scene.selectedTool.arbRotate = scene.freehandArbRotate;
 
+		-- if no tool is selected (or no tool in current tool group selected), select first freehand sub-tool in current tool group
+		if ((not scene.selectedSubTool) or (scene.selectedSubTool.parentId ~= self.id)) then
+			local selector;
+			for i=1,#scene.subToolSelectors do
+				if (scene.subToolSelectors[i].parentId == self.id) then
+					selector = scene.subToolSelectors[i];
+					break;
+				end
+			end
+
+			-- select first sub-tool in current tool group
+			if (selector) then
+				selector.content[1]:dispatchEvent({
+					name = "release",
+					target = selector.content[1]
+				});
+			end
+		end
+
 		-- set color for tool to match currently selected color (in case eraser was previously selected)
 		scene.colorSelector:changeColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b);
 	end
@@ -75,9 +94,9 @@ FRC_ArtCenter_ToolSelector.new = function(scene, height)
 	local toolButtons = toolData.tools;
 
 	local bg = display.newRoundedRect(0, 0, (BUTTON_WIDTH * #toolButtons) + ((BUTTON_PADDING + 3) * (#toolButtons)), BUTTON_HEIGHT + BUTTON_PADDING * 2, 11);
-	bg:setFillColor(0.14, 0.14, 0.14, 1.0);
+	bg:setFillColor(0, 0, 0, 0.25);
 	bg:setStrokeColor(0, 0, 0, 1.0);
-	bg.strokeWidth = 3;
+	bg.strokeWidth = 0;
 	bg.x = -((BUTTON_PADDING + 3) * 0.5);
 	bg.y = bg.height * 0.5 - (BUTTON_PADDING * 0.5) - (BUTTON_PADDING) + 1;
 	group:insert(bg);
@@ -91,7 +110,7 @@ FRC_ArtCenter_ToolSelector.new = function(scene, height)
 			imageUp = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. toolButtons[i].images.up,
 			imageDown = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. toolButtons[i].images.down,
 			focusState = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. toolButtons[i].images.focused,
-			disabled = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. toolButtons[i].images.disabled,
+			--disabled = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. toolButtons[i].images.disabled,
 			width = BUTTON_WIDTH,
 			height = BUTTON_HEIGHT
 		});
@@ -108,11 +127,6 @@ FRC_ArtCenter_ToolSelector.new = function(scene, height)
 		button._scene = scene;
 		button:addEventListener('release', onButtonRelease);
 		group.buttons:insert(button);
-
-		-- disable text button
-		if (i == #toolButtons) then
-			button:setDisabledState(true);
-		end
 	end
 
 	if (scene) then scene.view:insert(group); end

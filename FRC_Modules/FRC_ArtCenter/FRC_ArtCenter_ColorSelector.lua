@@ -75,6 +75,37 @@ local function onButtonRelease(event)
 	
 	elseif ((scene.mode == scene.modes.SHAPE_PLACEMENT) or (scene.mode == scene.modes.STAMP_PLACEMENT)) then
 
+		local shapeSubTool;
+
+		-- ensure all shape sub-tools reflect currently selected color/texture
+		for i=1,#scene.subToolSelectors do
+			if (scene.subToolSelectors[i].colorSubTools) then
+				for j=1,scene.subToolSelectors[i].content.numChildren do
+					if (scene.subToolSelectors[i].content[j].parentId) then
+						local obj = scene.subToolSelectors[i].content[j];
+						obj:setFill({ type="image", filename=scene.currentColor.texturePreview._imagePath });
+						obj:setFillColor(self.r, self.g, self.b, 1.0);
+
+						if ((self.r == canvasColor) and (self.g == canvasColor) and (self.b == canvasColor)) then
+							if (scene.currentColor.texturePreview.id == "Blank") then
+								obj:setFillColor(self.r, self.g, self.b, 0);
+
+							else
+								if (scene.mode == scene.modes.SHAPE_PLACEMENT) then
+									obj:setFillColor(self.r, self.g, self.b, 1.0);
+								else
+									obj:setFillColor(1.0, 1.0, 1.0, 1.0);
+								end
+							end
+						end
+						obj:setStrokeColor(0, 0, 0, 1.0);
+						obj:setStrokeWidth(5);
+					end
+				end
+			end
+		end
+
+		-- change color for shape or stamp
 		if ((scene.objectSelection) and (scene.objectSelection.selectedObject)) then
 			local obj = scene.objectSelection.selectedObject[1];
 			if (scene.mode == scene.modes.SHAPE_PLACEMENT) then
@@ -87,6 +118,7 @@ local function onButtonRelease(event)
 					obj:setFillColor(self.r, self.g, self.b, 0);
 					obj:setStrokeColor(0, 0, 0, 1.0);
 					obj.strokeWidth = 5;
+
 				else
 					if (scene.mode == scene.modes.SHAPE_PLACEMENT) then
 						obj:setFillColor(self.r, self.g, self.b, 1.0);
@@ -103,6 +135,25 @@ local function onButtonRelease(event)
 
 	if (showSelectedColor) then
 		self._parent:changeColor(self.r, self.g, self.b);
+		self:setFocusState(true);
+		for i=1,self.parent.numChildren do
+			if (self.parent[i] ~= self) then
+				self.parent[i]:setFocusState(false);
+			end
+		end
+
+		-- change color of texture selector to reflect currently selected color
+		for i=1,scene.textureSelector.content.numChildren do
+			if (not scene.textureSelector.content[i].disableTint) then
+				if ((self.r == canvasColor) and (self.g == canvasColor) and (self.b == canvasColor)) then
+					scene.textureSelector.content[i]:setFillColor(1.0, 1.0, 1.0, 1.0);
+				else
+					scene.textureSelector.content[i]:setFillColor(self.r, self.g, self.b);
+				end
+			else
+				scene.textureSelector.content[i]:setFillColor(1.0, 1.0, 1.0, 1.0);
+			end
+		end
 	end
 end
 
@@ -154,9 +205,9 @@ FRC_ArtCenter_ColorSelector.new = function(scene, width, height)
 		xScroll = false,
 		topPadding = BUTTON_PADDING,
 		bottomPadding = BUTTON_PADDING,
-		bgColor = { 0.14, 0.14, 0.14 },
+		bgColor = { 1.0, 1.0, 1.0, 0.75 },
 		borderRadius = 11,
-		borderWidth = 6,
+		borderWidth = 0,
 		borderColor = { 0, 0, 0, 1.0 }
 	});
 	local colorData = FRC_DataLib.readJSON(FRC_ArtCenter_Settings.DATA.COLORS).colors;
@@ -173,6 +224,7 @@ FRC_ArtCenter_ColorSelector.new = function(scene, width, height)
 			id = i,
 			imageUp = FRC_ArtCenter_Settings.UI.BLANK_COLOR,
 			imageDown = FRC_ArtCenter_Settings.UI.BLANK_COLOR,
+			focusState = FRC_ArtCenter_Settings.UI.BLANK_COLOR_FOCUSED,
 			width = BUTTON_WIDTH,
 			height = BUTTON_HEIGHT
 		});
@@ -188,8 +240,12 @@ FRC_ArtCenter_ColorSelector.new = function(scene, width, height)
 				id = i,
 				imageUp = FRC_ArtCenter_Settings.UI.NOCOLOR_COLOR,
 				imageDown = FRC_ArtCenter_Settings.UI.NOCOLOR_COLOR,
+				focusState = FRC_ArtCenter_Settings.UI.BLANK_COLOR_FOCUSED,
 				width = BUTTON_WIDTH,
-				height = BUTTON_HEIGHT
+				height = BUTTON_HEIGHT,
+				onPress = function()
+					require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter').notifyMenuBars();
+				end
 			});
 			noColor._scene = scene;
 			noColor.down:setFillColor(1.0, 1.0, 1.0, 0.75);
@@ -204,6 +260,7 @@ FRC_ArtCenter_ColorSelector.new = function(scene, width, height)
 			noColor.b = canvasColor;
 			noColor:addEventListener('release', onButtonRelease);
 			group:insert(noColor);
+			button:setFocusState(true);
 		end
 
 		-- color attributes

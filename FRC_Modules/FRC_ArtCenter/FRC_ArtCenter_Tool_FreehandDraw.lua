@@ -57,7 +57,7 @@ FRC_ArtCenter_Tool_FreehandDraw.drawLine = function(parent, x0, y0, x1, y1)
 			c.rotation = math_random(0,359);
 		end
 
-		local parentGroup = parent.group or parent;
+		local parentGroup = parent.canvas or parent;
 		parentGroup:insert(c);
 
 		err = err - deltay;
@@ -66,7 +66,7 @@ FRC_ArtCenter_Tool_FreehandDraw.drawLine = function(parent, x0, y0, x1, y1)
 			err = err + deltax;
 		end
 	end
-	parent:invalidate();
+	parent:invalidate("canvas");
 end
 
 local c = 2;
@@ -102,7 +102,7 @@ FRC_ArtCenter_Tool_FreehandDraw.onCanvasTouch = function(self, e)
 	
 	elseif (event.phase == 'ended') or (event.phase == 'cancelled') then
 		FRC_ArtCenter_Tool_FreehandDraw.points = nil;
-		self.parent.layerDrawing:invalidate();
+		self.parent.layerDrawing:invalidate("canvas");
 		c = 2;
 	end
 end

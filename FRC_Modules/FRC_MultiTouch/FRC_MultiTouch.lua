@@ -87,12 +87,20 @@ local function newTouchPoint(e)
 			stage:setFocus(e.target,e.id)
 			circle.x, circle.y = e.x, e.y
 			-- dispatch multitouch event here
-			circle.target:dispatchEvent{ name="multitouch", phase="moved", target=circle.target, x=e.x, y=e.y, list=touches:get(circle.target) }
+			if ((circle.target) and (circle.target.dispatchEvent)) then
+				circle.target:dispatchEvent{ name="multitouch", phase="moved", target=circle.target, x=e.x, y=e.y, list=touches:get(circle.target) }
+			else
+				circle.target = nil;
+			end
 			return true
 		elseif (e.phase == "moved") then
 			circle.x, circle.y = e.x, e.y
 			-- dispatch multitouch event here
-			circle.target:dispatchEvent{ name="multitouch", phase="moved", target=circle.target, x=e.x, y=e.y, list=touches:get(circle.target) }
+			if ((circle.target) and (circle.target.dispatchEvent)) then
+				circle.target:dispatchEvent{ name="multitouch", phase="moved", target=circle.target, x=e.x, y=e.y, list=touches:get(circle.target) }
+			else
+				circle.target = nil;
+			end
 			--print('moved',circle.target,circle.target.name)
 			return true
 		else
@@ -101,7 +109,11 @@ local function newTouchPoint(e)
 			-- dispatch multitouch event here
 			local phase = "ended"
 			if (isSim) then phase = "moved" end
-			circle.target:dispatchEvent{ name="multitouch", phase=phase, target=circle.target, x=e.x, y=e.y, list=touches:get(circle.target) }
+			if ((circle.target) and (circle.target.dispatchEvent)) then
+				circle.target:dispatchEvent{ name="multitouch", phase=phase, target=circle.target, x=e.x, y=e.y, list=touches:get(circle.target) }
+			else
+				circle.target = nil;
+			end
 			stage:setFocus(e.target,nil)
 			if (not isSim) then circle:removeSelf() end
 			return true
@@ -114,7 +126,11 @@ local function newTouchPoint(e)
 		local self = e.target;
 		if (e.numTaps == 1) then
 			touches:remove(circle)
-			circle.target:dispatchEvent{ name="multitouch", phase="ended", x=e.x, y=e.y, target=circle.target, list=touches:get(circle.target) }
+			if ((circle.target) and (circle.target.dispatchEvent)) then
+				circle.target:dispatchEvent{ name="multitouch", phase="ended", x=e.x, y=e.y, target=circle.target, list=touches:get(circle.target) }
+			else
+				circle.target = nil;
+			end
 			circle:removeSelf()
 		end
 		return true
@@ -127,7 +143,11 @@ end
 local function handleTouch(e)
 	if (e.phase == "began") then
 		local circle = newTouchPoint(e)
-		circle.target:dispatchEvent{ name="multitouch", phase="began", x=e.x, y=e.y, target=circle.target, list=touches:get(circle.target) }
+		if ((circle.target) and (circle.target.dispatchEvent)) then
+			circle.target:dispatchEvent{ name="multitouch", phase="began", x=e.x, y=e.y, target=circle.target, list=touches:get(circle.target) }
+		else
+			circle.target = nil;
+		end
 	end
 	--print('handleTouch(e)',e.target)
 	return true

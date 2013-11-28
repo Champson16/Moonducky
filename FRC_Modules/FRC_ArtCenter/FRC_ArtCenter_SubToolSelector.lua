@@ -15,7 +15,8 @@ local function selectObject(scene, obj)
 	local padding = 5;
 	scene.objectSelection = display.newRect(canvas.layerSelection, obj.x - ((obj.width * obj.xScale) * 0.5) - padding, obj.y - ((obj.height * obj.yScale) * 0.5) - padding, obj.width * obj.xScale + (padding * 2), obj.height * obj.yScale + (padding * 2));
 	scene.objectSelection:setStrokeColor(scene.selectedTool.SELECTION_COLOR[1], scene.selectedTool.SELECTION_COLOR[2], scene.selectedTool.SELECTION_COLOR[3]);
-	scene.objectSelection.strokeWidth = 3;
+	scene.objectSelection.strokeWidth = 2;
+	scene.objectSelection.stroke.effect = "generator.marchingAnts"
 	scene.objectSelection:setFillColor(1.0, 1.0, 1.0, 0);
 	scene.objectSelection.selectedObject = obj;
 	scene.objectSelection.rotation = obj.rotation;
@@ -41,8 +42,9 @@ local function onBackgroundButtonRelease(event)
 		bgImageLayer.group[1]:removeSelf();
 		bgImageLayer.group[1] = nil;
 	end
+	bgImageLayer:invalidate();
 
-	local image = display.newImageRect(bgImageLayer.group, imageFile, 1152, 768);
+	local image = display.newImageRect(bgImageLayer.canvas, imageFile, 1152, 768);
 	local x = scene.canvas.width / image.contentWidth;
 	local y = scene.canvas.height / image.contentHeight;
 
@@ -52,7 +54,7 @@ local function onBackgroundButtonRelease(event)
 		image.xScale = y;
 		image.yScale = y;
 	end
-	bgImageLayer:invalidate();
+	bgImageLayer:invalidate("canvas");
 end
 
 -- Brush size (modal) popover for freehand sub-tools
@@ -101,7 +103,8 @@ local function newBrushSizePopover(scene, brushButton)
 	local preview_padding = 8;
 	local preview = display.newContainer(scene.brushSizePopover, bgRect.width - (preview_padding * 2), (bgRect.height - (preview_padding * 2)) * 0.75 );
 	local previewBg = display.newRoundedRect(0, 0, preview.width, preview.height, 11);
-	previewBg:setFillColor(.133333333, .133333333, .133333333);
+	--previewBg:setFillColor(.133333333, .133333333, .133333333);
+	previewBg:setFillColor(1.0, 1.0, 1.0);
 	preview:insert(previewBg, true);
 	preview.x = bgRect.x;
 	preview.y = bgRect.y + (preview_padding) - ((bgRect.height - preview.height) * 0.5);
@@ -110,6 +113,7 @@ local function newBrushSizePopover(scene, brushButton)
 	local brushPreview = display.newImageRect(preview, brushButton.up._path, brushButton.up.contentWidth, brushButton.up.contentHeight);
 	brushPreview.xScale = size / brushButton.up.contentWidth;
 	brushPreview.yScale = brushPreview.xScale;
+	brushPreview:setFillColor(0, 0, 0);
 
 	-- create slider to control brush size
 	local slider = ui.slider.new({
@@ -145,6 +149,7 @@ end
 
 -- For sizeable brushes, brush size adjuster popover will show up if brush is held down for 0.5 seconds or more
 local function onFreehandButtonPress(event)
+	require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter').notifyMenuBars();
 	local self = event.target;
 	local scene = self._scene;
 
@@ -189,6 +194,7 @@ local function onFreehandButtonRelease(event)
 	FRC_ArtCenter_SubToolSelector.selection.x = self.x;
 	FRC_ArtCenter_SubToolSelector.selection.y = self.y + (FRC_ArtCenter_SubToolSelector.selection.contentHeight * 0.5) - 16;
 	FRC_ArtCenter_SubToolSelector.selection.isActive = true;
+	scene.selectedSubTool = self;
 
 	-- set color for tool to match currently selected color (in case eraser was previously selected)
 	scene.colorSelector:changeColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b);
@@ -268,6 +274,11 @@ local function onStampButtonRelease(event)
 	local scaleX = size / stamp.width;
 	local scaleY = size / stamp.height;
 
+	if (self.stampDefaultScale) then
+		scaleX = self.stampDefaultScale;
+		scaleY = self.stampDefaultScale;
+	end
+
 	if (scaleX > scaleY) then
 		stamp.xScale = scaleX;
 		stamp.yScale = scaleX;
@@ -276,12 +287,36 @@ local function onStampButtonRelease(event)
 		stamp.yScale = scaleY;
 	end
 
+	if (self.maskFile) then
+		local mask = graphics.newMask(FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. self.maskFile);
+		stamp:setMask(mask);
+		stamp.isHitTestMasked = true;
+		--stamp.maskScaleX = stamp.xScale;
+		--stamp.maskScaleY = stamp.yScale;
+	end
+
 	stampGroup.toolMode = self.toolMode;
 	stampGroup:addEventListener('multitouch', tool.onStampPinch);
 	canvas.layerObjects:insert(stampGroup);
 
 	stampGroup._scene = scene;
 	selectObject(scene, stampGroup);
+end
+
+local function dispose(self)
+	for i=self.numChildren,1,-1 do
+		if (self[i].dispose) then
+			self[i]:dispose();
+		elseif (self[i].removeSelf) then
+			self[i]:removeSelf();
+		end
+		self[i] = nil;
+	end
+	if (FRC_ArtCenter_SubToolSelector.selection) then
+		FRC_ArtCenter_SubToolSelector.selection:removeSelf();
+		FRC_ArtCenter_SubToolSelector.selection = nil;
+	end
+	self:removeSelf();
 end
 
 FRC_ArtCenter_SubToolSelector.new = function(scene, id, width, height)
@@ -298,9 +333,9 @@ FRC_ArtCenter_SubToolSelector.new = function(scene, id, width, height)
 		xScroll = false,
 		topPadding = 16,
 		bottomPadding = 16,
-		bgColor = { 0.14, 0.14, 0.14 },
+		bgColor = { 1.0, 1.0, 1.0, 0.75 }, --{ 0.14, 0.14, 0.14 },
 		borderRadius = 11,
-		borderWidth = 6,
+		borderWidth = 0,
 		borderColor = { 0, 0, 0, 1.0 }
 	});
 	
@@ -328,7 +363,7 @@ FRC_ArtCenter_SubToolSelector.new = function(scene, id, width, height)
 		btnPadding = BUTTON_PADDING;
 
 		if (toolData.module == "FRC_ArtCenter_Tool_BackgroundImage") then
-			image = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. subToolButtons[i].imageFile;
+			image = FRC_ArtCenter_Settings.UI.IMAGE_BASE_PATH .. (subToolButtons[i].thumbFile or subToolButtons[i].imageFile);
 			onButtonRelease = onBackgroundButtonRelease;
 			btnWidth = FRC_ArtCenter_Settings.UI.BACKGROUND_SUBTOOL_BUTTON_WIDTH;
 			btnHeight = FRC_ArtCenter_Settings.UI.BACKGROUND_SUBTOOL_BUTTON_HEIGHT;
@@ -396,11 +431,15 @@ FRC_ArtCenter_SubToolSelector.new = function(scene, id, width, height)
 			button.defaultSize = subToolButtons[i].defaultSize;
 			button.minSize = subToolButtons[i].minSize;
 			button.maxSize = subToolButtons[i].maxSize;
+		else
+			button:addEventListener('press', function()
+				require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter').notifyMenuBars();
+			end);
 		end
 
 		button:addEventListener('release', onButtonRelease);
 		button._scene = scene;
-		button.x = -6;
+		button.x = -2;
 		button.y = yPos;
 
 		yPos = yPos + btnHeight + btnPadding;
@@ -415,19 +454,30 @@ FRC_ArtCenter_SubToolSelector.new = function(scene, id, width, height)
 		button.brushSizes = subToolButtons[i].brushSizes or {};
 		button.stampWidth = subToolButtons[i].width or nil;
 		button.stampHeight = subToolButtons[i].height or nil;
+		button.stampDefaultScale = subToolButtons[i].defaultScale or nil;
+		button.maskFile = subToolButtons[i].maskFile or nil;
 		button.vertices = subToolButtons[i].vertices or nil;
+		group.colorSubTools = toolData.colorSubTools or false;
 		group:insert(button);
 
+		-- invert brush (for freehand draw subtools)
+		if ((toolData.module == "FRC_ArtCenter_Tool_FreehandDraw") and (id ~= "FreehandDraw")) then
+			button:setFillColor(0, 0, 0);
+		end
+
+		--[[
 		local num = display.newText(i, 0, 0, native.systemFontBold, 12);
-		num:setFillColor(1.0, 1.0, 1.0);
+		num:setFillColor(0, 0, 0);
 		num.anchorX = 0.5;
 		num.anchorY = 0.5;
 		num.x = button.x + (button.width * 0.5) + 8;
 		num.y = button.y + (button.height) - 5;
 		group:insert(num);
+		--]]
 	end
 
 	group.parentId = id;
+	group.dispose = dispose;
 	if (scene) then scene.view:insert(group); end
 	return group;
 end

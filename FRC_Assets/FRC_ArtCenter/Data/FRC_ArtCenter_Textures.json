@@ -4,91 +4,30 @@
 		"imageFile": "FRC_UX_ArtCenter_Texture_Blank.jpg"
 	},
 	{
-		"id": "Brick",
-		"imageFile": "FRC_UX_ArtCenter_Texture_Brick.jpg"
+		"id": "BarnStageCurtain",
+		"imageFile": "MDMT_ArtCenter_Texture_BarnStageCurtain.jpg",
+		"disableTint": true
 	},
 	{
-		"id": "Carpet",
-		"imageFile": "FRC_UX_ArtCenter_Texture_Carpet.jpg"
+		"id": "BarnStageCurtainBW",
+		"imageFile": "MDMT_ArtCenter_Texture_BarnStageCurtainBW.jpg"
 	},
 	{
-		"id": "CrinkledCotton",
-		"imageFile": "FRC_UX_ArtCenter_Texture_CrinkledCotton.jpg"
+		"id": "BarnStageCurtainThicker",
+		"imageFile": "MDMT_ArtCenter_Texture_BarnStageCurtainThicker.jpg",
+		"disableTint": true
 	},
 	{
-		"id": "Concrete04",
-		"imageFile": "FRC_UX_ArtCenter_Texture_Concrete04.jpg"
+		"id": "BarnStageCurtainThickerBW",
+		"imageFile": "MDMT_ArtCenter_Texture_BarnStageCurtainThickerBW.jpg"
 	},
 	{
-		"id": "Concrete12",
-		"imageFile": "FRC_UX_ArtCenter_Texture_Concrete12.jpg"
+		"id": "OperaStageCurtain",
+		"imageFile": "MDMT_ArtCenter_Texture_OperaStageCurtain.jpg",
+		"disableTint": true
 	},
 	{
-		"id": "Hassien",
-		"imageFile": "FRC_UX_ArtCenter_Texture_Hassien.jpg"
-	},
-	{
-		"id": "Leather01",
-		"imageFile": "FRC_UX_ArtCenter_Texture_Leather01.jpg"
-	},
-	{
-		"id": "Leather02",
-		"imageFile": "FRC_UX_ArtCenter_Texture_Leather02.jpg"
-	},
-	{
-		"id": "MarbleTiles",
-		"imageFile": "FRC_UX_ArtCenter_Texture_MarbleTiles.jpg"
-	},
-	{
-		"id": "PavementStones",
-		"imageFile": "FRC_UX_ArtCenter_Texture_PavementStones.jpg"
-	},
-	{
-		"id": "Polystyrene",
-		"imageFile": "FRC_UX_ArtCenter_Texture_Polystyrene.jpg"
-	},
-	{
-		"id": "Rock03",
-		"imageFile": "FRC_UX_ArtCenter_Texture_Rock03.jpg"
-	},
-	{
-		"id": "Rock08",
-		"imageFile": "FRC_UX_ArtCenter_Texture_Rock08.jpg"
-	},
-	{
-		"id": "Rubber",
-		"imageFile": "FRC_UX_ArtCenter_Texture_Rubber.jpg"
-	},
-	{
-		"id": "Hair",
-		"imageFile": "FRC_UX_ArtCenter_Texture_Hair.jpg"
-	},
-	{
-		"id": "Suede",
-		"imageFile": "FRC_UX_ArtCenter_Texture_Suede.jpg"
-	},
-	{
-		"id": "RoofDiagonal",
-		"imageFile": "FRC_UX_ArtCenter_Texture_RoofDiagonal.jpg"
-	},
-	{
-		"id": "WeededGrass",
-		"imageFile": "FRC_UX_ArtCenter_Texture_WeededGrass.jpg"
-	},
-	{
-		"id": "Wood02",
-		"imageFile": "FRC_UX_ArtCenter_Texture_Wood02.jpg"
-	},
-	{
-		"id": "Wood11",
-		"imageFile": "FRC_UX_ArtCenter_Texture_Wood11.jpg"
-	},
-	{
-		"id": "WoodPlanks",
-		"imageFile": "FRC_UX_ArtCenter_Texture_WoodPlanks.jpg"
-	},
-	{
-		"id": "Wool",
-		"imageFile": "FRC_UX_ArtCenter_Texture_Wool.jpg"
+		"id": "OperaStageCurtainBW",
+		"imageFile": "MDMT_ArtCenter_Texture_OperaStageCurtainBW.jpg"
 	}]
 }
