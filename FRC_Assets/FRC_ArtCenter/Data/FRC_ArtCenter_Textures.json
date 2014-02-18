@@ -10,7 +10,8 @@
 	},
 	{
 		"id": "BarnStageCurtainBW",
-		"imageFile": "MDMT_ArtCenter_Texture_BarnStageCurtainBW.jpg"
+		"imageFile": "MDMT_ArtCenter_Texture_BarnStageCurtainBW.jpg",
+		"disableTint": false
 	},
 	{
 		"id": "BarnStageCurtainThicker",
@@ -19,7 +20,8 @@
 	},
 	{
 		"id": "BarnStageCurtainThickerBW",
-		"imageFile": "MDMT_ArtCenter_Texture_BarnStageCurtainThickerBW.jpg"
+		"imageFile": "MDMT_ArtCenter_Texture_BarnStageCurtainThickerBW.jpg",
+		"disableTint": false
 	},
 	{
 		"id": "OperaStageCurtain",
@@ -28,6 +30,7 @@
 	},
 	{
 		"id": "OperaStageCurtainBW",
-		"imageFile": "MDMT_ArtCenter_Texture_OperaStageCurtainBW.jpg"
+		"imageFile": "MDMT_ArtCenter_Texture_OperaStageCurtainBW.jpg",
+		"disableTint": false
 	}]
 }

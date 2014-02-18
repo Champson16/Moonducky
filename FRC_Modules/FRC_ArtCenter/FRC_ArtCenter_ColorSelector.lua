@@ -1,5 +1,5 @@
 local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
-local ui = require('FRC_Modules.FRC_UI.FRC_UI');
+local ui = require('ui');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_ArtCenter_SubToolSelector = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_SubToolSelector');
 
@@ -68,10 +68,14 @@ local function onButtonRelease(event)
 		scene.selectedTool.graphic.height = scene.selectedTool.old_height;
 		scene.selectedTool.arbRotate = scene.selectedTool.old_arbRotate;
 		FRC_ArtCenter_SubToolSelector.selection.isVisible = true;
+		scene.mode = scene.modes.FREEHAND_DRAW;
+		scene.eraserGroup.button:setFocusState(false);
+		scene.canvas:setEraseMode(false);
 
 	elseif (scene.mode == scene.modes.BACKGROUND_SELECTION) then
 		scene.canvas:fillBackground(self.r, self.g, self.b);
 		showSelectedColor = true;
+		scene.canvas.isDirty = true;
 	
 	elseif ((scene.mode == scene.modes.SHAPE_PLACEMENT) or (scene.mode == scene.modes.STAMP_PLACEMENT)) then
 
@@ -110,8 +114,10 @@ local function onButtonRelease(event)
 			local obj = scene.objectSelection.selectedObject[1];
 			if (scene.mode == scene.modes.SHAPE_PLACEMENT) then
 				obj.fill = { type="image", filename=scene.currentColor.texturePreview._imagePath };
+				obj.parent.fillImage = scene.currentColor.texturePreview._imagePath;
 			end
 			obj:setFillColor(self.r, self.g, self.b, 1.0);
+			obj.parent.fillColor = { self.r, self.g, self.b, 1.0 };
 
 			if ((self.r == canvasColor) and (self.g == canvasColor) and (self.b == canvasColor)) then
 				if ((scene.mode == scene.modes.SHAPE_PLACEMENT) and (scene.currentColor.texturePreview.id == "Blank")) then
@@ -119,18 +125,26 @@ local function onButtonRelease(event)
 					obj:setStrokeColor(0, 0, 0, 1.0);
 					obj.strokeWidth = 5;
 
+					obj.parent.fillColor = { self.r, self.g, self.b, 0 };
+					obj.parent.strokeColor = { 0, 0, 0, 1.0 };
+					obj.parent.strokeWidth = 5;
+
 				else
 					if (scene.mode == scene.modes.SHAPE_PLACEMENT) then
 						obj:setFillColor(self.r, self.g, self.b, 1.0);
+						obj.parent.fillColor = { self.r, self.g, self.b, 1.0 };
 					else
 						obj:setFillColor(1.0, 1.0, 1.0, 1.0);
+						obj.parent.fillColor = { 1.0, 1.0, 1.0, 1.0 };
 					end
 				end
 			elseif (scene.mode == scene.modes.SHAPE_PLACEMENT) then
 				obj.strokeWidth = 0;
+				obj.parent.strokeWidth = 0;
 			end
 		end
 		showSelectedColor = true;
+		scene.canvas.isDirty = true;
 	end
 
 	if (showSelectedColor) then
@@ -226,7 +240,8 @@ FRC_ArtCenter_ColorSelector.new = function(scene, width, height)
 			imageDown = FRC_ArtCenter_Settings.UI.BLANK_COLOR,
 			focusState = FRC_ArtCenter_Settings.UI.BLANK_COLOR_FOCUSED,
 			width = BUTTON_WIDTH,
-			height = BUTTON_HEIGHT
+			height = BUTTON_HEIGHT,
+			parentScrollContainer = group
 		});
 		button._scene = scene;
 		button.up:setFillColor(c.r, c.g, c.b);

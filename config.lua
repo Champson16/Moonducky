@@ -1,5 +1,5 @@
 application = {
-    showRuntimeErrors = false,
+    showRuntimeErrors = true,
 	content = {
 		width = 768,
 		height = 1024, 
@@ -27,5 +27,5 @@ application = {
             }
         }
     }
-    --]]    
+    --]]
 }

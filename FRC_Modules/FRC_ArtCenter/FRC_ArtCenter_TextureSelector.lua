@@ -1,5 +1,5 @@
 local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
-local ui = require('FRC_Modules.FRC_UI.FRC_UI');
+local ui = require('ui');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 
 local TextureSelector = {};
@@ -57,15 +57,28 @@ local function onButtonRelease(event)
 						obj:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 0);
 						obj:setStrokeColor(0, 0, 0, 1.0);
 						obj.strokeWidth = 5;
+
+						obj.parent.fillImage = nil;
+						obj.parent.fillColor = { scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 0 };
+						obj.parent.strokeColor = { 0, 0, 0, 1.0 };
+						obj.parent.strokeWidth = 5;						
 					else
 						obj.fill = { type="image", filename=self._texturePath };
 						obj:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
 						obj.strokeWidth = 0;
+
+						obj.parent.fillImage = self._texturePath;
+						obj.parent.fillColor = { scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0 };
+						obj.parent.strokeWidth = 0;
 					end
 				else
 					obj.fill = { type="image", filename=self._texturePath };
 					obj:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
 					obj.strokeWidth = 0;
+
+					obj.parent.fillImage = self._texturePath;
+					obj.parent.fillColor = { scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0 };
+					obj.parent.strokeWidth = 0;
 				end
 			else
 				obj:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
@@ -134,7 +147,8 @@ TextureSelector.new = function(scene, width, height)
 			pressAlpha = 0.5,
 			onPress = function()
 				require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter').notifyMenuBars();
-			end
+			end,
+			parentScrollContainer = group
 		});
 		button.id = textures[i].id;
 		button._parent = group;

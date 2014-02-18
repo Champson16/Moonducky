@@ -1,0 +1,54 @@
+[{
+	"id": "Character",
+	"imageUp": "FRC_DressingRoom_Icon_CharacterMoonducky_up.png",
+	"imageDown": "FRC_DressingRoom_Icon_CharacterMoonducky_down.png",
+	"imageFocused": "FRC_DressingRoom_Icon_CharacterMoonducky_focused.png",
+	"imageDisabled": "FRC_DressingRoom_Icon_CharacterMoonducky_disabled.png",
+	"width": 128,
+	"height": 128
+},
+{
+	"id": "Headwear",
+	"imageUp": "FRC_DressingRoom_Icon_Headwear_up.png",
+	"imageDown": "FRC_DressingRoom_Icon_Headwear_down.png",
+	"imageFocused": "FRC_DressingRoom_Icon_Headwear_focused.png",
+	"imageDisabled": "FRC_DressingRoom_Icon_Headwear_disabled.png",
+	"width": 128,
+	"height": 128
+},
+{
+	"id": "Eyewear",
+	"imageUp": "FRC_DressingRoom_Icon_Eyewear_up.png",
+	"imageDown": "FRC_DressingRoom_Icon_Eyewear_down.png",
+	"imageFocused": "FRC_DressingRoom_Icon_Eyewear_focused.png",
+	"imageDisabled": "FRC_DressingRoom_Icon_Eyewear_disabled.png",
+	"width": 128,
+	"height": 128
+},
+{
+	"id": "Neckwear",
+	"imageUp": "FRC_DressingRoom_Icon_Neckwear_up.png",
+	"imageDown": "FRC_DressingRoom_Icon_Neckwear_down.png",
+	"imageFocused": "FRC_DressingRoom_Icon_Neckwear_focused.png",
+	"imageDisabled": "FRC_DressingRoom_Icon_Neckwear_disabled.png",
+	"width": 128,
+	"height": 128
+},
+{
+	"id": "UpperTorso",
+	"imageUp": "FRC_DressingRoom_Icon_UpperTorso_up.png",
+	"imageDown": "FRC_DressingRoom_Icon_UpperTorso_down.png",
+	"imageFocused": "FRC_DressingRoom_Icon_UpperTorso_focused.png",
+	"imageDisabled": "FRC_DressingRoom_Icon_UpperTorso_disabled.png",
+	"width": 128,
+	"height": 128
+},
+{
+	"id": "LowerTorso",
+	"imageUp": "FRC_DressingRoom_Icon_LowerTorso_up.png",
+	"imageDown": "FRC_DressingRoom_Icon_LowerTorso_down.png",
+	"imageFocused": "FRC_DressingRoom_Icon_LowerTorso_focused.png",
+	"imageDisabled": "FRC_DressingRoom_Icon_LowerTorso_disabled.png",
+	"width": 128,
+	"height": 128
+}]

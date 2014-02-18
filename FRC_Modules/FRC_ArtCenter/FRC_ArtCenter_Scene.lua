@@ -1,14 +1,19 @@
 local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
-local FRC_SceneManager = require('FRC_Modules.FRC_SceneManager.FRC_SceneManager');
+local storyboard = require('storyboard');
 local layout = require('FRC_Modules.FRC_Layout.FRC_Layout');
-local FRC_ArtCenter_Scene = FRC_SceneManager.newScene();
-local ui = require('FRC_Modules.FRC_UI.FRC_UI');
+local FRC_ArtCenter_Scene = storyboard.newScene();
+local ui = require('ui');
 local FRC_ArtCenter_ToolSelector = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_ToolSelector');
 local FRC_ArtCenter_SubToolSelector = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_SubToolSelector');
 local FRC_ArtCenter_ColorSelector = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_ColorSelector');
 local FRC_ArtCenter_TextureSelector = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_TextureSelector');
 local FRC_ArtCenter_Tool_FreehandDraw = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Tool_FreehandDraw');
-local FRC_ArtCenter_Tool_BackgroundImage = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Tool_BackgroundImage');
+local FRC_ArtCenter_Tool_BackgroundImage = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Tool_BackgroundImage'); 
+local FRC_Store;
+
+if (not FRC_ArtCenter_Settings.DISABLE_STORE) then
+	FRC_Store = require('FRC_Modules.FRC_Store.FRC_Store');
+end
 
 local screenW, screenH = layout.getScreenDimensions();
 local canvas_width = screenW - ((FRC_ArtCenter_Settings.UI.SELECTOR_WIDTH * 2) + (FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 2));
@@ -153,6 +158,7 @@ local function onEraserButtonRelease(event)
 		scene.selectedTool.arbRotate = true;
 		scene.mode = scene.modes.ERASE;
 		scene.eraserGroup.button:setFocusState(true);
+		scene.canvas:setEraseMode(true);
 
 		FRC_ArtCenter_SubToolSelector.selection.isVisible = false;
 	else
@@ -164,6 +170,7 @@ local function onEraserButtonRelease(event)
 			scene.objectSelection:removeSelf();
 			scene.objectSelection = nil;
 			scene.eraserGroup.button:setDisabledState(true);
+			scene.canvas.isDirty = true;
 		end
 	end
 end
@@ -176,13 +183,17 @@ local function onColorSampleRelease(event)
 	scene.colorSelector.isVisible = not scene.colorSelector.isVisible;
 end
 
-function FRC_ArtCenter_Scene.onCreateScene(event)
-	local self = event.target;
+function FRC_ArtCenter_Scene.createScene(self, event)
+	system.activate( "multitouch" );
+	--local self = event.target;
 	local view = self.view;
 
 	if ((self.preCreateScene) and (type(self.preCreateScene) == 'function')) then
-		self.preCreateScene(event);
+		self.preCreateScene(self, event);
 	end
+	
+	-- preload menu swoosh audio
+	FRC_ArtCenter_Scene.menuSwooshAudio = audio.loadSound(FRC_ArtCenter_Settings.AUDIO.MENU_SWOOSH_AUDIO);
 	
 	FRC_ArtCenter_Scene.canvasWidth = canvas_width;
 	FRC_ArtCenter_Scene.canvasHeight = canvas_height;
@@ -197,13 +208,17 @@ function FRC_ArtCenter_Scene.onCreateScene(event)
 	view:insert(background);
 
 	-- DRAWING CANVAS (and border)
-	local canvas_border = display.newRoundedRect(0, 0, canvas_width + (FRC_ArtCenter_Settings.UI.CANVAS_BORDER * 2), canvas_height + (FRC_ArtCenter_Settings.UI.CANVAS_BORDER * 2), 4);
+	local w = canvas_width + (FRC_ArtCenter_Settings.UI.CANVAS_BORDER * 2);
+	local h = canvas_height + (FRC_ArtCenter_Settings.UI.CANVAS_BORDER * 2)
+	w = w + (w % 4);
+	h = h + (h % 4);
+	local canvas_border = display.newRect(0, 0, w, h);
 	canvas_border:setFillColor(0, 0, 0, 1.0);
 	canvas_border.x = display.contentWidth * 0.5;
 	canvas_border.y = (display.contentHeight * 0.5) + FRC_ArtCenter_Settings.UI.CANVAS_TOP_MARGIN + canvas_height + 100;
 	view:insert(canvas_border);
 
-	local canvas = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Canvas').new(canvas_width, canvas_height, display.contentWidth * 0.5, (display.contentHeight * 0.5) + FRC_ArtCenter_Settings.UI.CANVAS_TOP_MARGIN + canvas_height + 100);
+	local canvas = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Canvas').new(canvas_width, canvas_height, display.contentWidth * 0.5, (display.contentHeight * 0.5) + FRC_ArtCenter_Settings.UI.CANVAS_TOP_MARGIN + canvas_height + 100, canvas_border.contentWidth, canvas_border.contentHeight);
 	view:insert(canvas);
 	canvas.border = canvas_border;
 	self.canvas = canvas;
@@ -321,7 +336,8 @@ function FRC_ArtCenter_Scene.onCreateScene(event)
 	self.selectedTool = FRC_ArtCenter_Tool_BackgroundImage;
 	self.subToolSelectors[1].content[1]:dispatchEvent({
 		name = "release",
-		target = self.subToolSelectors[1].content[1]
+		target = self.subToolSelectors[1].content[1],
+		noDirty = true
 	});
 	self.mode = self.modes.BACKGROUND_SELECTION;
 
@@ -338,14 +354,37 @@ function FRC_ArtCenter_Scene.onCreateScene(event)
 			end
 		end
 	end
+	self.canvas.blankColoringPageFile = self.canvas.coloringPageFile;
 
 	if ((self.postCreateScene) and (type(self.postCreateScene) == 'function')) then
-		self.postCreateScene(event);
+		self.postCreateScene(self, event);
+	end
+
+	-- add event listeners for purchases and restores
+	-- unlock individual items in subtool selectors after successful purchase/restore
+	if (not FRC_ArtCenter_Settings.DISABLE_STORE) then
+		function self.onPurchase(event)
+			if (event.name == "restored" and self.restored) then return; end
+			if (event.name == "restored") then self.restored = true; end
+			for i=1,#self.subToolSelectors do
+				local selector = self.subToolSelectors[i];
+				for j=1,selector.content.numChildren do
+					if (selector.content[j].lockImage) then
+						if (FRC_Store:checkPurchased(selector.content[j].IAPBundleID)) then
+							selector.content[j].lockImage:removeSelf();
+							selector.content[j].lockImage = nil;
+						end
+					end
+				end
+			end
+		end
+		FRC_Store:addEventListener('purchased', self.onPurchase);
+		FRC_Store:addEventListener('restored', self.onPurchase);
 	end
 end
 
-function FRC_ArtCenter_Scene.clearCanvas()
-	native.showAlert("Start Over?", "If you start over, your progress will be lost.", { "Cancel", "OK" }, function(event)
+function FRC_ArtCenter_Scene.clearCanvas(skipAlert)
+	local onAlertCallback = function(event)
 		if (event.action == "clicked") then
 			if (event.index == 1) then
 				return;
@@ -354,6 +393,8 @@ function FRC_ArtCenter_Scene.clearCanvas()
 				if (not canvas) then return; end
 
 				-- clear the drawing layer and background image
+				canvas.coloringPageFile = canvas.blankColoringPageFile;
+				canvas.layerBgImageColor:invalidate();
 				canvas.layerDrawing:invalidate();
 				canvas.layerBgImage:invalidate();
 
@@ -387,7 +428,12 @@ function FRC_ArtCenter_Scene.clearCanvas()
 				canvas:fillBackground(FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR, FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR, FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR);
 			end
 		end
-	end);
+	end
+	if (skipAlert ~= true) then
+		native.showAlert("Start Over?", "If you start over, your progress will be lost.", { "Cancel", "OK" }, onAlertCallback);
+	else
+		onAlertCallback({ action='clicked', index = 2 });
+	end
 end
 
 local function onShake(event)
@@ -406,6 +452,11 @@ local function slideInControls(self)
 	local bounceDelay = 50;
 	local slidePastDistance = 20;
 	local ease = easing.linear;
+	
+	-- play audio sfx
+	if (FRC_ArtCenter_Scene.menuSwooshAudio) then
+		audio.play(FRC_ArtCenter_Scene.menuSwooshAudio, { channel=_G.SFX_CHANNEL });
+	end
 
 	-- SLIDE IN TOOL SELECTOR FROM TOP
 	self.toolSelectorTransition = transition.to(self.toolSelector, {
@@ -550,25 +601,45 @@ local function onMenuClose(event)
 	local slidePastDistance = 20;
 	local slideTime = event.time;
 
-	FRC_ArtCenter_Scene.actionBarMenu:hide(true);
-	FRC_ArtCenter_Scene.settingsBarMenu:hide(true);
+	--[[
+	if (event.type == 'FRC_ActionBar') then
+		FRC_ArtCenter_Scene.actionBarMenu:hide(true);
+	elseif (event.type == 'FRC_SettingsBar') then
+		FRC_ArtCenter_Scene.settingsBarMenu:hide(true);
+	end
+	--]]
 
 	-- SLIDE IN TOOL SELECTOR FROM TOP
-	FRC_ArtCenter_Scene.toolSelectorTransition = transition.to(FRC_ArtCenter_Scene.toolSelector, {
-		time = slideTime,
-		y = FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 0.5,
-		transition = ease,
-		onComplete = function()
-			FRC_ArtCenter_Scene.toolSelectorTransition = nil;
-		end
-	});
+	local bothHidden = (((FRC_ArtCenter_Scene.actionBarMenu.isHidden) and (FRC_ArtCenter_Scene.settingsBarMenu.isHidden)) or
+						((not FRC_ArtCenter_Scene.actionBarMenu.isExpanded) and (not FRC_ArtCenter_Scene.settingsBarMenu.isExpanded)));
+
+	--[[
+	print('ActionBar hidden: ' .. tostring(FRC_ArtCenter_Scene.actionBarMenu.isHidden));
+	print('SettingsBar hidden: ' .. tostring(FRC_ArtCenter_Scene.settingsBarMenu.isHidden));
+
+	print('ActionBar expanded: ' .. tostring(FRC_ArtCenter_Scene.actionBarMenu.isExpanded));
+	print('SettingsBar expanded: ' .. tostring(FRC_ArtCenter_Scene.settingsBarMenu.isExpanded));
+	--]]
+
+	if (bothHidden) then
+		FRC_ArtCenter_Scene.toolSelectorTransition = transition.to(FRC_ArtCenter_Scene.toolSelector, {
+			time = slideTime,
+			y = FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 0.5,
+			transition = ease,
+			onComplete = function()
+				FRC_ArtCenter_Scene.toolSelectorTransition = nil;
+			end
+		});
+	end
 end
 
-function FRC_ArtCenter_Scene.onEnterScene(event)
-	local self = event.target;
+function FRC_ArtCenter_Scene.enterScene(self, event)
+	--local self = event.target;
+	--storyboard.purgeScene(storyboard.getPrevious());
+	native.setActivityIndicator(false);
 
 	if ((self.preEnterScene) and (type(self.preEnterScene) == 'function')) then
-		self.preEnterScene(event);
+		self.preEnterScene(self, event);
 	end
 
 	timer.performWithDelay(300, function()
@@ -579,16 +650,24 @@ function FRC_ArtCenter_Scene.onEnterScene(event)
 	Runtime:addEventListener("FRC_MenuClose", onMenuClose);
 
 	if ((self.postEnterScene) and (type(self.postEnterScene) == 'function')) then
-		self.postEnterScene(event);
+		self.postEnterScene(self, event);
 	end
 end
 
-function FRC_ArtCenter_Scene.onDidExitScene(event)
-	local scene = event.target;
+function FRC_ArtCenter_Scene.exitScene(self, event)
+	if (FRC_ArtCenter_Scene.menuSwooshAudio) then
+		audio.dispose(FRC_ArtCenter_Scene.menuSwooshAudio);
+		FRC_ArtCenter_Scene.menuSwooshAudio = nil;
+	end
+end
+
+function FRC_ArtCenter_Scene.didExitScene(self, event)
+	system.deactivate( "multitouch" );
+	local scene = self;
 	local view = scene.view;
 
 	if ((scene.preDidExitScene) and (type(scene.preDidExitScene) == 'function')) then
-		scene.preDidExitScene(event);
+		scene.preDidExitScene(self, event);
 	end
 
 	Runtime:removeEventListener("FRC_MenuExpand", onMenuExpand);
@@ -609,17 +688,24 @@ function FRC_ArtCenter_Scene.onDidExitScene(event)
 			scene[k] = nil;
 		end
 	end
+	
+	if (not FRC_ArtCenter_Settings.DISABLE_STORE) then
+		FRC_Store:removeEventListener('purchased', self.onPurchase);
+		FRC_Store:removeEventListener('restored', self.onPurchase);
+	end
+	
 	collectgarbage("collect");
 
 	if ((scene.postDidExitScene) and (type(scene.postDidExitScene) == 'function')) then
-		scene.postDidExitScene(event);
+		scene.postDidExitScene(self, event);
 	end
 end
 
 -- scene events
-FRC_ArtCenter_Scene:addEventListener('createScene', FRC_ArtCenter_Scene.onCreateScene);
-FRC_ArtCenter_Scene:addEventListener('enterScene', FRC_ArtCenter_Scene.onEnterScene);
-FRC_ArtCenter_Scene:addEventListener('didExitScene', FRC_ArtCenter_Scene.onDidExitScene);
+FRC_ArtCenter_Scene:addEventListener('createScene');
+FRC_ArtCenter_Scene:addEventListener('enterScene');
+FRC_ArtCenter_Scene:addEventListener('exitScene');
+FRC_ArtCenter_Scene:addEventListener('didExitScene');
 
 -- FRC_ArtCenter_Scene-specific events
 local function onToolSelection(event)

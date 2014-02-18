@@ -30,6 +30,7 @@ local newcircle = display.newCircle
 display.newCircle = function(...)
 	local circle = newcircle(unpack({...}))
 	dispatchEvent{ name="newCircle", target=circle, arg={...} }
+
 	return circle
 end
 

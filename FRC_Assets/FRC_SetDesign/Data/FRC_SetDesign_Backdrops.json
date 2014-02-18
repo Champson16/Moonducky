@@ -1,0 +1,42 @@
+[{
+	"id": "Barn",
+	"imageFile": "MDMT_SetDesign_Backdrop_Barn.jpg",
+	"thumbFile": "MDMT_SetDesign_Backdrop_Barn_thumbnail.jpg",
+	"width": 833,
+	"height": 417,
+},
+{
+	"id": "Circus",
+	"imageFile": "MDMT_SetDesign_Backdrop_Circus.jpg",
+	"thumbFile": "MDMT_SetDesign_Backdrop_Circus_thumbnail.jpg",
+	"width": 908,
+	"height": 365
+},
+{
+	"id": "NightClub",
+	"imageFile": "MDMT_SetDesign_Backdrop_NightClub.jpg",
+	"thumbFile": "MDMT_SetDesign_Backdrop_NightClub_thumbnail.jpg",
+	"width": 918,
+	"height": 417
+},
+{
+	"id": "Opera",
+	"imageFile": "MDMT_SetDesign_Backdrop_Opera.jpg",
+	"thumbFile": "MDMT_SetDesign_Backdrop_Opera_thumbnail.jpg",
+	"width": 895,
+	"height": 401
+},
+{
+	"id": "Restaurant",
+	"imageFile": "MDMT_SetDesign_Backdrop_Restaurant.jpg",
+	"thumbFile": "MDMT_SetDesign_Backdrop_Restaurant_thumbnail.jpg",
+	"width": 970,
+	"height": 399
+},
+{
+	"id": "Wood",
+	"imageFile": "MDMT_SetDesign_Backdrop_Wood.jpg",
+	"thumbFile": "MDMT_SetDesign_Backdrop_Wood_thumbnail.jpg",
+	"width": 1010,
+	"height": 506
+}]

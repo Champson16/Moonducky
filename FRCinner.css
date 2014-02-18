@@ -1,0 +1,128 @@
+/*------------------------------------------------
+Global Reset - Resets all browser defaults to 
+-------------------------------------------------- */
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600);
+html, body { margin:0; padding:0; }
+body { font:14px Open Sans, Helvetica, Arial, sans-serif; background:#13161d; color:#1a1a1a; font-weight:400;}
+a { text-decoration:none; outline:none; color:#0071b8; }
+a:hover, #bottom .box_ul li p a:hover { text-decoration:none; color:#333; }
+img{ border:none; }
+
+.fix{ clear: both; height:1px; margin: -1px 0 0; overflow: hidden }
+.fl{ float: left }
+.fr{ float: right }
+.ac{ text-align: center }
+.ar{ text-align: right }
+
+hr { padding-bottom:20px; padding-top:20px; clear:both;  }
+.hr2 { margin:0px; padding:0; clear:both;  }
+
+h1,h2,h3,h4,h5,h6 { font-family:Open Sans, Arial, Helvetica, sans-serif; padding:0px; margin:0px; font-weight:normal;}
+
+/* structure --------------------------------------------- */
+.header { background:#fff;  }
+.header_in { width:995px; height:125px; margin:0 auto;  }
+.page_wrapper {
+	background:#fff url(content_bg.png) repeat-x left top;
+	min-height:600px;
+	padding-bottom:100px;
+}
+.contant { width:995px; margin:0 auto; padding-top:100px; padding-left:30px; }
+
+/* Company ------------------ */
+.contant p { margin:0 0 18px 0; padding:0; font-size:14px; font-weight:400; color:#1a1a1a;  }
+
+.company_team_info {
+	width:90%;
+	padding-bottom:20px;
+}
+.com_found_title { padding-bottom:10px; }
+.com_found_title h3 { margin:0; padding:0; font-size:26px; color:#cc0000; float:left; margin-right:5px; font-weight:600;}
+.com_found_title h4 {
+	margin:0;
+	font-size:18px;
+	color:#333;
+	float: right;
+	padding-top: 7px;
+	padding-right: 0;
+	padding-bottom: 0;
+	padding-left: 0;
+}
+
+.advisors {
+	width:95%;
+}
+.advisors h3 { margin:0; font-size:27px; color:#111; font-weight:600;}
+.advisors h4 { margin:25px 0 0px 0; font-size:26px; color:#cc0000; font-weight:600;}
+.advisors p a.b_more { float:left; margin-right:20px; display:block; width:57px; height:15px; background:url(images/b_more.png) no-repeat left top; background-position:0 -15px;}
+.advisors p a:hover.b_more { background-position:0 0px; }
+
+
+
+
+/* clearfix --------------- */
+.clearfix:after { visibility: hidden; display: block; font-size: 0; content: " "; clear: both; height: 0; }
+* html .clearfix             { zoom: 1; } /* IE6 */
+*:first-child+html .clearfix { zoom: 1; } /* IE7 */
+
+@media screen and (min-width: 990px) and (max-width: 1000px) {
+/*body, .page_wrapper { background:#fe3535 !important; }*/
+
+.contant { width:95%; }
+
+
+}
+@media screen and (max-width: 990px) {
+.company_info2{ width:90%; margin-left:5%;  }
+.main_box_form2 {width:75%;}
+.story_scroller2 { width:80%; }
+.story_scroller2 iframe{ width:100%; }
+.production {width:95%}
+}
+
+@media screen and (min-width: 780px) and (max-width: 990px) {
+/*body, .page_wrapper { background:#ff8787; }*/
+
+.contant, .pro_scroller, .product_template {
+	width:90%;
+}
+
+}
+@media screen and (min-width: 570px) and (max-width: 779px) {
+/*body, .page_wrapper { background:#92ff87; }*/
+
+.contant, .product_template { width:95%;  }
+.footer { width:98%; }
+
+}
+@media screen and (max-width: 640px) { 
+/*body, .page_wrapper { background:#fbff87; }*/
+
+.contant, .company_info, .company_team_info, .advisors, .product_template { width:90%;  }
+
+
+}
+@media screen and (min-width: 480px) and (max-width: 570px) { 
+/*body, .page_wrapper { background:#87f2ff; }*/
+
+.contant, .company_info, .company_team_info, .advisors, .product_template { width:90%;  }
+
+
+}
+@media screen and (max-width: 480px) { 
+/*body, .page_wrapper { background:#fe87ff; }*/
+
+.contant, .company_info, .company_team_info, .advisors, .product_template { width:95%;  }
+
+
+}
+@media screen and (max-width: 400px) { 
+/*body, .page_wrapper { background:#cb87ff; }*/
+
+.contant, .company_info, .company_team_info, .advisors, .product_template { width:90%; padding-left:10px;  }
+
+
+}
+@media screen and (max-width: 990px) {
+
+}

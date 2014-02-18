@@ -1,4 +1,4 @@
-local FRC_SceneManager = require('FRC_Modules.FRC_SceneManager.FRC_SceneManager');
+local storyboard = require('storyboard');
 local FRC_SplashScreen_Settings = require('FRC_Modules.FRC_SplashScreen.FRC_SplashScreen_Settings');
 local FRC_Layout = require('FRC_Modules.FRC_Layout.FRC_Layout');
 local FRC_SplashScreen = {};
@@ -10,33 +10,32 @@ if ((NOOK_DEVICE) or (KINDLE_DEVICE)) then
   ANDROID_DEVICE = true;
 end
 
-local function dispose(self)
-	if (self.splashVideo) then
-		self.splashVideo:pause();
-		self.splashVideo:removeSelf();
-		self.splashVideo = nil;
-	end
-	self:removeSelf();
-end
-
 FRC_SplashScreen.new = function(nextScene)
 	display.setDefault("background", 1.0, 1.0, 1.0);
 	local splashGroup = display.newGroup();
-	splashGroup.dispose = dispose;
+	
+	splashGroup.freeMemory = function(self)
+		if (self.splashVideo) then
+			self.splashVideo:pause();
+			self.splashVideo:removeSelf();
+			self.splashVideo = nil;
+		end
+		self:removeSelf();
+		splashGroup = nil;
+	end
+	
+	local function gotoNextScene()
+		splashGroup:freeMemory();
+		storyboard.gotoScene(nextScene);
+	end
 
 	local screenW, screenH = FRC_Layout.getScreenDimensions();
+	local videoFile = FRC_SplashScreen_Settings.UI.DEFAULT_VIDEO_PATH;
 
 	local bg = display.newRect(splashGroup, 0, 0, screenW, screenH);
 	bg:setFillColor(1.0);
 	FRC_Layout.alignToLeft(bg);
 	FRC_Layout.alignToTop(bg);
-
-	local videoFile = FRC_SplashScreen_Settings.UI.DEFAULT_VIDEO_PATH;
-
-	local function gotoNextScene()
-		splashGroup:dispose();
-		FRC_SceneManager.gotoScene(nextScene);
-	end
 
 	if (not ANDROID_DEVICE) then
 		splashGroup.splashVideo = native.newVideo(0, 0, display.contentWidth, display.contentHeight);

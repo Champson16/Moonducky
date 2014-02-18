@@ -3,7 +3,6 @@
 local math_abs = math.abs;
 local math_floor = math.floor;
 local ui = {};
-ui.scrollers = {};
 
 local function format_num(amount, decimal, prefix, neg_prefix)
 	function comma_value(amount)
@@ -58,19 +57,12 @@ local function format_num(amount, decimal, prefix, neg_prefix)
 	return formatted
 end
 
-local function removeScroller(scroller)
-	for i=#ui.scrollers,1,-1 do
-		if (ui.scrollers[i] == scroller) then
-			table.remove(ui.scrollers, i);
-		end
-	end
-end
-
 -- checkoptions.callee should be set before calling any other method
 local checkoptions = {};
 checkoptions.callee = ''; -- name of function calling a checkoptions method
 
 -- adds Corona 'DisplayObject' to Lua type() function
+--[[
 local cached_type = type;
 type = function(obj)
 	if ((cached_type(obj) == 'table') and (obj._class) and (obj._class.addEventListener)) then
@@ -79,6 +71,7 @@ type = function(obj)
 		return cached_type(obj);
 	end
 end
+--]]
 
 -- check for required options; sets defaults
 checkoptions.check = function(options, required, defaults)
@@ -196,6 +189,7 @@ ui.button.new = function(args)
 		view.up.isHitTestable = true;
 	end
 	view:insert(view.up, true);
+	view.default = view.up;
 
 	if (options.imageDown) then
 		view.down = display.newImageRect(options.imageDown, options.width, options.height);
@@ -232,6 +226,7 @@ ui.button.new = function(args)
 	end
 	view.down.isVisible = false;
 	view:insert(view.down, true);
+	view.over = view.down;
 
 	if (options.disabled) then
 		view.disabled = display.newImageRect(options.disabled, options.width, options.height);
@@ -259,7 +254,7 @@ ui.button.new = function(args)
 	-- public properties and methods
 	view.press = ui.button.press;
 	view.release = ui.button.release;
-	view.dispose = ui.button.dispose;
+	view.dispose = function(self) pcall(ui.button.dispose, self); end
 	view.x = options.x;
 	view.y = options.y;
 	view.pressAlpha = options.pressAlpha;
@@ -269,6 +264,10 @@ ui.button.new = function(args)
 	view.setStrokeColor = ui.button.setStrokeColor;
 	view.setFill = ui.button.setFill;
 	view.setStrokeWidth = ui.button.setStrokeWidth;
+
+	if (options.parentScrollContainer) then
+		view.parentScrollContainer = options.parentScrollContainer;
+	end 
 
 	if (onPress) then
 		view:addEventListener('press', onPress);
@@ -290,28 +289,17 @@ ui.button.touch = function(event)
 	if (self.isDisabled) then return true; end
 
 	if (event.phase == "began") then
+		display.getCurrentStage():setFocus(self);
+		self._hasFocus = true;
 		self._startX = event.x;
 		self._startY = event.y;
-		self._touchTimer = timer.performWithDelay(5, function()
-			if (not self._proxy) then
-				self._touchTimer = nil;
-				for k,v in pairs(self) do
-					self[k] = nil;
-				end
-				display.getCurrentStage():setFocus(nil);
-				return;
-			end
-			display.getCurrentStage():setFocus(self);
-			self:press();
-			self._hasFocus = true;
-			self._touchTimer = nil;
-			self:dispatchEvent({
-				name = "press",
-				target = self,
-				x = event.x,
-				y = event.y
-			});
-		end, 1);
+		self:press();
+		self:dispatchEvent({
+			name = "press",
+			target = self,
+			x = event.x,
+			y = event.y
+		});
 
 		return true;
 
@@ -336,11 +324,6 @@ ui.button.touch = function(event)
 					});
 				end
 			else
-				if (self._touchTimer) then
-					timer.cancel(self._touchTimer);
-					self._touchTimer = nil;
-				end
-
 				self:dispatchEvent({
 					name = "moved",
 					target = self,
@@ -349,16 +332,16 @@ ui.button.touch = function(event)
 					xStart = event.xStart,
 					yStart = event.yStart
 				});
-
-				for i=#ui.scrollers,1,-1 do
-					local scrollerBounds = ui.scrollers[i].contentBounds;
+				
+				if (self.parentScrollContainer) then
+					local scrollerBounds = self.parentScrollContainer.contentBounds;
 					local isWithinScroller = scrollerBounds.xMin <= event.x and scrollerBounds.xMax >= event.x and scrollerBounds.yMin <= event.y and scrollerBounds.yMax >= event.y;
-					if ((isWithinScroller) and (ui.scrollers[i].isVisible)) then
+					if ((isWithinScroller) and (self.parentScrollContainer.isVisible)) then
 						eventPassedToScroller = true;
-						ui.scrollers[i]:_focusTouch(event);
-						break;
+						self.parentScrollContainer:_focusTouch(event);
 					end
 				end
+
 				if (eventPassedToScroller) then
 					return false;
 				end
@@ -366,11 +349,6 @@ ui.button.touch = function(event)
 
 		elseif ((event.phase == "ended") or (event.phase == "cancelled")) then
 			self:release();
-			
-			if (self._touchTimer) then
-				timer.cancel(self._touchTimer);
-				self._touchTimer = nil;
-			end
 
 			if (isWithinBounds) then
 				self:dispatchEvent({
@@ -393,24 +371,19 @@ ui.button.touch = function(event)
 		end
 		return true;
 
-	elseif ((event.phase == "moved") and(self._startX) and (self._startY)) then
+	elseif ((event.phase == "moved") and (self._startX) and (self._startY)) then
 		-- simple touches can sometimes caused "moved" phase to occur due to sensitive touch screens,
 		-- so ensure finger moved at least a few pixelsfrom start of touch location to consider it moved
 		local dx = math_abs(event.x - self._startX);
 		local dy = math_abs(event.y - self._startY);
 		local thresh = 3;
 		if ((dx >= thresh) or (dy >= thresh)) then
-			if (self._touchTimer) then
-				timer.cancel(self._touchTimer);
-				self._touchTimer = nil;
-			end
-
-			for i=#ui.scrollers,1,-1 do
-				local scrollerBounds = ui.scrollers[i].contentBounds;
+			if (self.parentScrollContainer) then
+				local scrollerBounds = self.parentScrollContainer.contentBounds;
 				local isWithinScroller = scrollerBounds.xMin <= event.x and scrollerBounds.xMax >= event.x and scrollerBounds.yMin <= event.y and scrollerBounds.yMax >= event.y;
-				if (isWithinScroller) then
-					ui.scrollers[i]:_focusTouch(event);
-					break;
+				if ((isWithinScroller) and (self.parentScrollContainer.isVisible)) then
+					eventPassedToScroller = true;
+					self.parentScrollContainer:_focusTouch(event);
 				end
 			end
 			display.getCurrentStage():setFocus(nil);
@@ -418,10 +391,6 @@ ui.button.touch = function(event)
 			return false;
 		end
 	else
-		if (self._touchTimer) then
-			timer.cancel(self._touchTimer);
-			self._touchTimer = nil;
-		end
 		display.getCurrentStage():setFocus(nil);
 		self._hasFocus = false;
 		return false;		
@@ -533,11 +502,6 @@ ui.button.dispose = function(self)
 	if (self._hasFocus) then display.getCurrentStage():setFocus(nil); end
 	self:removeEventListener("touch", ui.button.touch);
 
-	if (self._touchTimer) then
-		timer.cancel(self._touchTimer);
-		self._touchTimer = nil;
-	end
-
 	if (self.up) then
 		self.up:removeSelf();
 		self.up = nil;
@@ -558,518 +522,12 @@ ui.button.dispose = function(self)
 		self.disabled = nil;
 	end
 
-	self:removeSelf();
-end
-
---- ui.scroller
--- Scrollable container.
-ui.scroller = {};
-ui.scroller.required = {
-	width = "number",
-	height = "number"
-};
-ui.scroller.defaults = {
-	x = 0,
-	y = 0,
-	scrollLock = false,
-	xScroll = true,
-	yScroll = true
-};
-
-ui.scroller.new = function(args)
-	checkoptions.callee = 'ui.scroller.new';
-	local options = checkoptions.check(args, ui.scroller.required, ui.scroller.defaults);
-
-	local view = display.newContainer(options.width, options.height);
-	view.anchorChildren = true;
-	view._uiType = 'scroller';
-
-	-- if bgColor option is set, create a rectangle and insert directly into container (behind content group)
-	if ((options.bgColor) and (type(options.bgColor) == "table") and (#options.bgColor >= 3)) then
-		local bg = display.newRect(-(options.width * 0.5), -(options.height * 0.5), options.width, options.height);
-		bg:setFillColor(options.bgColor[1], options.bgColor[2], options.bgColor[3], options.bgColor[4] or 1.0);
-		view:insert(bg, true);
-	end
-
-	view.body = display.newGroup();
-	view.body.anchorChildren = true;
-	view:insert(view.body, true);
-
-	view.content = display.newGroup();
-	view.content.anchorChildren = false;
-	view.body:insert(view.content, true);
-
-	-- override container's insert method to insert into 'content' group instead
-	local cached_insert = view.insert;
-	view.insert = function(self, displayObject)
-		-- don't allow scrollers to be inserted into scrollers
-		if (displayObject._uiType) then
-			assert(displayObject._uiType ~= 'scroller', "Error: " .. "cannot insert a scroller object into another scroller.");
-		end
-		return self.content:insert(displayObject)
-	end
-
-	-- add scroller touch listener to handle scrolling
-	view:addEventListener("touch", ui.scroller.touch);
-
-	-- public properties and methods
-	view.scrollToBounds = ui.scroller.scrollToBounds;
-	view.positionChild = ui.scroller.positionChild;
-	view.snapTop = ui.scroller.snapTop;
-	view.snapBottom = ui.scroller.snapBottom;
-	view.snapLeft = ui.scroller.snapLeft;
-	view.snapRight = ui.scroller.snapRight;
-	view.snapCenter = ui.scroller.snapCenter;
-	view.snapCenterLeft = ui.scroller.snapCenterLeft;
-	view.snapCenterRight = ui.scroller.snapCenterRight;
-	view.snapTopLeft = ui.scroller.snapTopLeft;
-	view.snapTopRight = ui.scroller.snapTopRight;
-	view.snapTopCenter = ui.scroller.snapTopCenter;
-	view.snapBottomLeft = ui.scroller.snapBottomLeft;
-	view.snapBottomCenter = ui.scroller.snapBottomCenter;
-	view.snapBottomRight = ui.scroller.snapBottomRight;
-	view._focusTouch = ui.scroller._focusTouch;
-	view.dispose = ui.scroller.dispose;
-	view.x = options.x;
-	view.y = options.y;
-
-	-- scrolling properties
-	view.scrollLock = options.scrollLock;
-	view.xScroll = options.xScroll;
-	view.yScroll = options.yScroll;
-	view._trackingVelocity = false;
-	view._prevTime = 0;
-	view._markTime = 0;
-	view._velocity = 0;
-	view._friction = 0.935;
-	view._moveDirection = nil; -- x: horizontal; y: vertical
-
-	-- enterframe listener for view
-	view.enterframe = function(event)
-		-- make sure view object hasn't been removed (e.g. via parent group removal or other reason)
-		if ((view) and (not view._proxy)) then
-			Runtime:removeEventListener("enterframe", view.enterframe);
-			removeScroller(view);
-			for k,v in pairs(view) do
-				view[k] = nil;
-			end
-			view = nil;
-		end
-
-		if ((not view._trackingVelocity) and (view._moveDirection)) then
-			local time = event.time;
-			local timePassed = time - view._prevTime;
-			view._prevTime = time;
-
-			-- handle scrolling based on velocity
-			if (math_abs(view._velocity) >= 0.2) then
-				view._velocity = view._velocity * view._friction;
-				view.content[view._moveDirection] = view.content[view._moveDirection] + (view._velocity * timePassed);
-				view:scrollToBounds();
-			else
-				-- scroller has stopped movement
-				view:scrollToBounds();
-				view._velocity = 0;
-				view._moveDirection = nil;
-				Runtime:removeEventListener("enterFrame", view.enterframe);
-			end
-		elseif (view._moveDirection) then
-			-- user has their finger held down for more than 5 frames; stop movement
-			if ((view._eventStepX == view.content.x) or (view._eventStepY == view.content.y)) then
-				if (view._eventStep >= 5) then
-					view._eventStepX = view.content.x;
-					view._eventStepY = view.content.y;
-					view._markX = view.content.x;
-					view._markY = view.content.y;
-					view._velocity = 0;
-					view._eventStep = 0;
-				else
-					view._eventStep = view._eventStep + 1;
-				end
-			end
-		end
-	end
-
-	table.insert(ui.scrollers, view);
-	return view;
-end
-
-ui.scroller.scrollToBounds = function(self)
-	if (not self or not self._moveDirection) then return; end
-	local upperLimit = self:snapTop(self.content, true);
-	local lowerLimit = self:snapBottom(self.content, true);
-	local leftLimit = self:snapLeft(self.content, true);
-	local rightLimit = self:snapRight(self.content, true);
-	local xy = self.content[self._moveDirection];
-
-	local onScrollComplete = function()
-		self._moveTween = nil;
-		self._moveDirection = nil;
-	end
-
-	local tweenContent = function(limit)
-		if (self._moveTween) then transition.cancel(self._moveTween); end
-		if (not self._hasFocus) then
-			-- scroller is *not* currently being touched by user
-			local endX, endY;
-			if (limit == upperLimit) then
-				endX = self.content.x;
-				endY = upperLimit;
-			elseif (limit == lowerLimit) then
-				endX = self.content.x;
-				endY = lowerLimit;
-			elseif (limit == leftLimit) then
-				endX = leftLimit;
-				endY = self.content.y;
-			elseif (limit == rightLimit) then
-				endX = rightLimit;
-				endY = self.content.y;
-			end
-			self._moveTween = transition.to(self.content, { time=400, x=endX, y=endY, transition=easing.outQuad, onComplete=onScrollComplete });
-		end
-	end
-
-	if (self._moveDirection == 'y') then
-		if (xy > upperLimit) then
-			-- Content has moved below upper limit of scroller bounds
-			-- Stop content movement and transition back up to the upperLimit
-
-			self._velocity = 0;
-			Runtime:removeEventListener("enterFrame", self.enterframe);
-			tweenContent(upperLimit);
-
-		elseif (xy < lowerLimit) then
-			-- Content has moved above lower limit of scroller bounds
-			-- Stop content movement and transition back  down to the lowerLimit
-
-			self._velocity = 0;
-			Runtime:removeEventListener("enterFrame", self.enterframe);
-			tweenContent(lowerLimit);
-		end
-	elseif (self._moveDirection == 'x') then
-		if (xy > leftLimit) then
-			-- Content has moved past right limit of scroller bounds
-			-- Stop content movement and transition back up to the upperLimit
-
-			self._velocity = 0;
-			Runtime:removeEventListener("enterFrame", self.enterframe);
-			tweenContent(leftLimit);
-
-		elseif (xy < rightLimit) then
-			-- Content has moved past left limit of scroller bounds
-			-- Stop content movement and transition back  down to the lowerLimit
-
-			self._velocity = 0;
-			Runtime:removeEventListener("enterFrame", self.enterframe);
-			tweenContent(rightLimit);
-		end
-	end
-end
-
-ui.scroller.touch = function(event)
-	local self = event.target;
-	local bounds = self.contentBounds;
-	local isWithinBounds = bounds.xMin <= event.x and bounds.xMax >= event.x and bounds.yMin <= event.y and bounds.yMax >= event.y;
-	
-	if ((not isWithinBounds) and (event.phase ~= "moved")) then
-		display.getCurrentStage():setFocus(nil);
-		self._hasFocus = false;
-		self:scrollToBounds();
-		return false;
-	end
-
-	if ((self.content.height < self.height) or (self.scrollLock)) then return true; end
-
-	if (self._moveTween) then
-		transition.cancel(self._moveTween);
-		self._moveTween = nil;
-	end
-
-	if (event.phase == "began") then
-		display.getCurrentStage():setFocus(self);
-		self._hasFocus = true;
-
-		-- Remove enterFrame listener first (to prevent unintended duplicate listeners being added)
-		Runtime:removeEventListener("enterFrame", self.enterframe);
-
-		self._velocity = 0;
-		self._trackingVelocity = true;
-		self._eventX = event.x;
-		self._eventY = event.y;
-		self._markX = self.content.x;
-		self._markY = self.content.y;
-		self._markTime = event.time;
-		self._eventStep = 0;
-
-		Runtime:addEventListener("enterFrame", self.enterframe);
-
-	elseif (self._hasFocus) then
-		if (event.phase == "moved") then
-
-			-- determine scroll direction (if not already set)
-			if ((not self._moveDirection) and ((self.xScroll) or (self.yScroll))) then
-				local dx = math_abs(event.x - self._eventX);
-				local dy = math_abs(event.y - self._eventY);
-				local moveThresh = 8;
-
-				if ((dx > moveThresh) or (dy > moveThresh)) then
-					if (dx > dy) then
-						self._moveDirection = 'x';
-					else
-						self._moveDirection = 'y';
-					end
-				end
-
-				return true;
-			end
-
-			local delta, limit1, limit2, mark;
-
-			if ((self._moveDirection == 'y') and (self.yScroll)) then
-				delta = event.y - self._eventY;
-				self._eventY = event.y;
-				limit1 = self:snapTop(self.content, true);
-				limit2 = self:snapBottom(self.content, true);
-				mark = "_markX";
-			elseif ((self._moveDirection == 'x') and (self.xScroll)) then
-				delta = event.x - self._eventX;
-				self._eventX = event.x;
-				limit1 = self:snapLeft(self.content, true);
-				limit2 = self:snapRight(self.content, true);
-				mark = "_markY"
-			end
-
-			local xy = self.content[self._moveDirection];
-			if ((not xy) or (not limit1) or not (limit2)) then return true; end
-
-			if ((xy > limit1) or (xy < limit2)) then
-				-- elastic movement if user attempts to drag outside of scroller bounds
-				self.content[self._moveDirection] = self.content[self._moveDirection] + (delta/2);
-			else
-				self.content[self._moveDirection] = self.content[self._moveDirection] + delta;
-			end
-
-			-- modify velocity based on previous moved phase
-			self._velocity = (self.content[self._moveDirection] - self[mark]) / (event.time - self._markTime);
-			self._markTime = event.time;
-			self[mark] = self.content[self._moveDirection];
-
-		elseif ((event.phase == "ended") or (event.phase == "cancelled")) then
-			display.getCurrentStage():setFocus(nil);
-			self._hasFocus = false;
-			self._prevTime = event.time;
-			self._trackingVelocity = false;
-			self._markTime = 0;
-
-			if (self._velocity > 2) then
-				self._velocity = 2;
-			elseif (self._velocity < -2) then
-				self._velocity = -2;
-			end
-		end
-	end
-	return true;
-end
-
-ui.scroller.positionChild = function(self, displayObject, x, y)
-	self:snapTopLeft(displayObject);
-	displayObject.x = displayObject.x + x;
-	displayObject.y = displayObject.y + y;
-end
-
-ui.scroller.snapTop = function(self, displayObject, returnValue)
-	if (displayObject ~= self.content) then
-		if (not returnValue) then
-			displayObject.y = displayObject.height * displayObject.anchorY;
-		else
-			return displayObject.height * displayObject.anchorY;
-		end
-	else
-		if (not returnValue) then
-			displayObject.y = (displayObject.height * displayObject.anchorY) - (self.height * 0.5);
-		else
-			return (displayObject.height * displayObject.anchorY) - (self.height * 0.5);
-		end
-	end
-end
-
-ui.scroller.snapBottom = function(self, displayObject, returnValue)
-	if (displayObject ~= self.content) then
-		if (not returnValue) then
-			displayObject.y = -(displayObject.height * displayObject.anchorY) + self.height;
-		else
-			return -(displayObject.height * displayObject.anchorY) + self.height;
-		end
-	else
-		if (not returnValue) then
-			displayObject.y = -(displayObject.height * displayObject.anchorY) + (self.height * 0.5);
-		else
-			return -(displayObject.height * displayObject.anchorY) + (self.height * 0.5);
-		end
-	end
-end
-
-ui.scroller.snapLeft = function(self, displayObject, returnValue)
-	if (displayObject ~= self.content) then
-		if (not returnValue) then
-			displayObject.x = displayObject.width * displayObject.anchorX;
-		else
-			return displayObject.width * displayObject.anchorX;
-		end
-	else
-		if (not returnValue) then
-			displayObject.x = (displayObject.width * displayObject.anchorX) - (self.width * 0.5);
-		else
-			return (displayObject.width * displayObject.anchorX) - (self.width * 0.5);
-		end
-	end
-end
-
-ui.scroller.snapRight = function(self, displayObject, returnValue)
-	if (displayObject ~= self.content) then
-		if (not returnValue) then
-			displayObject.x = (displayObject.width * displayObject.anchorX) - displayObject.width + self.width;
-		else
-			return (displayObject.width * displayObject.anchorX) - displayObject.width + self.width;
-		end
-	else
-		if (not returnValue) then
-			displayObject.x = ((displayObject.width * displayObject.anchorX) - displayObject.width + (self.width * 0.5));
-		else
-			return ((displayObject.width * displayObject.anchorX) - displayObject.width + (self.width * 0.5));
-		end
-	end
-end
-
-ui.scroller.snapCenter = function(self, displayObject)
-	if (displayObject ~= self.content) then
-		displayObject.x = (displayObject.width * displayObject.anchorX) - ((displayObject.width - self.width) * 0.5);
-		displayObject.y = (displayObject.height * displayObject.anchorY) - ((displayObject.height - self.height) * 0.5);
-	else
-		displayObject.x = (displayObject.width * displayObject.anchorX) - ((displayObject.width - self.width) * 0.5) - (self.width * 0.5);
-		displayObject.y = (displayObject.height * displayObject.anchorY) - ((displayObject.height - self.height) * 0.5) - (self.height * 0.5);
-	end
-end
-
-ui.scroller.snapCenterLeft = function(self, displayObject)
-	if (displayObject ~= self.content) then
-		displayObject.x = displayObject.width * displayObject.anchorX;
-		displayObject.y = (displayObject.height * displayObject.anchorY) - ((displayObject.height - self.height) * 0.5);
-	else
-		displayObject.x = (displayObject.width * displayObject.anchorX) - (self.width * 0.5);
-		displayObject.y = (displayObject.height * displayObject.anchorY) - ((displayObject.height - self.height) * 0.5) - (self.height * 0.5);
-	end
-end
-
-ui.scroller.snapCenterRight = function(self, displayObject)
-	if (displayObject ~= self.content) then
-		displayObject.x = (displayObject.width * displayObject.anchorX) - displayObject.width + self.width;
-		displayObject.y = (displayObject.height * displayObject.anchorY) - ((displayObject.height - self.height) * 0.5);
-	else
-		displayObject.x = ((displayObject.width * displayObject.anchorX) - displayObject.width + (self.width * 0.5));
-		displayObject.y = (displayObject.height * displayObject.anchorY) - ((displayObject.height - self.height) * 0.5) - (self.height * 0.5);
-	end
-end
-
-ui.scroller.snapTopLeft = function(self, displayObject)
-	if (displayObject ~= self.content) then
-		displayObject.x = displayObject.width * displayObject.anchorX;
-		displayObject.y = displayObject.height * displayObject.anchorY;
-	else
-		displayObject.x = (displayObject.width * displayObject.anchorX) - (self.width * 0.5);
-		displayObject.y = (displayObject.height * displayObject.anchorY) - (self.height * 0.5);
-	end
-end
-
-ui.scroller.snapTopRight = function(self, displayObject)
-	if (displayObject ~= self.content) then
-		displayObject.x = (displayObject.width * displayObject.anchorX) - displayObject.width + self.width;
-		displayObject.y = displayObject.height * displayObject.anchorY;
-	else
-		displayObject.x = ((displayObject.width * displayObject.anchorX) - displayObject.width + (self.width * 0.5));
-		displayObject.y = (displayObject.height * displayObject.anchorY) - (self.height * 0.5);
-	end
-end
-
-ui.scroller.snapTopCenter = function(self, displayObject)
-	if (displayObject ~= self.content) then
-		displayObject.x = (displayObject.width * displayObject.anchorX) - ((displayObject.width - self.width) * 0.5);
-		displayObject.y = displayObject.height * displayObject.anchorY;
-	else
-		displayObject.x = (displayObject.width * displayObject.anchorX) - ((displayObject.width - self.width) * 0.5) - (self.width * 0.5);
-		displayObject.y = (displayObject.height * displayObject.anchorY) - (self.height * 0.5);
-	end
-end
-
-ui.scroller.snapBottomLeft = function(self, displayObject)
-	if (displayObject ~= self.content) then
-		displayObject.x = displayObject.width * displayObject.anchorX;
-		displayObject.y = -(displayObject.height * displayObject.anchorY) + self.height;
-	else
-		displayObject.x = (displayObject.width * displayObject.anchorX) - (self.width * 0.5);
-		displayObject.y = -(displayObject.height * displayObject.anchorY) + (self.height * 0.5);
-	end
-end
-
-ui.scroller.snapBottomRight = function(self, displayObject)
-	if (displayObject ~= self.content) then
-		displayObject.x = (displayObject.width * displayObject.anchorX) - displayObject.width + self.width;
-		displayObject.y = -(displayObject.height * displayObject.anchorY) + self.height;
-	else
-		displayObject.x = ((displayObject.width * displayObject.anchorX) - displayObject.width + (self.width * 0.5));
-		displayObject.y = -(displayObject.height * displayObject.anchorY) + (self.height * 0.5);
-	end
-end
-
-ui.scroller.snapBottomCenter = function(self, displayObject)
-	if (displayObject ~= self.content) then
-		displayObject.x = (displayObject.width * displayObject.anchorX) - ((displayObject.width - self.width) * 0.5);
-		displayObject.y = -(displayObject.height * displayObject.anchorY) + self.height;
-	else
-		displayObject.x = (displayObject.width * displayObject.anchorX) - ((displayObject.width - self.width) * 0.5) - (self.width * 0.5);
-		displayObject.y = -(displayObject.height * displayObject.anchorY) + (self.height * 0.5);
-	end
-end
-
-ui.scroller._focusTouch = function(self, event)
-	local target = event.target;
-		
-	-- if button, restore back to "default" state
-	if ((target._uiType) and (target._uiType == "button")) then
-		target:release();
-	end
-
-	-- remove focus from target
-	display.getCurrentStage():setFocus(nil);
-	target._hasFocus = false;
-	if (target.isFocus) then target.isFocus = nil; end
-	
-	-- set event.target to scrollView and start back at "began" phase
-	local nextTarget = self.bg or self;
-	local e = {
-		name = event.name,
-		target = nextTarget,
-		phase = "began",
-		x = event.x,
-		y = event.y
-	};
-	nextTarget:dispatchEvent(e);
-end
-
-ui.scroller.dispose = function(self)
-	if (self._hasFocus) then display.getCurrentStage():setFocus(nil); end
-	self:removeEventListener("touch", ui.scroller.touch);
-	Runtime:removeEventListener("enterFrame", self.enterframe);
-	if (self._moveTween) then
-		transition.cancel(self._moveTween);
-		self._moveTween = nil;
-	end
-	removeScroller(self);
+	self.parentScrollContainer = nil;
 	self:removeSelf();
 end
 
 --- ui.scrollContainer
--- Scrollable container with no momentum/physics simulation.
+-- Scrollable container with momentum/physics simulation.
 ui.scrollContainer = {};
 ui.scrollContainer.required = {
 	width = "number",
@@ -1135,7 +593,7 @@ ui.scrollContainer.new = function(args)
 		end
 	end
 
-	view._focusTouch = ui.scroller._focusTouch;
+	view._focusTouch = ui.scrollContainer._focusTouch;
 
 	view._trackingVelocity = false;
 	view._prevTime = 0;
@@ -1216,8 +674,32 @@ ui.scrollContainer.new = function(args)
 		end
 	end
 
-	table.insert(ui.scrollers, view);
 	return view;
+end
+
+ui.scrollContainer._focusTouch = function(self, event)
+	local target = event.target;
+		
+	-- if button, restore back to "default" state
+	if ((target._uiType) and (target._uiType == "button")) then
+		target:release();
+	end
+
+	-- remove focus from target
+	display.getCurrentStage():setFocus(nil);
+	target._hasFocus = false;
+	if (target.isFocus) then target.isFocus = nil; end
+	
+	-- set event.target to scrollView and start back at "began" phase
+	local nextTarget = self.bg or self;
+	local e = {
+		name = event.name,
+		target = nextTarget,
+		phase = "began",
+		x = event.x,
+		y = event.y
+	};
+	nextTarget:dispatchEvent(e);
 end
 
 ui.scrollContainer.touch = function(event)
@@ -1356,6 +838,8 @@ ui.slider.new = function(args)
 	handle.minX = -(options.width * 0.5) + (handle.contentWidth * 0.5) - 2;
 	handle.maxX = (options.width * 0.5) - (handle.contentWidth * 0.5) + 2;
 	handle.range = handle.maxX - handle.minX;
+	slider.handle = handle;
+	slider.setValue = ui.slider.setValue;
 
 	-- position handle at correct starting location
 	local startDecimalValue = format_num((slider.value - slider.min) / (slider.max - slider.min), 2);
@@ -1363,6 +847,14 @@ ui.slider.new = function(args)
 	slider.percent = math_floor(startDecimalValue * 100);
 
 	return slider;
+end
+
+ui.slider.setValue = function(self, value)
+	self.value = value;
+	
+	local decimalValue = format_num((self.value - self.min) / (self.max - self.min), 2);
+	self.handle.x = self.handle.minX + ((self.handle.maxX - self.handle.minX) * decimalValue);
+	self.percent = math_floor(decimalValue * 100);
 end
 
 ui.slider.touch = function(event)
@@ -1386,14 +878,27 @@ ui.slider.touch = function(event)
 			slider.value = slider.min + ((slider.max - slider.min) * decimalValue);
 			slider.percent = math_floor(decimalValue * 100);
 			
-			slider:dispatchEvent({
+			local endTouch = slider:dispatchEvent({
 				name = "change",
 				target = slider,
 				value = slider.value,
 				percent = slider.percent,
 				handle = self
 			});
+			
+			if (endTouch == true) then
+				self._hasFocus = false;
+				display.getCurrentStage():setFocus(nil);
+				return true;
+			end
 		else
+			slider:dispatchEvent({
+				name = "touchEnded",
+				target = slider,
+				value = slider.value,
+				percent = slider.percent,
+				handle = self
+			});
 			self._hasFocus = false;
 			display.getCurrentStage():setFocus(nil);
 		end
@@ -1402,4 +907,103 @@ ui.slider.touch = function(event)
 	return true;
 end
 
+--- ui.movieClip
+-- Simple flip-book style animation group
+ui.movieClip = {};
+ui.movieClip.required = {
+	images = "table",
+	width = "number",
+	height = "number"
+};
+ui.movieClip.defaults = {};
+
+ui.movieClip.new = function(args)
+	checkoptions.callee = 'ui.movieClip.new';
+	local options = checkoptions.check(args, ui.movieClip.required, ui.movieClip.defaults);
+	
+	local group = display.newGroup();
+	group.currentIndex = 1;
+	group.intervalTime = 100;
+	
+	for i=1,#options.images do
+		local frame = display.newImageRect(group, options.images[i], options.width, options.height);
+		frame.x = 0;
+		frame.y = 0;
+	end
+	
+	group.showFrame = function(self, index)
+		for i=self.numChildren,1,-1 do
+			if (i == index) then
+				self[i].isVisible = true;
+			else
+				self[i].isVisible = false;
+			end
+		end
+		self.currentIndex = index;
+	end
+	
+	group.play = function(self, options)
+		local maxIterations = 0;
+		if (options.noLoop) then
+			maxIterations = self.numChildren - self.currentIndex;
+			if (maxIterations <= 0) then
+				maxIterations = 1;
+			end 
+		end
+		
+		if (options.startFrame) then
+			self:showFrame(options.startFrame);
+		end
+		
+		if (options.intervalTime) then
+			self.intervalTime = options.intervalTime;
+		end
+		
+		self.iterations = 0;
+		
+		local function gotoNext(isDelay)
+			local nextIndex = self.currentIndex + 1;
+			if (nextIndex > self.numChildren) then
+				self.iterations = self.iterations + 1;
+				nextIndex = 1;
+				
+				if ((self.iterations > maxIterations) and (maxIterations > 0)) then
+					self.iterations = 0;
+					timer.cancel(self.animationTimer);
+					self.animationTimer = nil;
+				else
+					if (isDelay == true) then
+						timer.cancel(self.animationTimer);
+						self.animationTimer = timer.performWithDelay(options.delay, function()
+							self.animationTimer = timer.performWithDelay(self.intervalTime, function() gotoNext(true); end, 0);
+						end, 1);
+					end
+				end
+			end
+			self:showFrame(nextIndex);
+		end
+		
+		if (options.delay) then
+			self.animationTimer = timer.performWithDelay(options.delay, function()
+				self.animationTimer = timer.performWithDelay(self.intervalTime, function() gotoNext(true); end, 0);
+			end, 1);
+		else
+			self.animationTimer = timer.performWithDelay(self.intervalTime, gotoNext, 0);
+		end 
+	end
+	
+	
+	group.stop = function(self, atFrame)
+		if (group.animationTimer) then timer.cancel(group.animationTimer); group.animationTimer = nil; end
+		if (atFrame) then group:showFrame(atFrame); end
+	end
+	
+	group.dispose = function(self)
+		if (group.animationTimer) then timer.cancel(group.animationTimer); group.animationTimer = nil; end
+		group:removeSelf();
+	end
+	
+	return group;
+end
+	
 return ui;

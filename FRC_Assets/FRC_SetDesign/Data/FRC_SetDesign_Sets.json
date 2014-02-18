@@ -1,0 +1,78 @@
+[{
+	"id": "Barn",
+	"imageFile": "MDMT_SetDesign_Set_Barn.png",
+	"thumbFile": "MDMT_SetDesign_Set_Barn_thumbnail.png",
+	"width": 1152,
+	"height": 768,
+	"frameRect": {
+		"left": 155,
+		"top": 0,
+		"width": 822,
+		"height": 408
+	}
+},
+{
+	"id": "Circus",
+	"imageFile": "MDMT_SetDesign_Set_Circus.png",
+	"thumbFile": "MDMT_SetDesign_Set_Circus_thumbnail.png",
+	"width": 1152,
+	"height": 768,
+	"frameRect": {
+		"left": 140,
+		"top": 63,
+		"width": 886,
+		"height": 359
+	}
+},
+{
+	"id": "NightClub",
+	"imageFile": "MDMT_SetDesign_Set_NightClub.png",
+	"thumbFile": "MDMT_SetDesign_Set_NightClub_thumbnail.png",
+	"width": 1152,
+	"height": 768,
+	"frameRect": {
+		"left": 187,
+		"top": 22,
+		"width": 793,
+		"height": 384
+	}
+},
+{
+	"id": "Opera",
+	"imageFile": "MDMT_SetDesign_Set_Opera.png",
+	"thumbFile": "MDMT_SetDesign_Set_Opera_thumbnail.png",
+	"width": 1152,
+	"height": 768,
+	"frameRect": {
+		"left": 180,
+		"top": 11,
+		"width": 809,
+		"height": 386
+	}
+},
+{
+	"id": "Restaurant",
+	"imageFile": "MDMT_SetDesign_Set_Restaurant.png",
+	"thumbFile": "MDMT_SetDesign_Set_Restaurant_thumbnail.png",
+	"width": 1152,
+	"height": 768,
+	"frameRect": {
+		"left": 170,
+		"top": 39,
+		"width": 819,
+		"height": 398
+	}
+},
+{
+	"id": "Wood",
+	"imageFile": "MDMT_SetDesign_Set_Wood.png",
+	"thumbFile": "MDMT_SetDesign_Set_Wood_thumbnail.png",
+	"width": 1152,
+	"height": 768,
+	"frameRect": {
+		"left": 140,
+		"top": 47,
+		"width": 896,
+		"height": 386
+	}
+}]

@@ -1,6 +1,30 @@
 -- multitouch
 
-require("FRC_Modules.FRC_EventLib.FRC_EventLib");
+local stage = display.getCurrentStage()
+
+-- Easy-access function for adding event listeners to the stage
+function addEventListener( name, event )
+	stage:addEventListener( name, event )
+end
+
+-- Easy-access function for removing event listeners to the stage
+function removeEventListener( name, event )
+	stage:removeEventListener( name, event )
+end
+
+local newgroup = display.newGroup
+display.newGroup = function(...)
+	local group = newgroup(unpack({...}))
+	stage:dispatchEvent{ name="newGroup", target=group, arg={...} }
+	return group
+end
+
+local newcontainer = display.newContainer
+display.newContainer = function(...)
+	local container = newcontainer(unpack({...}))
+	stage:dispatchEvent{ name="newContainer", target=container, arg={...} }
+	return container
+end
 
 
 --[[ internal values ]]--
@@ -153,7 +177,7 @@ local function handleTouch(e)
 	return true
 end
 
-
+handleMultiTouch = handleTouch;
 
 -- WORKS BUT ONLY IF ONE TYPE OF LISTENER IS ATTACHED...
 
@@ -161,4 +185,5 @@ function multitouchListener( e )
 	e.target:addEventListener("touch",handleTouch)
 end
 
-addEventListener( "newGroup", multitouchListener )
+--addEventListener( "newGroup", multitouchListener )
+--addEventListener( "newContainer", multitouchListener )

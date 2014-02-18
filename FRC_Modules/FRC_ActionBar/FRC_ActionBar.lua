@@ -1,5 +1,5 @@
 local FRC_Layout = require('FRC_Modules.FRC_Layout.FRC_Layout');
-local ui = require('FRC_Modules.FRC_UI.FRC_UI');
+local ui = require('ui');
 local FRC_ActionBar = Runtime._super:new();
 
 -- checkoptions.callee should be set before calling any other method
@@ -7,6 +7,7 @@ local checkoptions = {};
 checkoptions.callee = ''; -- name of function calling a checkoptions method
 
 -- adds Corona 'DisplayObject' to Lua type() function
+--[[
 local cached_type = type;
 type = function(obj)
 	if ((cached_type(obj) == 'table') and (obj._class) and (obj._class.addEventListener)) then
@@ -15,6 +16,7 @@ type = function(obj)
 		return cached_type(obj);
 	end
 end
+--]]
 
 local activeMenu;
 
@@ -30,7 +32,7 @@ checkoptions.check = function(options, required, defaults)
 			assert(options[k], 'Missing Option: \'' .. k .. '\' is a required option for \'' .. checkoptions.callee .. '\'');
 
 			-- ensure option is the proper type
-			assert(type(options[k]) == v, 'Type Error: option' .. '\'' .. k .. '\' in \'' .. checkoptions.callee .. '\' must be a ' .. v);
+			assert(type(options[k]) == v, 'Type Error: option' .. '\'' .. k .. '\' in \'' .. checkoptions.callee .. '\' must be a ' .. v .. '. Got ' .. type(options[k]));
 		end
 	end
 
@@ -50,7 +52,7 @@ local requiredOptions = {
 	imageUp = 'string',
 	buttonWidth = 'number',
 	buttonHeight = 'number',
-	parent = 'DisplayObject'
+	parent = 'table'
 };
 
 local defaultOptions = {
@@ -86,13 +88,13 @@ local function onMenuToggleRelease(event)
 			self:setFocusState(false);
 			menu.isExpanded = false;
 			menu.expandTransition = nil;
-		end });
 
-		Runtime:dispatchEvent({
-			name = "FRC_MenuClose",
-			type = "FRC_ActionBar",
-			time = 400
-		});
+			Runtime:dispatchEvent({
+				name = "FRC_MenuClose",
+				type = "FRC_ActionBar",
+				time = 400
+			});
+		end });
 
 	else
 		-- expand menu
@@ -112,8 +114,7 @@ end
 
 local function show(self)
 	if (self.hideTimer) then timer.cancel(self.hideTimer); self.hideTimer = nil; end
-
-	self.hideTimer = timer.performWithDelay(3000, function()
+	self.hideTimer = timer.performWithDelay(5000, function()
 		self.hideTimer = nil;
 		self:hide();
 	end, 1);
@@ -126,6 +127,7 @@ local function show(self)
 end
 
 local function hide(self, doNotDispatch)
+	if (self.hideTimer) then timer.cancel(self.hideTimer); self.hideTimer = nil; end
 	if (self.isHidden) then self.alpha = 0; return; end
 	if (self.showTransition) then transition.cancel(self.showTransition); self.showTransition = nil; end
 
@@ -135,24 +137,27 @@ local function hide(self, doNotDispatch)
 		self.menuItems.alpha = 0;
 		self.isExpanded = false;
 		self.toggleButton:setFocusState(false);
-	end });
 
-	if (not doNotDispatch) then
-		Runtime:dispatchEvent({
-			name = "FRC_MenuClose",
-			type = "FRC_ActionBar",
-			time = 400
-		});
-	end
+		if (not doNotDispatch) then
+			Runtime:dispatchEvent({
+				name = "FRC_MenuClose",
+				type = "FRC_ActionBar",
+				time = 400
+			});
+		end
+	end });
 end
 
 local function dispose(self)
+	if (self.isDisposed) then return; end
 	if (self.hideTimer) then timer.cancel(self.hideTimer); self.hideTimer = nil; end
 	if (self.showTransition) then transition.cancel(self.showTransition); self.showTransition = nil; end
 	if (self.expandTransition) then transition.cancel(self.expandTransition); self.expandTransition = nil; end
 
-	self.toggleButton:dispose();
-	self.toggleButton = nil;
+	if (self.toggleButton) then
+		self.toggleButton:dispose();
+		self.toggleButton = nil;
+	end
 
 	if ((self.menuItems) and (self.menuItems.numChildren > 0)) then
 		for i=self.menuItems.numChildren,1,-1 do
@@ -172,9 +177,12 @@ local function dispose(self)
 		activeMenu = nil;
 	end
 
-	self.menuActivator:removeSelf(); self.menuActivator = nil;
+	if (self.menuActivator) then
+		self.menuActivator:removeSelf(); self.menuActivator = nil;
+	end
 	self:removeSelf();
 	collectgarbage("collect");
+	self.isDisposed = true;
 end
 
 FRC_ActionBar.new = function(args)
@@ -196,7 +204,7 @@ FRC_ActionBar.new = function(args)
 		disabled = options.disabled,
 		width = options.buttonWidth,
 		height = options.buttonHeight,
-		onPress = onMenuTogglePress,
+		onPress = function(e) menuGroup:show(); onMenuTogglePress(e); end,
 		onRelease = onMenuToggleRelease
 	});
 	menuGroup:insert(toggleButton);
@@ -223,9 +231,13 @@ FRC_ActionBar.new = function(args)
 			disabled = options.buttons[i].disabled,
 			width = options.buttonWidth,
 			height = options.buttonHeight,
-			onPress = options.buttons[i].onPress,
+			onPress = function(e)
+				menuGroup:show();
+				if (e.target.onPress) then e.target.onPress(e); end
+			end,
 			onRelease = options.buttons[i].onRelease
 		});
+		button.onPress = options.buttons[i].onPress;
 		if (options.buttons[i].isFocused) then
 			button:setFocusState(true);
 		end

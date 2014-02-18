@@ -1,5 +1,5 @@
 local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
-local ui = require('FRC_Modules.FRC_UI.FRC_UI');
+local ui = require('ui');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_ArtCenter_SubToolSelector = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_SubToolSelector');
 
@@ -19,6 +19,8 @@ local function onButtonRelease(event)
 	scene.mode = scene.modes[self.mode];
 	scene.selectedTool = require('FRC_Modules.FRC_ArtCenter.' .. self.module);
 	scene.eraserGroup.button:setFocusState(false);
+	scene.canvas:setEraseMode(false);
+	
 	if ((self.mode == "STAMP_PLACEMENT") or (self.mode == "SHAPE_PLACEMENT") or (self.mode == "BACKGROUND_SELECTION")) then
 		scene.eraserGroup.button:setDisabledState(true);
 	else

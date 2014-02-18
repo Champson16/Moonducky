@@ -1,0 +1,18 @@
+[{
+	"id": "SetSelector",
+	"imageUp": "MDMT_SetDesign_Icon_SetSelector_up.png",
+	"imageDown": "MDMT_SetDesign_Icon_SetSelector_down.png",
+	"imageFocused": "MDMT_SetDesign_Icon_SetSelector_focused.png",
+	"imageDisabled": "MDMT_SetDesign_Icon_SetSelector_disabled.png",
+	"width": 128,
+	"height": 128
+},
+{
+	"id": "BackdropSelector",
+	"imageUp": "MDMT_SetDesign_Icon_Backdrop_up.png",
+	"imageDown": "MDMT_SetDesign_Icon_Backdrop_down.png",
+	"imageFocused": "MDMT_SetDesign_Icon_Backdrop_focused.png",
+	"imageDisabled": "MDMT_SetDesign_Icon_Backdrop_disabled.png",
+	"width": 128,
+	"height": 128
+}]

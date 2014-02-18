@@ -13,51 +13,71 @@
 		"subtools": [{
 			"id": "Blank",
 			"imageFile": "MDSS_UX_ArtCenter_Backdrop_Blank.png",
+			"thumbFile": "MDSS_UX_ArtCenter_Backdrop_Blank.png",
+			"IAPBundleID" : "free"
 		},
 		{
 			"id": "Background01",
 			"imageFile": "MDMT_ArtCenter_Background01.png",
-			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail01.jpg"
+			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail01.jpg",
+			"IAPBundleID" : "free",
+			"color": false
 		},
 		{
 			"id": "Background02",
 			"imageFile": "MDMT_ArtCenter_Background02.png",
-			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail02.jpg"
+			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail02.jpg",
+			"IAPBundleID" : "free",
+			"color": false
 		},
 		{
 			"id": "Background03",
 			"imageFile": "MDMT_ArtCenter_Background03.png",
-			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail03.jpg"
+			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail03.jpg",
+			"IAPBundleID" : "free",
+			"color": false
 		},
 		{
 			"id": "Background04",
 			"imageFile": "MDMT_ArtCenter_Background04.png",
-			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail04.jpg"
+			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail04.jpg",
+			"IAPBundleID" : "free",
+			"color": false
 		},
 		{
 			"id": "Background05",
 			"imageFile": "MDMT_ArtCenter_Background05.png",
-			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail05.jpg"
+			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail05.jpg",
+			"IAPBundleID" : "free",
+			"color": false
 		},
 		{
 			"id": "Background06",
 			"imageFile": "MDMT_ArtCenter_Background06.png",
-			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail06.jpg"
+			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail06.jpg",
+			"IAPBundleID" : "free",
+			"color": false
 		},
 		{
 			"id": "Background07",
 			"imageFile": "MDMT_ArtCenter_Background07.png",
-			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail07.jpg"
+			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail07.jpg",
+			"IAPBundleID" : "free",
+			"color": false
 		},
 		{
 			"id": "Background08",
 			"imageFile": "MDMT_ArtCenter_Background08.png",
-			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail08.jpg"
+			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail08.jpg",
+			"IAPBundleID" : "free",
+			"color": false
 		},
 		{
 			"id": "Background09",
 			"imageFile": "MDMT_ArtCenter_Background09.png",
-			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail09.jpg"
+			"thumbFile": "MDMT_ArtCenter_BackgroundThumbnail09.jpg",
+			"IAPBundleID" : "free",
+			"color": false
 		}]
 	},
 	{
@@ -183,26 +203,8 @@
 		"subtools": [{
 			"id": "PaintBrush1",
 			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush1.png",
-			"alpha": 0.05,
-			"brushSizes": [40, 50, 60],
-			"defaultSize": 40,
-			"minSize": 39,
-			"maxSize": 60
-		},
-		{
-			"id": "PaintBrush1",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush1.png",
-			"alpha": 0.05,
+			"alpha": 0.04,
 			"arbRotate": true,
-			"brushSizes": [40, 50, 60],
-			"defaultSize": 40,
-			"minSize": 39,
-			"maxSize": 60
-		},
-		{
-			"id": "PaintBrush2",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush2.png",
-			"alpha": 0.05,
 			"brushSizes": [40, 50, 60],
 			"defaultSize": 40,
 			"minSize": 39,
@@ -222,25 +224,7 @@
 			"id": "PaintBrush3",
 			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush3.png",
 			"alpha": 0.05,
-			"brushSizes": [40, 50, 60],
-			"defaultSize": 40,
-			"minSize": 39,
-			"maxSize": 60
-		},
-		{
-			"id": "PaintBrush3",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush3.png",
-			"alpha": 0.05,
 			"arbRotate": true,
-			"brushSizes": [40, 50, 60],
-			"defaultSize": 40,
-			"minSize": 39,
-			"maxSize": 60
-		},
-		{
-			"id": "PaintBrush4",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush4.png",
-			"alpha": 0.5,
 			"brushSizes": [40, 50, 60],
 			"defaultSize": 40,
 			"minSize": 39,
@@ -260,25 +244,7 @@
 			"id": "PaintBrush5",
 			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush5.png",
 			"alpha": 0.08,
-			"brushSizes": [40, 50, 60],
-			"defaultSize": 40,
-			"minSize": 39,
-			"maxSize": 60
-		},
-		{
-			"id": "PaintBrush5",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush5.png",
-			"alpha": 0.08,
 			"arbRotate": true,
-			"brushSizes": [40, 50, 60],
-			"defaultSize": 40,
-			"minSize": 39,
-			"maxSize": 60
-		},
-		{
-			"id": "PaintBrush6",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush6.png",
-			"alpha": 0.08,
 			"brushSizes": [40, 50, 60],
 			"defaultSize": 40,
 			"minSize": 39,
@@ -298,25 +264,7 @@
 			"id": "PaintBrush7",
 			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush7.png",
 			"alpha": 0.08,
-			"brushSizes": [40, 50, 60],
-			"defaultSize": 40,
-			"minSize": 39,
-			"maxSize": 60
-		},
-		{
-			"id": "PaintBrush7",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush7.png",
-			"alpha": 0.08,
 			"arbRotate": true,
-			"brushSizes": [40, 50, 60],
-			"defaultSize": 40,
-			"minSize": 39,
-			"maxSize": 60
-		},
-		{
-			"id": "PaintBrush8",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush8.png",
-			"alpha": 0.08,
 			"brushSizes": [40, 50, 60],
 			"defaultSize": 40,
 			"minSize": 39,
@@ -338,25 +286,7 @@
 			"id": "Fancy1",
 			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy1.png",
 			"alpha": 0.08,
-			"brushSizes": [30, 50, 70],
-			"defaultSize": 30,
-			"minSize": 29,
-			"maxSize": 70
-		},
-		{
-			"id": "Fancy1",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy1.png",
-			"alpha": 0.08,
 			"arbRotate": true,
-			"brushSizes": [30, 50, 70],
-			"defaultSize": 30,
-			"minSize": 29,
-			"maxSize": 70
-		},
-		{
-			"id": "Fancy2",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy2.png",
-			"alpha": 0.08,
 			"brushSizes": [30, 50, 70],
 			"defaultSize": 30,
 			"minSize": 29,
@@ -376,25 +306,7 @@
 			"id": "Fancy3",
 			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy3.png",
 			"alpha": 0.08,
-			"brushSizes": [30, 50, 70],
-			"defaultSize": 30,
-			"minSize": 29,
-			"maxSize": 70
-		},
-		{
-			"id": "Fancy3",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy3.png",
-			"alpha": 0.08,
 			"arbRotate": true,
-			"brushSizes": [30, 50, 70],
-			"defaultSize": 30,
-			"minSize": 29,
-			"maxSize": 70
-		},
-		{
-			"id": "Fancy4",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy4.png",
-			"alpha": 0.08,
 			"brushSizes": [30, 50, 70],
 			"defaultSize": 30,
 			"minSize": 29,
@@ -414,25 +326,7 @@
 			"id": "Fancy5",
 			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy5.png",
 			"alpha": 0.08,
-			"brushSizes": [30, 50, 70],
-			"defaultSize": 30,
-			"minSize": 29,
-			"maxSize": 70
-		},
-		{
-			"id": "Fancy5",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy5.png",
-			"alpha": 0.08,
 			"arbRotate": true,
-			"brushSizes": [30, 50, 70],
-			"defaultSize": 30,
-			"minSize": 29,
-			"maxSize": 70
-		},
-		{
-			"id": "Fancy6",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy6.png",
-			"alpha": 0.08,
 			"brushSizes": [30, 50, 70],
 			"defaultSize": 30,
 			"minSize": 29,
@@ -452,25 +346,7 @@
 			"id": "Fancy7",
 			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy7.png",
 			"alpha": 0.08,
-			"brushSizes": [30, 50, 70],
-			"defaultSize": 30,
-			"minSize": 29,
-			"maxSize": 70
-		},
-		{
-			"id": "Fancy7",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy7.png",
-			"alpha": 0.08,
 			"arbRotate": true,
-			"brushSizes": [30, 50, 70],
-			"defaultSize": 30,
-			"minSize": 29,
-			"maxSize": 70
-		},
-		{
-			"id": "Fancy8",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy8.png",
-			"alpha": 0.08,
 			"brushSizes": [30, 50, 70],
 			"defaultSize": 30,
 			"minSize": 29,
@@ -490,25 +366,7 @@
 			"id": "Fancy9",
 			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy9.png",
 			"alpha": 0.08,
-			"brushSizes": [30, 50, 70],
-			"defaultSize": 30,
-			"minSize": 29,
-			"maxSize": 70
-		},
-		{
-			"id": "Fancy9",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy9.png",
-			"alpha": 0.08,
 			"arbRotate": true,
-			"brushSizes": [30, 50, 70],
-			"defaultSize": 30,
-			"minSize": 29,
-			"maxSize": 70
-		},
-		{
-			"id": "Fancy10",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy10.png",
-			"alpha": 0.08,
 			"brushSizes": [30, 50, 70],
 			"defaultSize": 30,
 			"minSize": 29,
@@ -528,25 +386,7 @@
 			"id": "Fancy11",
 			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy11.png",
 			"alpha": 0.08,
-			"brushSizes": [30, 50, 70],
-			"defaultSize": 30,
-			"minSize": 29,
-			"maxSize": 70
-		},
-		{
-			"id": "Fancy11",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy11.png",
-			"alpha": 0.08,
 			"arbRotate": true,
-			"brushSizes": [30, 50, 70],
-			"defaultSize": 30,
-			"minSize": 29,
-			"maxSize": 70
-		},
-		{
-			"id": "Fancy12",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy12.png",
-			"alpha": 0.08,
 			"brushSizes": [30, 50, 70],
 			"defaultSize": 30,
 			"minSize": 29,
@@ -566,25 +406,7 @@
 			"id": "Fancy13",
 			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy13.png",
 			"alpha": 0.08,
-			"brushSizes": [30, 50, 70],
-			"defaultSize": 30,
-			"minSize": 29,
-			"maxSize": 70
-		},
-		{
-			"id": "Fancy13",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy13.png",
-			"alpha": 0.08,
 			"arbRotate": true,
-			"brushSizes": [30, 50, 70],
-			"defaultSize": 30,
-			"minSize": 29,
-			"maxSize": 70
-		},
-		{
-			"id": "Fancy14",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy14.png",
-			"alpha": 0.08,
 			"brushSizes": [30, 50, 70],
 			"defaultSize": 30,
 			"minSize": 29,
@@ -604,25 +426,7 @@
 			"id": "Fancy15",
 			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy15.png",
 			"alpha": 0.08,
-			"brushSizes": [30, 50, 70],
-			"defaultSize": 30,
-			"minSize": 29,
-			"maxSize": 70
-		},
-		{
-			"id": "Fancy15",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy15.png",
-			"alpha": 0.08,
 			"arbRotate": true,
-			"brushSizes": [30, 50, 70],
-			"defaultSize": 30,
-			"minSize": 29,
-			"maxSize": 70
-		},
-		{
-			"id": "Fancy16",
-			"imageFile": "FRC_UX_ArtCenter_FreehandPaintFancy_Brush_Fancy16.png",
-			"alpha": 0.08,
 			"brushSizes": [30, 50, 70],
 			"defaultSize": 30,
 			"minSize": 29,
@@ -640,6 +444,51 @@
 		}]
 	},
 	{
+		"id": "ShapesPalette",
+		"images": {
+			"up": "FRC_ArtCenter_Icon_Shape_up.png",
+			"down": "FRC_ArtCenter_Icon_Shape_down.png",
+			"focused": "FRC_ArtCenter_Icon_Shape_focused.png"
+		},
+		"module": "FRC_ArtCenter_Tool_Shapes",
+		"mode": "SHAPE_PLACEMENT",
+		"subToolSelection": false,
+		"noColorVisible": true,
+		"colorSubTools": true,
+		"subtools": [{
+			"id": "triangle",
+			"vertices": [-1.0,1.0, 0,-1.0, 1.0,1.0]
+		},
+		{
+			"id": "square",
+			"vertices": [-0.90,0.90, -0.90,-0.90, 0.90,-0.90, 0.90, 0.90]
+		},
+		{
+			"id": "pentagon",
+			"vertices": [-0.5,1.0, -0.9,0, 0,-0.75, 0.9,0, 0.5,1.0]
+		},
+		{
+			"id": "hexagon",
+			"vertices": [-0.5,0.9, -1.0,0, -0.5,-0.9, 0.5,-0.9, 1.0,0, 0.5,0.9]
+		},
+		{
+			"id": "septagon",
+			"vertices": [-1.0,0.25, -0.75,-0.5, 0,-0.90, 0.75,-0.5, 1.0,0.25, 0.5,1.0, -0.5,1.0]
+		},
+		{
+			"id": "octagon",
+			"vertices": [-1.0,0.40, -1.0,-0.40, -0.40,-1.0, 0.40,-1.0, 1.0,-0.40, 1.0,0.40, 0.40,1.0, -0.40,1.0]
+		},
+		{
+			"id": "circle",
+			"vertices": [1]
+		},
+		{
+			"id": "star",
+			"vertices": [-0.5,0.25, -1.0,-0.2, -0.30,-0.30, 0,-0.90, 0.30,-0.30, 1.0,-0.2, 0.5,0.25, 0.60,0.90, 0,0.60, -0.60,0.90]
+		}]
+	},
+	{
 		"id": "StampsPalette",
 		"images": {
 			"up": "FRC_ArtCenter_Icon_Stamp_up.png",
@@ -653,7 +502,8 @@
 		"subtools": [{
 			"id": "AnimalBird",
 			"imageFile": "MDMT_ArtCenter_Stamp_AnimalBird.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_AnimalBirdMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_AnimalBird_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_AnimalBird_thumbnail.png",
 			"width": 243,
 			"height": 243,
 			"defaultScale": 0.4
@@ -661,7 +511,8 @@
 		{
 			"id": "AnimalDog",
 			"imageFile": "MDMT_ArtCenter_Stamp_AnimalDog.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_AnimalDogMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_AnimalDog_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_AnimalDog_thumbnail.png",
 			"width": 259,
 			"height": 241,
 			"defaultScale": 0.5
@@ -669,7 +520,8 @@
 		{
 			"id": "AnimalElephant",
 			"imageFile": "MDMT_ArtCenter_Stamp_AnimalElephant.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_AnimalElephantMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_AnimalElephant_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_AnimalElephant_thumbnail.png",
 			"width": 284,
 			"height": 284,
 			"defaultScale": 0.9
@@ -677,7 +529,8 @@
 		{
 			"id": "AnimalHorse",
 			"imageFile": "MDMT_ArtCenter_Stamp_AnimalHorse.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_AnimalHorseMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_AnimalHorse_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_AnimalHorse_thumbnail.png",
 			"width": 476,
 			"height": 476,
 			"defaultScale": 0.6
@@ -685,7 +538,8 @@
 		{
 			"id": "AnimalTeddyBear",
 			"imageFile": "MDMT_ArtCenter_Stamp_AnimalTeddyBear.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_AnimalTeddyBearMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_AnimalTeddyBear_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_AnimalTeddyBear_thumbnail.png",
 			"width": 265,
 			"height": 265,
 			"defaultScale": 0.4
@@ -693,7 +547,8 @@
 		{
 			"id": "BuildingBarn",
 			"imageFile": "MDMT_ArtCenter_Stamp_BuildingBarn.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_BuildingBarnMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_BuildingBarn_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_BuildingBarn_thumbnail.png",
 			"width": 318,
 			"height": 318,
 			"defaultScale": 0.65
@@ -701,7 +556,8 @@
 		{
 			"id": "BuildingCabin",
 			"imageFile": "MDMT_ArtCenter_Stamp_BuildingCabin.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_BuildingCabinMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_BuildingCabin_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_BuildingCabin_thumbnail.png",
 			"width": 325,
 			"height": 325,
 			"defaultScale": 0.65
@@ -709,7 +565,8 @@
 		{
 			"id": "BuildingHouseTwoStory",
 			"imageFile": "MDMT_ArtCenter_Stamp_BuildingHouseTwoStory.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_BuildingHouseTwoStoryMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_BuildingHouseTwoStory_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_BuildingHouseTwoStory_thumbnail.png",
 			"width": 211,
 			"height": 211,
 			"defaultScale": 0.95
@@ -717,7 +574,8 @@
 		{
 			"id": "BuildingSkyscraper",
 			"imageFile": "MDMT_ArtCenter_Stamp_BuildingSkyscraper.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_BuildingSkyscraperMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_BuildingSkyscraper_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_BuildingSkyscraper_thumbnail.png",
 			"width": 384,
 			"height": 384,
 			"defaultScale": 1.3
@@ -725,7 +583,8 @@
 		{
 			"id": "BuildingWarehouse",
 			"imageFile": "MDMT_ArtCenter_Stamp_BuildingWarehouse.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_BuildingWarehouseMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_BuildingWarehouse_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_BuildingWarehouse_thumbnail.png",
 			"width": 449,
 			"height": 449,
 			"defaultScale": 0.9
@@ -733,7 +592,8 @@
 		{
 			"id": "EnvironmentMountains",
 			"imageFile": "MDMT_ArtCenter_Stamp_EnvironmentMountains.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_EnvironmentMountainsMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_EnvironmentMountains_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_EnvironmentMountains_thumbnail.png",
 			"width": 712,
 			"height": 712,
 			"defaultScale": 1.0
@@ -741,7 +601,8 @@
 		{
 			"id": "EnvironmentSun",
 			"imageFile": "MDMT_ArtCenter_Stamp_EnvironmentSun.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_EnvironmentSunMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_EnvironmentSun_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_EnvironmentSun_thumbnail.png",
 			"width": 313,
 			"height": 313,
 			"defaultScale": 0.7
@@ -749,7 +610,8 @@
 		{
 			"id": "ObjectLollipop",
 			"imageFile": "MDMT_ArtCenter_Stamp_ObjectLollipop.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_ObjectLollipopMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_ObjectLollipop_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_ObjectLollipop_thumbnail.png",
 			"width": 251,
 			"height": 251,
 			"defaultScale": 0.4
@@ -757,7 +619,8 @@
 		{
 			"id": "ObjectUmbrella",
 			"imageFile": "MDMT_ArtCenter_Stamp_ObjectUmbrella.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_ObjectUmbrellaMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_ObjectUmbrella_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_ObjectUmbrella_thumbnail.png",
 			"width": 246,
 			"height": 246,
 			"defaultScale": 0.6
@@ -765,7 +628,8 @@
 		{
 			"id": "TreeApple",
 			"imageFile": "MDMT_ArtCenter_Stamp_TreeApple.png",
-			"maskeFile": "MDMT_ArtCenter_Stamp_TreeAppleMask.png",
+			"maskeFile": "MDMT_ArtCenter_Stamp_TreeApple_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_TreeApple_thumbnail.png",
 			"width": 278,
 			"height": 278,
 			"defaultScale": 0.8
@@ -773,7 +637,8 @@
 		{
 			"id": "TreePear",
 			"imageFile": "MDMT_ArtCenter_Stamp_TreePear.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_TreePearMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_TreePear_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_TreePear_thumbnail.png",
 			"width": 475,
 			"height": 475,
 			"defaultScale": 0.4
@@ -781,7 +646,8 @@
 		{
 			"id": "TreePine",
 			"imageFile": "MDMT_ArtCenter_Stamp_TreePine.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_TreePineMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_TreePine_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_TreePine_thumbnail.png",
 			"width": 293,
 			"height": 293,
 			"defaultScale": 0.8
@@ -789,10 +655,24 @@
 		{
 			"id": "TreeSimple",
 			"imageFile": "MDMT_ArtCenter_Stamp_TreeSimple.png",
-			"maskFile": "MDMT_ArtCenter_Stamp_TreeSimpleMask.png",
+			"maskFile": "MDMT_ArtCenter_Stamp_TreeSimple_mask.png",
+			"thumbFile": "MDMT_ArtCenter_Stamp_TreeSimple_thumbnail.png",
 			"width": 270,
 			"height": 270,
 			"defaultScale": 0.8
 		}]
+	},
+	{
+		"id": "CharacterStampsPalette",
+		"images": {
+			"up": "FRC_ArtCenter_Icon_CharacterMoonducky_up.png",
+			"down": "FRC_ArtCenter_Icon_CharacterMoonducky_down.png",
+			"focused": "FRC_ArtCenter_Icon_CharacterMoonducky_focused.png"
+		},
+		"module": "FRC_ArtCenter_Tool_Stamps",
+		"mode": "STAMP_PLACEMENT",
+		"subToolSelection": false,
+		"noColorVisible": true,
+		"subtools": []
 	}]
 }

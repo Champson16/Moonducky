@@ -4,7 +4,7 @@
 settings = {
 	
 	orientation = {
-		default = "landscapeRight",
+		default = "landscapeLeft",
 		supported = { "landscapeRight", "landscapeLeft" }
 	},
 	
@@ -12,7 +12,14 @@ settings = {
 		plist = {
 			CFBundleIconFiles = {
 				"Icon",
-				"Icon-60", 
+				"Icon-22",
+				"Icon-25",
+				"Icon-Small",
+				"Icon-Small-40",
+				"Icon-Small-50",
+				"Icon-32",
+				"Icon-60",
+				"Icon-64",
 				"Icon-72",
 				"Icon-76",
 				"Icon-29",
@@ -25,6 +32,14 @@ settings = {
 			UIPrerenderedIcon = true, -- set to false for "shine" overlay
 			UIApplicationExitsOnSuspend = false,
 			CoronaUseIOS6LandscapeOnlyWorkaround = true, -- used to address landscape orientation/Apple Game center issues (not a problem now but good to protect against for later)
+			UIAppFonts = {
+				"GoldenCockerelITCStd-Italic.otf",
+				"GoldenCockerelITCStd-Titl.otf",
+				"GoldenCockerelITCStd.otf",
+				"GoldenCockerelITCStd.otf",
+				"GoldenTypeITCStd-Bold.otf",
+				"GoldenTypeITCStd.otf"
+			}
 
             --[[
             -- iOS app URL schemes:
@@ -41,13 +56,11 @@ settings = {
             --]]
 		}
 	},
-	
-	--[[
-	-- Android permissions
 
-	androidPermissions = {
-  		"android.permission.INTERNET",
-  	},
-
-	]]--
+	plugins = {
+		-- the following plugin can be accessed via: analytics = require("analytics"); analytics:setProvider("flurry")
+		["CoronaProvider.analytics.flurry"] = {
+		  publisherId = "com.coronalabs"
+		}
+	}
 }
