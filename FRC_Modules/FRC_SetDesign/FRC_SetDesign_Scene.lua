@@ -42,7 +42,7 @@ function FRC_SetDesign_Scene:saveCurrentSet(e)
 	local id = e.id;
 	if ((not id) or (id == '')) then id = (generateUniqueIdentifier(20)); end
 	local saveGroup = self.view.saveGroup;
-	
+
 	-- [[
 	local capture = display.capture(saveGroup);
 	capture.x = display.contentCenterX;
@@ -127,7 +127,7 @@ function FRC_SetDesign_Scene:createScene(event)
 			end
 		end
 	end
-	
+
 	local setScale = 0.65;
 	view.saveGroup = display.newGroup(); view:insert(view.saveGroup);
 	local backdropGroup = display.newGroup(); view.saveGroup:insert(backdropGroup);
@@ -212,7 +212,7 @@ function FRC_SetDesign_Scene:createScene(event)
 			categoriesHeight = categoryData[i].height * category_button_scale;
 		end
 	end
-	categoriesHeight = categoriesHeight + (category_button_spacing * 2);
+	categoriesHeight = categoriesHeight + (category_button_spacing * 1.25);
 
 	-- create button panel for categories (aligned to the bottom of the screen)
 	local categoriesContainer = display.newContainer(categoriesWidth, categoriesHeight);

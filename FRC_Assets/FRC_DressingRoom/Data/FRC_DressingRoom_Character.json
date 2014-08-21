@@ -1,785 +1,783 @@
 [{
 	"id": "Chicken",
-	"bodyImage": "MDMT_DressingRoom_CHICKEN.png",
-	"bodyThumb": "MDMT_DressingRoom_global_BaseCharacter_Chicken_thumbnail.png",
-	"bodyWidth": 423,
-	"bodyHeight": 461,
-	"eyesOpenImage": "MDMT_DressingRoom_CHICKEN_eyes_open.png",
-	"eyesOpenWidth": 57,
-	"eyesOpenHeight": 18,
-	"eyesShutImage": "MDMT_DressingRoom_CHICKEN_eyes_shut.png",
-	"eyesShutWidth": 56,
-	"eyesShutHeight": 9,
-	"eyesX": -12,
-	"eyesY": -156,
+	"bodyImage": "MDMT_DressingRoom_Chicken.png",
+	"bodyWidth": 430,
+	"bodyHeight": 469,
+	"eyesOpenImage": "MDMT_DressingRoom_Chicken_EyesOpen.png",
+	"eyesOpenWidth": 51,
+	"eyesOpenHeight": 13,
+	"eyesShutImage": "MDMT_DressingRoom_Chicken_EyesShut.png",
+	"eyesShutWidth": 58,
+	"eyesShutHeight": 11,
+	"eyesX": -6,
+	"eyesY": -159,
 	"clothing": {
 		"Headwear": [{
 			"id": "bandana",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_bandana.png",
-			"width": 115,
-			"height": 122,
-			"xOffset": -15,
-			"yOffset": -210
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_Bandana.png",
+			"width": 88,
+			"height": 89,
+			"xOffset": -10,
+			"yOffset": -212
 		},
 		{
 			"id": "farm",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_farm.png",
-			"width": 231,
-			"height": 87,
-			"xOffset": -3,
-			"yOffset": -195
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_Farm.png",
+			"width": 219,
+			"height": 78,
+			"xOffset": -6,
+			"yOffset": -199
 		},
 		{
 			"id": "funk",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_funk.png",
-			"width": 281,
-			"height": 80,
-			"xOffset": -64,
-			"yOffset": -200
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_Funk.png",
+			"width": 217,
+			"height": 76,
+			"xOffset": -23,
+			"yOffset": -205
 		},
 		{
 			"id": "leopard",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_leopard.png",
-			"width": 145,
-			"height": 109,
-			"xOffset": -5,
-			"yOffset": -200
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_Leopard.png",
+			"width": 150,
+			"height": 87,
+			"xOffset": -10,
+			"yOffset": -205
 		},
 		{
 			"id": "porkpie",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_porkpie.png",
-			"width": 100,
-			"height": 63,
-			"xOffset": -12,
-			"yOffset": -200
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_Porkpie.png",
+			"width": 109,
+			"height": 68,
+			"xOffset": -8,
+			"yOffset": -202
 		},
 		{
 			"id": "russian",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_russian.png",
-			"width": 156,
-			"height": 108,
-			"xOffset": -29,
-			"yOffset": -195
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_Russian.png",
+			"width": 119,
+			"height": 85,
+			"xOffset": -6,
+			"yOffset": -208
 		},
 		{
 			"id": "stocking",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_stocking.png",
-			"width": 87,
-			"height": 83,
-			"xOffset": -7,
-			"yOffset": -206
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_Stocking.png",
+			"width": 94,
+			"height": 84,
+			"xOffset": -8,
+			"yOffset": -210
 		},
 		{
 			"id": "straw",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_straw.png",
-			"width": 247,
-			"height": 96,
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_Straw.png",
+			"width": 229,
+			"height": 95,
 			"xOffset": -2,
-			"yOffset": -207
+			"yOffset": -214
 		},
 		{
 			"id": "turbin",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_turbin.png",
-			"width": 103,
-			"height": 124,
-			"xOffset": -12,
-			"yOffset": -220
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Chicken_Turbin.png",
+			"width": 106,
+			"height": 113,
+			"xOffset": -9,
+			"yOffset": -221
 		}],
 
 		"Eyewear": [{
 			"id": "bono",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Chicken_bono.png",
-			"width": 117,
-			"height": 55,
-			"xOffset": -2,
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Chicken_Bono.png",
+			"width": 111,
+			"height": 50,
+			"xOffset": -1,
 			"yOffset": -154
 		},
 		{
 			"id": "bottle",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Chicken_bottle.png",
-			"width": 101,
-			"height": 41,
-			"xOffset": -8,
-			"yOffset": -154
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Chicken_Bottle.png",
+			"width": 110,
+			"height": 44,
+			"xOffset": -7,
+			"yOffset": -158
 		},
 		{
 			"id": "Hypno",
 			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Chicken_Hypno.png",
-			"width": 101,
-			"height": 35,
-			"xOffset": -7,
-			"yOffset": -154
+			"width": 117,
+			"height": 41,
+			"xOffset": -4,
+			"yOffset": -153
 		},
 		{
 			"id": "lennon",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Chicken_lennon.png",
-			"width": 107,
-			"height": 41,
-			"xOffset": -10,
-			"yOffset": -158
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Chicken_Lennon.png",
+			"width": 110,
+			"height": 42,
+			"xOffset": -9,
+			"yOffset": -160
 		},
 		{
 			"id": "MIB",
 			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Chicken_MIB.png",
-			"width": 103,
-			"height": 26,
-			"xOffset": -7,
-			"yOffset": -153
+			"width": 111,
+			"height": 27,
+			"xOffset": -6,
+			"yOffset": -155
 		},
 		{
 			"id": "oakley",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Chicken_oakley.png",
-			"width": 135,
-			"height": 33,
-			"xOffset": -2,
-			"yOffset": -154
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Chicken_Oakley.png",
+			"width": 127,
+			"height": 35,
+			"xOffset": -7,
+			"yOffset": -160
 		},
 		{
 			"id": "police",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Chicken_police.png",
-			"width": 92,
-			"height": 40,
-			"xOffset": -10,
-			"yOffset": -154
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Chicken_Police.png",
+			"width": 105,
+			"height": 44,
+			"xOffset": -8,
+			"yOffset": -155
 		},
 		{
 			"id": "ski_goggle",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Chicken_ski_goggle.png",
-			"width": 114,
-			"height": 59,
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Chicken_SkiGoggle.png",
+			"width": 102,
+			"height": 48,
 			"xOffset": -4,
-			"yOffset": -158
+			"yOffset": -152
 		},
 		{
 			"id": "wing",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Chicken_wing.png",
-			"width": 190,
-			"height": 60,
-			"xOffset": -4,
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Chicken_Wing.png",
+			"width": 194,
+			"height": 62,
+			"xOffset": -5,
 			"yOffset": -172
 		}],
 		"Neckwear": [{
 			"id": "blue",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_blue.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_Blue.png",
 			"width": 108,
-			"height": 196,
-			"xOffset": -2,
-			"yOffset": 2
+			"height": 202,
+			"xOffset": -3,
+			"yOffset": -4
 		},
 		{
 			"id": "diamond",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_diamond.png",
-			"width": 105,
-			"height": 84,
-			"xOffset": -4,
-			"yOffset": -68
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_Diamond.png",
+			"width": 124,
+			"height": 82,
+			"xOffset": -5,
+			"yOffset": -71
 		},
 		{
 			"id": "emerald",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_emerald.png",
-			"width": 113,
-			"height": 114,
-			"xOffset": -2,
-			"yOffset": -42
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_Emerald.png",
+			"width": 104,
+			"height": 104,
+			"xOffset": -3,
+			"yOffset": -56
 		},
 		{
 			"id": "flower",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_flower.png",
-			"width": 125,
-			"height": 60,
-			"xOffset": -4,
-			"yOffset": -68
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_Flower.png",
+			"width": 118,
+			"height": 54,
+			"xOffset": -2,
+			"yOffset": -75
 		},
 		{
 			"id": "orange",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_orange.png",
-			"width": 76,
-			"height": 213,
-			"xOffset": -6,
-			"yOffset": -15
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_Orange.png",
+			"width": 108,
+			"height": 206,
+			"xOffset": 0,
+			"yOffset": -5
 		},
 		{
 			"id": "polkadot",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_polkadot.png",
-			"width": 94,
-			"height": 161,
-			"xOffset": -5,
-			"yOffset": -26
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_Polkadot.png",
+			"width": 114,
+			"height": 206,
+			"xOffset": -2,
+			"yOffset": -1
 		},
 		{
 			"id": "purple",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_purple.png",
-			"width": 85,
-			"height": 47,
-			"xOffset": -7,
-			"yOffset": -81
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_Purple.png",
+			"width": 81,
+			"height": 48,
+			"xOffset": -3,
+			"yOffset": -79
 		},
 		{
 			"id": "red",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_red.png",
-			"width": 98,
-			"height": 69,
-			"xOffset": -2,
-			"yOffset": -78
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_Red.png",
+			"width": 97,
+			"height": 50,
+			"xOffset": -1,
+			"yOffset": -82
 		},
 		{
 			"id": "stripe",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_stripe.png",
-			"width": 107,
-			"height": 185,
-			"xOffset": -4,
-			"yOffset": -13
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Chicken_Stripe.png",
+			"width": 95,
+			"height": 202,
+			"xOffset": -1,
+			"yOffset": -7
 		}],
 		"UpperTorso": [{
 			"id": "70s",
 			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Chicken_70s.png",
-			"width": 274,
-			"height": 258,
-			"xOffset": 7,
-			"yOffset": 4
+			"width": 150,
+			"height": 213,
+			"xOffset": 6,
+			"yOffset": -16
 		},
 		{
 			"id": "80s",
 			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Chicken_80s.png",
-			"width": 285,
-			"height": 223,
-			"xOffset": 3,
-			"yOffset": 0
+			"width": 248,
+			"height": 202,
+			"xOffset": -3,
+			"yOffset": -5
 		},
 		{
 			"id": "jeans",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Chicken_jeans.png",
-			"width": 226,
-			"height": 202,
-			"xOffset": -4,
-			"yOffset": -24
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Chicken_Jeans.png",
+			"width": 233,
+			"height": 185,
+			"xOffset": -5,
+			"yOffset": -9
 		},
 		{
 			"id": "pinkstripe",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Chicken_pinkstripe.png",
-			"width": 263,
-			"height": 331,
-			"xOffset": 16,
-			"yOffset": -11
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Chicken_Pinkstripe.png",
+			"width": 141,
+			"height": 224,
+			"xOffset": -5,
+			"yOffset": -17
 		},
 		{
 			"id": "plaid",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Chicken_plaid.png",
-			"width": 246,
-			"height": 260,
-			"xOffset": -26,
-			"yOffset": 2
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Chicken_Plaid.png",
+			"width": 162,
+			"height": 253,
+			"xOffset": 2,
+			"yOffset": 0
 		},
 		{
 			"id": "purpleboa",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Chicken_purpleboa.png",
-			"width": 281,
-			"height": 307,
-			"xOffset": 0,
-			"yOffset": -18
-		},
-		{
-			"id": "quilted",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Chicken_quilted.png",
-			"width": 292,
-			"height": 272,
-			"xOffset": -7,
-			"yOffset": 4
-		},
-		{
-			"id": "rednwhite",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Chicken_rednwhite.png",
-			"width": 222,
-			"height": 256,
-			"xOffset": 22,
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Chicken_Purpleboa.png",
+			"width": 217,
+			"height": 270,
+			"xOffset": -2,
 			"yOffset": -6
 		},
 		{
+			"id": "quilted",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Chicken_Quilted.png",
+			"width": 240,
+			"height": 198,
+			"xOffset": -3,
+			"yOffset": -17
+		},
+		{
+			"id": "rednwhite",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Chicken_Rednwhite.png",
+			"width": 140,
+			"height": 223,
+			"xOffset": -3,
+			"yOffset": -19
+		},
+		{
 			"id": "tyedye",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Chicken_tyedye.png",
-			"width": 231,
-			"height": 214,
-			"xOffset": -1,
-			"yOffset": 5
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Chicken_Tyedye.png",
+			"width": 238,
+			"height": 212,
+			"xOffset": -3,
+			"yOffset": -12
 		}],
 		"LowerTorso": [{
 			"id": "goat",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_goat.png",
-			"width": 240,
-			"height": 126,
-			"xOffset": -6,
-			"yOffset": 92
-		},
-		{
-			"id": "hawaiian",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_hawaiian.png",
-			"width": 274,
-			"height": 120,
-			"xOffset": 4,
-			"yOffset": 106
-		},
-		{
-			"id": "jamz",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_jamz.png",
-			"width": 202,
-			"height": 93,
-			"xOffset": -4,
-			"yOffset": 112
-		},
-		{
-			"id": "jeans",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_jeans.png",
-			"width": 212,
-			"height": 102,
-			"xOffset": -5,
-			"yOffset": 108
-		},
-		{
-			"id": "kilt",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_kilt.png",
-			"width": 236,
-			"height": 123,
-			"xOffset": 5,
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_Goat.png",
+			"width": 248,
+			"height": 115,
+			"xOffset": -8,
 			"yOffset": 109
 		},
 		{
-			"id": "leopardskin",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_leopardskin.png",
-			"width": 291,
-			"height": 125,
-			"xOffset": 3,
-			"yOffset": 106
+			"id": "hawaiian",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_Hawaiian.png",
+			"width": 263,
+			"height": 120,
+			"xOffset": 1,
+			"yOffset": 119
 		},
 		{
-			"id": "pink",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_pink.png",
-			"width": 288,
-			"height": 149,
-			"xOffset": -5,
-			"yOffset": 101
+			"id": "jamz",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_Jamz.png",
+			"width": 233,
+			"height": 117,
+			"xOffset": -4,
+			"yOffset": 102
 		},
 		{
-			"id": "purple",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_purple.png",
-			"width": 275,
-			"height": 130,
-			"xOffset": -5,
+			"id": "jeans",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_Jeans.png",
+			"width": 246,
+			"height": 111,
+			"xOffset": -2,
 			"yOffset": 88
 		},
 		{
+			"id": "kilt",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_Kilt.png",
+			"width": 248,
+			"height": 131,
+			"xOffset": -10,
+			"yOffset": 98
+		},
+		{
+			"id": "leopardskin",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_Leopardskin.png",
+			"width": 268,
+			"height": 124,
+			"xOffset": 1,
+			"yOffset": 119
+		},
+		{
+			"id": "pink",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_Pink.png",
+			"width": 270,
+			"height": 140,
+			"xOffset": -6,
+			"yOffset": 85
+		},
+		{
+			"id": "purple",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_Purple.png",
+			"width": 322,
+			"height": 132,
+			"xOffset": -1,
+			"yOffset": 104
+		},
+		{
 			"id": "stripe",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_stripe.png",
-			"width": 243,
-			"height": 133,
-			"xOffset": -3,
-			"yOffset": 105
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Chicken_Stripe.png",
+			"width": 248,
+			"height": 124,
+			"xOffset": -4,
+			"yOffset": 100
 		}]
 	}
 },
 {
 	"id": "Sheep",
-	"bodyImage": "MDMT_DressingRoom_SHEEP.png",
-	"bodyThumb": "MDMT_DressingRoom_global_BaseCharacter_Sheep_thumbnail.png",
-	"bodyWidth": 322,
-	"bodyHeight": 444,
-	"eyesOpenImage": "MDMT_DressingRoom_SHEEP_eyes_open.png",
-	"eyesOpenWidth": 57,
+	"bodyImage": "MDMT_DressingRoom_Sheep.png",
+	"bodyWidth": 329,
+	"bodyHeight": 454,
+	"eyesOpenImage": "MDMT_DressingRoom_Sheep_EyesOpen.png",
+	"eyesOpenWidth": 59,
 	"eyesOpenHeight": 15,
-	"eyesShutImage": "MDMT_DressingRoom_SHEEP_eyes_shut.png",
-	"eyesShutWidth": 60,
+	"eyesShutImage": "MDMT_DressingRoom_Sheep_EyesShut.png",
+	"eyesShutWidth": 62,
 	"eyesShutHeight": 10,
-	"eyesX": -6,
-	"eyesY": -156,
+	"eyesX": -5,
+	"eyesY": -165,
 	"clothing": {
 		"Headwear": [{
 			"id": "bandana",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_bandana.png",
-			"width": 113,
-			"height": 130,
-			"xOffset": -15,
-			"yOffset": -211
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_Bandana.png",
+			"width": 97,
+			"height": 99,
+			"xOffset": -6,
+			"yOffset": -221
 		},
 		{
 			"id": "farm",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_farm.png",
-			"width": 229,
-			"height": 83,
-			"xOffset": -5,
-			"yOffset": -201
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_Farm.png",
+			"width": 230,
+			"height": 81,
+			"xOffset": -1,
+			"yOffset": -205
 		},
 		{
 			"id": "funk",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_funk.png",
-			"width": 271,
-			"height": 81,
-			"xOffset": -52,
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_Funk.png",
+			"width": 197,
+			"height": 78,
+			"xOffset": -18,
 			"yOffset": -210
 		},
 		{
 			"id": "leopard",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_leopard.png",
-			"width": 129,
-			"height": 91,
-			"xOffset": 1,
-			"yOffset": -204
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_Leopard.png",
+			"width": 134,
+			"height": 74,
+			"xOffset": -2,
+			"yOffset": -210
 		},
 		{
 			"id": "porkpie",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_porkpie.png",
-			"width": 102,
-			"height": 64,
-			"xOffset": -6,
-			"yOffset": -203
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_Porkpie.png",
+			"width": 106,
+			"height": 66,
+			"xOffset": -5,
+			"yOffset": -205
 		},
 		{
 			"id": "russian",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_russian.png",
-			"width": 166,
-			"height": 177,
-			"xOffset": -34,
-			"yOffset": -196
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_Russian.png",
+			"width": 138,
+			"height": 99,
+			"xOffset": -6,
+			"yOffset": -221
 		},
 		{
 			"id": "stocking",
 			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_stocking.png",
-			"width": 91,
-			"height": 85,
-			"xOffset": -7,
-			"yOffset": -213
+			"width": 104,
+			"height": 94,
+			"xOffset": -6,
+			"yOffset": -218
 		},
 		{
 			"id": "straw",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_straw.png",
-			"width": 218,
-			"height": 82,
-			"xOffset": 2,
-			"yOffset": -207
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_Straw.png",
+			"width": 220,
+			"height": 79,
+			"xOffset": 3,
+			"yOffset": -212
 		},
 		{
 			"id": "turbin",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_turbin.png",
-			"width": 100,
-			"height": 122,
-			"xOffset": -7,
-			"yOffset": -229
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Sheep_Turbin.png",
+			"width": 103,
+			"height": 117,
+			"xOffset": -5,
+			"yOffset": -226
 		}],
 
 		"Eyewear": [{
 			"id": "bono",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Sheep_bono.png",
-			"width": 99,
-			"height": 47,
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Sheep_Bono.png",
+			"width": 110,
+			"height": 50,
 			"xOffset": -1,
-			"yOffset": -157
+			"yOffset": -163
 		},
 		{
 			"id": "bottle",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Sheep_bottle.png",
-			"width": 86,
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Sheep_Bottle.png",
+			"width": 88,
 			"height": 35,
 			"xOffset": -3,
-			"yOffset": -155
+			"yOffset": -165
 		},
 		{
 			"id": "Hypno",
 			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Sheep_Hypno.png",
-			"width": 89,
-			"height": 31,
-			"xOffset": -2,
-			"yOffset": -158
+			"width": 95,
+			"height": 32,
+			"xOffset": -4,
+			"yOffset": -161
 		},
 		{
 			"id": "lennon",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Sheep_lennon.png",
-			"width": 85,
-			"height": 32,
-			"xOffset": -5,
-			"yOffset": -161
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Sheep_Lennon.png",
+			"width": 88,
+			"height": 34,
+			"xOffset": -6,
+			"yOffset": -166
 		},
 		{
 			"id": "MIB",
 			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Sheep_MIB.png",
-			"width": 87,
-			"height": 24,
-			"xOffset": -5,
-			"yOffset": -160
+			"width": 102,
+			"height": 26,
+			"xOffset": -3,
+			"yOffset": -164
 		},
 		{
 			"id": "oakley",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Sheep_oakley.png",
-			"width": 98,
-			"height": 25,
-			"xOffset": -4,
-			"yOffset": -158
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Sheep_Oakley.png",
+			"width": 111,
+			"height": 28,
+			"xOffset": -5,
+			"yOffset": -163
 		},
 		{
 			"id": "police",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Sheep_police.png",
-			"width": 82,
-			"height": 34,
-			"xOffset": -3,
-			"yOffset": -158
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Sheep_Police.png",
+			"width": 92,
+			"height": 39,
+			"xOffset": -7,
+			"yOffset": -164
 		},
 		{
 			"id": "ski_goggle",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Sheep_ski_goggle.png",
-			"width": 87,
-			"height": 43,
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Sheep_SkiGoggle.png",
+			"width": 94,
+			"height": 46,
 			"xOffset": -5,
-			"yOffset": -158
+			"yOffset": -164
 		},
 		{
 			"id": "wing",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Sheep_wing.png",
-			"width": 151,
-			"height": 50,
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Sheep_Wing.png",
+			"width": 155,
+			"height": 49,
 			"xOffset": -3,
-			"yOffset": -172
+			"yOffset": -176
 		}],
 		"Neckwear": [{
 			"id": "blue",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_blue.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_Blue.png",
 			"width": 108,
-			"height": 177,
-			"xOffset": -4,
+			"height": 182,
+			"xOffset": -8,
 			"yOffset": -33
 		},
 		{
 			"id": "diamond",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_diamond.png",
-			"width": 112,
-			"height": 86,
-			"xOffset": -4,
-			"yOffset": -86
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_Diamond.png",
+			"width": 115,
+			"height": 76,
+			"xOffset": -6,
+			"yOffset": -93
 		},
 		{
 			"id": "emerald",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_emerald.png",
-			"width": 111,
-			"height": 106,
-			"xOffset": -4,
-			"yOffset": -69
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_Emerald.png",
+			"width": 107,
+			"height": 100,
+			"xOffset": -5,
+			"yOffset": -74
 		},
 		{
 			"id": "flower",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_flower.png",
-			"width": 116,
-			"height": 56,
-			"xOffset": -4,
-			"yOffset": -96
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_Flower.png",
+			"width": 108,
+			"height": 49,
+			"xOffset": -5,
+			"yOffset": -99
 		},
 		{
 			"id": "orange",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_orange.png",
-			"width": 103,
-			"height": 178,
-			"xOffset": -1,
-			"yOffset": -33
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_Orange.png",
+			"width": 105,
+			"height": 183,
+			"xOffset": -4,
+			"yOffset": -36
 		},
 		{
 			"id": "polkadot",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_polkadot.png",
-			"width": 118,
-			"height": 157,
-			"xOffset": -4,
-			"yOffset": -41
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_Polkadot.png",
+			"width": 104,
+			"height": 164,
+			"xOffset": -5,
+			"yOffset": -45
 		},
 		{
 			"id": "purple",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_purple.png",
-			"width": 81,
-			"height": 43,
-			"xOffset": -12,
-			"yOffset": -84
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_Purple.png",
+			"width": 65,
+			"height": 37,
+			"xOffset": -3,
+			"yOffset": -88
 		},
 		{
 			"id": "red",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_red.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_Red.png",
 			"width": 78,
-			"height": 55,
-			"xOffset": -1,
-			"yOffset": -81
+			"height": 40,
+			"xOffset": -5,
+			"yOffset": -86
 		},
 		{
 			"id": "stripe",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_stripe.png",
-			"width": 119,
-			"height": 187,
-			"xOffset": -4,
-			"yOffset": -27
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Sheep_Stripe.png",
+			"width": 102,
+			"height": 176,
+			"xOffset": -5,
+			"yOffset": -33
 		}],
 		"UpperTorso": [{
 			"id": "70s",
 			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Sheep_70s.png",
-			"width": 220,
-			"height": 188,
-			"xOffset": -3,
-			"yOffset": -55
+			"width": 128,
+			"height": 170,
+			"xOffset": -4,
+			"yOffset": -62
 		},
 		{
 			"id": "80s",
 			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Sheep_80s.png",
-			"width": 218,
-			"height": 198,
-			"xOffset": 6,
-			"yOffset": -27
+			"width": 143,
+			"height": 166,
+			"xOffset": -7,
+			"yOffset": -50
 		},
 		{
 			"id": "jeans",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Sheep_jeans.png",
-			"width": 251,
-			"height": 202,
-			"xOffset": 1,
-			"yOffset": -54
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Sheep_Jeans.png",
+			"width": 156,
+			"height": 147,
+			"xOffset": -2,
+			"yOffset": -57
 		},
 		{
 			"id": "pinkstripe",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Sheep_pinkstripe.png",
-			"width": 208,
-			"height": 263,
-			"xOffset": 7,
-			"yOffset": -37
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Sheep_Pinkstripe.png",
+			"width": 126,
+			"height": 177,
+			"xOffset": -10,
+			"yOffset": -49
 		},
 		{
 			"id": "plaid",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Sheep_plaid.png",
-			"width": 209,
-			"height": 198,
-			"xOffset": -16,
-			"yOffset": -46
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Sheep_Plaid.png",
+			"width": 147,
+			"height": 202,
+			"xOffset": -1,
+			"yOffset": -50
 		},
 		{
 			"id": "purpleboa",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Sheep_purpleboa.png",
-			"width": 273,
-			"height": 279,
-			"xOffset": 0,
-			"yOffset": -37
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Sheep_Purpleboa.png",
+			"width": 183,
+			"height": 208,
+			"xOffset": -4,
+			"yOffset": -49
 		},
 		{
 			"id": "quilted",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Sheep_quilted.png",
-			"width": 219,
-			"height": 180,
-			"xOffset": 1,
-			"yOffset": -52
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Sheep_Quilted.png",
+			"width": 152,
+			"height": 157,
+			"xOffset": -7,
+			"yOffset": -56
 		},
 		{
 			"id": "rednwhite",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Sheep_rednwhite.png",
-			"width": 247,
-			"height": 284,
-			"xOffset": -1,
-			"yOffset": -48
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Sheep_Rednwhite.png",
+			"width": 138,
+			"height": 171,
+			"xOffset": -4,
+			"yOffset": -52
 		},
 		{
 			"id": "tyedye",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Sheep_tyedye.png",
-			"width": 159,
-			"height": 179,
-			"xOffset": 1,
-			"yOffset": -37
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Sheep_Tyedye.png",
+			"width": 143,
+			"height": 176,
+			"xOffset": -3,
+			"yOffset": -48
 		}],
 		"LowerTorso": [{
 			"id": "goat",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_goat.png",
-			"width": 225,
-			"height": 99,
-			"xOffset": 0,
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_Goat.png",
+			"width": 215,
+			"height": 131,
+			"xOffset": 1,
 			"yOffset": 65
 		},
 		{
 			"id": "hawaiian",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_hawaiian.png",
-			"width": 190,
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_Hawaiian.png",
+			"width": 184,
 			"height": 103,
-			"xOffset": 1,
-			"yOffset": 69
+			"xOffset": -3,
+			"yOffset": 57
 		},
 		{
 			"id": "jamz",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_jamz.png",
-			"width": 177,
-			"height": 96,
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_Jamz.png",
+			"width": 179,
+			"height": 121,
 			"xOffset": 1,
-			"yOffset": 63
+			"yOffset": 72
 		},
 		{
 			"id": "jeans",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_jeans.png",
-			"width": 171,
-			"height": 97,
-			"xOffset": 1,
-			"yOffset": 71
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_Jeans.png",
+			"width": 185,
+			"height": 94,
+			"xOffset": -1,
+			"yOffset": 54
 		},
 		{
 			"id": "kilt",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_kilt.png",
-			"width": 181,
-			"height": 116,
-			"xOffset": 1,
-			"yOffset": 67
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_Kilt.png",
+			"width": 194,
+			"height": 108,
+			"xOffset": -5,
+			"yOffset": 56
 		},
 		{
 			"id": "leopardskin",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_leopardskin.png",
-			"width": 183,
-			"height": 96,
-			"xOffset": 0,
-			"yOffset": 68
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_Leopardskin.png",
+			"width": 175,
+			"height": 98,
+			"xOffset": -5,
+			"yOffset": 51
 		},
 		{
 			"id": "pink",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_pink.png",
-			"width": 223,
-			"height": 147,
-			"xOffset": 1,
-			"yOffset": 65
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_Pink.png",
+			"width": 210,
+			"height": 111,
+			"xOffset": -4,
+			"yOffset": 52
 		},
 		{
 			"id": "purple",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_purple.png",
-			"width": 221,
-			"height": 99,
-			"xOffset": -2,
-			"yOffset": 70
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_Purple.png",
+			"width": 202,
+			"height": 101,
+			"xOffset": -4,
+			"yOffset": 55
 		},
 		{
 			"id": "stripe",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_stripe.png",
-			"width": 171,
-			"height": 99,
-			"xOffset": 4,
-			"yOffset": 71
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Sheep_Stripe.png",
+			"width": 180,
+			"height": 100,
+			"xOffset": -2,
+			"yOffset": 54
 		}]
 	}
 },
 {
 	"id": "Pig",
-	"bodyImage": "MDMT_DressingRoom_Pig.png",
+	"bodyImage": "MDMT_DressingRoom_Costume_Pig_Pig.png",
 	"bodyThumb": "MDMT_DressingRoom_global_BaseCharacter_Pig_thumbnail.png",
-	"bodyWidth": 322,
-	"bodyHeight": 444,
-	"eyesOpenImage": "MDMT_DressingRoom_PIG_eyes_open.png",
-	"eyesOpenWidth": 57,
-	"eyesOpenHeight": 15,
-	"eyesShutImage": "MDMT_DressingRoom_PIG_eyes_shut.png",
+	"bodyWidth": 329,
+	"bodyHeight": 466,
+	"eyesOpenImage": "MDMT_DressingRoom_Costume_Pig_EyesOpen.png",
+	"eyesOpenWidth": 55,
+	"eyesOpenHeight": 14,
+	"eyesShutImage": "MDMT_DressingRoom_Costume_Pig_EyesShut.png",
 	"eyesShutWidth": 60,
-	"eyesShutHeight": 10,
+	"eyesShutHeight": 9,
 	"eyesX": -6,
 	"eyesY": -156,
 	"clothing": {
 		"Headwear": [{
 			"id": "bandana",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_bandana.png",
-			"width": 113,
-			"height": 130,
-			"xOffset": -15,
-			"yOffset": -211
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_Bandana.png",
+			"width": 98,
+			"height": 93,
+			"xOffset": 4,
+			"yOffset": -216
 		},
 		{
 			"id": "farm",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_farm.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_Farm.png",
 			"width": 229,
 			"height": 83,
 			"xOffset": -5,
@@ -787,7 +785,7 @@
 		},
 		{
 			"id": "funk",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_funk.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_Funk.png",
 			"width": 271,
 			"height": 81,
 			"xOffset": -52,
@@ -795,7 +793,7 @@
 		},
 		{
 			"id": "leopard",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_leopard.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_Leopard.png",
 			"width": 129,
 			"height": 91,
 			"xOffset": 1,
@@ -803,7 +801,7 @@
 		},
 		{
 			"id": "porkpie",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_porkpie.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_Porkpie.png",
 			"width": 102,
 			"height": 64,
 			"xOffset": -6,
@@ -811,15 +809,15 @@
 		},
 		{
 			"id": "russian",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_russian.png",
-			"width": 166,
-			"height": 177,
-			"xOffset": -34,
-			"yOffset": -196
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_Russian.png",
+			"width": 148,
+			"height": 96,
+			"xOffset": 5,
+			"yOffset": -216
 		},
 		{
 			"id": "stocking",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_stocking.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_Stocking.png",
 			"width": 91,
 			"height": 85,
 			"xOffset": -7,
@@ -827,7 +825,7 @@
 		},
 		{
 			"id": "straw",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_straw.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_Straw.png",
 			"width": 218,
 			"height": 82,
 			"xOffset": 2,
@@ -835,7 +833,7 @@
 		},
 		{
 			"id": "turbin",
-			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_turbin.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_Turbin.png",
 			"width": 100,
 			"height": 122,
 			"xOffset": -7,
@@ -844,7 +842,7 @@
 
 		"Eyewear": [{
 			"id": "bono",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Pig_bono.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Pig_Bono.png",
 			"width": 99,
 			"height": 47,
 			"xOffset": -1,
@@ -852,7 +850,7 @@
 		},
 		{
 			"id": "bottle",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Pig_bottle.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Pig_Bottle.png",
 			"width": 86,
 			"height": 35,
 			"xOffset": -3,
@@ -868,7 +866,7 @@
 		},
 		{
 			"id": "lennon",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Pig_lennon.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Pig_Lennon.png",
 			"width": 85,
 			"height": 32,
 			"xOffset": -5,
@@ -884,7 +882,7 @@
 		},
 		{
 			"id": "oakley",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Pig_oakley.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Pig_Oakley.png",
 			"width": 98,
 			"height": 25,
 			"xOffset": -4,
@@ -892,7 +890,7 @@
 		},
 		{
 			"id": "police",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Pig_police.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Pig_Police.png",
 			"width": 82,
 			"height": 34,
 			"xOffset": -3,
@@ -900,7 +898,7 @@
 		},
 		{
 			"id": "ski_goggle",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Pig_ski_goggle.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Pig_SkiGoggle.png",
 			"width": 87,
 			"height": 43,
 			"xOffset": -5,
@@ -908,15 +906,87 @@
 		},
 		{
 			"id": "wing",
-			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Pig_wing.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Pig_Wing.png",
 			"width": 151,
 			"height": 50,
 			"xOffset": -3,
 			"yOffset": -172
 		}],
+		"UpperTorso": [{
+			"id": "70s",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_70s.png",
+			"width": 146,
+			"height": 165,
+			"xOffset": -1,
+			"yOffset": -49
+		},
+		{
+			"id": "80s",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_80s.png",
+			"width": 167,
+			"height": 161,
+			"xOffset": 2,
+			"yOffset": -53
+		},
+		{
+			"id": "jeans",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_Jeans.png",
+			"width": 180,
+			"height": 141,
+			"xOffset": 0,
+			"yOffset": -57
+		},
+		{
+			"id": "pinkstripe",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_Pinkstripe.png",
+			"width": 149,
+			"height": 193,
+			"xOffset": -4,
+			"yOffset": -34
+		},
+		{
+			"id": "plaid",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_Plaid.png",
+			"width": 160,
+			"height": 199,
+			"xOffset": 3,
+			"yOffset": -31
+		},
+		{
+			"id": "purpleboa",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_Purpleboa.png",
+			"width": 198,
+			"height": 204,
+			"xOffset": -1,
+			"yOffset": -33
+		},
+		{
+			"id": "quilted",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_Quilted.png",
+			"width": 163,
+			"height": 155,
+			"xOffset": -1,
+			"yOffset": -54
+		},
+		{
+			"id": "rednwhite",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_Rednwhite.png",
+			"width": 150,
+			"height": 171,
+			"xOffset": 1,
+			"yOffset": -46
+		},
+		{
+			"id": "tyedye",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_Tyedye.png",
+			"width": 162,
+			"height": 169,
+			"xOffset": 2,
+			"yOffset": -46
+		}],
 		"Neckwear": [{
 			"id": "blue",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_blue.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_Blue.png",
 			"width": 108,
 			"height": 177,
 			"xOffset": -4,
@@ -924,7 +994,7 @@
 		},
 		{
 			"id": "diamond",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_diamond.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_Diamond.png",
 			"width": 112,
 			"height": 86,
 			"xOffset": -4,
@@ -932,7 +1002,7 @@
 		},
 		{
 			"id": "emerald",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_emerald.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_Emerald.png",
 			"width": 111,
 			"height": 106,
 			"xOffset": -4,
@@ -940,7 +1010,7 @@
 		},
 		{
 			"id": "flower",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_flower.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_Flower.png",
 			"width": 116,
 			"height": 56,
 			"xOffset": -4,
@@ -948,7 +1018,7 @@
 		},
 		{
 			"id": "orange",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_orange.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_Orange.png",
 			"width": 103,
 			"height": 178,
 			"xOffset": -1,
@@ -956,7 +1026,7 @@
 		},
 		{
 			"id": "polkadot",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_polkadot.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_Polkadot.png",
 			"width": 118,
 			"height": 157,
 			"xOffset": -4,
@@ -964,7 +1034,7 @@
 		},
 		{
 			"id": "purple",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_purple.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_Purple.png",
 			"width": 81,
 			"height": 43,
 			"xOffset": -12,
@@ -972,95 +1042,23 @@
 		},
 		{
 			"id": "red",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_red.png",
-			"width": 78,
-			"height": 55,
-			"xOffset": -1,
-			"yOffset": -81
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_Red.png",
+			"width": 75,
+			"height": 38,
+			"xOffset": -4,
+			"yOffset": -87
 		},
 		{
 			"id": "stripe",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_stripe.png",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Pig_Stripe.png",
 			"width": 119,
 			"height": 187,
 			"xOffset": -5,
 			"yOffset": -27
 		}],
-		"UpperTorso": [{
-			"id": "70s",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_70s.png",
-			"width": 220,
-			"height": 188,
-			"xOffset": 23,
-			"yOffset": -47
-		},
-		{
-			"id": "80s",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_80s.png",
-			"width": 218,
-			"height": 198,
-			"xOffset": 6,
-			"yOffset": -27
-		},
-		{
-			"id": "jeans",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_jeans.png",
-			"width": 251,
-			"height": 202,
-			"xOffset": 1,
-			"yOffset": -54
-		},
-		{
-			"id": "pinkstripe",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_pinkstripe.png",
-			"width": 208,
-			"height": 263,
-			"xOffset": 7,
-			"yOffset": -37
-		},
-		{
-			"id": "plaid",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_plaid.png",
-			"width": 209,
-			"height": 198,
-			"xOffset": -16,
-			"yOffset": -46
-		},
-		{
-			"id": "purpleboa",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_purpleboa.png",
-			"width": 273,
-			"height": 279,
-			"xOffset": 0,
-			"yOffset": -37
-		},
-		{
-			"id": "quilted",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_quilted.png",
-			"width": 219,
-			"height": 180,
-			"xOffset": 16,
-			"yOffset": -52
-		},
-		{
-			"id": "rednwhite",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_rednwhite.png",
-			"width": 247,
-			"height": 284,
-			"xOffset": 38,
-			"yOffset": -10
-		},
-		{
-			"id": "tyedye",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Pig_tyedye.png",
-			"width": 159,
-			"height": 179,
-			"xOffset": 1,
-			"yOffset": -37
-		}],
 		"LowerTorso": [{
 			"id": "goat",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_goat.png",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_Goat.png",
 			"width": 225,
 			"height": 99,
 			"xOffset": 0,
@@ -1068,7 +1066,7 @@
 		},
 		{
 			"id": "hawaiian",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_hawaiian.png",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_Hawaiian.png",
 			"width": 190,
 			"height": 103,
 			"xOffset": 1,
@@ -1076,7 +1074,7 @@
 		},
 		{
 			"id": "jamz",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_jamz.png",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_Jamz.png",
 			"width": 177,
 			"height": 96,
 			"xOffset": 1,
@@ -1084,7 +1082,7 @@
 		},
 		{
 			"id": "jeans",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_jeans.png",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_Jeans.png",
 			"width": 171,
 			"height": 97,
 			"xOffset": 1,
@@ -1092,7 +1090,7 @@
 		},
 		{
 			"id": "kilt",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_kilt.png",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_Kilt.png",
 			"width": 181,
 			"height": 116,
 			"xOffset": 1,
@@ -1100,7 +1098,7 @@
 		},
 		{
 			"id": "leopardskin",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_leopardskin.png",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_Leopardskin.png",
 			"width": 183,
 			"height": 96,
 			"xOffset": 0,
@@ -1108,7 +1106,7 @@
 		},
 		{
 			"id": "pink",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_pink.png",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_Pink.png",
 			"width": 223,
 			"height": 147,
 			"xOffset": 1,
@@ -1116,7 +1114,7 @@
 		},
 		{
 			"id": "purple",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_purple.png",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_Purple.png",
 			"width": 221,
 			"height": 99,
 			"xOffset": -2,
@@ -1124,7 +1122,7 @@
 		},
 		{
 			"id": "stripe",
-			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_stripe.png",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_Stripe.png",
 			"width": 171,
 			"height": 99,
 			"xOffset": 4,
@@ -1292,78 +1290,6 @@
 			"xOffset": 9,
 			"yOffset": -153
 		}],
-		"Neckwear": [{
-			"id": "blue",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_blue.png",
-			"width": 102,
-			"height": 162,
-			"xOffset": -5,
-			"yOffset": -13
-		},
-		{
-			"id": "diamond",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_diamond.png",
-			"width": 101,
-			"height": 77,
-			"xOffset": -3,
-			"yOffset": -64
-		},
-		{
-			"id": "emerald",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_emerald.png",
-			"width": 100,
-			"height": 97,
-			"xOffset": -5,
-			"yOffset": -47
-		},
-		{
-			"id": "flower",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_flower.png",
-			"width": 104,
-			"height": 50,
-			"xOffset": -4,
-			"yOffset": -73
-		},
-		{
-			"id": "orange",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_orange.png",
-			"width": 95,
-			"height": 163,
-			"xOffset": -3,
-			"yOffset": -15
-		},
-		{
-			"id": "polkadot",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_polkadot.png",
-			"width": 108,
-			"height": 145,
-			"xOffset": -5,
-			"yOffset": -19
-		},
-		{
-			"id": "purple",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_purple.png",
-			"width": 56,
-			"height": 32,
-			"xOffset": 0,
-			"yOffset": -75
-		},
-		{
-			"id": "red",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_red.png",
-			"width": 70,
-			"height": 37,
-			"xOffset": 1,
-			"yOffset": -71
-		},
-		{
-			"id": "stripe",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_stripe.png",
-			"width": 87,
-			"height": 167,
-			"xOffset": 0,
-			"yOffset": -16
-		}],
 		"UpperTorso": [{
 			"id": "70s",
 			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Goat_70s.png",
@@ -1435,6 +1361,78 @@
 			"height": 160,
 			"xOffset": 0,
 			"yOffset": -22
+		}],
+		"Neckwear": [{
+			"id": "blue",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_blue.png",
+			"width": 102,
+			"height": 162,
+			"xOffset": -5,
+			"yOffset": -13
+		},
+		{
+			"id": "diamond",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_diamond.png",
+			"width": 101,
+			"height": 77,
+			"xOffset": -3,
+			"yOffset": -64
+		},
+		{
+			"id": "emerald",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_emerald.png",
+			"width": 100,
+			"height": 97,
+			"xOffset": -5,
+			"yOffset": -47
+		},
+		{
+			"id": "flower",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_flower.png",
+			"width": 104,
+			"height": 50,
+			"xOffset": -4,
+			"yOffset": -73
+		},
+		{
+			"id": "orange",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_orange.png",
+			"width": 95,
+			"height": 163,
+			"xOffset": -3,
+			"yOffset": -15
+		},
+		{
+			"id": "polkadot",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_polkadot.png",
+			"width": 108,
+			"height": 145,
+			"xOffset": -5,
+			"yOffset": -19
+		},
+		{
+			"id": "purple",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_purple.png",
+			"width": 56,
+			"height": 32,
+			"xOffset": 0,
+			"yOffset": -75
+		},
+		{
+			"id": "red",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_red.png",
+			"width": 70,
+			"height": 37,
+			"xOffset": 1,
+			"yOffset": -71
+		},
+		{
+			"id": "stripe",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Goat_stripe.png",
+			"width": 87,
+			"height": 167,
+			"xOffset": 0,
+			"yOffset": -16
 		}],
 		"LowerTorso": [{
 			"id": "goat",
@@ -1595,7 +1593,7 @@
 			"width": 121,
 			"height": 118,
 			"xOffset": 31,
-			"yOffset": -209
+			"yOffset": -230
 		}],
 
 		"Eyewear": [{
@@ -1659,7 +1657,7 @@
 			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Cat_SkiGoggle.png",
 			"width": 94,
 			"height": 46,
-			"xOffset": 22,
+			"xOffset": 25,
 			"yOffset": -168
 		},
 		{
@@ -1669,6 +1667,78 @@
 			"height": 49,
 			"xOffset": 29,
 			"yOffset": -178
+		}],
+		"UpperTorso": [{
+			"id": "70s",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_70s.png",
+			"width": 128,
+			"height": 170,
+			"xOffset": 23,
+			"yOffset": -46
+		},
+		{
+			"id": "80s",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_80s.png",
+			"width": 144,
+			"height": 165,
+			"xOffset": 18,
+			"yOffset": -42
+		},
+		{
+			"id": "jeans",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_jeans.png",
+			"width": 156,
+			"height": 148,
+			"xOffset": 22,
+			"yOffset": -53
+		},
+		{
+			"id": "pinkstripe",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_pinkstripe.png",
+			"width": 129,
+			"height": 179,
+			"xOffset": 17,
+			"yOffset": -42
+		},
+		{
+			"id": "plaid",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_plaid.png",
+			"width": 145,
+			"height": 201,
+			"xOffset": 26,
+			"yOffset": -31
+		},
+		{
+			"id": "purpleboa",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_purpleboa.png",
+			"width": 182,
+			"height": 208,
+			"xOffset": 23,
+			"yOffset": -32
+		},
+		{
+			"id": "quilted",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_quilted.png",
+			"width": 151,
+			"height": 156,
+			"xOffset": 19,
+			"yOffset": -48
+		},
+		{
+			"id": "rednwhite",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_rednwhite.png",
+			"width": 138,
+			"height": 171,
+			"xOffset": 23,
+			"yOffset": -45
+		},
+		{
+			"id": "tyedye",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_tyedye.png",
+			"width": 142,
+			"height": 176,
+			"xOffset": 24,
+			"yOffset": -41
 		}],
 		"Neckwear": [{
 			"id": "blue",
@@ -1741,78 +1811,6 @@
 			"height": 175,
 			"xOffset": 22,
 			"yOffset": -40
-		}],
-		"UpperTorso": [{
-			"id": "70s",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_70s.png",
-			"width": 128,
-			"height": 170,
-			"xOffset": 23,
-			"yOffset": 46
-		},
-		{
-			"id": "80s",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_80s.png",
-			"width": 144,
-			"height": 165,
-			"xOffset": 18,
-			"yOffset": -42
-		},
-		{
-			"id": "jeans",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_jeans.png",
-			"width": 156,
-			"height": 148,
-			"xOffset": 22,
-			"yOffset": -53
-		},
-		{
-			"id": "pinkstripe",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_pinkstripe.png",
-			"width": 129,
-			"height": 179,
-			"xOffset": 17,
-			"yOffset": -42
-		},
-		{
-			"id": "plaid",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_plaid.png",
-			"width": 145,
-			"height": 201,
-			"xOffset": 26,
-			"yOffset": -31
-		},
-		{
-			"id": "purpleboa",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_purpleboa.png",
-			"width": 182,
-			"height": 208,
-			"xOffset": 23,
-			"yOffset": -32
-		},
-		{
-			"id": "quilted",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_quilted.png",
-			"width": 151,
-			"height": 156,
-			"xOffset": 19,
-			"yOffset": -48
-		},
-		{
-			"id": "rednwhite",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_rednwhite.png",
-			"width": 138,
-			"height": 171,
-			"xOffset": 23,
-			"yOffset": -45
-		},
-		{
-			"id": "tyedye",
-			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Cat_tyedye.png",
-			"width": 142,
-			"height": 176,
-			"xOffset": 24,
-			"yOffset": -41
 		}],
 		"LowerTorso": [{
 			"id": "goat",
@@ -2048,78 +2046,6 @@
 			"xOffset": 17,
 			"yOffset": -170
 		}],
-		"Neckwear": [{
-			"id": "blue",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_blue.png",
-			"width": 100,
-			"height": 171,
-			"xOffset": 12,
-			"yOffset": -26
-		},
-		{
-			"id": "diamond",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_diamond.png",
-			"width": 107,
-			"height": 71,
-			"xOffset": 13,
-			"yOffset": -80
-		},
-		{
-			"id": "emerald",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_emerald.png",
-			"width": 104,
-			"height": 96,
-			"xOffset": 12,
-			"yOffset": -67
-		},
-		{
-			"id": "flower",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_flower.png",
-			"width": 108,
-			"height": 51,
-			"xOffset": 12,
-			"yOffset": -88
-		},
-		{
-			"id": "orange",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_orange.png",
-			"width": 98,
-			"height": 171,
-			"xOffset": 14,
-			"yOffset": -33
-		},
-		{
-			"id": "polkadot",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_polkadot.png",
-			"width": 97,
-			"height": 154,
-			"xOffset": 12,
-			"yOffset": -40
-		},
-		{
-			"id": "purple",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_purple.png",
-			"width": 60,
-			"height": 35,
-			"xOffset": 14,
-			"yOffset": -80
-		},
-		{
-			"id": "red",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_red.png",
-			"width": 72,
-			"height": 38,
-			"xOffset": 16,
-			"yOffset": -80
-		},
-		{
-			"id": "stripe",
-			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_stripe.png",
-			"width": 93,
-			"height": 165,
-			"xOffset": 13,
-			"yOffset": -30
-		}],
 		"UpperTorso": [{
 			"id": "70s",
 			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Dog_70s.png",
@@ -2191,6 +2117,78 @@
 			"height": 167,
 			"xOffset": 19,
 			"yOffset": -45
+		}],
+		"Neckwear": [{
+			"id": "blue",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_blue.png",
+			"width": 100,
+			"height": 171,
+			"xOffset": 12,
+			"yOffset": -26
+		},
+		{
+			"id": "diamond",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_diamond.png",
+			"width": 107,
+			"height": 71,
+			"xOffset": 13,
+			"yOffset": -80
+		},
+		{
+			"id": "emerald",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_emerald.png",
+			"width": 104,
+			"height": 96,
+			"xOffset": 12,
+			"yOffset": -67
+		},
+		{
+			"id": "flower",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_flower.png",
+			"width": 108,
+			"height": 51,
+			"xOffset": 12,
+			"yOffset": -88
+		},
+		{
+			"id": "orange",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_orange.png",
+			"width": 98,
+			"height": 171,
+			"xOffset": 14,
+			"yOffset": -33
+		},
+		{
+			"id": "polkadot",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_polkadot.png",
+			"width": 97,
+			"height": 154,
+			"xOffset": 12,
+			"yOffset": -40
+		},
+		{
+			"id": "purple",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_purple.png",
+			"width": 60,
+			"height": 35,
+			"xOffset": 14,
+			"yOffset": -80
+		},
+		{
+			"id": "red",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_red.png",
+			"width": 72,
+			"height": 38,
+			"xOffset": 16,
+			"yOffset": -80
+		},
+		{
+			"id": "stripe",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Dog_stripe.png",
+			"width": 93,
+			"height": 165,
+			"xOffset": 13,
+			"yOffset": -30
 		}],
 		"LowerTorso": [{
 			"id": "goat",

@@ -28,10 +28,10 @@ scene.preCreateScene = function(self, event)
 	end
 	if (not characterStampsTool) then return; end
 	local subtools = characterStampsTool.subtools;
-	
+
 	local savedCharData = FRC_DataLib.readJSON(FRC_DressingRoom_Settings.DATA.DATA_FILENAME, system.DocumentsDirectory);
 	savedCharData = savedCharData.savedItems;
-	
+
 	for i=1,#savedCharData do
 		local char = savedCharData[i];
 		table.insert(characterStampsTool.subtools, {
@@ -60,9 +60,10 @@ scene.postCreateScene = function(self, event)
 		imageDown = 'FRC_Assets/FRC_ActionBar/Images/MDMT_ActionBar_Button_ActionBar_down.png',
 		focusState = 'FRC_Assets/FRC_ActionBar/Images/MDMT_ActionBar_Button_ActionBar_focused.png',
 		disabled = 'FRC_Assets/FRC_ActionBar/Images/MDMT_ActionBar_Button_ActionBar_disabled.png',
-		buttonWidth = 75,
-		buttonHeight = 75,
-		buttonPadding = 40,
+		buttonWidth = 100,
+		buttonHeight = 100,
+		buttonPadding = 15,
+		bgColor = { 1, 1, 1, .95 },
 		buttons = {
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Home_up.png',
@@ -80,8 +81,8 @@ scene.postCreateScene = function(self, event)
 				end
 			},
 			{
-				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_up.png',
-				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_down.png',
+				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_down.png',
+				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_up.png',
 				onRelease = function(e)
 					local screenRect = display.newRect(view, 0, 0, screenW, screenH);
 					screenRect.x = display.contentCenterX;
@@ -89,15 +90,16 @@ scene.postCreateScene = function(self, event)
 					screenRect:setFillColor(0, 0, 0, 0.75);
 					screenRect:addEventListener('touch', function() return true; end);
 					screenRect:addEventListener('tap', function() return true; end);
-					
+
 					local webView = native.newWebView(0, 0, screenW - 100, screenH - 55);
 					webView.x = display.contentCenterX;
 					webView.y = display.contentCenterY + 20;
-					webView:request("http://fatredcouch.com/page.php?t=products");
-		
+					local platformName = import("platform").detected;
+					webView:request("http://fatredcouch.com/page.php?t=products&p=" .. platformName);
+
 					local closeButton = ui.button.new({
-						imageUp = imageBase .. 'MDMT_Home_global_LandingPage_CloseButton.png',
-						imageDown = imageBase .. 'MDMT_Home_global_LandingPage_CloseButton.png',
+						imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
+						imageDown = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
 						width = 50,
 						height = 50,
 						onRelease = function(event)
@@ -114,8 +116,8 @@ scene.postCreateScene = function(self, event)
 			},
 			-- SAVE button
 			{
-				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Save_up.png',
-				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Save_down.png',
+				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_up.png',
+				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_down.png',
 				onRelease = function(e)
 					local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
 					local galleryPopup;
@@ -138,9 +140,9 @@ scene.postCreateScene = function(self, event)
 			},
 			-- LOAD button (needs icon)
 			{
-				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Load_up.png',
-				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Load_down.png',
-				disabled = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Load_disabled.png',
+				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_up.png',
+				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_down.png',
+				disabled = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_disabled.png',
 				isDisabled = (#FRC_ArtCenter.savedData.savedItems < 1),
 				onRelease = function(e)
 					local function showLoadPopup()
@@ -190,9 +192,10 @@ scene.postCreateScene = function(self, event)
 		imageDown = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_Settings_down.png',
 		focusState = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_Settings_focused.png',
 		disabled = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_Settings_disabled.png',
-		buttonWidth = 75,
-		buttonHeight = 75,
-		buttonPadding = 40,
+		buttonWidth = 100,
+		buttonHeight = 100,
+		buttonPadding = 15,
+		bgColor = { 1, 1, 1, .95 },
 		buttons = {
 			{
 				imageUp = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_SoundMusic_up.png',

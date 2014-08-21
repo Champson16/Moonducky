@@ -1,0 +1,9 @@
+{
+	"analytics": "FRC_Modules.FRC_Analytics.FRC_Analytics",
+	"ratings": "FRC_Modules.FRC_Ratings.FRC_Ratings",
+	"datafiles": "FRC_Modules.FRC_DataLib.FRC_DataLib",
+	"util": "FRC_Modules.FRC_Util.FRC_Util",
+	"platform": "FRC_Modules.FRC_Platform.FRC_Platform",
+	"audiomanager": "FRC_Modules.FRC_AudioManager.FRC_AudioManager",
+	"artcenter": "FRC_Modules.FRC_ArtCenter.FRC_ArtCenter"
+}

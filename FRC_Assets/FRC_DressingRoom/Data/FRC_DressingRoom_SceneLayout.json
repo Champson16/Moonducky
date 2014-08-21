@@ -1,0 +1,25 @@
+[{
+	"id": "Armoire",
+	"imageFile": "MDMT_DressingRoom_Armoire.png",
+	"width": 304,
+	"height": 602,
+	"left": 20,
+	"y": 268
+},
+{
+	"id": "Ottoman",
+	"imageFile": "MDMT_DressingRoom_Ottoman.png",
+	"width": 215,
+	"height": 195,
+	"right": 82,
+	"y": 480
+},
+{
+	"id": "MysteryBox",
+	"imageFile": "MDMT_DressingRoom_MysteryBox.png",
+	"width": 130,
+	"height": 96,
+	"right": 126,
+	"y": 390,
+	"onTouch": "randomCostume"
+}]

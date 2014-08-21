@@ -24,15 +24,19 @@ ul.tabs li
         
 ul.tabs li a
 {
-    font: normal 24px Verdana;
-    text-decoration: none;
-    position: relative;
-    padding: 6px 14px;
-    border: 1px solid #B7B7B7;
-    color: #000;
-    background: #F7F7F7 url(tabbg2.gif) repeat-x 0 0;
-    border-radius: 3px 3px 0 0;
-    outline:none;
+	font-weight: normal;
+	font-variant: normal;
+	font-style: normal;
+	font-size: 18px;
+	font-family: Verdana;
+	text-decoration: none;
+	position: relative;
+	padding: 6px 14px;
+	border: 1px solid #B7B7B7;
+	color: #000;
+	background: #F7F7F7 url(tabbg2.gif) repeat-x 0 0;
+	border-radius: 3px 3px 0 0;
+	outline: none;
 }
         
 ul.tabs li a:visited

@@ -4,6 +4,8 @@ local FRC_DressingRoom_Settings = require('FRC_Modules.FRC_DressingRoom.FRC_Dres
 local FRC_Layout = require('FRC_Modules.FRC_Layout.FRC_Layout');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_DressingRoom_Scene = storyboard.newScene();
+local FRC_AnimationManager = require('FRC_Modules.FRC_AnimationManager.FRC_AnimationManager');
+local FRC_AudioManager = require('FRC_Modules.FRC_AudioManager.FRC_AudioManager');
 
 local character_x = 0;
 local character_y = -16;
@@ -21,6 +23,9 @@ local function DATA(key, baseDir)
 	baseDir = baseDir or system.ResourceDirectory;
 	return FRC_DataLib.readJSON(FRC_DressingRoom_Settings.DATA[key], baseDir);
 end
+
+local animationXMLBase = UI('ANIMATION_XML_BASE');
+local animationImageBase = UI('ANIMATION_IMAGE_BASE');
 
 local generateUniqueIdentifier = function(digits)
 	digits = digits or 20;
@@ -42,7 +47,7 @@ function FRC_DressingRoom_Scene:save(e)
 	local id = e.id;
 	if ((not id) or (id == '')) then id = (generateUniqueIdentifier(20)); end
 	local saveGroup = self.view.saveGroup;
-	
+
 	-- create mask (to be used for Stamp in ArtCenter)
 	-- mask must have a minimum of 3px padding on all sides, and be a multiple of 4
 	local capture = display.capture(saveGroup);
@@ -161,7 +166,7 @@ function FRC_DressingRoom_Scene:createScene(event)
 	local chartainer = display.newGroup();
 	chartainer.anchorChildren = true;
 	view:insert(chartainer);
-	chartainer.x, chartainer.y = display.contentCenterX, display.contentCenterY - 30;
+	chartainer.x, chartainer.y = display.contentCenterX - 10, display.contentCenterY + 20;
 	chartainer:scale(0.80, 0.80);
 	chartainer:scale(bg.xScale, bg.yScale);
 	view.saveGroup = chartainer;
@@ -169,7 +174,7 @@ function FRC_DressingRoom_Scene:createScene(event)
 	-- Get lua tables from JSON data
 	local characterData = DATA('CHARACTER');
 	local categoryData = DATA('CATEGORY');
-	local furnitureData = DATA('FURNITURE');
+	local sceneLayoutData = DATA('SCENELAYOUT');
 
 	-- Insert 'None' as first item of all character costume categories
 	local none = {
@@ -213,6 +218,8 @@ function FRC_DressingRoom_Scene:createScene(event)
 	end
 
 	local function beginEyeAnimation(open, shut)
+		-- DEBUG:
+		-- print("beginEyeAnimation BLINK");
 		if (eyeTimer) then pcall(timer.cancel, eyeTimer); end
 		open.isVisible = true;
 		shut.isVisible = false;
@@ -238,9 +245,8 @@ function FRC_DressingRoom_Scene:createScene(event)
 		end, 1);
 	end
 
-	-- handles swapping out of characters and specific clothing items
-	local function changeItem(categoryId, character, index)
-		-- clear current layer
+	local function clearLayer(categoryId)
+		-- clear specified layer
 		for k,v in pairs(layers) do
 			if (categoryId == k) then
 				for i=layers[k].numChildren,1,-1 do
@@ -250,23 +256,34 @@ function FRC_DressingRoom_Scene:createScene(event)
 				break;
 			end
 		end
-		
+	end
+
+	-- handles swapping out of characters and specific clothing items
+	local function changeItem(categoryId, character, index)
+		clearLayer(categoryId);
+
 		local charData = getDataForCharacter(character);
+
+		local function changeEyes(charBody)
+			if (charData.eyesOpenImage and charData.eyesShutImage) then
+				local charEyesOpen = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.eyesOpenImage, charData.eyesOpenWidth, charData.eyesOpenHeight);
+				charEyesOpen.x, charEyesOpen.y = charBody.x + charData.eyesX, charBody.y + charData.eyesY;
+				charEyesOpen.isVisible = true;
+
+				local charEyesShut = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.eyesShutImage, charData.eyesShutWidth, charData.eyesShutHeight);
+				charEyesShut.x, charEyesShut.y = charBody.x + charData.eyesX, charBody.y + charData.eyesY;
+				charEyesShut.isVisible = false;
+
+				beginEyeAnimation(charEyesOpen, charEyesShut);
+			end
+		end
 
 		if (categoryId == 'Character') then
 			selectedCharacter = character;
 			local charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.bodyImage, charData.bodyWidth, charData.bodyHeight);
 			charBody.x, charBody.y = character_x, character_y;
 
-			local charEyesOpen = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.eyesOpenImage, charData.eyesOpenWidth, charData.eyesOpenHeight);
-			charEyesOpen.x, charEyesOpen.y = charBody.x + charData.eyesX, charBody.y + charData.eyesY;
-			charEyesOpen.isVisible = true;
-
-			local charEyesShut = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.eyesShutImage, charData.eyesShutWidth, charData.eyesShutHeight);
-			charEyesShut.x, charEyesShut.y = charBody.x + charData.eyesX, charBody.y + charData.eyesY;
-			charEyesShut.isVisible = false;
-
-			beginEyeAnimation(charEyesOpen, charEyesShut);
+			changeEyes(charBody);
 
 			if (index ~= 0) then
 				for i=2,#categoryData do
@@ -279,6 +296,29 @@ function FRC_DressingRoom_Scene:createScene(event)
 			if (clothingData.id ~= 'none') then
 				local item = display.newImageRect(layers[categoryId], UI('IMAGES_PATH') .. clothingData.imageFile, clothingData.width, clothingData.height);
 				item.x, item.y = character_x + clothingData.xOffset, character_y + clothingData.yOffset;
+				-- check to see if we need to use the special altBodyImage
+				if (categoryId == 'Headwear') then
+					if (clothingData.altBodyImage) then
+						-- DEBUG:
+						-- print("Swapping in altBodyImage: ", UI('IMAGES_PATH') .. charData.altBodyImage);
+						clearLayer('Character');
+						charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.altBodyImage, charData.bodyWidth, charData.bodyHeight);
+						charBody.x, charBody.y = character_x, character_y;
+						changeEyes(charBody);
+					else
+						-- sloppy but we have to switch back to the baseimage
+						-- DEBUG:
+						-- print("Swapping in bodyImage: ", UI('IMAGES_PATH') .. charData.bodyImage);
+						clearLayer('Character');
+						charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.bodyImage, charData.bodyWidth, charData.bodyHeight);
+						charBody.x, charBody.y = character_x, character_y;
+						changeEyes(charBody);
+					end
+				end
+			--else
+			--	clearLayer('Character');
+			--	charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.bodyImage, charData.bodyWidth, charData.bodyHeight);
+			--	charBody.x, charBody.y = character_x, character_y;
 			end
 			layers[categoryId].selectedIndex = index;
 		end
@@ -299,32 +339,57 @@ function FRC_DressingRoom_Scene:createScene(event)
 		end
 	end
 
-	-- by default, place naked first character onto the dressing room floor
-	changeItem('Character', characterData[1].id, 0);
-	view:insert(chartainer);
+	-- create sceneLayout items
+	local sceneLayoutMethods = {};
 
-	-- create furniture items
-	local furnitureMethods = {};
-	function furnitureMethods.randomCostume()
-		for i=2,#categoryData do
-			changeItem(categoryData[i].id, selectedCharacter, math.random(2, #getDataForCharacter(selectedCharacter).clothing[categoryData[i].id]));
+	-- ambient loop sequence
+	function sceneLayoutMethods.playMysteryBoxAnimationSequence()
+		for i=1, mysteryBoxAnimationSequences.numChildren do
+			mysteryBoxAnimationSequences[i]:play({
+				showLastFrame = false,
+				playBackward = false,
+				autoLoop = false,
+				palindromicLoop = false,
+				delay = 0,
+				intervalTime = 30,
+				maxIterations = 1,
+				onCompletion = function ()
+					for i=2,#categoryData do
+						changeItem(categoryData[i].id, selectedCharacter, math.random(2, #getDataForCharacter(selectedCharacter).clothing[categoryData[i].id]));
+					end
+				end
+			});
 		end
 	end
 
-	for i=1,#furnitureData do
-		local furniture = display.newImageRect(view, UI('IMAGES_PATH') .. furnitureData[i].imageFile, furnitureData[i].width, furnitureData[i].height);
-		if (furnitureData[i].left) then
-			furniture.x = furnitureData[i].left - ((screenW - display.contentWidth) * 0.5) + (furniture.contentWidth * 0.5);
-		elseif (furnitureData[i].right) then
-			furniture.x = display.contentWidth - furnitureData[i].right + ((screenW - display.contentWidth) * 0.5) - (furniture.contentWidth * 0.5);
-		end
-		furniture.y = furnitureData[i].y - ((screenH - display.contentHeight) * 0.5);
-		furniture:scale(bg.xScale, bg.yScale);
+	function sceneLayoutMethods.randomCostume()
+		-- play the mystery box animation
+		sceneLayoutMethods.playMysteryBoxAnimationSequence();
+	end
 
-		if (furnitureData[i].onTouch) then
-			furniture.onTouch = furnitureMethods[furnitureData[i].onTouch];
-			if (furniture.onTouch) then
-				furniture:addEventListener('touch', function(e)
+	for i=1,#sceneLayoutData do
+		local sceneLayout = display.newImageRect(view, UI('IMAGES_PATH') .. sceneLayoutData[i].imageFile, sceneLayoutData[i].width, sceneLayoutData[i].height);
+		if (sceneLayoutData[i].left) then
+			sceneLayout.x = sceneLayoutData[i].left - ((screenW - display.contentWidth) * 0.5) + (sceneLayout.contentWidth * 0.5);
+		elseif (sceneLayoutData[i].right) then
+			sceneLayout.x = display.contentWidth - sceneLayoutData[i].right + ((screenW - display.contentWidth) * 0.5) - (sceneLayout.contentWidth * 0.5);
+		else
+			sceneLayout.x = sceneLayoutData[i].x - ((screenW - display.contentWidth) * 0.5);
+		end
+		if (sceneLayoutData[i].top) then
+			sceneLayout.y = sceneLayoutData[i].top - ((screenH - display.contentHeight) * 0.5) + (sceneLayout.contentHeight * 0.5);
+		elseif (sceneLayoutData[i].bottom) then
+			sceneLayout.y = display.contentHeight - sceneLayoutData[i].bottom + ((screenH - display.contentHeight) * 0.5) - (sceneLayout.contentHeight * 0.5);
+		else
+			sceneLayout.y = sceneLayoutData[i].y - ((screenH - display.contentHeight) * 0.5);
+		end
+
+		sceneLayout:scale(bg.xScale, bg.yScale);
+
+		if (sceneLayoutData[i].onTouch) then
+			sceneLayout.onTouch = sceneLayoutMethods[sceneLayoutData[i].onTouch];
+			if (sceneLayout.onTouch) then
+				sceneLayout:addEventListener('touch', function(e)
 					if (e.phase == "began") then
 						e.target.onTouch();
 					end
@@ -333,6 +398,28 @@ function FRC_DressingRoom_Scene:createScene(event)
 			end
 		end
 	end
+
+	local mysteryBoxAnimationFiles = {
+		"SPMTM_DressingRoom_MysteryBox_06.xml",
+		"SPMTM_DressingRoom_MysteryBox_05.xml",
+		"SPMTM_DressingRoom_MysteryBox_04.xml",
+		"SPMTM_DressingRoom_MysteryBox_03.xml",
+		"SPMTM_DressingRoom_MysteryBox_02.xml",
+		"SPMTM_DressingRoom_MysteryBox_01.xml"
+	};
+	-- preload the animation data (XML and images) early
+	mysteryBoxAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(mysteryBoxAnimationFiles, animationXMLBase, animationImageBase);
+	mysteryBoxAnimationSequences.anchorX = 0.5;
+	mysteryBoxAnimationSequences.anchorY = 0.5;
+	mysteryBoxAnimationSequences.xScale = screenW / display.contentWidth;
+	mysteryBoxAnimationSequences.yScale = mysteryBoxAnimationSequences.xScale;
+	mysteryBoxAnimationSequences.x = -22; -- display.contentWidth * 0.5;
+	mysteryBoxAnimationSequences.y = 70; -- display.contentHeight * 0.5;
+	view:insert(mysteryBoxAnimationSequences);
+
+	-- by default, place naked first character onto the dressing room floor
+	changeItem('Character', characterData[1].id, 0);
+	view:insert(chartainer);
 
 	local category_button_spacing = 48;
 	local button_spacing = 24;
@@ -348,7 +435,7 @@ function FRC_DressingRoom_Scene:createScene(event)
 			categoriesHeight = categoryData[i].height * button_scale;
 		end
 	end
-	categoriesHeight = categoriesHeight + (category_button_spacing * 2);
+	categoriesHeight = categoriesHeight + (category_button_spacing * 1.25); -- (category_button_spacing * 2);
 
 	-- create button panel for categories (aligned to the bottom of the screen)
 	local categoriesContainer = display.newContainer(categoriesWidth, categoriesHeight);
@@ -413,8 +500,8 @@ function FRC_DressingRoom_Scene:createScene(event)
 		buttonHeight = scroller.contentHeight - button_spacing;
 		local button = ui.button.new({
 			id = characterData[i].id,
-			imageUp = UI('IMAGES_PATH') .. characterData[i].bodyThumb,
-			imageDown = UI('IMAGES_PATH') .. characterData[i].bodyThumb,
+			imageUp = UI('IMAGES_PATH') .. (characterData[i].bodyThumb or characterData[i].bodyImage),
+			imageDown = UI('IMAGES_PATH') .. (characterData[i].bodyThumb or characterData[i].bodyImage),
 			width = buttonHeight * (characterData[i].bodyWidth / characterData[i].bodyHeight),
 			height = buttonHeight,
 			parentScrollContainer = scroller,
@@ -432,17 +519,50 @@ function FRC_DressingRoom_Scene:createScene(event)
 	end
 
 	-- create the clothing scroll containers using the first character's images
+
+	local thumbnailExtension = "";
+	if (FRC_DressingRoom_Settings.CONFIG.costumes) then
+		if (FRC_DressingRoom_Settings.CONFIG.costumes.customThumbnails) then
+			thumbnailExtension = "_thumbnail";
+		end
+	end
+	-- DEBUG:
+	print("costume thumbnail extension: ", thumbnailExtension);
+
 	for k,v in pairs(characterData[1].clothing) do
 		local categoryId = k;
 		local scroller = itemScrollers[categoryId];
 		local x = -(scroller.contentWidth * 0.5) + scroller.leftPadding;
 		for j=1,#v do
+			-- DEBUG:
+			-- this is to find issues with bad character data
+			-- print("characterData[1].clothing:" .. v[j].id);
+			-- width = buttonHeight * (v[j].width / v[j].height),
+			-- need to constrain the image to fit a maximum width area
+			local scaledWidth = buttonHeight * (v[j].width / v[j].height);
+			local constrainedWidth = buttonHeight * 1.5;
+			local tempwidth = math.min(scaledWidth, constrainedWidth);
+			local tempheight = buttonHeight; -- default
+			if (tempwidth == constrainedWidth) then
+				-- we had to constrain the width artificially so we need to scale down the height to reflect that
+				tempheight = buttonHeight * (constrainedWidth / scaledWidth);
+			end;
+			-- if there's a custom thumbnail extension (instead of using the first character's costume images)
+			-- we need to rewrite the imageFile path
+			local imageFilePath = UI('IMAGES_PATH') .. v[j].imageFile;
+			-- DEBUG:
+			-- print(imageFilePath);
+			if ( thumbnailExtension ~= "" ) then
+				imageFilePath = string.gsub(imageFilePath, ".png", thumbnailExtension .. ".png", 1);
+				-- DEBUG:
+				-- print(imageFilePath);
+			end
 			local button = ui.button.new({
 				id = v[j].id,
-				imageUp = UI('IMAGES_PATH') .. v[j].imageFile,
-				imageDown = UI('IMAGES_PATH') .. v[j].imageFile,
-				width = buttonHeight * (v[j].width / v[j].height),
-				height = buttonHeight,
+				imageUp = imageFilePath,
+				imageDown = imageFilePath,
+				width = tempwidth,
+				height = tempheight,
 				parentScrollContainer = scroller,
 				pressAlpha = 0.5,
 				onRelease = function(e)

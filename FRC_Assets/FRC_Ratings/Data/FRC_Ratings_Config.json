@@ -1,0 +1,14 @@
+{
+	"dialog": {
+		"title": "Rate MoonDucky Music Theatre",
+		"description": "If you enjoyed the MoonDucky Music Theatre, please take a moment to rate this app.",
+		"option_rateit": "Yes, rate it!",
+		"option_dontask": "Don't ask again",
+		"option_remindlater": "Remind me later",
+		"snooze": 5
+	},
+	"apple": "",
+	"google": "com.fatredcouch.moonducky.musictheatre",
+	"nook": "http://www.barnesandnoble.com/reviews/SOMETHING",
+	"amazon": "http://www.amazon.com/SOMETHING/product-reviews/SOMETHING/"
+}

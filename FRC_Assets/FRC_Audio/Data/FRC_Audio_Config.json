@@ -1,0 +1,17 @@
+{
+	"volume": 1.0,
+	"groups": {
+		"music": {
+			"max_channels": 3,
+			"volume": 1.0
+		},
+		"sfx": {
+			"max_channels": 5,
+			"volume": 1.0
+		}
+	},
+
+	"audio": [
+		{ "tag": "theme_song", "path": "FRC_Assets/MDMT_Assets/Audio/MDMT_global_BGMUSIC_HamstersJustWantToBeFree.mp3" }
+	]
+}
