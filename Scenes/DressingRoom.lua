@@ -39,7 +39,7 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_down.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_up.png',
 				onRelease = function(e)
-					local screenRect = display.newRect(view, 0, 0, screenW, screenH);
+					local screenRect = display.newRect(0, 0, screenW, screenH);
 					screenRect.x = display.contentCenterX;
 					screenRect.y = display.contentCenterY;
 					screenRect:setFillColor(0, 0, 0, 0.75);
@@ -64,7 +64,6 @@ function scene.postCreateScene(self, event)
 							screenRect:removeSelf(); screenRect = nil;
 						end
 					});
-					-- view:insert(closeButton);
 					closeButton.x = 5 + (closeButton.contentWidth * 0.5) - ((screenW - display.contentWidth) * 0.5);
 					closeButton.y = 5 + (closeButton.contentHeight * 0.5) - ((screenH - display.contentHeight) * 0.5);
 					webView.closeButton = closeButton;

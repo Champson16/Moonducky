@@ -7,6 +7,8 @@ local FRC_SetDesign = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign');
 
 local scene = FRC_SetDesign.newScene();
 
+local imageBase = 'FRC_Assets/MDMT_Assets/Images/';
+
 function scene.postCreateScene(self, event)
 	local scene = self;
 	local view = scene.view;
@@ -35,7 +37,7 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_down.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_up.png',
 				onRelease = function(e)
-					local screenRect = display.newRect(view, 0, 0, screenW, screenH);
+					local screenRect = display.newRect(0, 0, screenW, screenH);
 					screenRect.x = display.contentCenterX;
 					screenRect.y = display.contentCenterY;
 					screenRect:setFillColor(0, 0, 0, 0.75);
@@ -49,8 +51,8 @@ function scene.postCreateScene(self, event)
 					webView:request("http://fatredcouch.com/page.php?t=products&p=" .. platformName);
 
 					local closeButton = ui.button.new({
-						imageUp = 'FRC_Assets/MDMT_Assets/Images/FRC_Home_global_LandingPage_CloseButton.png',
-						imageDown = 'FRC_Assets/MDMT_Assets/Images/FRC_Home_global_LandingPage_CloseButton.png',
+						imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
+						imageDown = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
 						width = 50,
 						height = 50,
 						onRelease = function(event)
@@ -60,9 +62,9 @@ function scene.postCreateScene(self, event)
 							screenRect:removeSelf(); screenRect = nil;
 						end
 					});
-					view:insert(closeButton);
 					closeButton.x = 5 + (closeButton.contentWidth * 0.5) - ((screenW - display.contentWidth) * 0.5);
 					closeButton.y = 5 + (closeButton.contentHeight * 0.5) - ((screenH - display.contentHeight) * 0.5);
+					webView.closeButton = closeButton;
 				end
 			},
 			-- SAVE button

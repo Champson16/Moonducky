@@ -20,7 +20,7 @@ local public = {};
 function public:findFreeChannel(force)
 	local channel;
 	for i=1,#self.channels do
-		if (audio.isChannelActive(self.channels[i])) then
+		if (not audio.isChannelActive(self.channels[i])) then
 			channel = self.channels[i];
 			break;
 		end

@@ -74,6 +74,7 @@ function public:isPlaying()
 end
 
 function public:stop(options)
+	options = options or {};
 	if (self.channel) then
 		if (options.delay) then
 			pcall(function() audio.stopWithDelay(options.delay, { channel = self.channel }); end);
@@ -116,6 +117,7 @@ end
 
 function AudioHandle.new(options)
 	options = options or {};
+	-- valid options are: name (string), path (string), useLoadSound (boolean), group (group object or string)
 	if (options.name) then
 		if (AudioManager:isHandleNameTaken(options.name)) then
 			local chosenName = options.name;

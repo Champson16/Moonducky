@@ -20,10 +20,10 @@ local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_Util = require('FRC_Modules.FRC_Util.FRC_Util');
 
 -- constants
-_G.APP_VERSION = '1.1.00';
+_G.APP_VERSION = '1.1.01';
 -- note: the schema for VERSIONNUM is major version digit, minor version digit . release build two digits 0-padded
 -- this allows us to serialize/compare app version settings files
-_G.APP_VERSIONNUM = 11.00;
+_G.APP_VERSIONNUM = 11.01;
 
 _G.BUNDLE_ID = 'com.fatredcouch.moonducky.musictheatre'; -- this appears to be unused
 
