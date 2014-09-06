@@ -114,7 +114,7 @@ function scene.postCreateScene(self, event)
 						hideBlank = false,
 						width = screenW * 0.75,
 						height = screenH * 0.75,
-						data = FRC_DressingRoom.saveData.savedItems,
+						data = scene.saveData.savedItems,
 						callback = function(e)
 							galleryPopup:dispose();
 							galleryPopup = nil;
@@ -129,7 +129,7 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_down.png',
 				disabled = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_disabled.png',
-				isDisabled = (#scene.saveData.savedItems < 1),
+				isDisabled = ((scene.saveData.savedItems == nil) or (#scene.saveData.savedItems < 1)),
 				onRelease = function(e)
 					local function showLoadPopup()
 						local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');

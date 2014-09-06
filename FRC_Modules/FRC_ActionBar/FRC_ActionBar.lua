@@ -68,7 +68,7 @@ local function onMenuTogglePress(event)
 	local self = event.target;
 	local menu = self.parent;
 	if (menu.showTransition) then
-		transition.cancel(menu.showTransition); 
+		transition.cancel(menu.showTransition);
 		menu.showTransition = nil;
 		menu.alpha = 1.0;
 		menu.isHidden = false;
@@ -81,7 +81,7 @@ local function onMenuToggleRelease(event)
 	local menu = self.parent;
 	menu:show();
 	if (menu.expandTransition) then return; end
-	
+
 	if (menu.isExpanded) then
 		-- contract menu
 		menu.expandTransition = transition.to(menu.menuItems, { time=400, x=menu.menuItems.xHidden, alpha=0, transition=easing.inOutExpo, onComplete=function()
@@ -261,7 +261,7 @@ FRC_ActionBar.new = function(args)
 	menuItems.x = menuItems.xHidden;
 	menuItems.alpha = 0;
 
-	
+
 	-- create background overlay to capture touches behind everything else
 	menuGroup.menuActivator = display.newRect(0, 0, screenW, screenH);
 	menuGroup.menuActivator.isVisible = false;

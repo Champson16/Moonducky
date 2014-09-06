@@ -1,4 +1,381 @@
 [{
+	"id": "Hamster",
+	"bodyImage": "MDMT_DressingRoom_Hamster.png",
+	"bodyWidth": 261,
+	"bodyHeight": 431,
+	"eyesOpenImage": "MDMT_DressingRoom_Hamster_EyesOpen.png",
+	"eyesOpenWidth": 64,
+	"eyesOpenHeight": 18,
+	"eyesShutImage": "MDMT_DressingRoom_Hamster_EyesShut.png",
+	"eyesShutWidth": 73,
+	"eyesShutHeight": 13,
+	"eyesX": -3,
+	"eyesY": -163,
+	"clothing": {
+		"Headwear": [{
+			"id": "bandana",
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Hamster_Bandana.png",
+			"width": 96,
+			"height": 108,
+			"xOffset": -10,
+			"yOffset": -189
+		},
+		{
+			"id": "farm",
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Hamster_Farm.png",
+			"width": 255,
+			"height": 95,
+			"xOffset": -5,
+			"yOffset": -204
+		},
+		{
+			"id": "funk",
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Hamster_Funk.png",
+			"width": 228,
+			"height": 88,
+			"xOffset": -20,
+			"yOffset": -209
+		},
+		{
+			"id": "leopard",
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Hamster_Leopard.png",
+			"width": 151,
+			"height": 84,
+			"xOffset": 1,
+			"yOffset": -211
+		},
+		{
+			"id": "porkpie",
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Hamster_Porkpie.png",
+			"width": 104,
+			"height": 64,
+			"xOffset": -4,
+			"yOffset": -200
+		},
+		{
+			"id": "russian",
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Hamster_Russian.png",
+			"width": 158,
+			"height": 117,
+			"xOffset": -8,
+			"yOffset": -221
+		},
+		{
+			"id": "stocking",
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Hamster_Stocking.png",
+			"width": 96,
+			"height": 88,
+			"xOffset": -6,
+			"yOffset": -215
+		},
+		{
+			"id": "straw",
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Hamster_Straw.png",
+			"width": 249,
+			"height": 89,
+			"xOffset": 12,
+			"yOffset": -210
+		},
+		{
+			"id": "turbin",
+			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Hamster_Turbin.png",
+			"width": 137,
+			"height": 133,
+			"xOffset": 0,
+			"yOffset": -230
+		}],
+
+		"Eyewear": [{
+			"id": "bono",
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Hamster_Bono.png",
+			"width": 124,
+			"height": 61,
+			"xOffset": 0,
+			"yOffset": -156
+		},
+		{
+			"id": "bottle",
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Hamster_Bottle.png",
+			"width": 100,
+			"height": 43,
+			"xOffset": -1,
+			"yOffset": -158
+		},
+		{
+			"id": "Hypno",
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Hamster_Hypno.png",
+			"width": 107,
+			"height": 39,
+			"xOffset": -1,
+			"yOffset": -157
+		},
+		{
+			"id": "lennon",
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Hamster_Lennon.png",
+			"width": 99,
+			"height": 43,
+			"xOffset": -4,
+			"yOffset": -163
+		},
+		{
+			"id": "MIB",
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Hamster_MIB.png",
+			"width": 116,
+			"height": 35,
+			"xOffset": -1,
+			"yOffset": -160
+		},
+		{
+			"id": "oakley",
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Hamster_Oakley.png",
+			"width": 125,
+			"height": 34,
+			"xOffset": -1,
+			"yOffset": -157
+		},
+		{
+			"id": "police",
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Hamster_Police.png",
+			"width": 105,
+			"height": 49,
+			"xOffset": -5,
+			"yOffset": -152
+		},
+		{
+			"id": "ski_goggle",
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Hamster_SkiGoggle.png",
+			"width": 118,
+			"height": 61,
+			"xOffset": -4,
+			"yOffset": -157
+		},
+		{
+			"id": "wing",
+			"imageFile": "MDMT_DressingRoom_Costume_Eyewear_Hamster_Wing.png",
+			"width": 175,
+			"height": 67,
+			"xOffset": -4,
+			"yOffset": -177
+		}],
+		"Neckwear": [{
+			"id": "blue",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Hamster_Blue.png",
+			"width": 131,
+			"height": 198,
+			"xOffset": -1,
+			"yOffset": -20
+		},
+		{
+			"id": "diamond",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Hamster_Diamond.png",
+			"width": 148,
+			"height": 85,
+			"xOffset": -2,
+			"yOffset": -78
+		},
+		{
+			"id": "emerald",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Hamster_Emerald.png",
+			"width": 145,
+			"height": 115,
+			"xOffset": 0,
+			"yOffset": -61
+		},
+		{
+			"id": "flower",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Hamster_Flower.png",
+			"width": 139,
+			"height": 67,
+			"xOffset": -2,
+			"yOffset": -86
+		},
+		{
+			"id": "orange",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Hamster_Orange.png",
+			"width": 135,
+			"height": 199,
+			"xOffset": 3,
+			"yOffset": -19
+		},
+		{
+			"id": "polkadot",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Hamster_Polkadot.png",
+			"width": 142,
+			"height": 177,
+			"xOffset": -2,
+			"yOffset": -32
+		},
+		{
+			"id": "purple",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Hamster_Purple.png",
+			"width": 73,
+			"height": 42,
+			"xOffset": -1,
+			"yOffset": -87
+		},
+		{
+			"id": "red",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Hamster_Red.png",
+			"width": 87,
+			"height": 45,
+			"xOffset": 0,
+			"yOffset": -85
+		},
+		{
+			"id": "stripe",
+			"imageFile": "MDMT_DressingRoom_Costume_Neckwear_Hamster_Stripe.png",
+			"width": 129,
+			"height": 191,
+			"xOffset": -2,
+			"yOffset": -25
+		}],
+		"UpperTorso": [{
+			"id": "70s",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Hamster_70s.png",
+			"width": 165,
+			"height": 186,
+			"xOffset": 0,
+			"yOffset": -27
+		},
+		{
+			"id": "80s",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Hamster_80s.png",
+			"width": 188,
+			"height": 189,
+			"xOffset": -2,
+			"yOffset": -28
+		},
+		{
+			"id": "jeans",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Hamster_Jeans.png",
+			"width": 184,
+			"height": 171,
+			"xOffset": 0,
+			"yOffset": -34
+		},
+		{
+			"id": "pinkstripe",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Hamster_Pinkstripe.png",
+			"width": 162,
+			"height": 185,
+			"xOffset": -8,
+			"yOffset": -26
+		},
+		{
+			"id": "plaid",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Hamster_Plaid.png",
+			"width": 182,
+			"height": 208,
+			"xOffset": 1,
+			"yOffset": -17
+		},
+		{
+			"id": "purpleboa",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Hamster_Purpleboa.png",
+			"width": 208,
+			"height": 226,
+			"xOffset": -4,
+			"yOffset": -12
+		},
+		{
+			"id": "quilted",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Hamster_Quilted.png",
+			"width": 188,
+			"height": 185,
+			"xOffset": -4,
+			"yOffset": -28
+		},
+		{
+			"id": "rednwhite",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Hamster_Rednwhite.png",
+			"width": 168,
+			"height": 174,
+			"xOffset": -1,
+			"yOffset": -33
+		},
+		{
+			"id": "tyedye",
+			"imageFile": "MDMT_DressingRoom_Costume_UpperTorso_Hamster_Tyedye.png",
+			"width": 178,
+			"height": 194,
+			"xOffset": -2,
+			"yOffset": -23
+		}],
+		"LowerTorso": [{
+			"id": "goat",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Hamster_Goat.png",
+			"width": 232,
+			"height": 114,
+			"xOffset": 4,
+			"yOffset": 82
+		},
+		{
+			"id": "hawaiian",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Hamster_Hawaiian.png",
+			"width": 224,
+			"height": 105,
+			"xOffset": -6,
+			"yOffset": 76
+		},
+		{
+			"id": "jamz",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Hamster_Jamz.png",
+			"width": 191,
+			"height": 109,
+			"xOffset": 1,
+			"yOffset": 86
+		},
+		{
+			"id": "jeans",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Hamster_Jeans.png",
+			"width": 204,
+			"height": 92,
+			"xOffset": 1,
+			"yOffset": 71
+		},
+		{
+			"id": "kilt",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Hamster_Kilt.png",
+			"width": 220,
+			"height": 106,
+			"xOffset": 1,
+			"yOffset": 79
+		},
+		{
+			"id": "leopardskin",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Hamster_Leopardskin.png",
+			"width": 218,
+			"height": 108,
+			"xOffset": -5,
+			"yOffset": 74
+		},
+		{
+			"id": "pink",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Hamster_Pink.png",
+			"width": 244,
+			"height": 111,
+			"xOffset": -4,
+			"yOffset": 68
+		},
+		{
+			"id": "purple",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Hamster_Purple.png",
+			"width": 256,
+			"height": 111,
+			"xOffset": -1,
+			"yOffset": 74
+		},
+		{
+			"id": "stripe",
+			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Hamster_Stripe.png",
+			"width": 214,
+			"height": 109,
+			"xOffset": 3,
+			"yOffset": 75
+		}]
+	}
+},
+{
 	"id": "Chicken",
 	"bodyImage": "MDMT_DressingRoom_Chicken.png",
 	"bodyWidth": 430,

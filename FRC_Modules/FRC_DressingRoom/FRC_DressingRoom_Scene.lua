@@ -153,8 +153,11 @@ function FRC_DressingRoom_Scene:createScene(event)
 		FRC_DressingRoom_Scene:preCreateScene(event);
 	end
 
+	-- DEBUG:
+	print("FRC_DressingRoom_Scene - createScene");
+	-- FRC_DressingRoom.getSavedData();
 	self.saveData = DATA('DATA_FILENAME', system.DocumentsDirectory);
-	require('FRC_Modules.FRC_DressingRoom.FRC_DressingRoom').saveData = self.saveData;
+	require('FRC_Modules.FRC_DressingRoom.FRC_DressingRoom').saveData = FRC_DataLib.readJSON(saveDataFilename, system.DocumentsDirectory);
 
 	local bg = display.newImageRect(view, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
 	bg.x, bg.y = display.contentCenterX, display.contentCenterY;
@@ -264,7 +267,11 @@ function FRC_DressingRoom_Scene:createScene(event)
 
 		local charData = getDataForCharacter(character);
 
-		local function changeEyes(charBody)
+		if (categoryId == 'Character') then
+			selectedCharacter = character;
+			local charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.bodyImage, charData.bodyWidth, charData.bodyHeight);
+			charBody.x, charBody.y = character_x, character_y;
+
 			if (charData.eyesOpenImage and charData.eyesShutImage) then
 				local charEyesOpen = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.eyesOpenImage, charData.eyesOpenWidth, charData.eyesOpenHeight);
 				charEyesOpen.x, charEyesOpen.y = charBody.x + charData.eyesX, charBody.y + charData.eyesY;
@@ -276,14 +283,6 @@ function FRC_DressingRoom_Scene:createScene(event)
 
 				beginEyeAnimation(charEyesOpen, charEyesShut);
 			end
-		end
-
-		if (categoryId == 'Character') then
-			selectedCharacter = character;
-			local charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.bodyImage, charData.bodyWidth, charData.bodyHeight);
-			charBody.x, charBody.y = character_x, character_y;
-
-			changeEyes(charBody);
 
 			if (index ~= 0) then
 				for i=2,#categoryData do
@@ -295,8 +294,12 @@ function FRC_DressingRoom_Scene:createScene(event)
 			if (not clothingData) then return; end
 			if (clothingData.id ~= 'none') then
 				local item = display.newImageRect(layers[categoryId], UI('IMAGES_PATH') .. clothingData.imageFile, clothingData.width, clothingData.height);
+				-- ERRORCHECK
+				if not item then
+					assert(refImage, "ERROR: Missing costume media file: ", UI('IMAGES_PATH') .. clothingData.imageFile);
+				end
 				item.x, item.y = character_x + clothingData.xOffset, character_y + clothingData.yOffset;
-				-- check to see if we need to use the special altBodyImage
+				--[[ -- check to see if we need to use the special altBodyImage
 				if (categoryId == 'Headwear') then
 					if (clothingData.altBodyImage) then
 						-- DEBUG:
@@ -304,7 +307,6 @@ function FRC_DressingRoom_Scene:createScene(event)
 						clearLayer('Character');
 						charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.altBodyImage, charData.bodyWidth, charData.bodyHeight);
 						charBody.x, charBody.y = character_x, character_y;
-						changeEyes(charBody);
 					else
 						-- sloppy but we have to switch back to the baseimage
 						-- DEBUG:
@@ -312,9 +314,9 @@ function FRC_DressingRoom_Scene:createScene(event)
 						clearLayer('Character');
 						charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.bodyImage, charData.bodyWidth, charData.bodyHeight);
 						charBody.x, charBody.y = character_x, character_y;
-						changeEyes(charBody);
 					end
 				end
+				--]]
 			--else
 			--	clearLayer('Character');
 			--	charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.bodyImage, charData.bodyWidth, charData.bodyHeight);
