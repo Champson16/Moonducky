@@ -341,28 +341,35 @@ function FRC_DressingRoom_Scene:createScene(event)
 		end
 	end
 
-	-- create sceneLayout items
+		-- create sceneLayout items
 	local sceneLayoutMethods = {};
 	local sceneLayout = {};
+	-- setup the randomly fired mysteryBoxAnimations
+	local mysteryBoxAnimationFiles = {};
+	local mysteryBoxAnimationSequences = {};
 
 	-- ambient loop sequence
 	function sceneLayoutMethods.playMysteryBoxAnimationSequence()
-		for i=1, mysteryBoxAnimationSequences.numChildren do
-			mysteryBoxAnimationSequences[i]:play({
+		-- pick a random animation sequence
+		local sequence = mysteryBoxAnimationSequences[math.random(1,4)];
+		for i=1, sequence.numChildren do
+			sequence[i]:play({
 				showLastFrame = false,
 				playBackward = false,
 				autoLoop = false,
 				palindromicLoop = false,
 				delay = 0,
 				intervalTime = 30,
-				maxIterations = 1,
-				onCompletion = function ()
-					for i=2,#categoryData do
-						changeItem(categoryData[i].id, selectedCharacter, math.random(2, #getDataForCharacter(selectedCharacter).clothing[categoryData[i].id]));
-					end
-				end
+				maxIterations = 1
 			});
 		end
+		-- set a timer and after a delay, change the costume randomly
+		timer.performWithDelay(1500,
+		function ()
+			for i=2,#categoryData do
+				changeItem(categoryData[i].id, selectedCharacter, math.random(2, #getDataForCharacter(selectedCharacter).clothing[categoryData[i].id]));
+			end
+		end, 1);
 	end
 
 	function sceneLayoutMethods.randomCostume()
@@ -438,23 +445,87 @@ function FRC_DressingRoom_Scene:createScene(event)
 		end
 	end
 
-	local mysteryBoxAnimationFiles = {
-		"SPMTM_DressingRoom_MysteryBox_06.xml",
-		"SPMTM_DressingRoom_MysteryBox_05.xml",
-		"SPMTM_DressingRoom_MysteryBox_04.xml",
-		"SPMTM_DressingRoom_MysteryBox_03.xml",
-		"SPMTM_DressingRoom_MysteryBox_02.xml",
-		"SPMTM_DressingRoom_MysteryBox_01.xml"
+		mysteryBoxAnimationFiles[1] = {
+		"SPMTM_DressingRoom_MysteryBox_v01_15.xml",
+		"SPMTM_DressingRoom_MysteryBox_v01_14.xml",
+		"SPMTM_DressingRoom_MysteryBox_v01_13.xml",
+		"SPMTM_DressingRoom_MysteryBox_v01_12.xml",
+		"SPMTM_DressingRoom_MysteryBox_v01_11.xml",
+		"SPMTM_DressingRoom_MysteryBox_v01_10.xml",
+		"SPMTM_DressingRoom_MysteryBox_v01_09.xml",
+		"SPMTM_DressingRoom_MysteryBox_v01_08.xml",
+		"SPMTM_DressingRoom_MysteryBox_v01_07.xml",
+		"SPMTM_DressingRoom_MysteryBox_v01_06.xml",
+		"SPMTM_DressingRoom_MysteryBox_v01_05.xml",
+		"SPMTM_DressingRoom_MysteryBox_v01_04.xml",
+		"SPMTM_DressingRoom_MysteryBox_v01_03.xml",
+		"SPMTM_DressingRoom_MysteryBox_v01_02.xml",
+		"SPMTM_DressingRoom_MysteryBox_v01_01.xml"
 	};
-	-- preload the animation data (XML and images) early
-	mysteryBoxAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(mysteryBoxAnimationFiles, animationXMLBase, animationImageBase);
-	mysteryBoxAnimationSequences.anchorX = 0.5;
-	mysteryBoxAnimationSequences.anchorY = 0.5;
-	mysteryBoxAnimationSequences.xScale = screenW / display.contentWidth;
-	mysteryBoxAnimationSequences.yScale = mysteryBoxAnimationSequences.xScale;
-	mysteryBoxAnimationSequences.x = -22; -- display.contentWidth * 0.5;
-	mysteryBoxAnimationSequences.y = 70; -- display.contentHeight * 0.5;
-	view:insert(mysteryBoxAnimationSequences);
+
+	mysteryBoxAnimationFiles[2] = {
+		"SPMTM_DressingRoom_MysteryBox_v02_15.xml",
+		"SPMTM_DressingRoom_MysteryBox_v02_14.xml",
+		"SPMTM_DressingRoom_MysteryBox_v02_13.xml",
+		"SPMTM_DressingRoom_MysteryBox_v02_12.xml",
+		"SPMTM_DressingRoom_MysteryBox_v02_11.xml",
+		"SPMTM_DressingRoom_MysteryBox_v02_10.xml",
+		"SPMTM_DressingRoom_MysteryBox_v02_09.xml",
+		"SPMTM_DressingRoom_MysteryBox_v02_08.xml",
+		"SPMTM_DressingRoom_MysteryBox_v02_07.xml",
+		"SPMTM_DressingRoom_MysteryBox_v02_06.xml",
+		"SPMTM_DressingRoom_MysteryBox_v02_05.xml",
+		"SPMTM_DressingRoom_MysteryBox_v02_04.xml",
+		"SPMTM_DressingRoom_MysteryBox_v02_03.xml",
+		"SPMTM_DressingRoom_MysteryBox_v02_02.xml",
+		"SPMTM_DressingRoom_MysteryBox_v02_01.xml"
+	};
+
+	mysteryBoxAnimationFiles[3] = {
+		"SPMTM_DressingRoom_MysteryBox_v03_13.xml",
+		"SPMTM_DressingRoom_MysteryBox_v03_12.xml",
+		"SPMTM_DressingRoom_MysteryBox_v03_11.xml",
+		"SPMTM_DressingRoom_MysteryBox_v03_10.xml",
+		"SPMTM_DressingRoom_MysteryBox_v03_09.xml",
+		"SPMTM_DressingRoom_MysteryBox_v03_08.xml",
+		"SPMTM_DressingRoom_MysteryBox_v03_07.xml",
+		"SPMTM_DressingRoom_MysteryBox_v03_06.xml",
+		"SPMTM_DressingRoom_MysteryBox_v03_05.xml",
+		"SPMTM_DressingRoom_MysteryBox_v03_04.xml",
+		"SPMTM_DressingRoom_MysteryBox_v03_03.xml",
+		"SPMTM_DressingRoom_MysteryBox_v03_02.xml",
+		"SPMTM_DressingRoom_MysteryBox_v03_01.xml"
+	};
+
+	mysteryBoxAnimationFiles[4] = {
+		"SPMTM_DressingRoom_MysteryBox_v05_15.xml",
+		"SPMTM_DressingRoom_MysteryBox_v05_14.xml",
+		"SPMTM_DressingRoom_MysteryBox_v05_13.xml",
+		"SPMTM_DressingRoom_MysteryBox_v05_12.xml",
+		"SPMTM_DressingRoom_MysteryBox_v05_11.xml",
+		"SPMTM_DressingRoom_MysteryBox_v05_10.xml",
+		"SPMTM_DressingRoom_MysteryBox_v05_09.xml",
+		"SPMTM_DressingRoom_MysteryBox_v05_08.xml",
+		"SPMTM_DressingRoom_MysteryBox_v05_07.xml",
+		"SPMTM_DressingRoom_MysteryBox_v05_06.xml",
+		"SPMTM_DressingRoom_MysteryBox_v05_05.xml",
+		"SPMTM_DressingRoom_MysteryBox_v05_04.xml",
+		"SPMTM_DressingRoom_MysteryBox_v05_03.xml",
+		"SPMTM_DressingRoom_MysteryBox_v05_02.xml",
+		"SPMTM_DressingRoom_MysteryBox_v05_01.xml"
+	};
+
+	for i=1,#mysteryBoxAnimationFiles do
+		-- preload the animation data (XML and images) early
+		mysteryBoxAnimationSequences[i] = FRC_AnimationManager.createAnimationClipGroup(mysteryBoxAnimationFiles[i], animationXMLBase, animationImageBase);
+		mysteryBoxAnimationSequences[i].anchorX = 0.5;
+		mysteryBoxAnimationSequences[i].anchorY = 0.5;
+		mysteryBoxAnimationSequences[i].xScale = screenW / display.contentWidth;
+		mysteryBoxAnimationSequences[i].yScale = mysteryBoxAnimationSequences[i].xScale;
+		mysteryBoxAnimationSequences[i].x = -31; -- display.contentWidth * 0.5;
+		mysteryBoxAnimationSequences[i].y = 42; -- display.contentHeight * 0.5;
+		view:insert(mysteryBoxAnimationSequences[i]);
+	end
 
 	-- by default, place naked first character onto the dressing room floor
 	changeItem('Character', characterData[1].id, 0);

@@ -1,0 +1,19 @@
+<Animations>
+  <Animation name="SPMTM_DressingRoom_MysteryBox_v01_13" frameCount="57">
+    <Part name="SPMTM_DressingRoom_Sparkle_Yellow">
+      <Frame x="341.50" y="-43.85" scaleX="0.090" scaleY="0.090" index="15"/>
+      <Frame x="366.95" y="-89.15" scaleX="0.420" scaleY="0.420" index="16"/>
+      <Frame x="348.95" y="-126.25" scaleX="0.090" scaleY="0.090" index="17"/>
+      <Frame x="319.95" y="-152.50" scaleX="0.420" scaleY="0.420" index="18"/>
+      <Frame x="278.20" y="-156.80" scaleX="0.090" scaleY="0.090" index="19"/>
+      <Frame x="235.05" y="-155.95" scaleX="0.420" scaleY="0.420" index="20"/>
+      <Frame x="212.95" y="-140.25" scaleX="0.090" scaleY="0.090" index="21"/>
+      <Frame x="188.25" y="-117.40" scaleX="0.420" scaleY="0.420" index="22"/>
+      <Frame x="166.95" y="-96.30" scaleX="0.090" scaleY="0.090" index="23"/>
+      <Frame x="148.15" y="-77.10" scaleX="0.420" scaleY="0.420" index="24"/>
+      <Frame x="131.60" y="-59.75" scaleX="0.090" scaleY="0.090" index="25"/>
+      <Frame x="115.90" y="-42.90" scaleX="0.420" scaleY="0.420" index="26"/>
+      <Frame x="105.20" y="-31.10" scaleX="0.090" scaleY="0.090" index="27"/>
+    </Part>
+  </Animation>
+</Animations>

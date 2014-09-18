@@ -1,0 +1,46 @@
+<Animations>
+  <Animation name="SPMTM_DressingRoom_MysteryBox_v05_02" frameCount="52">
+    <Part name="SPMTM_DressingRoom_FairyGlow">
+      <Frame x="-3.25" y="-1.65" scaleX="0.030" scaleY="0.030" index="8"/>
+      <Frame x="-3.25" y="-1.65" scaleX="0.127" scaleY="0.127" index="9"/>
+      <Frame x="-3.25" y="-1.65" scaleX="0.224" scaleY="0.224" index="10"/>
+      <Frame x="-3.25" y="-1.65" scaleX="0.321" scaleY="0.321" index="11"/>
+      <Frame x="-3.25" y="-1.65" scaleX="0.418" scaleY="0.418" index="12"/>
+      <Frame x="-3.25" y="-1.70" scaleX="0.515" scaleY="0.515" index="13"/>
+      <Frame x="-3.25" y="-1.65" scaleX="0.612" scaleY="0.612" index="14"/>
+      <Frame x="-3.25" y="-1.65" scaleX="0.709" scaleY="0.709" index="15"/>
+      <Frame x="-3.20" y="-1.65" scaleX="0.806" scaleY="0.806" index="16"/>
+      <Frame x="-3.25" y="-1.65" scaleX="0.903" scaleY="0.903" index="17"/>
+      <Frame x="-3.25" y="-1.65" index="18"/>
+      <Frame x="-3.25" y="-1.65" scaleX="1.042" scaleY="1.042" index="19"/>
+      <Frame x="-3.20" y="-1.65" scaleX="1.083" scaleY="1.083" index="20"/>
+      <Frame x="-3.25" y="-1.65" scaleX="1.125" scaleY="1.125" index="21"/>
+      <Frame x="-3.25" y="-1.65" scaleX="1.167" scaleY="1.167" index="22"/>
+      <Frame x="-3.25" y="-1.65" scaleX="1.208" scaleY="1.208" index="23"/>
+      <Frame x="-3.20" y="-1.65" scaleX="1.250" scaleY="1.250" index="24"/>
+      <Frame x="-3.25" y="-1.65" scaleX="1.292" scaleY="1.292" index="25"/>
+      <Frame x="-3.25" y="-1.65" scaleX="1.333" scaleY="1.333" index="26"/>
+      <Frame x="-3.20" y="-1.65" scaleX="1.375" scaleY="1.375" index="27"/>
+      <Frame x="-3.25" y="-1.65" scaleX="1.417" scaleY="1.417" index="28"/>
+      <Frame x="-3.25" y="-1.65" scaleX="1.458" scaleY="1.458" index="29"/>
+      <Frame x="-3.20" y="-1.65" scaleX="1.500" scaleY="1.500" index="30"/>
+      <Frame x="-3.20" y="-1.65" scaleX="1.542" scaleY="1.542" index="31"/>
+      <Frame x="-3.25" y="-1.65" scaleX="1.583" scaleY="1.583" index="32"/>
+      <Frame x="-3.25" y="-1.65" scaleX="1.625" scaleY="1.625" index="33"/>
+      <Frame x="-3.20" y="-1.65" scaleX="1.667" scaleY="1.667" index="34"/>
+      <Frame x="-3.25" y="-1.65" scaleX="1.708" scaleY="1.708" index="35"/>
+      <Frame x="-3.25" y="-1.65" scaleX="1.750" scaleY="1.750" index="36"/>
+      <Frame x="-3.20" y="-1.65" scaleX="1.792" scaleY="1.792" index="37"/>
+      <Frame x="-3.20" y="-1.65" scaleX="1.833" scaleY="1.833" index="38"/>
+      <Frame x="-3.25" y="-1.65" scaleX="1.875" scaleY="1.875" index="39"/>
+      <Frame x="-3.25" y="-1.65" scaleX="1.917" scaleY="1.917" index="40"/>
+      <Frame x="-3.20" y="-1.65" scaleX="1.958" scaleY="1.958" index="41"/>
+      <Frame x="-3.25" y="-1.65" scaleX="2.000" scaleY="2.000" index="42"/>
+      <Frame x="-3.25" y="-1.65" scaleX="2.000" scaleY="2.000" index="43"/>
+      <Frame x="-3.25" y="-1.65" scaleX="2.000" scaleY="2.000" index="44"/>
+      <Frame x="-3.25" y="-1.65" scaleX="2.000" scaleY="2.000" index="45"/>
+      <Frame x="-3.25" y="-1.65" scaleX="2.000" scaleY="2.000" index="46"/>
+      <Frame x="-3.25" y="-1.65" scaleX="2.000" scaleY="2.000" index="47"/>
+    </Part>
+  </Animation>
+</Animations>

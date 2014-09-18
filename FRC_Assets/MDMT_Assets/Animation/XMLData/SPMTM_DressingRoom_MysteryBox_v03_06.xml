@@ -1,0 +1,49 @@
+<Animations>
+  <Animation name="SPMTM_DressingRoom_MysteryBox_v03_06" frameCount="67">
+    <Part name="SPMTM_DressingRoom_SparkleCloud">
+      <Frame x="14.70" y="158.50" scaleX="0.020" scaleY="0.016" index="20"/>
+      <Frame x="11.45" y="156.85" scaleX="0.347" scaleY="0.277" alpha="0.94" index="21"/>
+      <Frame x="8.15" y="155.25" scaleX="0.673" scaleY="0.539" alpha="0.88" index="22"/>
+      <Frame x="4.90" y="153.60" scaleY="0.800" alpha="0.83" index="23"/>
+      <Frame x="2.55" y="155.75" scaleX="1.007" scaleY="0.805" alpha="0.77" index="24"/>
+      <Frame x="0.15" y="157.95" scaleX="1.013" scaleY="0.811" alpha="0.72" index="25"/>
+      <Frame x="-2.20" y="160.10" scaleX="1.020" scaleY="0.816" alpha="0.66" index="26"/>
+      <Frame x="-4.55" y="162.25" scaleX="1.027" scaleY="0.821" alpha="0.61" index="27"/>
+      <Frame x="-6.95" y="164.45" scaleX="1.033" scaleY="0.827" alpha="0.55" index="28"/>
+      <Frame x="-9.35" y="166.60" scaleX="1.040" scaleY="0.832" alpha="0.50" index="29"/>
+      <Frame x="-11.75" y="168.75" scaleX="1.047" scaleY="0.837" alpha="0.44" index="30"/>
+      <Frame x="-14.10" y="170.95" scaleX="1.053" scaleY="0.843" alpha="0.38" index="31"/>
+      <Frame x="-16.40" y="173.10" scaleX="1.060" scaleY="0.848" alpha="0.33" index="32"/>
+      <Frame x="-18.80" y="175.25" scaleX="1.067" scaleY="0.853" alpha="0.27" index="33"/>
+      <Frame x="-21.25" y="177.45" scaleX="1.073" scaleY="0.859" alpha="0.22" index="34"/>
+      <Frame x="-23.55" y="179.60" scaleX="1.080" scaleY="0.864" alpha="0.16" index="35"/>
+      <Frame x="-25.95" y="181.75" scaleX="1.087" scaleY="0.869" alpha="0.11" index="36"/>
+      <Frame x="-28.30" y="183.90" scaleX="1.093" scaleY="0.875" alpha="0.05" index="37"/>
+      <Frame x="-20.00" y="56.05" scaleX="0.020" scaleY="0.016" index="39"/>
+      <Frame x="-24.85" y="53.60" scaleX="0.510" scaleY="0.408" alpha="0.93" index="40"/>
+      <Frame x="-29.80" y="51.15" scaleY="0.800" alpha="0.87" index="41"/>
+      <Frame x="-31.55" y="53.45" scaleX="1.007" scaleY="0.806" alpha="0.81" index="42"/>
+      <Frame x="-33.25" y="55.75" scaleX="1.014" scaleY="0.811" alpha="0.75" index="43"/>
+      <Frame x="-35.00" y="58.10" scaleX="1.021" scaleY="0.817" alpha="0.68" index="44"/>
+      <Frame x="-36.70" y="60.40" scaleX="1.029" scaleY="0.823" alpha="0.62" index="45"/>
+      <Frame x="-38.40" y="62.70" scaleX="1.036" scaleY="0.829" alpha="0.56" index="46"/>
+      <Frame x="-40.10" y="65.00" scaleX="1.043" scaleY="0.834" alpha="0.50" index="47"/>
+      <Frame x="-41.85" y="67.40" scaleX="1.050" scaleY="0.840" alpha="0.43" index="48"/>
+      <Frame x="-43.55" y="69.75" scaleX="1.057" scaleY="0.846" alpha="0.37" index="49"/>
+      <Frame x="-45.25" y="72.05" scaleX="1.064" scaleY="0.851" alpha="0.31" index="50"/>
+      <Frame x="-47.00" y="74.35" scaleX="1.071" scaleY="0.857" alpha="0.25" index="51"/>
+      <Frame x="-48.70" y="76.65" scaleX="1.079" scaleY="0.863" alpha="0.18" index="52"/>
+      <Frame x="-50.45" y="79.00" scaleX="1.086" scaleY="0.869" alpha="0.12" index="53"/>
+      <Frame x="-52.20" y="81.30" scaleX="1.093" scaleY="0.874" alpha="0.06" index="54"/>
+      <Frame x="-20.00" y="-18.30" scaleX="0.020" scaleY="0.016" index="56"/>
+      <Frame x="-29.80" y="-23.20" scaleY="0.800" alpha="0.88" index="57"/>
+      <Frame x="-33.90" y="-17.05" scaleY="0.800" alpha="0.77" index="58"/>
+      <Frame x="-38.05" y="-10.85" scaleY="0.800" alpha="0.66" index="59"/>
+      <Frame x="-42.15" y="-4.65" scaleY="0.800" alpha="0.55" index="60"/>
+      <Frame x="-46.30" y="1.55" scaleY="0.800" alpha="0.44" index="61"/>
+      <Frame x="-50.40" y="7.70" scaleY="0.800" alpha="0.33" index="62"/>
+      <Frame x="-54.55" y="13.90" scaleY="0.800" alpha="0.22" index="63"/>
+      <Frame x="-58.65" y="20.10" scaleY="0.800" alpha="0.11" index="64"/>
+    </Part>
+  </Animation>
+</Animations>

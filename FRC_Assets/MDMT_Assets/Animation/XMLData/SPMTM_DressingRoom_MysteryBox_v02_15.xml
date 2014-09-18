@@ -1,5 +1,5 @@
 <Animations>
-  <Animation name="SPMTM_DressingRoom_MysteryBox_06" frameCount="39">
+  <Animation name="SPMTM_DressingRoom_MysteryBox_v02_15" frameCount="58">
     <Part name="SPMTM_DressingRoom_ChestTop_Up">
       <Frame x="341.35" y="-89.70" scaleY="0.712" index="7"/>
       <Frame x="341.35" y="-93.45" scaleY="0.784" index="8"/>
@@ -20,12 +20,9 @@
       <Frame x="341.35" y="-104.65" index="23"/>
       <Frame x="341.35" y="-104.65" index="24"/>
       <Frame x="341.35" y="-104.65" index="25"/>
-      <Frame x="341.35" y="-104.65" index="26"/>
-      <Frame x="341.35" y="-104.65" index="27"/>
-      <Frame x="341.35" y="-104.65" index="28"/>
-      <Frame x="341.35" y="-100.90" scaleY="0.872" index="29"/>
-      <Frame x="341.35" y="-97.15" scaleY="0.745" index="30"/>
-      <Frame x="341.35" y="-93.35" scaleY="0.617" index="31"/>
+      <Frame x="341.35" y="-100.90" scaleY="0.872" index="26"/>
+      <Frame x="341.35" y="-97.15" scaleY="0.745" index="27"/>
+      <Frame x="341.35" y="-93.35" scaleY="0.617" index="28"/>
     </Part>
   </Animation>
 </Animations>

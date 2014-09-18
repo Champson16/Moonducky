@@ -1,0 +1,41 @@
+<Animations>
+  <Animation name="SPMTM_DressingRoom_MysteryBox_v01_06" frameCount="57">
+    <Part name="SPMTM_DressingRoom_ChestTop_Down">
+      <Frame x="342.90" y="-84.35" index="0"/>
+      <Frame x="342.90" y="-84.35" index="1"/>
+      <Frame x="342.90" y="-84.35" index="2"/>
+      <Frame x="342.90" y="-84.35" index="3"/>
+      <Frame x="342.90" y="-84.35" index="4"/>
+      <Frame x="342.90" y="-76.65" scaleY="0.888" index="5"/>
+      <Frame x="342.90" y="-68.95" scaleY="0.776" index="6"/>
+      <Frame x="342.90" y="-84.35" index="29"/>
+      <Frame x="342.90" y="-81.20" scaleY="0.954" index="30"/>
+      <Frame x="342.90" y="-78.05" scaleY="0.908" index="31"/>
+      <Frame x="342.90" y="-74.85" scaleY="0.862" index="32"/>
+      <Frame x="342.90" y="-78.05" scaleY="0.908" index="33"/>
+      <Frame x="342.90" y="-81.20" scaleY="0.954" index="34"/>
+      <Frame x="342.90" y="-84.35" index="35"/>
+      <Frame x="342.90" y="-84.35" index="36"/>
+      <Frame x="342.90" y="-84.35" index="37"/>
+      <Frame x="342.90" y="-84.35" index="38"/>
+      <Frame x="342.90" y="-84.35" index="39"/>
+      <Frame x="342.90" y="-84.35" index="40"/>
+      <Frame x="342.90" y="-84.35" index="41"/>
+      <Frame x="342.90" y="-84.35" index="42"/>
+      <Frame x="342.90" y="-84.35" index="43"/>
+      <Frame x="342.90" y="-84.35" index="44"/>
+      <Frame x="342.90" y="-84.35" index="45"/>
+      <Frame x="342.90" y="-84.35" index="46"/>
+      <Frame x="342.90" y="-84.35" index="47"/>
+      <Frame x="342.90" y="-84.35" index="48"/>
+      <Frame x="342.90" y="-84.35" index="49"/>
+      <Frame x="342.90" y="-84.35" index="50"/>
+      <Frame x="342.90" y="-84.35" index="51"/>
+      <Frame x="342.90" y="-84.35" index="52"/>
+      <Frame x="342.90" y="-84.35" index="53"/>
+      <Frame x="342.90" y="-84.35" index="54"/>
+      <Frame x="342.90" y="-84.35" index="55"/>
+      <Frame x="342.90" y="-84.35" index="56"/>
+    </Part>
+  </Animation>
+</Animations>

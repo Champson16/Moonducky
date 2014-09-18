@@ -1,5 +1,5 @@
 <Animations>
-  <Animation name="SPMTM_DressingRoom_MysteryBox_05" frameCount="39">
+  <Animation name="SPMTM_DressingRoom_MysteryBox_v05_14" frameCount="52">
     <Part name="SPMTM_DressingRoom_ChestBottom_Back">
       <Frame x="342.90" y="-49.80" index="0"/>
       <Frame x="342.90" y="-49.80" index="1"/>
@@ -31,15 +31,28 @@
       <Frame x="342.90" y="-49.80" index="27"/>
       <Frame x="342.90" y="-49.80" index="28"/>
       <Frame x="342.90" y="-49.80" index="29"/>
-      <Frame x="342.90" y="-49.80" index="30"/>
-      <Frame x="342.90" y="-49.80" index="31"/>
-      <Frame x="342.90" y="-49.80" index="32"/>
-      <Frame x="342.90" y="-48.25" scaleY="0.954" index="33"/>
-      <Frame x="342.90" y="-46.65" scaleY="0.908" index="34"/>
-      <Frame x="342.90" y="-45.05" scaleY="0.862" index="35"/>
-      <Frame x="342.90" y="-46.65" scaleY="0.908" index="36"/>
-      <Frame x="342.90" y="-48.25" scaleY="0.954" index="37"/>
+      <Frame x="342.90" y="-48.25" scaleY="0.954" index="30"/>
+      <Frame x="342.90" y="-46.65" scaleY="0.908" index="31"/>
+      <Frame x="342.90" y="-45.05" scaleY="0.862" index="32"/>
+      <Frame x="342.90" y="-46.65" scaleY="0.908" index="33"/>
+      <Frame x="342.90" y="-48.25" scaleY="0.954" index="34"/>
+      <Frame x="342.90" y="-49.80" index="35"/>
+      <Frame x="342.90" y="-49.80" index="36"/>
+      <Frame x="342.90" y="-49.80" index="37"/>
       <Frame x="342.90" y="-49.80" index="38"/>
+      <Frame x="342.90" y="-49.80" index="39"/>
+      <Frame x="342.90" y="-49.80" index="40"/>
+      <Frame x="342.90" y="-49.80" index="41"/>
+      <Frame x="342.90" y="-49.80" index="42"/>
+      <Frame x="342.90" y="-49.80" index="43"/>
+      <Frame x="342.90" y="-49.80" index="44"/>
+      <Frame x="342.90" y="-49.80" index="45"/>
+      <Frame x="342.90" y="-49.80" index="46"/>
+      <Frame x="342.90" y="-49.80" index="47"/>
+      <Frame x="342.90" y="-49.80" index="48"/>
+      <Frame x="342.90" y="-49.80" index="49"/>
+      <Frame x="342.90" y="-49.80" index="50"/>
+      <Frame x="342.90" y="-49.80" index="51"/>
     </Part>
   </Animation>
 </Animations>

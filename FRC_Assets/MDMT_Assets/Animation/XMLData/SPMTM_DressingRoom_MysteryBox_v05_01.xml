@@ -1,0 +1,16 @@
+<Animations>
+  <Animation name="SPMTM_DressingRoom_MysteryBox_v05_01" frameCount="52">
+    <Part name="SPMTM_DressingRoom_FairySparkle">
+      <Frame x="-1.60" y="-4.85" scaleX="0.020" scaleY="0.020" index="42"/>
+      <Frame x="-1.60" y="-4.85" scaleX="0.183" scaleY="0.183" index="43"/>
+      <Frame x="-1.60" y="-4.85" scaleX="0.347" scaleY="0.347" index="44"/>
+      <Frame x="-1.55" y="-4.85" scaleX="0.510" scaleY="0.510" index="45"/>
+      <Frame x="-1.60" y="-4.80" scaleX="0.673" scaleY="0.673" index="46"/>
+      <Frame x="-1.60" y="-4.85" scaleX="0.837" scaleY="0.837" index="47"/>
+      <Frame x="-1.60" y="-4.85" index="48"/>
+      <Frame x="-1.60" y="-4.80" scaleX="0.670" scaleY="0.670" index="49"/>
+      <Frame x="-1.60" y="-4.85" scaleX="0.340" scaleY="0.340" index="50"/>
+      <Frame x="-1.60" y="-4.80" scaleX="0.010" scaleY="0.010" index="51"/>
+    </Part>
+  </Animation>
+</Animations>

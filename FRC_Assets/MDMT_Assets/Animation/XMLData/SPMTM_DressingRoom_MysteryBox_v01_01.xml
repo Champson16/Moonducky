@@ -1,0 +1,30 @@
+<Animations>
+  <Animation name="SPMTM_DressingRoom_MysteryBox_v01_01" frameCount="57">
+    <Part name="SPMTM_DressingRoom_Sparkle_Yellow">
+      <Frame x="-120.60" y="-65.80" scaleX="0.010" scaleY="0.010" index="26"/>
+      <Frame x="-120.55" y="-65.85" scaleX="0.157" scaleY="0.157" index="27"/>
+      <Frame x="-120.60" y="-65.80" scaleX="0.305" scaleY="0.305" index="28"/>
+      <Frame x="-120.60" y="-65.85" scaleX="0.452" scaleY="0.452" index="29"/>
+      <Frame x="-120.55" y="-65.80" scaleX="0.600" scaleY="0.600" index="30"/>
+      <Frame x="-120.55" y="-65.80" scaleX="0.403" scaleY="0.403" index="31"/>
+      <Frame x="-120.60" y="-65.80" scaleX="0.207" scaleY="0.207" index="32"/>
+      <Frame x="-120.60" y="-65.80" scaleX="0.010" scaleY="0.010" index="33"/>
+      <Frame x="-117.45" y="-202.05" scaleX="0.010" scaleY="0.010" index="34"/>
+      <Frame x="-117.45" y="-202.05" scaleX="0.152" scaleY="0.152" index="35"/>
+      <Frame x="-117.45" y="-202.05" scaleX="0.295" scaleY="0.295" index="36"/>
+      <Frame x="-117.45" y="-202.05" scaleX="0.437" scaleY="0.437" index="37"/>
+      <Frame x="-117.45" y="-202.05" scaleX="0.580" scaleY="0.580" index="38"/>
+      <Frame x="-117.45" y="-202.05" scaleX="0.437" scaleY="0.437" index="39"/>
+      <Frame x="-117.45" y="-202.05" scaleX="0.295" scaleY="0.295" index="40"/>
+      <Frame x="-117.45" y="-202.05" scaleX="0.152" scaleY="0.152" index="41"/>
+      <Frame x="-117.45" y="-202.05" scaleX="0.010" scaleY="0.010" index="42"/>
+      <Frame x="126.90" y="-59.55" scaleX="0.010" scaleY="0.010" index="43"/>
+      <Frame x="126.90" y="-59.55" scaleX="0.237" scaleY="0.237" index="44"/>
+      <Frame x="126.95" y="-59.55" scaleX="0.463" scaleY="0.463" index="45"/>
+      <Frame x="126.90" y="-59.60" scaleX="0.690" scaleY="0.690" index="46"/>
+      <Frame x="126.95" y="-59.55" scaleX="0.463" scaleY="0.463" index="47"/>
+      <Frame x="126.90" y="-59.55" scaleX="0.237" scaleY="0.237" index="48"/>
+      <Frame x="126.90" y="-59.55" scaleX="0.010" scaleY="0.010" index="49"/>
+    </Part>
+  </Animation>
+</Animations>

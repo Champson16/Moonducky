@@ -11,15 +11,15 @@
 	"imageFile": "MDMT_DressingRoom_Ottoman.png",
 	"width": 215,
 	"height": 195,
-	"right": 82,
-	"y": 480
+	"right": 91,
+	"y": 452
 },
 {
 	"id": "MysteryBox",
 	"imageFile": "MDMT_DressingRoom_MysteryBox.png",
 	"width": 130,
 	"height": 96,
-	"right": 126,
-	"y": 390,
+	"right": 135,
+	"y": 362,
 	"onTouch": "randomCostume"
 }]

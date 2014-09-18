@@ -94,7 +94,7 @@ function scene.postCreateScene(self, event)
 					local webView = native.newWebView(0, 0, screenW - 100, screenH - 55);
 					webView.x = display.contentCenterX;
 					webView.y = display.contentCenterY + 20;
-					webView:request("MDMT_FRC_WebOverlay_Learn_Credits.html", system.ResourceDirectory);
+					webView:request("MDMT_FRC_WebOverlay_Help_Main_DressingRoom.html", system.ResourceDirectory);
 					local closeButton = ui.button.new({
 						imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
 						imageDown = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',

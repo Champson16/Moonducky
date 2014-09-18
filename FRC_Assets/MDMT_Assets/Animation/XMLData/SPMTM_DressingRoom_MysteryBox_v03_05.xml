@@ -1,0 +1,40 @@
+<Animations>
+  <Animation name="SPMTM_DressingRoom_MysteryBox_v03_05" frameCount="67">
+    <Part name="SPMTM_DressingRoom_Sparkle_Blue">
+      <Frame x="-143.75" y="13.20" scaleX="0.300" scaleY="0.300" index="38"/>
+      <Frame x="-143.75" y="18.05" scaleX="0.300" scaleY="0.300" alpha="0.05" index="39"/>
+      <Frame x="-143.75" y="22.90" scaleX="0.300" scaleY="0.300" alpha="0.88" index="40"/>
+      <Frame x="-143.75" y="27.75" scaleX="0.300" scaleY="0.300" alpha="0.17" index="41"/>
+      <Frame x="-143.75" y="32.60" scaleX="0.300" scaleY="0.300" alpha="0.76" index="42"/>
+      <Frame x="-143.75" y="37.45" scaleX="0.300" scaleY="0.300" alpha="0.29" index="43"/>
+      <Frame x="-143.75" y="42.30" scaleX="0.300" scaleY="0.300" alpha="0.64" index="44"/>
+      <Frame x="-143.75" y="47.15" scaleX="0.300" scaleY="0.300" alpha="0.41" index="45"/>
+      <Frame x="-143.75" y="52.00" scaleX="0.300" scaleY="0.300" alpha="0.52" index="46"/>
+      <Frame x="-143.75" y="56.85" scaleX="0.300" scaleY="0.300" alpha="0.52" index="47"/>
+      <Frame x="-143.75" y="61.70" scaleX="0.300" scaleY="0.300" alpha="0.41" index="48"/>
+      <Frame x="-143.75" y="66.55" scaleX="0.300" scaleY="0.300" alpha="0.64" index="49"/>
+      <Frame x="-143.75" y="71.40" scaleX="0.300" scaleY="0.300" alpha="0.29" index="50"/>
+      <Frame x="-143.75" y="76.25" scaleX="0.300" scaleY="0.300" alpha="0.76" index="51"/>
+      <Frame x="-143.75" y="81.10" scaleX="0.300" scaleY="0.300" alpha="0.17" index="52"/>
+      <Frame x="-143.75" y="85.95" scaleX="0.300" scaleY="0.300" alpha="0.88" index="53"/>
+      <Frame x="-143.75" y="90.80" scaleX="0.300" scaleY="0.300" alpha="0.05" index="54"/>
+      <Frame x="-143.75" y="95.70" scaleX="0.300" scaleY="0.300" index="55"/>
+    </Part>
+    <Part name="SPMTM_DressingRoom_Sparkle_Green">
+      <Frame x="-120.60" y="135.50" scaleX="0.300" scaleY="0.300" index="24"/>
+      <Frame x="-120.60" y="141.80" scaleX="0.300" scaleY="0.300" alpha="0.84" index="25"/>
+      <Frame x="-120.60" y="148.15" scaleX="0.300" scaleY="0.300" alpha="0.69" index="26"/>
+      <Frame x="-120.60" y="154.50" scaleX="0.300" scaleY="0.300" alpha="0.53" index="27"/>
+      <Frame x="-120.60" y="160.85" scaleX="0.300" scaleY="0.300" alpha="0.38" index="28"/>
+      <Frame x="-120.60" y="167.20" scaleX="0.300" scaleY="0.300" alpha="0.23" index="29"/>
+      <Frame x="-120.60" y="173.55" scaleX="0.300" scaleY="0.300" alpha="0.07" index="30"/>
+      <Frame x="-120.60" y="179.90" scaleX="0.300" scaleY="0.300" alpha="0.07" index="31"/>
+      <Frame x="-120.60" y="186.25" scaleX="0.300" scaleY="0.300" alpha="0.23" index="32"/>
+      <Frame x="-120.60" y="192.60" scaleX="0.300" scaleY="0.300" alpha="0.38" index="33"/>
+      <Frame x="-120.60" y="198.95" scaleX="0.300" scaleY="0.300" alpha="0.53" index="34"/>
+      <Frame x="-120.60" y="205.30" scaleX="0.300" scaleY="0.300" alpha="0.69" index="35"/>
+      <Frame x="-120.60" y="211.65" scaleX="0.300" scaleY="0.300" alpha="0.84" index="36"/>
+      <Frame x="-120.60" y="218.00" scaleX="0.300" scaleY="0.300" index="37"/>
+    </Part>
+  </Animation>
+</Animations>

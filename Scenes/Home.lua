@@ -125,6 +125,8 @@ function scene.createScene(self, event)
 			webView.x = display.contentCenterX;
 			webView.y = display.contentCenterY + 20;
 			local platformName = import("platform").detected;
+			-- DEBUG:
+			print("http://fatredcouch.com/page.php?t=products&p=" .. platformName);
 			webView:request("http://fatredcouch.com/page.php?t=products&p=" .. platformName);
 
 			local closeButton = ui.button.new({
@@ -178,7 +180,7 @@ function scene.createScene(self, event)
 		disabled = 'FRC_Assets/FRC_ActionBar/Images/MDMT_ActionBar_Button_ActionBar_disabled.png',
 		buttonWidth = 100,
 		buttonHeight = 100,
-		buttonPadding = 15,
+		buttonPadding = 0,
 		bgColor = { 1, 1, 1, .95 },
 		buttons = {
 			{
@@ -196,6 +198,8 @@ function scene.createScene(self, event)
 					webView.x = display.contentCenterX;
 					webView.y = display.contentCenterY + 20;
 					local platformName = import("platform").detected;
+					-- DEBUG:
+					print("http://fatredcouch.com/page.php?t=products&p=" .. platformName);
 					webView:request("http://fatredcouch.com/page.php?t=products&p=" .. platformName);
 
 					local closeButton = ui.button.new({
@@ -229,7 +233,7 @@ function scene.createScene(self, event)
 					local webView = native.newWebView(0, 0, screenW - 100, screenH - 55);
 					webView.x = display.contentCenterX;
 					webView.y = display.contentCenterY + 20;
-					webView:request("MDMT_FRC_WebOverlay_Learn_Credits.html", system.ResourceDirectory);
+					webView:request("MDMT_FRC_WebOverlay_Help_Main.html", system.ResourceDirectory);
 					local closeButton = ui.button.new({
 						imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
 						imageDown = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
@@ -262,7 +266,7 @@ function scene.createScene(self, event)
 		disabled = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_Settings_disabled.png',
 		buttonWidth = 100,
 		buttonHeight = 100,
-		buttonPadding = 15,
+		buttonPadding = 0,
 		bgColor = { 1, 1, 1, .95 },
 		buttons = {
 			{

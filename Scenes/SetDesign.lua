@@ -23,7 +23,7 @@ function scene.postCreateScene(self, event)
 		disabled = 'FRC_Assets/FRC_ActionBar/Images/MDMT_ActionBar_Button_ActionBar_disabled.png',
 		buttonWidth = 100,
 		buttonHeight = 100,
-		buttonPadding = 15,
+		buttonPadding = 0,
 		bgColor = { 1, 1, 1, .95 },
 		buttons = {
 			{
@@ -34,10 +34,32 @@ function scene.postCreateScene(self, event)
 				end
 			},
 			{
+				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_ArtCenter_up.png',
+				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_ArtCenter_down.png',
+				onRelease = function()
+					storyboard.gotoScene('Scenes.ArtCenter');
+				end
+			},
+			{
+				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_up.png',
+				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_down.png',
+				onRelease = function()
+					-- if (self.canvas.isDirty) then
+						-- native.showAlert('Exit?', 'If you exit, your unsaved progress will be lost.\nIf you want to save first, tap Cancel now and then use the Save feature.', { 'Cancel', 'OK' }, function(event)
+							-- if (event.index == 2) then
+								-- storyboard.gotoScene('Scenes.DressingRoom');
+							-- end
+						-- end);
+					-- else
+						storyboard.gotoScene('Scenes.DressingRoom');
+					-- end
+				end
+			},
+			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_down.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_up.png',
 				onRelease = function(e)
-					local screenRect = display.newRect(0, 0, screenW, screenH);
+					local screenRect = display.newRect(view, 0, 0, screenW, screenH);
 					screenRect.x = display.contentCenterX;
 					screenRect.y = display.contentCenterY;
 					screenRect:setFillColor(0, 0, 0, 0.75);
@@ -62,6 +84,39 @@ function scene.postCreateScene(self, event)
 							screenRect:removeSelf(); screenRect = nil;
 						end
 					});
+					closeButton.x = 5 + (closeButton.contentWidth * 0.5) - ((screenW - display.contentWidth) * 0.5);
+					closeButton.y = 5 + (closeButton.contentHeight * 0.5) - ((screenH - display.contentHeight) * 0.5);
+					webView.closeButton = closeButton;
+				end
+			},
+			{
+				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_up.png',
+				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_down.png',
+				onRelease = function()
+					local screenRect = display.newRect(view, 0, 0, screenW, screenH);
+					screenRect.x = display.contentCenterX;
+					screenRect.y = display.contentCenterY;
+					screenRect:setFillColor(0, 0, 0, 0.75);
+					screenRect:addEventListener('touch', function() return true; end);
+					screenRect:addEventListener('tap', function() return true; end);
+
+					local webView = native.newWebView(0, 0, screenW - 100, screenH - 55);
+					webView.x = display.contentCenterX;
+					webView.y = display.contentCenterY + 20;
+					webView:request("MDMT_FRC_WebOverlay_Help_Main_SetDesign.html", system.ResourceDirectory);
+					local closeButton = ui.button.new({
+						imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
+						imageDown = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
+						width = 50,
+						height = 50,
+						onRelease = function(event)
+							local self = event.target;
+							webView:removeSelf(); webView = nil;
+							self:removeSelf(); closeButton = nil;
+							screenRect:removeSelf(); screenRect = nil;
+						end
+					});
+					--view:insert(closeButton);
 					closeButton.x = 5 + (closeButton.contentWidth * 0.5) - ((screenW - display.contentWidth) * 0.5);
 					closeButton.y = 5 + (closeButton.contentHeight * 0.5) - ((screenH - display.contentHeight) * 0.5);
 					webView.closeButton = closeButton;
@@ -129,7 +184,7 @@ function scene.postCreateScene(self, event)
 		disabled = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_Settings_disabled.png',
 		buttonWidth = 100,
 		buttonHeight = 100,
-		buttonPadding = 15,
+		buttonPadding = 0,
 		bgColor = { 1, 1, 1, .95 },
 		buttons = {
 			{

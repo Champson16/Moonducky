@@ -1,0 +1,56 @@
+<Animations>
+  <Animation name="SPMTM_DressingRoom_MysteryBox_v03_02" frameCount="67">
+    <Part name="SPMTM_DressingRoom_Sparkle_Green">
+      <Frame x="71.05" y="61.10" scaleX="0.300" scaleY="0.300" index="36"/>
+      <Frame x="71.05" y="66.25" scaleX="0.300" scaleY="0.300" alpha="0.12" index="37"/>
+      <Frame x="71.05" y="71.40" scaleX="0.300" scaleY="0.300" alpha="0.75" index="38"/>
+      <Frame x="71.05" y="76.55" scaleX="0.300" scaleY="0.300" alpha="0.37" index="39"/>
+      <Frame x="71.05" y="81.70" scaleX="0.300" scaleY="0.300" alpha="0.50" index="40"/>
+      <Frame x="71.05" y="86.85" scaleX="0.300" scaleY="0.300" alpha="0.62" index="41"/>
+      <Frame x="71.05" y="92.00" scaleX="0.300" scaleY="0.300" alpha="0.25" index="42"/>
+      <Frame x="71.05" y="97.15" scaleX="0.300" scaleY="0.300" alpha="0.87" index="43"/>
+      <Frame x="71.05" y="107.50" scaleX="0.300" scaleY="0.300" alpha="0.87" index="45"/>
+      <Frame x="71.05" y="112.65" scaleX="0.300" scaleY="0.300" alpha="0.25" index="46"/>
+      <Frame x="71.05" y="117.80" scaleX="0.300" scaleY="0.300" alpha="0.62" index="47"/>
+      <Frame x="71.05" y="122.95" scaleX="0.300" scaleY="0.300" alpha="0.50" index="48"/>
+      <Frame x="71.05" y="128.10" scaleX="0.300" scaleY="0.300" alpha="0.37" index="49"/>
+      <Frame x="71.05" y="133.25" scaleX="0.300" scaleY="0.300" alpha="0.75" index="50"/>
+      <Frame x="71.05" y="138.40" scaleX="0.300" scaleY="0.300" alpha="0.12" index="51"/>
+      <Frame x="71.05" y="143.60" scaleX="0.300" scaleY="0.300" index="52"/>
+    </Part>
+    <Part name="SPMTM_DressingRoom_Sparkle_Pink">
+      <Frame x="84.30" y="163.55" scaleX="0.300" scaleY="0.300" index="18"/>
+      <Frame x="84.30" y="168.40" scaleX="0.300" scaleY="0.300" alpha="0.05" index="19"/>
+      <Frame x="84.30" y="173.25" scaleX="0.300" scaleY="0.300" alpha="0.88" index="20"/>
+      <Frame x="84.30" y="178.10" scaleX="0.300" scaleY="0.300" alpha="0.17" index="21"/>
+      <Frame x="84.30" y="182.95" scaleX="0.300" scaleY="0.300" alpha="0.76" index="22"/>
+      <Frame x="84.30" y="187.80" scaleX="0.300" scaleY="0.300" alpha="0.29" index="23"/>
+      <Frame x="84.30" y="192.65" scaleX="0.300" scaleY="0.300" alpha="0.64" index="24"/>
+      <Frame x="84.30" y="197.50" scaleX="0.300" scaleY="0.300" alpha="0.41" index="25"/>
+      <Frame x="84.30" y="202.35" scaleX="0.300" scaleY="0.300" alpha="0.52" index="26"/>
+      <Frame x="84.30" y="207.20" scaleX="0.300" scaleY="0.300" alpha="0.52" index="27"/>
+      <Frame x="84.30" y="212.05" scaleX="0.300" scaleY="0.300" alpha="0.41" index="28"/>
+      <Frame x="84.30" y="216.90" scaleX="0.300" scaleY="0.300" alpha="0.64" index="29"/>
+      <Frame x="84.30" y="221.75" scaleX="0.300" scaleY="0.300" alpha="0.29" index="30"/>
+      <Frame x="84.30" y="226.60" scaleX="0.300" scaleY="0.300" alpha="0.76" index="31"/>
+      <Frame x="84.30" y="231.45" scaleX="0.300" scaleY="0.300" alpha="0.17" index="32"/>
+      <Frame x="84.30" y="236.30" scaleX="0.300" scaleY="0.300" alpha="0.88" index="33"/>
+      <Frame x="84.30" y="241.15" scaleX="0.300" scaleY="0.300" alpha="0.05" index="34"/>
+      <Frame x="84.30" y="246.05" scaleX="0.300" scaleY="0.300" index="35"/>
+    </Part>
+    <Part name="SPMTM_DressingRoom_Sparkle_Yellow">
+      <Frame x="-21.45" y="-16.55" scaleX="0.300" scaleY="0.300" index="53"/>
+      <Frame x="-21.45" y="-9.70" scaleX="0.300" scaleY="0.300" alpha="0.83" index="54"/>
+      <Frame x="-21.45" y="-2.80" scaleX="0.300" scaleY="0.300" alpha="0.66" index="55"/>
+      <Frame x="-21.45" y="4.05" scaleX="0.300" scaleY="0.300" alpha="0.50" index="56"/>
+      <Frame x="-21.45" y="10.95" scaleX="0.300" scaleY="0.300" alpha="0.33" index="57"/>
+      <Frame x="-21.45" y="17.80" scaleX="0.300" scaleY="0.300" alpha="0.16" index="58"/>
+      <Frame x="-21.45" y="31.55" scaleX="0.300" scaleY="0.300" alpha="0.16" index="60"/>
+      <Frame x="-21.45" y="38.45" scaleX="0.300" scaleY="0.300" alpha="0.33" index="61"/>
+      <Frame x="-21.45" y="45.30" scaleX="0.300" scaleY="0.300" alpha="0.50" index="62"/>
+      <Frame x="-21.45" y="52.20" scaleX="0.300" scaleY="0.300" alpha="0.66" index="63"/>
+      <Frame x="-21.45" y="59.05" scaleX="0.300" scaleY="0.300" alpha="0.83" index="64"/>
+      <Frame x="-21.45" y="65.95" scaleX="0.300" scaleY="0.300" index="65"/>
+    </Part>
+  </Animation>
+</Animations>

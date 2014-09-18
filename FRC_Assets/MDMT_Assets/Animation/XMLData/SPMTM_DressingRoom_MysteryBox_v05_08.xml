@@ -1,0 +1,43 @@
+<Animations>
+  <Animation name="SPMTM_DressingRoom_MysteryBox_v05_08" frameCount="52">
+    <Part name="SPMTM_DressingRoom_SpaceVortexColor">
+      <Frame x="-3.00" y="-6.00" scaleX="0.010" scaleY="0.010" alpha="0.49" index="11"/>
+      <Frame x="-3.00" y="-6.05" scaleX="0.094" scaleY="0.094" rotation="2.755" alpha="0.49" index="12"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.179" scaleY="0.179" rotation="5.519" alpha="0.49" index="13"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.263" scaleY="0.263" rotation="8.282" alpha="0.49" index="14"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.347" scaleY="0.347" rotation="11.046" alpha="0.49" index="15"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.431" scaleY="0.431" rotation="13.808" alpha="0.49" index="16"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.515" scaleY="0.515" rotation="16.572" alpha="0.49" index="17"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.599" scaleY="0.599" rotation="19.526" alpha="0.49" index="18"/>
+      <Frame x="-3.05" y="-6.00" scaleX="0.595" scaleY="0.595" rotation="22.291" alpha="0.49" index="19"/>
+      <Frame x="-3.00" y="-6.05" scaleX="0.590" scaleY="0.590" rotation="25.058" alpha="0.49" index="20"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.586" scaleY="0.586" rotation="27.826" alpha="0.49" index="21"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.581" scaleY="0.581" rotation="30.593" alpha="0.49" index="22"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.576" scaleY="0.576" rotation="33.362" alpha="0.49" index="23"/>
+      <Frame x="-3.05" y="-6.00" scaleX="0.572" scaleY="0.572" rotation="36.318" alpha="0.49" index="24"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.567" scaleY="0.567" rotation="39.084" alpha="0.49" index="25"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.563" scaleY="0.563" rotation="41.854" alpha="0.49" index="26"/>
+      <Frame x="-3.05" y="-6.05" scaleX="0.558" scaleY="0.558" rotation="44.622" alpha="0.49" index="27"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.554" scaleY="0.554" rotation="47.391" alpha="0.49" index="28"/>
+      <Frame x="-3.05" y="-6.00" scaleX="0.549" scaleY="0.549" rotation="50.160" alpha="0.49" index="29"/>
+      <Frame x="-3.05" y="-6.00" scaleX="0.545" scaleY="0.545" rotation="52.928" alpha="0.49" index="30"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.540" scaleY="0.540" rotation="55.886" alpha="0.49" index="31"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.536" scaleY="0.536" rotation="58.654" alpha="0.49" index="32"/>
+      <Frame x="-2.95" y="-6.05" scaleX="0.531" scaleY="0.531" rotation="61.422" alpha="0.49" index="33"/>
+      <Frame x="-3.00" y="-5.95" scaleX="0.527" scaleY="0.527" rotation="63.962" alpha="0.49" index="34"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.522" scaleY="0.522" rotation="66.688" alpha="0.49" index="35"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.518" scaleY="0.518" rotation="69.250" alpha="0.49" index="36"/>
+      <Frame x="-3.00" y="-6.05" scaleX="0.513" scaleY="0.513" rotation="71.953" alpha="0.49" index="37"/>
+      <Frame x="-3.05" y="-6.00" scaleX="0.509" scaleY="0.509" rotation="74.677" alpha="0.49" index="38"/>
+      <Frame x="-3.05" y="-6.00" scaleX="0.504" scaleY="0.504" rotation="77.213" alpha="0.49" index="39"/>
+      <Frame x="-3.00" y="-5.95" scaleX="0.500" scaleY="0.500" rotation="79.936" alpha="0.50" index="40"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.430" scaleY="0.430" rotation="94.024" alpha="0.57" index="41"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.360" scaleY="0.360" rotation="108.307" alpha="0.64" index="42"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.290" scaleY="0.290" rotation="122.611" alpha="0.71" index="43"/>
+      <Frame x="-2.95" y="-5.95" scaleX="0.220" scaleY="0.220" rotation="137.112" alpha="0.78" index="44"/>
+      <Frame x="-2.95" y="-6.00" scaleX="0.150" scaleY="0.150" rotation="151.419" alpha="0.85" index="45"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.080" scaleY="0.080" rotation="165.720" alpha="0.92" index="46"/>
+      <Frame x="-3.00" y="-6.00" scaleX="0.010" scaleY="0.010" rotation="-180.000" index="47"/>
+    </Part>
+  </Animation>
+</Animations>

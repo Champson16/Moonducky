@@ -1,0 +1,31 @@
+<Animations>
+  <Animation name="SPMTM_DressingRoom_MysteryBox_v02_03" frameCount="58">
+    <Part name="SPMTM_DressingRoom_Sparkle_Pink_whiteglow">
+      <Frame x="-3.10" y="64.20" scaleX="0.010" scaleY="0.010" index="31"/>
+      <Frame x="-3.10" y="64.20" scaleX="0.127" scaleY="0.127" index="32"/>
+      <Frame x="-3.10" y="64.20" scaleX="0.245" scaleY="0.245" index="33"/>
+      <Frame x="-3.10" y="64.20" scaleX="0.362" scaleY="0.362" index="34"/>
+      <Frame x="-3.15" y="64.15" scaleX="0.480" scaleY="0.480" index="35"/>
+      <Frame x="-3.10" y="64.20" scaleX="0.362" scaleY="0.362" index="36"/>
+      <Frame x="-3.10" y="64.20" scaleX="0.245" scaleY="0.245" index="37"/>
+      <Frame x="-3.10" y="64.20" scaleX="0.127" scaleY="0.127" index="38"/>
+      <Frame x="-3.10" y="64.20" scaleX="0.010" scaleY="0.010" index="39"/>
+      <Frame x="18.85" y="1.60" scaleX="0.010" scaleY="0.010" index="40"/>
+      <Frame x="18.85" y="1.60" scaleX="0.108" scaleY="0.108" index="41"/>
+      <Frame x="18.85" y="1.60" scaleX="0.206" scaleY="0.206" index="42"/>
+      <Frame x="18.85" y="1.60" scaleX="0.304" scaleY="0.304" index="43"/>
+      <Frame x="18.80" y="1.60" scaleX="0.402" scaleY="0.402" index="44"/>
+      <Frame x="18.85" y="1.60" scaleX="0.500" scaleY="0.500" index="45"/>
+      <Frame x="18.85" y="1.60" scaleX="0.377" scaleY="0.377" index="46"/>
+      <Frame x="18.85" y="1.60" scaleX="0.255" scaleY="0.255" index="47"/>
+      <Frame x="18.85" y="1.60" scaleX="0.132" scaleY="0.132" index="48"/>
+      <Frame x="18.85" y="1.60" scaleX="0.010" scaleY="0.010" index="49"/>
+      <Frame x="7.85" y="-115.90" scaleX="0.010" scaleY="0.010" index="50"/>
+      <Frame x="7.85" y="-115.90" scaleX="0.140" scaleY="0.140" index="51"/>
+      <Frame x="7.85" y="-115.90" scaleX="0.270" scaleY="0.270" index="52"/>
+      <Frame x="7.80" y="-115.95" scaleX="0.400" scaleY="0.400" index="53"/>
+      <Frame x="7.85" y="-115.90" scaleX="0.205" scaleY="0.205" index="54"/>
+      <Frame x="7.85" y="-115.90" scaleX="0.010" scaleY="0.010" index="55"/>
+    </Part>
+  </Animation>
+</Animations>
