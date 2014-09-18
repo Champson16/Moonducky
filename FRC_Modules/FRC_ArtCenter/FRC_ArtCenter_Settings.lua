@@ -47,6 +47,8 @@ settings.UI = {
 };
 
 settings.DATA = {
+	SAVE_PROMPT = 'Save Your MoonDucky Artwork',
+	LOAD_PROMPT = 'Load Your MoonDucky Artwork',
 	SAVED_DATAFILE = 'FRC_ArtCenter_Saved.json',
 	COLORS = 'FRC_Assets/FRC_ArtCenter/Data/FRC_ArtCenter_Colors.json',
 	TEXTURES = 'FRC_Assets/FRC_ArtCenter/Data/FRC_ArtCenter_Textures.json',
@@ -64,7 +66,7 @@ settings.MODES = {
 	BACKGROUND_SELECTION = 2,
 	SHAPE_PLACEMENT = 3,
 	STAMP_PLACEMENT = 4,
-	ERASE = 5	
+	ERASE = 5
 };
 
 return settings;

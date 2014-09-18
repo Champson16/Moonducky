@@ -6,8 +6,12 @@ local FRC_SettingsBar = require('FRC_Modules.FRC_SettingsBar.FRC_SettingsBar');
 local FRC_DressingRoom = require('FRC_Modules.FRC_DressingRoom.FRC_DressingRoom');
 local FRC_DressingRoom_Settings = require('FRC_Modules.FRC_DressingRoom.FRC_DressingRoom_Settings');
 local FRC_AudioManager = require('FRC_Modules.FRC_AudioManager.FRC_AudioManager');
+-- this is only needed if you want to call table.dump to inspect a table during debugging
+local FRC_Util = require('FRC_Modules.FRC_Util.FRC_Util');
 
 local scene = FRC_DressingRoom.newScene();
+-- DEBUG:
+print("FRC_DressingRoom.newScene");
 
 local imageBase = 'FRC_Assets/MDMT_Assets/Images/';
 
@@ -25,7 +29,7 @@ function scene.postCreateScene(self, event)
 		disabled = 'FRC_Assets/FRC_ActionBar/Images/MDMT_ActionBar_Button_ActionBar_disabled.png',
 		buttonWidth = 100,
 		buttonHeight = 100,
-		buttonPadding = 15,
+		buttonPadding = 0,
 		bgColor = { 1, 1, 1, .95 },
 		buttons = {
 			{
@@ -36,10 +40,17 @@ function scene.postCreateScene(self, event)
 				end
 			},
 			{
+				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_ArtCenter_up.png',
+				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_ArtCenter_down.png',
+				onRelease = function()
+					storyboard.gotoScene('Scenes.ArtCenter');
+				end
+			},
+			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_down.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_up.png',
 				onRelease = function(e)
-					local screenRect = display.newRect(0, 0, screenW, screenH);
+					local screenRect = display.newRect(view, 0, 0, screenW, screenH);
 					screenRect.x = display.contentCenterX;
 					screenRect.y = display.contentCenterY;
 					screenRect:setFillColor(0, 0, 0, 0.75);
@@ -110,7 +121,7 @@ function scene.postCreateScene(self, event)
 					local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
 					local galleryPopup;
 					galleryPopup = FRC_GalleryPopup.new({
-						title = 'SAVE',
+						title = FRC_DressingRoom_Settings.DATA.SAVE_PROMPT,
 						hideBlank = false,
 						width = screenW * 0.75,
 						height = screenH * 0.75,
@@ -135,7 +146,7 @@ function scene.postCreateScene(self, event)
 						local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
 						local galleryPopup;
 						galleryPopup = FRC_GalleryPopup.new({
-							title = 'LOAD',
+							title = FRC_DressingRoom_Settings.DATA.LOAD_PROMPT,
 							isLoadPopup = true,
 							hideBlank = true,
 							width = screenW * 0.75,
@@ -156,6 +167,7 @@ function scene.postCreateScene(self, event)
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_StartOver_down.png',
 				onRelease = self.startOver
 			}
+
 		}
 	});
 
@@ -170,7 +182,7 @@ function scene.postCreateScene(self, event)
 		disabled = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_Settings_disabled.png',
 		buttonWidth = 100,
 		buttonHeight = 100,
-		buttonPadding = 15,
+		buttonPadding = 0,
 		bgColor = { 1, 1, 1, .95 },
 		buttons = {
 			{

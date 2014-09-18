@@ -343,6 +343,7 @@ function FRC_DressingRoom_Scene:createScene(event)
 
 	-- create sceneLayout items
 	local sceneLayoutMethods = {};
+	local sceneLayout = {};
 
 	-- ambient loop sequence
 	function sceneLayoutMethods.playMysteryBoxAnimationSequence()
@@ -370,28 +371,64 @@ function FRC_DressingRoom_Scene:createScene(event)
 	end
 
 	for i=1,#sceneLayoutData do
-		local sceneLayout = display.newImageRect(view, UI('IMAGES_PATH') .. sceneLayoutData[i].imageFile, sceneLayoutData[i].width, sceneLayoutData[i].height);
-		if (sceneLayoutData[i].left) then
-			sceneLayout.x = sceneLayoutData[i].left - ((screenW - display.contentWidth) * 0.5) + (sceneLayout.contentWidth * 0.5);
-		elseif (sceneLayoutData[i].right) then
-			sceneLayout.x = display.contentWidth - sceneLayoutData[i].right + ((screenW - display.contentWidth) * 0.5) - (sceneLayout.contentWidth * 0.5);
-		else
-			sceneLayout.x = sceneLayoutData[i].x - ((screenW - display.contentWidth) * 0.5);
-		end
-		if (sceneLayoutData[i].top) then
-			sceneLayout.y = sceneLayoutData[i].top - ((screenH - display.contentHeight) * 0.5) + (sceneLayout.contentHeight * 0.5);
-		elseif (sceneLayoutData[i].bottom) then
-			sceneLayout.y = display.contentHeight - sceneLayoutData[i].bottom + ((screenH - display.contentHeight) * 0.5) - (sceneLayout.contentHeight * 0.5);
-		else
-			sceneLayout.y = sceneLayoutData[i].y - ((screenH - display.contentHeight) * 0.5);
-		end
+		if sceneLayoutData[i].imageFile then
+			sceneLayout[i] = display.newImageRect(view, UI('IMAGES_PATH') .. sceneLayoutData[i].imageFile, sceneLayoutData[i].width, sceneLayoutData[i].height);
+			if (sceneLayoutData[i].left) then
+				sceneLayout[i].x = sceneLayoutData[i].left - ((screenW - display.contentWidth) * 0.5) + (sceneLayout[i].contentWidth * 0.5);
+			elseif (sceneLayoutData[i].right) then
+				sceneLayout[i].x = display.contentWidth - sceneLayoutData[i].right + ((screenW - display.contentWidth) * 0.5) - (sceneLayout[i].contentWidth * 0.5);
+			else
+				sceneLayout[i].x = sceneLayoutData[i].x - ((screenW - display.contentWidth) * 0.5);
+			end
+			if (sceneLayoutData[i].top) then
+				sceneLayout[i].y = sceneLayoutData[i].top - ((screenH - display.contentHeight) * 0.5) + (sceneLayout[i].contentHeight * 0.5);
+			elseif (sceneLayoutData[i].bottom) then
+				sceneLayout[i].y = display.contentHeight - sceneLayoutData[i].bottom + ((screenH - display.contentHeight) * 0.5) - (sceneLayout[i].contentHeight * 0.5);
+			else
+				sceneLayout[i].y = sceneLayoutData[i].y - ((screenH - display.contentHeight) * 0.5);
+			end
+			sceneLayout[i]:scale(bg.xScale, bg.yScale);
+		elseif sceneLayoutData[i].animationFiles then
+			-- get the list of animation files and create the animation object
+			-- preload the animation data (XML and images) early
+			sceneLayout[i] = FRC_AnimationManager.createAnimationClipGroup(sceneLayoutData[i].animationFiles, animationXMLBase, animationImageBase);
+			sceneLayout[i].anchorX = 0.5;
+			sceneLayout[i].anchorY = 0.5;
+			sceneLayout[i].xScale = screenW / display.contentWidth;
+			sceneLayout[i].yScale = sceneLayout[i].xScale;
 
-		sceneLayout:scale(bg.xScale, bg.yScale);
+			if (sceneLayoutData[i].left) then
+				sceneLayout[i].x = sceneLayoutData[i].left - ((screenW - display.contentWidth) * 0.5) + (sceneLayout[i].contentWidth * 0.5);
+			elseif (sceneLayoutData[i].right) then
+				sceneLayout[i].x = display.contentWidth - sceneLayoutData[i].right + ((screenW - display.contentWidth) * 0.5) - (sceneLayout[i].contentWidth * 0.5);
+			else
+				-- sceneLayout[i].x = sceneLayoutData[i].x - ((screenW - display.contentWidth) * 0.5);
+			end
+			if (sceneLayoutData[i].top) then
+				sceneLayout[i].y = sceneLayoutData[i].top - ((screenH - display.contentHeight) * 0.5) + (sceneLayout[i].contentHeight * 0.5);
+			elseif (sceneLayoutData[i].bottom) then
+				sceneLayout[i].y = display.contentHeight - sceneLayoutData[i].bottom + ((screenH - display.contentHeight) * 0.5) - (sceneLayout[i].contentHeight * 0.5);
+			else
+				-- sceneLayout[i].y = sceneLayoutData[i].y - ((screenH - display.contentHeight) * 0.5);
+			end
+			view:insert(sceneLayout[i]);
+			for j=1, sceneLayout[i].numChildren do
+				sceneLayout[i][j]:play({
+					showLastFrame = false,
+					playBackward = false,
+					autoLoop = true,
+					palindromicLoop = false,
+					delay = 0,
+					intervalTime = 30,
+					maxIterations = 1
+				});
+			end
+		end
 
 		if (sceneLayoutData[i].onTouch) then
-			sceneLayout.onTouch = sceneLayoutMethods[sceneLayoutData[i].onTouch];
-			if (sceneLayout.onTouch) then
-				sceneLayout:addEventListener('touch', function(e)
+			sceneLayout[i].onTouch = sceneLayoutMethods[sceneLayoutData[i].onTouch];
+			if (sceneLayout[i].onTouch) then
+				sceneLayout[i]:addEventListener('touch', function(e)
 					if (e.phase == "began") then
 						e.target.onTouch();
 					end

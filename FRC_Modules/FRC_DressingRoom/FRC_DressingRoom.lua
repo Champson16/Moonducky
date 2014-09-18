@@ -13,19 +13,11 @@ end
 local emptyDataFile = json.decode(FRC_DressingRoom_Settings.DATA.EMPTY_DATAFILE);
 local saveDataFilename = FRC_DressingRoom_Settings.DATA.DATA_FILENAME;
 
-local saveDataToFile = function()
-	FRC_DataLib.saveJSON(saveDataFilename, FRC_DressingRoom.savedData, system.DocumentsDirectory);
+FRC_DressingRoom.saveData = FRC_DataLib.readJSON(saveDataFilename, system.DocumentsDirectory);
+if (not FRC_DressingRoom.saveData) then
+	FRC_DataLib.saveJSON(saveDataFilename, emptyDataFile);
+	FRC_DressingRoom.saveData = emptyDataFile;
 end
-FRC_DressingRoom.saveDataToFile = saveDataToFile;
-
-local getSavedData = function()
-	FRC_DressingRoom.savedData = FRC_DataLib.readJSON(saveDataFilename, system.DocumentsDirectory);
-	if (not FRC_DressingRoom.savedData) then
-		FRC_DressingRoom.savedData = emptyDataFile;
-		saveDataToFile();
-	end
-end
-FRC_DressingRoom.getSavedData = getSavedData;
 
 function FRC_DressingRoom.newScene(settings)
 	local settings = settings or {};
