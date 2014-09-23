@@ -4,6 +4,7 @@ local storyboard = require('storyboard');
 local FRC_ActionBar = require('FRC_Modules.FRC_ActionBar.FRC_ActionBar');
 local FRC_SettingsBar = require('FRC_Modules.FRC_SettingsBar.FRC_SettingsBar');
 local FRC_SetDesign = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign');
+local FRC_SetDesign_Settings = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign_Settings');
 
 local scene = FRC_SetDesign.newScene();
 
@@ -130,7 +131,7 @@ function scene.postCreateScene(self, event)
 					local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
 					local galleryPopup;
 					galleryPopup = FRC_GalleryPopup.new({
-						title = 'SAVE',
+						title = FRC_SetDesign_Settings.DATA.SAVE_PROMPT,
 						hideBlank = false,
 						width = screenW * 0.75,
 						height = screenH * 0.75,
@@ -148,13 +149,13 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_down.png',
 				disabled = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_disabled.png',
-				isDisabled = (#scene.saveData.savedItems < 1),
+				isDisabled = ((scene.saveData.savedItems == nil) or (#scene.saveData.savedItems < 1)),
 				onRelease = function(e)
 					local function showLoadPopup()
 						local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
 						local galleryPopup;
 						galleryPopup = FRC_GalleryPopup.new({
-							title = 'LOAD',
+							title = FRC_SetDesign_Settings.DATA.LOAD_PROMPT,
 							isLoadPopup = true,
 							hideBlank = true,
 							width = screenW * 0.75,

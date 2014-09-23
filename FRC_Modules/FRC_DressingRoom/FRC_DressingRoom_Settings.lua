@@ -15,8 +15,8 @@ FRC_DressingRoom_Settings.UI = {
 };
 
 FRC_DressingRoom_Settings.DATA = {
-	SAVE_PROMPT = 'Save Your Character Design',
-	LOAD_PROMPT = 'Load Your Character Design',
+	SAVE_PROMPT = 'Save Your Character Costume',
+	LOAD_PROMPT = 'Load Your Character Costume',
 	CHARACTER = 'FRC_Assets/FRC_DressingRoom/Data/FRC_DressingRoom_Character.json',
 	CATEGORY = 'FRC_Assets/FRC_DressingRoom/Data/FRC_DressingRoom_Category.json',
 	SCENELAYOUT = 'FRC_Assets/FRC_DressingRoom/Data/FRC_DressingRoom_SceneLayout.json',

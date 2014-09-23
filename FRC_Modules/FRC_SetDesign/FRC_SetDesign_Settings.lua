@@ -10,6 +10,8 @@ FRC_SetDesign_Settings.UI = {
 };
 
 FRC_SetDesign_Settings.DATA = {
+	SAVE_PROMPT = 'Save Your MoonDucky Set Design',
+	LOAD_PROMPT = 'Load Your MoonDucky Set Design',
 	CATEGORIES = 'FRC_Assets/FRC_SetDesign/Data/FRC_SetDesign_Categories.json',
 	SETS = 'FRC_Assets/FRC_SetDesign/Data/FRC_SetDesign_Sets.json',
 	BACKDROPS = 'FRC_Assets/FRC_SetDesign/Data/FRC_SetDesign_Backdrops.json',
