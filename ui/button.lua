@@ -8,7 +8,7 @@ local math_abs = math.abs;
 
 button.new = function(options)
 	local onPress, onRelease;
-	
+
 	-- Corona widgets compatibility
 	if (options.default) then
 		options.imageUp = options.default;
@@ -65,7 +65,7 @@ button.new = function(options)
 		else
 			view.up = display.newCircle(0, 0, options.width * 0.5);
 		end
-		view.up:setFillColor(1.0, 1.0, 1.0, 0);
+		view.up:setFillColor(1.0, 1.0, 1.0, 0.1);
 		view.up:setStrokeColor(0, 0, 0, 1.0);
 		view.up.strokeWidth = 5;
 		view.up.isHitTestable = true;
@@ -99,9 +99,9 @@ button.new = function(options)
 		if (#vertices > 1) then
 			view.down = display.newPolygon(0, 0, vertices);
 		else
-			view.down = display.newCircle(0, 0, options.width);
+			view.down = display.newCircle(0, 0, options.width * 0.5);
 		end
-		view.down:setFillColor(0, 0, 0, 0);
+		view.down:setFillColor(0, 0, 0, 0.1);
 		view.down:setStrokeColor(0, 0, 0, 1.0);
 		view.down.strokeWidth = 5;
 		view.down.isHitTestable = true;
@@ -157,7 +157,7 @@ button.new = function(options)
 
 	if (options.parentScrollContainer) then
 		view.parentScrollContainer = options.parentScrollContainer;
-	end 
+	end
 
 	if (onPress) then
 		view:addEventListener('press', onPress);
@@ -223,7 +223,7 @@ button.touch = function(event)
 					xStart = event.xStart,
 					yStart = event.yStart
 				});
-				
+
 				if (self.parentScrollContainer) then
 					local scrollerBounds = self.parentScrollContainer.contentBounds;
 					local isWithinScroller = scrollerBounds.xMin <= event.x and scrollerBounds.xMax >= event.x and scrollerBounds.yMin <= event.y and scrollerBounds.yMax >= event.y;
@@ -284,7 +284,7 @@ button.touch = function(event)
 	else
 		display.getCurrentStage():setFocus(nil);
 		self._hasFocus = false;
-		return false;		
+		return false;
 	end
 	return true;
 end
