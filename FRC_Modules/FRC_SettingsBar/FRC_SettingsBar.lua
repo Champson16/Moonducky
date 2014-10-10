@@ -57,11 +57,11 @@ local requiredOptions = {
 
 local defaultOptions = {
 	items = {},
-	bgColor = { 0.14, 0.14, 0.14, 1.0 },
+	bgColor = { 0, 0, 0, 0.25 },
 	top = 7,
 	right = 10,
 	buttons = {},
-	buttonPadding = 20
+	buttonPadding = 0
 };
 
 local function onMenuTogglePress(event)
@@ -81,7 +81,7 @@ local function onMenuToggleRelease(event)
 	local menu = self.parent;
 	menu:show();
 	if (menu.expandTransition) then return; end
-	
+
 	if (menu.isExpanded) then
 		-- contract menu
 		menu.expandTransition = transition.to(menu.menuItems, { time=400, x=menu.menuItems.xHidden, alpha=0, transition=easing.inOutExpo, onComplete=function()
@@ -149,6 +149,28 @@ local function hide(self, doNotDispatch)
 	end });
 end
 
+local function pauseHideTimer(self)
+	if (self.hideTimer) then timer.pause(self.hideTimer); end
+end
+
+local function resumeHideTimer(self)
+	if (self.hideTimer) then timer.resume(self.hideTimer); end
+end
+
+local function getItem(self, id)
+	if (not id) then return; end
+	local item;
+
+	for i=1,self.menuItems.numChildren do
+		if (self.menuItems[i].id and self.menuItems[i].id == id) then
+			item = self.menuItems[i];
+			break;
+		end
+	end
+
+	return item;
+end
+
 local function dispose(self)
 	if (self.isDisposed) then return; end
 	if (self.hideTimer) then timer.cancel(self.hideTimer); self.hideTimer = nil; end
@@ -199,6 +221,7 @@ FRC_SettingsBar.new = function(args)
 	local menuItems = display.newGroup(); menuGroup:insert(menuItems);
 
 	local toggleButton = ui.button.new({
+		id = options.id,
 		imageUp = options.imageUp,
 		imageDown = options.imageDown,
 		focusState = options.focusState,
@@ -226,6 +249,7 @@ FRC_SettingsBar.new = function(args)
 	local x, y = toggleButton.x, toggleButton.y;
 	for i=#options.buttons,1,-1 do
 		local button = ui.button.new({
+			id = options.buttons[i].id,
 			imageUp = options.buttons[i].imageUp,
 			imageDown = options.buttons[i].imageDown,
 			focusState = options.buttons[i].focusState,
@@ -252,7 +276,7 @@ FRC_SettingsBar.new = function(args)
 	end
 
 	local bgRect = display.newRoundedRect(0, 0, options.right + (options.buttonWidth * (#options.buttons + 1)) + (options.buttonPadding * #options.buttons) + options.right + (options.buttonPadding * 0.5) + 10, options.top + options.buttonHeight + (options.top) + 10, 11);
-	bgRect:setFillColor(0, 0, 0, 0.25);
+	bgRect:setFillColor( unpack(options.bgColor) );
 	menuItems:insert(1, bgRect);
 	bgRect.x = screenW - (bgRect.width * 0.5) - ((screenW - display.contentWidth) * 0.5) + 15;
 	bgRect.y = (bgRect.height * 0.5) - ((screenH - display.contentHeight) * 0.5) - 10;
@@ -267,7 +291,7 @@ FRC_SettingsBar.new = function(args)
 	menuGroup.menuActivator.isVisible = false;
 	menuGroup.menuActivator.isHitTestable = true;
 	options.parent:insert(2, menuGroup.menuActivator);
-	options.parent:insert(menuGroup);
+	--options.parent:insert(menuGroup);
 	menuGroup.menuActivator.x = display.contentCenterX;
 	menuGroup.menuActivator.y = display.contentCenterY;
 
@@ -290,7 +314,10 @@ FRC_SettingsBar.new = function(args)
 	menuGroup.isExpanded = false;
 	menuGroup.show = show;
 	menuGroup.hide = hide;
-	menuGroup.dispose = dispose;
+	menuGroup.pauseHideTimer = pauseHideTimer;
+	menuGroup.resumeHideTimer = resumeHideTimer;
+	menuGroup.getItem = getItem;
+	menuGroup.dispose = function(self) pcall(dispose, self); end
 	menuGroup.toggleMenu = function()
 		onMenuToggleRelease({target=toggleButton});
 	end
@@ -316,6 +343,19 @@ function FRC_SettingsBar.onUnrelatedTouch(event)
 	activeMenu:hide();
 end
 
+function FRC_SettingsBar.onSimulatedTouch(event)
+	if (activeMenu.menuItems) then
+		-- unpack the event target
+		local targetid = event.targetid;
+		for i=1, activeMenu.menuItems.numChildren do
+			if (activeMenu.menuItems[i].id == targetid) then
+				activeMenu.menuItems[i]:dispatchEvent( { name = 'press', target = activeMenu.menuItems[i] } );
+			end
+		end
+	end
+end
+
 FRC_SettingsBar:addEventListener('unrelatedTouch', FRC_SettingsBar.onUnrelatedTouch);
+FRC_SettingsBar:addEventListener('simulatedTouch', FRC_SettingsBar.onSimulatedTouch);
 
 return FRC_SettingsBar;

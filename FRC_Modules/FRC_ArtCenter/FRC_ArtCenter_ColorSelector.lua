@@ -3,7 +3,7 @@ local ui = require('ui');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_ArtCenter_SubToolSelector = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_SubToolSelector');
 
-local FRC_ArtCenter_ColorSelector = {}; 
+local FRC_ArtCenter_ColorSelector = {};
 
 local function HexToRGB(color)
 	local newcolor = {
@@ -76,7 +76,7 @@ local function onButtonRelease(event)
 		scene.canvas:fillBackground(self.r, self.g, self.b);
 		showSelectedColor = true;
 		scene.canvas.isDirty = true;
-	
+
 	elseif ((scene.mode == scene.modes.SHAPE_PLACEMENT) or (scene.mode == scene.modes.STAMP_PLACEMENT)) then
 
 		local shapeSubTool;
@@ -174,15 +174,46 @@ end
 local function changeColor(self, r, g, b)
 	local canvasColor = FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR;
 	local tool = self._scene.selectedTool;
+	local scene = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Scene');
 	tool.r = r;
 	tool.g = g;
 	tool.b = b;
+
+	self.r, self.g, self.b = r, g, b;
 
 	self._scene.currentColor.preview.up:setFillColor(r, g, b);
 	self._scene.currentColor.preview.down:setFillColor(r, g, b);
 	self._scene.currentColor.preview.r = r;
 	self._scene.currentColor.preview.g = g;
 	self._scene.currentColor.preview.b = b;
+
+	-- ensure all shape sub-tools reflect currently selected color/texture
+	for i=1,#scene.subToolSelectors do
+		if (scene.subToolSelectors[i].colorSubTools) then
+			for j=1,scene.subToolSelectors[i].content.numChildren do
+				if (scene.subToolSelectors[i].content[j].parentId) then
+					local obj = scene.subToolSelectors[i].content[j];
+					obj:setFill({ type="image", filename=scene.currentColor.texturePreview._imagePath });
+					obj:setFillColor(self.r, self.g, self.b, 1.0);
+
+					if ((self.r == canvasColor) and (self.g == canvasColor) and (self.b == canvasColor)) then
+						if (scene.currentColor.texturePreview.id == "Blank") then
+							obj:setFillColor(self.r, self.g, self.b, 0);
+
+						else
+							if (scene.mode == scene.modes.SHAPE_PLACEMENT) then
+								obj:setFillColor(self.r, self.g, self.b, 1.0);
+							else
+								obj:setFillColor(1.0, 1.0, 1.0, 1.0);
+							end
+						end
+					end
+					obj:setStrokeColor(0, 0, 0, 1.0);
+					obj:setStrokeWidth(5);
+				end
+			end
+		end
+	end
 
 	if ((r == canvasColor) and (g == canvasColor) and (b == canvasColor)) then
 		self._scene.currentColor.texturePreview:setFillColor(1.0, 1.0, 1.0, 1.0);
@@ -220,6 +251,7 @@ FRC_ArtCenter_ColorSelector.new = function(scene, width, height)
 		topPadding = BUTTON_PADDING,
 		bottomPadding = BUTTON_PADDING,
 		bgColor = { 1.0, 1.0, 1.0, 0.75 },
+		--bgColor = { 0, 0, 0, 0 },
 		borderRadius = 11,
 		borderWidth = 0,
 		borderColor = { 0, 0, 0, 1.0 }

@@ -1,4 +1,4 @@
-local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
+ local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
 local ui = require('ui');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_ArtCenter_SubToolSelector = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_SubToolSelector');
@@ -20,7 +20,7 @@ local function onButtonRelease(event)
 	scene.selectedTool = require('FRC_Modules.FRC_ArtCenter.' .. self.module);
 	scene.eraserGroup.button:setFocusState(false);
 	scene.canvas:setEraseMode(false);
-	
+
 	if ((self.mode == "STAMP_PLACEMENT") or (self.mode == "SHAPE_PLACEMENT") or (self.mode == "BACKGROUND_SELECTION")) then
 		scene.eraserGroup.button:setDisabledState(true);
 	else
@@ -96,7 +96,8 @@ FRC_ArtCenter_ToolSelector.new = function(scene, height)
 	local toolButtons = toolData.tools;
 
 	local bg = display.newRoundedRect(0, 0, (BUTTON_WIDTH * #toolButtons) + ((BUTTON_PADDING + 3) * (#toolButtons)), BUTTON_HEIGHT + BUTTON_PADDING * 2, 11);
-	bg:setFillColor(0, 0, 0, 0.25);
+	-- this sets the appearance of the background of the main tool selector
+  bg:setFillColor(0, 0, 0, 0.75);
 	bg:setStrokeColor(0, 0, 0, 1.0);
 	bg.strokeWidth = 0;
 	bg.x = -((BUTTON_PADDING + 3) * 0.5);

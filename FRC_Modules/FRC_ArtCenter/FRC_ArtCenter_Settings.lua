@@ -7,6 +7,7 @@ settings.DISABLE_STORE = true;
 settings.UI = {
 	IMAGE_BASE_PATH = 'FRC_Assets/FRC_ArtCenter/Images/',
 	DEFAULT_CANVAS_COLOR = .956862745,
+	PALETTE_TOP_MARGIN = 38; -- 42,
 	CANVAS_TOP_MARGIN = 42,
 	CANVAS_BORDER = 3,
 	SELECTOR_WIDTH = 130,
@@ -15,20 +16,27 @@ settings.UI = {
 	ERASER_BUTTON_IMAGE = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Eraser.png',
 	ERASER_BUTTON_IMAGE_FOCUSED = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Eraser_focused.png',
 	ERASER_BUTTON_IMAGE_DISABLED = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Eraser_disabled.png',
-	SCENE_BACKGROUND_IMAGE = 'FRC_Assets/FRC_ArtCenter/Images/FRC_ArtCenter_Background.jpg',
-	SCENE_BACKGROUND_WIDTH = display.contentWidth,
-	SCENE_BACKGROUND_HEIGHT = display.contentHeight,
+	SCENE_BACKGROUND_IMAGE = 'FRC_Assets/FRC_ArtCenter/Images/FRC_ArtCenter_Background.png',
+	SCENE_BACKGROUND_WIDTH = 1440,
+	SCENE_BACKGROUND_HEIGHT = 768,
 	COLOR_PREVIEW_IMAGE = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Color_Blank.png',
 	BLANK_TEXTURE_IMAGE = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Texture_Blank.jpg',
 	NOCOLOR_COLOR = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Color_NoColor.png',
 	BLANK_COLOR	= 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Color_Blank.png',
 	BLANK_COLOR_FOCUSED = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Color_Blank_focused.png',
+	COLOR_PALETTE_LEFT_PADDING = 50,
+	COLOR_PALETTE_BOTTOM_PADDING = 0,
 	COLOR_WIDTH = 64,
 	COLOR_HEIGHT = 64,
 	COLOR_PADDING = 16,
 	TEXTURE_WIDTH = 100,
 	TEXTURE_HEIGHT = 50,
 	TEXTURE_PADDING = 16,
+	TEXTURE_BGCOLOR = { 1.0, 1.0, 1.0, 0 },
+	TEXTURE_BORDER_COLOR = { 0, 0, 0, 1.0 },
+	TEXTURE_BORDER_RADIUS = 11,
+	TEXTURE_BORDER_WIDTH = 0,
+	SUBTOOL_PALETTE_LEFT_PADDING = 50,
 	SUBTOOL_SELECTION_IMAGE = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_SubToolSelection.png',
 	SUBTOOL_SELECTION_WIDTH = 86,
 	SUBTOOL_SELECTION_HEIGHT = 86,
@@ -43,16 +51,24 @@ settings.UI = {
 	STAMP_SUBTOOL_BUTTON_WIDTH = 100,
 	STYLE_SELECTION_ARROW_IMAGE = 'FRC_Assets/FRC_ArtCenter/Images/FRC_ArtCenter_global_StyleSelectionArrow.png',
 	STYLE_SELECTION_ARROW_WIDTH = 18,
-	STYLE_SELECTION_ARROW_HEIGHT = 18
+	STYLE_SELECTION_ARROW_HEIGHT = 18,
+	ANIMATION_XML_BASE = 'FRC_Assets/MDMT_Assets/Animation/XMLData/',
+	ANIMATION_IMAGE_BASE = 'FRC_Assets/MDMT_Assets/Animation/Images/',
+	STAMP_SELECTION_COLOR = { 0, 0.5, 1.0 },
+	STAMP_MIN_SIZE = 60,
+	STAMP_MAX_SCALE = 3,
+	STAMP_SELECTION_PADDING = 5
 };
 
 settings.DATA = {
+	DATA_FILENAME = 'FRC_ArtCenter_Saved.json',
 	SAVE_PROMPT = 'Save Your MoonDucky Artwork',
 	LOAD_PROMPT = 'Load Your MoonDucky Artwork',
-	SAVED_DATAFILE = 'FRC_ArtCenter_Saved.json',
 	COLORS = 'FRC_Assets/FRC_ArtCenter/Data/FRC_ArtCenter_Colors.json',
 	TEXTURES = 'FRC_Assets/FRC_ArtCenter/Data/FRC_ArtCenter_Textures.json',
-	TOOLS = 'FRC_Assets/FRC_ArtCenter/Data/FRC_ArtCenter_Tools.json'
+	TOOLS = 'FRC_Assets/FRC_ArtCenter/Data/FRC_ArtCenter_Tools.json',
+	SCENELAYOUT = 'FRC_Assets/FRC_ArtCenter/Data/FRC_ArtCenter_SceneLayout.json',
+	EMPTY_DATAFILE = '{ "owner": "FRC_ArtCenter", "savedItems": [] }'
 };
 
 settings.AUDIO = {
@@ -60,6 +76,15 @@ settings.AUDIO = {
 };
 
 -- CONSTANTS:
+
+-- read data file: 'FRC_Assets/FRC_ArtCenter/Data/FRC_ArtCenter_Config.json' and store in 'CONFIG' key
+local FRC_DataLib = require("FRC_Modules.FRC_DataLib.FRC_DataLib");
+local config = FRC_DataLib.readJSON("FRC_Assets/FRC_ArtCenter/Data/FRC_ArtCenter_Config.json");
+if (config) then
+	settings.CONFIG = config;
+else
+	settings.CONFIG = {};
+end
 
 settings.MODES = {
 	FREEHAND_DRAW = 1,

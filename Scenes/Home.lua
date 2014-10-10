@@ -353,19 +353,20 @@ end
 
 function scene.exitScene(self, event)
 	ui:dispose();
-end
 
-function scene.didExitScene(self, event)
 	local scene = self;
-	scene.actionBarMenu:dispose();
-	scene.actionBarMenu = nil;
-	scene.settingsBarMenu:dispose();
-	scene.settingsBarMenu = nil;
+	if (scene.actionBarMenu) then
+		scene.actionBarMenu:dispose();
+		scene.actionBarMenu = nil;
+	end
+	if (scene.settingsBarMenu) then
+		scene.settingsBarMenu:dispose();
+		scene.settingsBarMenu = nil;
+	end
 end
 
 scene:addEventListener('createScene');
 scene:addEventListener('enterScene');
 scene:addEventListener('exitScene');
-scene:addEventListener('didExitScene');
 
 return scene;

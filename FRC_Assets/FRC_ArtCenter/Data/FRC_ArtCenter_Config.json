@@ -1,0 +1,14 @@
+{
+	"subtools": {
+		"left": {
+			"disableAnimation": false,
+			"hideBackground": false,
+			"left": 0
+		},
+		"right": {
+			"disableAnimation": false,
+			"hideBackground": false,
+			"right": 0
+		}
+	}
+}

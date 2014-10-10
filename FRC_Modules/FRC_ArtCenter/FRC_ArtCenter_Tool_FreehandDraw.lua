@@ -208,31 +208,6 @@ FRC_ArtCenter_Tool_FreehandDraw.onCanvasTouch = function(self, e)
 
 	else
 		points = {};
-		local scene = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Scene');
-		
-		if (scene.mode == scene.modes.ERASE) then
-			-- NOTE: display.capture has been broken since build 2013.2111, so we're using display.save
-			-- as a workaround. Not ideal for long-term use because display.save is using file I/O (slow)
-			
-			local c = display.capture(self.parent.layerDrawing); -- uncomment this line when display.capture is fixed
-			self.isProcessingErase = true;
-			--[[
-			display.save(self.parent.layerDrawing, {
-				filename = "erasebuffer.png",
-				baseDir = system.TemporaryDirectory,
-				isFullResolution = true
-			}); -- delete this line when display.capture is fixed
-			local c = display.newImage("erasebuffer.png", system.TemporaryDirectory, true); -- delete this line when display.capture is fixed
-			c:scale(display.contentScaleX, display.contentScaleY);
-			--]]
-			self.parent.layerDrawing:invalidate();
-			local parentGroup = self.parent.layerDrawing.canvas;
-			parentGroup:insert(c);
-			self.parent.layerDrawing:invalidate("canvas");
-			timer.performWithDelay(1, function()
-				self.isProcessingErase = false;
-			end, 1);
-		end
 	end
 end
 

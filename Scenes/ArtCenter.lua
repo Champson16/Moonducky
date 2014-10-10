@@ -10,7 +10,6 @@ local FRC_DressingRoom_Settings = require('FRC_Modules.FRC_DressingRoom.FRC_Dres
 local storyboard = require('storyboard');
 
 local scene = FRC_ArtCenter.newScene({
-	--SCENE_BACKGROUND_IMAGE = 'FRC_Assets/FRC_MemoryGame/Images/PUFF_Games_global_LandingPage_Background.jpg',
 	SCENE_BACKGROUND_WIDTH = 1152,
 	SCENE_BACKGROUND_HEIGHT = 768,
 	MENU_SWOOSH_AUDIO = 'FRC_Assets/FRC_ArtCenter/Audio/PUFF_global_ArtCenter_MenuSwoosh.mp3'
@@ -68,6 +67,7 @@ scene.postCreateScene = function(self, event)
 		buttonHeight = 100,
 		buttonPadding = 0,
 		bgColor = { 1, 1, 1, .95 },
+		alwaysVisible = true,
 		buttons = {
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Home_up.png',
@@ -114,7 +114,7 @@ scene.postCreateScene = function(self, event)
 					webView.x = display.contentCenterX;
 					webView.y = display.contentCenterY + 20;
 					local platformName = import("platform").detected;
-					webView:request("http://fatredcouch.com/page.php?t=products&p=" .. platformName);
+					webView:request("https://fatredcouch.com/page.php?t=products&p=" .. platformName );
 
 					local closeButton = ui.button.new({
 						imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
@@ -171,6 +171,7 @@ scene.postCreateScene = function(self, event)
 			},
 			-- SAVE button
 			{
+				id = "save",
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_down.png',
 				onRelease = function(e)
@@ -187,7 +188,7 @@ scene.postCreateScene = function(self, event)
 							galleryPopup = nil;
 							self.canvas:save(e.id);
 							self.canvas.id = FRC_ArtCenter.generateUniqueIdentifier();
-							self.actionBarMenu.menuItems[5]:setDisabledState(false);
+							self.actionBarMenu:getItem("load"):setDisabledState(false);
 							self.canvas.isDirty = false;
 						end
 					});
@@ -195,6 +196,7 @@ scene.postCreateScene = function(self, event)
 			},
 			-- LOAD button (needs icon)
 			{
+				id = "load",
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_down.png',
 				disabled = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_disabled.png',

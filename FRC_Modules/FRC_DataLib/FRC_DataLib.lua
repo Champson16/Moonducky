@@ -4,6 +4,7 @@ local json = require "json";
 FRC_DataLib.readFile = function(filename, baseDirectory)
 	baseDirectory = baseDirectory or system.ResourceDirectory;
 	local path = system.pathForFile( filename, baseDirectory );
+	if (not path) then return false; end
 	local file = io.open(path, 'r');
 	if (not file) then return false; end
 	local data = file:read('*a');
@@ -14,7 +15,9 @@ end
 FRC_DataLib.saveFile = function(filename, saveData, baseDirectory)
 	baseDirectory = baseDirectory or system.DocumentsDirectory;
 	local path = system.pathForFile(filename, baseDirectory);
+	if (not path) then return false; end
 	local file = io.open(path, "w")
+	if (not file) then return false; end
 	file:write(saveData)
 	io.close(file);
 end
@@ -45,8 +48,11 @@ function FRC_DataLib.saveTable(t, filename)
 	end
 end
 
-function FRC_DataLib.loadTable(filename)
-	local path = system.pathForFile(filename, system.DocumentsDirectory)
+function FRC_DataLib.loadTable(filename, baseDirectory)
+	if (not baseDirectory) then
+		baseDirectory = system.DocumentsDirectory;
+	end
+	local path = system.pathForFile(filename, baseDirectory)
 	local contents = ""
 	local myTable = {}
 	local file = io.open( path, "r" )

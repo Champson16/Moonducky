@@ -1,8 +1,14 @@
 local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
 local FRC_ArtCenter_Scene = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Scene');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
+local json = require "json";
 local FRC_ArtCenter = {};
 math.randomseed(os.time());
+
+local function DATA(key, baseDir)
+	baseDir = baseDir or system.ResourceDirectory;
+	return FRC_DataLib.readJSON(FRC_ArtCenter_Settings.DATA[key], baseDir);
+end
 
 -- used to generate a unique 20-digit internal identifier for each drawing (for saving/loading)
 local generateUniqueIdentifier = function(digits)
@@ -22,16 +28,20 @@ local generateUniqueIdentifier = function(digits)
 end
 FRC_ArtCenter.generateUniqueIdentifier = generateUniqueIdentifier;
 
+local emptyDataFile = json.decode(FRC_ArtCenter_Settings.DATA.EMPTY_DATAFILE);
+-- load saved data or save new data
+local saveDataFilename = FRC_ArtCenter_Settings.DATA.DATA_FILENAME;
+
 local saveDataToFile = function()
-	FRC_DataLib.saveJSON(FRC_ArtCenter_Settings.DATA.SAVED_DATAFILE, FRC_ArtCenter.savedData, system.DocumentsDirectory);
+	FRC_DataLib.saveJSON(saveDataFilename, FRC_ArtCenter.savedData, system.DocumentsDirectory);
 end
 FRC_ArtCenter.saveDataToFile = saveDataToFile;
 
 local getSavedData = function()
-	FRC_ArtCenter.savedData = FRC_DataLib.readJSON(FRC_ArtCenter_Settings.DATA.SAVED_DATAFILE, system.DocumentsDirectory);
+	FRC_ArtCenter.savedData = FRC_DataLib.readJSON(saveDataFilename, system.DocumentsDirectory);
 	if (not FRC_ArtCenter.savedData) then
-		FRC_ArtCenter.savedData = { owner='FRC_ArtCenter', savedItems={} };
-		saveDataToFile();
+		FRC_ArtCenter.savedData = emptyDataFile; -- { owner='FRC_ArtCenter', savedItems={} };
+		FRC_ArtCenter.saveDataToFile();
 	end
 end
 FRC_ArtCenter.getSavedData = getSavedData;
@@ -52,7 +62,7 @@ local newScene = function(settings)
 		end
 	end
 
-	getSavedData();
+	FRC_ArtCenter.getSavedData();
 
 	return FRC_ArtCenter_Scene;
 end

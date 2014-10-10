@@ -8,7 +8,7 @@ local FRC_ArtCenter_Tool_FreehandDraw = {};
 FRC_ArtCenter_Tool_FreehandDraw.graphic = {
 	image = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_FreehandPaintBasic_Brush_PaintBrush1.png',
 	width = 40,
-	height = 40	
+	height = 40
 };
 
 FRC_ArtCenter_Tool_FreehandDraw.r = 1.0;

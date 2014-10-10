@@ -18,13 +18,13 @@ local function split(pString, pPattern)
       cap = pString:sub(last_end)
       table.insert(Table, cap)
   end
- 
+
    return Table
 end
 
 local getScreenDimensions = function()
 	local build = tonumber(split(system.getInfo('build'), '%.')[2]);
-	
+
 	if (build < 2109) then
 		local screenW = display.actualContentWidth;
 		local screenH = display.actualContentHeight;
@@ -93,6 +93,41 @@ m.alignToBottom = function(displayObject, pixelsFromEdge)
 		local pixelsFromEdge = displayObject or 0;
 		return m.bottom(pixelsFromEdge);
 	end
+end
+
+m.alignToCenter = function(displayObject)
+  if (((displayObject) and (type(displayObject) ~= 'number'))) then
+    displayObject.x = displayObject.contentWidth - (displayObject.contentWidth * displayObject.anchorX);
+    displayObject.y = displayObject.contentHeight - (displayObject.contentHeight * displayObject.anchorY);
+  end
+end
+
+m.scaleToFit = function(displayObject, xOffset, yOffset)
+	if (not xOffset) then xOffset = 0; end
+	if (not yOffset) then yOffset = 0; end
+
+	local refWidth, refHeight = 1152, 768;
+
+	local screenW, screenH = getScreenDimensions();
+	local scale = screenH / refHeight;
+	local scaledSize, diffScaled, diff;
+	local x, y = 0, 0;
+
+	if ((refWidth * scale) < screenW) then
+		scale = screenW / refWidth;
+		scaledSize = display.contentWidth * scale;
+		diffScaled = ((refWidth * scale) - scaledSize) * 0.5;
+		diff = ((refWidth * scale) - display.contentWidth) * 0.5;
+		x = -(diff - diffScaled);
+	else
+		scaledSize = display.contentHeight * scale;
+		diffScaled = ((refHeight * scale) - scaledSize) * 0.5;
+		diff = ((refHeight * scale) - display.contentHeight) * 0.5;
+		y = -(diff - diffScaled);
+	end
+
+	displayObject.xScale, displayObject.yScale = scale, scale;
+	displayObject.x, displayObject.y = x + (xOffset * scale), y + (yOffset * scale);
 end
 
 return m;

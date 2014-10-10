@@ -418,8 +418,10 @@ local function onStampButtonRelease(event)
 		stamp:setMask(mask);
 		stamp.isHitTestMasked = true;
 		stampGroup.maskFile = maskPath;
-		--stamp.maskScaleX = stamp.xScale;
-		--stamp.maskScaleY = stamp.yScale;
+		stamp.maskX = 0;
+		stamp.maskY = 0;
+		stamp.maskScaleX = 1.0;
+		stamp.maskScaleY = 1.0;
 	end
 
 	stampGroup.objectType = 'stamp';
@@ -472,18 +474,26 @@ FRC_ArtCenter_SubToolSelector.new = function(scene, id, width, height)
 		FRC_ArtCenter_SubToolSelector.selection.alpha = 0.80;
 	end
 
+	local bgAlpha = 0.75;
+
+	if (FRC_ArtCenter_Settings.CONFIG.subtools.right) then
+		if (FRC_ArtCenter_Settings.CONFIG.subtools.right.hideBackground) then
+			bgAlpha = 0;
+		end
+	end
+
 	local group = ui.scrollContainer.new({
 		width = width,
 		height = height,
 		xScroll = false,
 		topPadding = 16,
 		bottomPadding = 16,
-		bgColor = { 1.0, 1.0, 1.0, 0.75 }, --{ 0.14, 0.14, 0.14 },
+		bgColor = { 1.0, 1.0, 1.0, bgAlpha }, --{ 0.14, 0.14, 0.14 },
 		borderRadius = 11,
 		borderWidth = 0,
 		borderColor = { 0, 0, 0, 1.0 }
 	});
-	
+
 	local toolData = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter').toolData or FRC_DataLib1.readJSON(FRC_ArtCenter_Settings.DATA.TOOLS);
 	local toolButtons = toolData.tools;
 	local toolData, subToolButtons;
@@ -552,6 +562,10 @@ FRC_ArtCenter_SubToolSelector.new = function(scene, id, width, height)
 
 		btnHeight = btnHeight or BUTTON_HEIGHT;
 		yPos = yPos + 16;
+
+		-- DEBUG:
+		print("id: ", id);
+		print("image: ", image);
 
 		local button = ui.button.new({
 			id = subToolButtons[i].id,

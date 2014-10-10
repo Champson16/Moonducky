@@ -1,3 +1,4 @@
+local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
 local BezierCurve = {}
 BezierCurve.imageFile = nil;
 BezierCurve.blotWidth = 32;
@@ -47,14 +48,16 @@ local display_newLine = function(...)
 			if (BezierCurve.imageFile) then
 				c = display.newImage(BezierCurve.imageFile);
 			else
-				c = display.newCircle( y, x, BezierCurve.blotWidth * 0.5 );
+				c = display.newImage(FRC_ArtCenter_Settings.UI.ERASER_BRUSH);
+				c.fill.blendMode = { srcColor = "zero", dstColor="oneMinusSrcAlpha" };
 				blotRotation = false;
 			end
 		else
 			if (BezierCurve.imageFile) then
 				c = display.newImage(BezierCurve.imageFile);
 			else
-				c = display.newCircle( x, y, BezierCurve.blotWidth * 0.5 );
+				c = display.newImage(FRC_ArtCenter_Settings.UI.ERASER_BRUSH);
+				c.fill.blendMode = { srcColor = "zero", dstColor="oneMinusSrcAlpha" };
 				blotRotation = false;
 			end
 		end
