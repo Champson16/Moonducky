@@ -61,7 +61,7 @@ function scene.postCreateScene(self, event)
 					webView.x = display.contentCenterX;
 					webView.y = display.contentCenterY + 20;
 					local platformName = import("platform").detected;
-					webView:request("http://fatredcouch.com/page.php?t=products&p=" .. platformName);
+					webView:request("https://fatredcouch.com/page.php?t=products&p=" .. platformName.. "&cacheBypass=".. system.getTimer() );
 
 					local closeButton = ui.button.new({
 						imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
@@ -115,6 +115,7 @@ function scene.postCreateScene(self, event)
 			},
 			-- SAVE button
 			{
+				id = "save",
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_down.png',
 				onRelease = function(e)
@@ -130,13 +131,14 @@ function scene.postCreateScene(self, event)
 							galleryPopup:dispose();
 							galleryPopup = nil;
 							scene:save(e);
-							self.actionBarMenu.menuItems[5]:setDisabledState(false); -- after save, enable 'Load' button
+							self.actionBarMenu:getItem("load"):setDisabledState(false); -- after save, enable 'Load' button
 						end
 					});
 				end
 			},
 			-- LOAD button (needs icon)
 			{
+				id = "load",
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_down.png',
 				disabled = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_disabled.png',
@@ -214,7 +216,7 @@ function scene.postCreateScene(self, event)
 end
 
 function scene.postExitScene(self, event)
-	ui:dispose();
+	--ui:dispose();
 end
 
 function scene.postDidExitScene(self, event)

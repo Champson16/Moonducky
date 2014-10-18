@@ -160,16 +160,15 @@ function FRC_DressingRoom_Scene:createScene(event)
 	require('FRC_Modules.FRC_DressingRoom.FRC_DressingRoom').saveData = FRC_DataLib.readJSON(saveDataFilename, system.DocumentsDirectory);
 
 	local bg = display.newImageRect(view, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
+	FRC_Layout.scaleToFit(bg);
 	bg.x, bg.y = display.contentCenterX, display.contentCenterY;
-	bg.xScale = screenW / display.contentWidth;
-	bg.yScale = bg.xScale;
 
 	-- setup a container that will hold character and all layers of clothing
 	--local chartainer = display.newContainer(display.contentWidth, display.contentHeight);
 	local chartainer = display.newGroup();
 	chartainer.anchorChildren = true;
 	view:insert(chartainer);
-	chartainer.x, chartainer.y = display.contentCenterX - 10, display.contentCenterY + 20;
+	chartainer.x, chartainer.y = display.contentCenterX + 10, display.contentCenterY - 10;
 	chartainer:scale(0.80, 0.80);
 	chartainer:scale(bg.xScale, bg.yScale);
 	view.saveGroup = chartainer;
@@ -221,8 +220,6 @@ function FRC_DressingRoom_Scene:createScene(event)
 	end
 
 	local function beginEyeAnimation(open, shut)
-		-- DEBUG:
-		-- print("beginEyeAnimation BLINK");
 		if (eyeTimer) then pcall(timer.cancel, eyeTimer); end
 		open.isVisible = true;
 		shut.isVisible = false;
@@ -299,7 +296,7 @@ function FRC_DressingRoom_Scene:createScene(event)
 					assert(refImage, "ERROR: Missing costume media file: ", UI('IMAGES_PATH') .. clothingData.imageFile);
 				end
 				item.x, item.y = character_x + clothingData.xOffset, character_y + clothingData.yOffset;
-				--[[ -- check to see if we need to use the special altBodyImage
+				-- check to see if we need to use the special altBodyImage
 				if (categoryId == 'Headwear') then
 					if (clothingData.altBodyImage) then
 						-- DEBUG:
@@ -316,11 +313,13 @@ function FRC_DressingRoom_Scene:createScene(event)
 						charBody.x, charBody.y = character_x, character_y;
 					end
 				end
-				--]]
-			--else
-			--	clearLayer('Character');
-			--	charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.bodyImage, charData.bodyWidth, charData.bodyHeight);
-			--	charBody.x, charBody.y = character_x, character_y;
+			else
+				if (categoryId == 'Headwear') then
+					-- we only reset the body if they chose the none option for Headwear
+					clearLayer('Character');
+					charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.bodyImage, charData.bodyWidth, charData.bodyHeight);
+			  	charBody.x, charBody.y = character_x, character_y;
+				end
 			end
 			layers[categoryId].selectedIndex = index;
 		end
@@ -341,7 +340,7 @@ function FRC_DressingRoom_Scene:createScene(event)
 		end
 	end
 
-		-- create sceneLayout items
+	-- create sceneLayout items
 	local sceneLayoutMethods = {};
 	local sceneLayout = {};
 	-- setup the randomly fired mysteryBoxAnimations
@@ -377,14 +376,22 @@ function FRC_DressingRoom_Scene:createScene(event)
 		sceneLayoutMethods.playMysteryBoxAnimationSequence();
 	end
 
+	local sceneLayoutAnimationSequences;
+
 	for i=1,#sceneLayoutData do
 		if sceneLayoutData[i].imageFile then
 			sceneLayout[i] = display.newImageRect(view, UI('IMAGES_PATH') .. sceneLayoutData[i].imageFile, sceneLayoutData[i].width, sceneLayoutData[i].height);
+			FRC_Layout.scaleToFit(sceneLayout[i]);
+
 			if (sceneLayoutData[i].left) then
+				sceneLayoutData[i].left = (sceneLayoutData[i].left * bg.xScale);
 				sceneLayout[i].x = sceneLayoutData[i].left - ((screenW - display.contentWidth) * 0.5) + (sceneLayout[i].contentWidth * 0.5);
+
 			elseif (sceneLayoutData[i].right) then
+				sceneLayoutData[i].right = (sceneLayoutData[i].right * bg.xScale);
 				sceneLayout[i].x = display.contentWidth - sceneLayoutData[i].right + ((screenW - display.contentWidth) * 0.5) - (sceneLayout[i].contentWidth * 0.5);
 			else
+				sceneLayoutData[i].x = sceneLayoutData[i].x * bg.xScale;
 				sceneLayout[i].x = sceneLayoutData[i].x - ((screenW - display.contentWidth) * 0.5);
 			end
 			if (sceneLayoutData[i].top) then
@@ -392,32 +399,45 @@ function FRC_DressingRoom_Scene:createScene(event)
 			elseif (sceneLayoutData[i].bottom) then
 				sceneLayout[i].y = display.contentHeight - sceneLayoutData[i].bottom + ((screenH - display.contentHeight) * 0.5) - (sceneLayout[i].contentHeight * 0.5);
 			else
+				sceneLayoutData[i].y = sceneLayoutData[i].y * bg.yScale;
 				sceneLayout[i].y = sceneLayoutData[i].y - ((screenH - display.contentHeight) * 0.5);
 			end
-			sceneLayout[i]:scale(bg.xScale, bg.yScale);
+
+			sceneLayout[i].y = sceneLayout[i].y + bg.contentBounds.yMin;
+
+
 		elseif sceneLayoutData[i].animationFiles then
 			-- get the list of animation files and create the animation object
 			-- preload the animation data (XML and images) early
 			sceneLayout[i] = FRC_AnimationManager.createAnimationClipGroup(sceneLayoutData[i].animationFiles, animationXMLBase, animationImageBase);
-			sceneLayout[i].anchorX = 0.5;
-			sceneLayout[i].anchorY = 0.5;
-			sceneLayout[i].xScale = screenW / display.contentWidth;
-			sceneLayout[i].yScale = sceneLayout[i].xScale;
+			FRC_Layout.scaleToFit(sceneLayout[i]);
 
 			if (sceneLayoutData[i].left) then
+				sceneLayoutData[i].left = (sceneLayoutData[i].left * bg.xScale);
 				sceneLayout[i].x = sceneLayoutData[i].left - ((screenW - display.contentWidth) * 0.5) + (sceneLayout[i].contentWidth * 0.5);
+
 			elseif (sceneLayoutData[i].right) then
+				sceneLayoutData[i].right = (sceneLayoutData[i].right * bg.xScale);
 				sceneLayout[i].x = display.contentWidth - sceneLayoutData[i].right + ((screenW - display.contentWidth) * 0.5) - (sceneLayout[i].contentWidth * 0.5);
+			elseif (sceneLayoutData[i].x) then
+				sceneLayoutData[i].x = sceneLayoutData[i].x * bg.xScale;
+				sceneLayout[i].x = sceneLayoutData[i].x - ((screenW - display.contentWidth) * 0.5);
 			else
-				-- sceneLayout[i].x = sceneLayoutData[i].x - ((screenW - display.contentWidth) * 0.5);
+				local xOffset = (screenW - (display.contentWidth * bg.xScale)) * 0.5;
+				sceneLayout[i].x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset;
 			end
+
 			if (sceneLayoutData[i].top) then
 				sceneLayout[i].y = sceneLayoutData[i].top - ((screenH - display.contentHeight) * 0.5) + (sceneLayout[i].contentHeight * 0.5);
 			elseif (sceneLayoutData[i].bottom) then
 				sceneLayout[i].y = display.contentHeight - sceneLayoutData[i].bottom + ((screenH - display.contentHeight) * 0.5) - (sceneLayout[i].contentHeight * 0.5);
-			else
-				-- sceneLayout[i].y = sceneLayoutData[i].y - ((screenH - display.contentHeight) * 0.5);
+			elseif (sceneLayoutData[i].y) then
+				sceneLayoutData[i].y = sceneLayoutData[i].y * bg.yScale;
+				sceneLayout[i].y = sceneLayoutData[i].y - ((screenH - display.contentHeight) * 0.5);
 			end
+
+			sceneLayout[i].y = sceneLayout[i].y + bg.contentBounds.yMin;
+
 			view:insert(sceneLayout[i]);
 			for j=1, sceneLayout[i].numChildren do
 				sceneLayout[i][j]:play({
@@ -445,7 +465,7 @@ function FRC_DressingRoom_Scene:createScene(event)
 		end
 	end
 
-		mysteryBoxAnimationFiles[1] = {
+	mysteryBoxAnimationFiles[1] = {
 		"SPMTM_DressingRoom_MysteryBox_v01_15.xml",
 		"SPMTM_DressingRoom_MysteryBox_v01_14.xml",
 		"SPMTM_DressingRoom_MysteryBox_v01_13.xml",
@@ -517,13 +537,12 @@ function FRC_DressingRoom_Scene:createScene(event)
 
 	for i=1,#mysteryBoxAnimationFiles do
 		-- preload the animation data (XML and images) early
+
 		mysteryBoxAnimationSequences[i] = FRC_AnimationManager.createAnimationClipGroup(mysteryBoxAnimationFiles[i], animationXMLBase, animationImageBase);
-		mysteryBoxAnimationSequences[i].anchorX = 0.5;
-		mysteryBoxAnimationSequences[i].anchorY = 0.5;
-		mysteryBoxAnimationSequences[i].xScale = screenW / display.contentWidth;
-		mysteryBoxAnimationSequences[i].yScale = mysteryBoxAnimationSequences[i].xScale;
-		mysteryBoxAnimationSequences[i].x = -31; -- display.contentWidth * 0.5;
-		mysteryBoxAnimationSequences[i].y = 42; -- display.contentHeight * 0.5;
+		FRC_Layout.scaleToFit(mysteryBoxAnimationSequences[i], -31, 42);
+		local xOffset = (screenW - (display.contentWidth * bg.xScale)) * 0.5;
+		mysteryBoxAnimationSequences[i].x = mysteryBoxAnimationSequences[i].x + xOffset;
+		mysteryBoxAnimationSequences[i].y = mysteryBoxAnimationSequences[i].y + bg.contentBounds.yMin;
 		view:insert(mysteryBoxAnimationSequences[i]);
 	end
 

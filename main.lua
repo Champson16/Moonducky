@@ -128,7 +128,7 @@ analytics.logEvent('App Launched');
 local analytics = import("analytics");
 analytics.init("flurry");
 analytics.logEvent("MDMTLaunch");
-local storyboard = require('storyboard_legacy');
+local storyboard = require("storyboard");
 storyboard.purgeOnSceneChange = true;
 storyboard.isDebug = false;
 
