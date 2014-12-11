@@ -267,6 +267,10 @@ function FRC_ArtCenter_Scene.createScene(self, event)
 	background.y = background.contentHeight * 0.5; --display.contentHeight * 0.5;
 	view:insert(background);
 	self.background = background;
+	if (FRC_ArtCenter_Settings.UI.SCALE_BACKGROUND) then
+		background.xScale = screenW / background.contentWidth;
+		background.yScale = background.xScale;
+	end
 
 
 	-- CREATE SCENE LAYOUT

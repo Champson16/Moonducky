@@ -19,6 +19,7 @@ settings.UI = {
 	SCENE_BACKGROUND_IMAGE = 'FRC_Assets/FRC_ArtCenter/Images/FRC_ArtCenter_Background.png',
 	SCENE_BACKGROUND_WIDTH = 1440,
 	SCENE_BACKGROUND_HEIGHT = 768,
+	SCALE_BACKGROUND = true,
 	COLOR_PREVIEW_IMAGE = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Color_Blank.png',
 	BLANK_TEXTURE_IMAGE = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Texture_Blank.jpg',
 	NOCOLOR_COLOR = 'FRC_Assets/FRC_ArtCenter/Images/FRC_UX_ArtCenter_Color_NoColor.png',
