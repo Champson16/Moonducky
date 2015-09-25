@@ -2,65 +2,170 @@
 -- portrait, portraitUpsideDown, landscapeLeft, landscapeRight
 
 settings = {
-	
+
 	orientation = {
-		default = "landscapeLeft",
+		default = "landscapeRight",
 		supported = { "landscapeRight", "landscapeLeft" }
 	},
-	
+
 	iphone = {
 		plist = {
-			CFBundleIconFiles = {
-				"Icon",
-				"Icon-22",
-				"Icon-25",
-				"Icon-Small",
-				"Icon-Small-40",
-				"Icon-Small-50",
-				"Icon-32",
-				"Icon-60",
-				"Icon-64",
-				"Icon-72",
-				"Icon-76",
-				"Icon-29",
-				"Icon-40",
-				"Icon-50"
+		  -- CFBundleVersion = "1.0",
+			MinimumOSVersion = "6.0", -- can't be lower than this now with Corona SDK
+			CFBundleDisplayName = "MoonDucky",
+			CFBundleName = "MoonDucky",
+			CFBundleLocalizations = {
+        "en"
 			},
+			UIAppFonts = {
+				"FeltTipRoman.ttf", "Freshman.ttf", "Graphite-Std.ttf", "LasVegas-Medium.ttf", "OpenSans-Semibold.ttf"
+			},
+			CFBundleIconFiles = {
+				"Icon.png",
+        "Icon@2x.png",
+        "Icon-60.png",
+        "Icon-60@2x.png",
+        "Icon-60@3x.png",
+        "Icon-72.png",
+        "Icon-72@2x.png",
+        "Icon-76.png",
+        "Icon-76@2x.png",
+        "Icon-Small-40.png",
+        "Icon-Small-40@2x.png",
+        "Icon-Small-40@3x.png",
+        "Icon-Small-50.png",
+        "Icon-Small-50@2x.png",
+        "Icon-Small.png",
+        "Icon-Small@2x.png",
+        "Icon-Small@3x.png"
+			},
+			--launch image files table
+      UILaunchImages = {
+        {  -- iPhone 4 Portrait
+            ["UILaunchImageMinimumOSVersion"] = "7.0",
+            ["UILaunchImageName"] = "Default",
+            ["UILaunchImageOrientation"] = "Portrait",
+            ["UILaunchImageSize"] = "{320, 480}"
+        },
+        {  -- iPhone 4 LandscapeLeft
+            ["UILaunchImageMinimumOSVersion"] = "7.0",
+            ["UILaunchImageName"] = "Default",
+            ["UILaunchImageOrientation"] = "LandscapeLeft",
+            ["UILaunchImageSize"] = "{320, 480}"
+        },
+        {  -- iPhone 4 LandscapeRight
+            ["UILaunchImageMinimumOSVersion"] = "7.0",
+            ["UILaunchImageName"] = "Default",
+            ["UILaunchImageOrientation"] = "LandscapeRight",
+            ["UILaunchImageSize"] = "{320, 480}"
+        },
+        {  -- iPhone 5 Portrait
+            ["UILaunchImageMinimumOSVersion"] = "7.0",
+            ["UILaunchImageName"] = "Default-568h",
+            ["UILaunchImageOrientation"] = "Portrait",
+            ["UILaunchImageSize"] = "{320, 568}"
+        },
+        {  -- iPhone 5 LandscapeLeft
+            ["UILaunchImageMinimumOSVersion"] = "7.0",
+            ["UILaunchImageName"] = "Default-568h-UpsideDown",
+            ["UILaunchImageOrientation"] = "LandscapeLeft",
+            ["UILaunchImageSize"] = "{320, 568}"
+        },
+        {  -- iPhone 5 LandscapeRight
+            ["UILaunchImageMinimumOSVersion"] = "7.0",
+            ["UILaunchImageName"] = "Default-568h",
+            ["UILaunchImageOrientation"] = "LandscapeRight",
+            ["UILaunchImageSize"] = "{320, 568}"
+        },
+        {  -- iPad LandscapeLeft
+            ["UILaunchImageMinimumOSVersion"] = "7.0",
+            ["UILaunchImageName"] = "Default-Landscape-UpsideDown",
+            ["UILaunchImageOrientation"] = "LandscapeLeft",
+            ["UILaunchImageSize"] = "{768, 1024}"
+        },
+        {  -- iPad LandscapeRight
+            ["UILaunchImageMinimumOSVersion"] = "7.0",
+            ["UILaunchImageName"] = "Default-Landscape",
+            ["UILaunchImageOrientation"] = "LandscapeRight",
+            ["UILaunchImageSize"] = "{768, 1024}"
+        },
+        {  -- iPhone 6 LandscapeLeft
+            ["UILaunchImageMinimumOSVersion"] = "8.0",
+            ["UILaunchImageName"] = "Default-667h-UpsideDown",
+            ["UILaunchImageOrientation"] = "LandscapeLeft",
+            ["UILaunchImageSize"] = "{375, 667}"
+        },
+        {  -- iPhone 6 LandscapeRight
+            ["UILaunchImageMinimumOSVersion"] = "8.0",
+            ["UILaunchImageName"] = "Default-667h",
+            ["UILaunchImageOrientation"] = "LandscapeRight",
+            ["UILaunchImageSize"] = "{375, 667}"
+        },
+        {  -- iPhone 6 Plus LandscapeLeft
+            ["UILaunchImageMinimumOSVersion"] = "8.0",
+            ["UILaunchImageName"] = "Default-Landscape-736h-UpsideDown",
+            ["UILaunchImageOrientation"] = "LandscapeLeft",
+            ["UILaunchImageSize"] = "{414, 736}"
+        },
+        {  -- iPhone 6 Plus LandscapeRight
+            ["UILaunchImageMinimumOSVersion"] = "8.0",
+            ["UILaunchImageName"] = "Default-Landscape-736h",
+            ["UILaunchImageOrientation"] = "LandscapeRight",
+            ["UILaunchImageSize"] = "{414, 736}"
+        }
+      },
 			UIStatusBarHidden = true,
-			MinimumOSVersion = "5.1.0",
 			UIViewControllerBasedStatusBarAppearance = false,
 			UIPrerenderedIcon = true, -- set to false for "shine" overlay
-			UIApplicationExitsOnSuspend = false,
-			CoronaUseIOS6LandscapeOnlyWorkaround = true, -- used to address landscape orientation/Apple Game center issues (not a problem now but good to protect against for later)
-			UIAppFonts = {
-				"GoldenCockerelITCStd-Italic.otf",
-				"GoldenCockerelITCStd-Titl.otf",
-				"GoldenCockerelITCStd.otf",
-				"GoldenCockerelITCStd.otf",
-				"GoldenTypeITCStd-Bold.otf",
-				"GoldenTypeITCStd.otf"
-			}
+			UIApplicationExitsOnSuspend = false
+			-- CoronaUseIOS6LandscapeOnlyWorkaround = true, -- used to address landscape orientation/Apple Game center issues (not a problem now but good to protect against for later)
 
-            --[[
-            -- iOS app URL schemes:
-            CFBundleURLTypes =
-            {
-                {
-                    CFBundleURLSchemes =
-                    {
-                        "fbXXXXXXXXXXXXXX", -- example scheme for facebook
-                        "coronasdkapp", -- example second scheme
-                    }
-                }
-            }
-            --]]
+      --[[
+      -- iOS app URL schemes:
+      CFBundleURLTypes =
+      {
+          {
+              CFBundleURLSchemes =
+              {
+                  "fbXXXXXXXXXXXXXX", -- example scheme for facebook
+                  "coronasdkapp", -- example second scheme
+              }
+          }
+      }
+      --]]
 		}
 	},
+
+	android = {
+		usesExpansionFile = false, -- set this to TRUE before building a release build
+		versionCode = "1201", -- update this to match AppSettings JSON before release
+		usesPermissions = {
+			"com.android.vending.CHECK_LICENSE",
+			"android.permission.INTERNET",
+      "android.permission.READ_EXTERNAL_STORAGE",
+      "android.permission.WRITE_EXTERNAL_STORAGE",
+      "android.permission.ACCESS_FINE_LOCATION",
+      "android.permission.ACCESS_COURSE_LOCATION"
+		},
+		--[[ COMMENT THIS BACK IN TO SEE THE PORTRAIT LOCK BUG IN THE SIMULATOR
+		usesFeatures = {
+      { name="android.hardware.camera", required = false },
+      { name="android.hardware.location", required = false },
+      { name="android.hardware.location.gps", required = false },
+    }
+		--]]
+		supportsScreens = {
+			smallScreens = false,
+			normalScreens = true,
+			largeScreens = true,
+			xlargeScreens = true
+		},
+		largeHeap = true -- provides support for larger textures
+  },
 
 	plugins = {
 		-- the following plugin can be accessed via: analytics = require("analytics"); analytics:setProvider("flurry")
-		["CoronaProvider.analytics.flurry"] = {
-		  publisherId = "com.coronalabs"
-		}
+		["CoronaProvider.analytics.flurry"] = { publisherId = "com.coronalabs" },
+		["plugin.zip"] = { publisherId = "com.coronalabs" }
 	}
 }
