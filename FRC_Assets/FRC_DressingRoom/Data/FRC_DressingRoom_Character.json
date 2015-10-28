@@ -1165,7 +1165,7 @@
 			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_Funk.png",
 			"width": 271,
 			"height": 81,
-			"xOffset": -52,
+			"xOffset": -12,
 			"yOffset": -210
 		},
 		{
@@ -1197,7 +1197,7 @@
 			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_Stocking.png",
 			"width": 91,
 			"height": 85,
-			"xOffset": -7,
+			"xOffset": -3,
 			"yOffset": -213
 		},
 		{
@@ -1213,7 +1213,7 @@
 			"imageFile": "MDMT_DressingRoom_Costume_Headwear_Pig_Turbin.png",
 			"width": 100,
 			"height": 122,
-			"xOffset": -7,
+			"xOffset": -3,
 			"yOffset": -229
 		}],
 
@@ -1460,9 +1460,9 @@
 		{
 			"id": "jeans",
 			"imageFile": "MDMT_DressingRoom_Costume_LowerTorso_Pig_Jeans.png",
-			"width": 171,
+			"width": 181,
 			"height": 97,
-			"xOffset": 1,
+			"xOffset": 3,
 			"yOffset": 71
 		},
 		{

@@ -26,20 +26,20 @@
 	"height": 128
 },
 {
-	"id": "Neckwear",
-	"imageUp": "FRC_DressingRoom_Icon_Neckwear_up.png",
-	"imageDown": "FRC_DressingRoom_Icon_Neckwear_down.png",
-	"imageFocused": "FRC_DressingRoom_Icon_Neckwear_focused.png",
-	"imageDisabled": "FRC_DressingRoom_Icon_Neckwear_disabled.png",
-	"width": 128,
-	"height": 128
-},
-{
 	"id": "UpperTorso",
 	"imageUp": "FRC_DressingRoom_Icon_UpperTorso_up.png",
 	"imageDown": "FRC_DressingRoom_Icon_UpperTorso_down.png",
 	"imageFocused": "FRC_DressingRoom_Icon_UpperTorso_focused.png",
 	"imageDisabled": "FRC_DressingRoom_Icon_UpperTorso_disabled.png",
+	"width": 128,
+	"height": 128
+},
+{
+	"id": "Neckwear",
+	"imageUp": "FRC_DressingRoom_Icon_Neckwear_up.png",
+	"imageDown": "FRC_DressingRoom_Icon_Neckwear_down.png",
+	"imageFocused": "FRC_DressingRoom_Icon_Neckwear_focused.png",
+	"imageDisabled": "FRC_DressingRoom_Icon_Neckwear_disabled.png",
 	"width": 128,
 	"height": 128
 },

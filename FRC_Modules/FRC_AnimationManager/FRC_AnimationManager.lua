@@ -1,5 +1,3 @@
--- VERSION 09182014
-
 -- FRC_AnimationManager
 -- FRC_AnimationManager.getAnimationData
 ---- transforms a Lua table containing data from Flash, preloads required bitmap assets
@@ -51,6 +49,9 @@
 -- DELAY FROM START VO:  START DOGS PLAYING BALL SFX
 
 local FRC_AnimationManager = {};
+
+-- Uncomment line below to remove all print statements for this module
+-- local function print() return; end
 
 -- this is only needed if you want to call table.dump to inspect a table during debugging
 local FRC_Util = require('FRC_Modules.FRC_Util.FRC_Util');
@@ -244,11 +245,12 @@ FRC_AnimationManager.createAnimationClip = function(data)
   animationClip.frameCount = tonumber(data.frameCount);
   animationClip.intervalTime = 33.33; -- 30fps default
 
-  animationClip.currentPart = "";
+  animationClip.currentPart = nil; -- "";
   -- for debugging, we track the id
   animationClip.id = animData.id;
 
   animationClip.isPlaying = false;
+  animationClip.isPaused = false;
 
   animationClip.xTransform = 0;
   animationClip.yTransform = 0;
@@ -296,11 +298,14 @@ FRC_AnimationManager.createAnimationClip = function(data)
       local p = frameData.part;
       -- if the part is different, then switch the graphic
       -- DEBUG:
-      -- print("current part: ", animationClip.currentPart, " - next part: ", p);
+      -- print("animationClip.currentPart: " , type(animationClip.currentPart), " current part: ", animationClip.currentPart, " - next part: ", p);
       if (animationClip.currentPart ~= p) then
         -- hide the current part (if there is one)
-        if (animationClip.animationParts[animationClip.currentPart]) then
-          animationClip.animationParts[animationClip.currentPart].isVisible = false;
+        if animationClip.currentPart then
+          if (animationClip.animationParts[animationClip.currentPart]) then
+            -- TODO:  We can use disable this line to create a trails effect for the animation
+            animationClip.animationParts[animationClip.currentPart].isVisible = false;
+          end
         end
         animationClip.currentPart = p;
         -- DEBUG:
@@ -308,14 +313,14 @@ FRC_AnimationManager.createAnimationClip = function(data)
       else
         -- force the part visible in case another animation that used this part was stopped (hidden) in the
         -- CCC 1.2.15 mod in attempt to fix pause/fastforward bug
-        if (animationClip.animationParts) then
+        if (animationClip.animationParts and animationClip.currentPart) then
           if (animationClip.animationParts[animationClip.currentPart]) then
             animationClip.animationParts[animationClip.currentPart].isVisible = true;
           end
         end
       end
       local newPart;
-      if (animationClip.animationParts) then
+      if (animationClip.animationParts and animationClip.currentPart) then
         if (animationClip.animationParts[animationClip.currentPart]) then
           newPart = animationClip.animationParts[animationClip.currentPart];
         end
@@ -415,7 +420,7 @@ FRC_AnimationManager.createAnimationClip = function(data)
       -- print("Warning... no frame data found at frame: ", index, " Last part was: ",animationClip.currentPart);
       -- -- we have to clear everything from the frame since there was no data for this frame number
       -- hide the current part (if there is one)
-      if (animationClip.animationParts) then
+      if (animationClip.animationParts and animationClip.currentPart) then -- (animationClip.currentPart ~= "")) then
         if (animationClip.animationParts[animationClip.currentPart]) then
           animationClip.animationParts[animationClip.currentPart].isVisible = false;
           -- DEBUG:
@@ -429,9 +434,10 @@ FRC_AnimationManager.createAnimationClip = function(data)
   animationClip.play = function(self, options)
     local gotoNext; -- forward declaration
     -- DEBUG:
-    print("animationClip.play: ", animationClip.id);
+    -- print("animationClip.play: ", animationClip.id);
     -- table.dump(options);
     animationClip.isPlaying = true;
+    animationClip.isPaused = false;
     -- DEBUG:
     -- print("options.showLastFrame: ", options.showLastFrame);
     ------ options:
@@ -452,7 +458,7 @@ FRC_AnimationManager.createAnimationClip = function(data)
     animationClip.flip = options.flipProperties or nil;
     -- DEBUG:
     if (animationClip.flip) then
-      print("animationClip.flip: ");
+      -- print("animationClip.flip: ");
       table.dump(animationClip.flip);
     end
     -- animationClip.onTouch = options.onTouch or nil;
@@ -461,7 +467,7 @@ FRC_AnimationManager.createAnimationClip = function(data)
       -- loop forever until the stop() or dispose() functions are called
       animationClip.maxIterations = -1;
       -- DEBUG:
-      print(animationClip.id, " autoLooping enabled! Framecount: ", animationClip.frameCount);
+      -- print(animationClip.id, " autoLooping enabled! Framecount: ", animationClip.frameCount);
     else
       animationClip.maxIterations = tonumber(options.maxIterations);
       -- check for a nil value or a bad value
@@ -475,7 +481,7 @@ FRC_AnimationManager.createAnimationClip = function(data)
 
     if (animationClip.playBackward) then
       -- DEBUG:
-      print("initial play is backwards");
+      -- print("initial play is backwards");
       animationClip.startFrame = options.startFrame or animationClip.frameCount;
       animationClip.currentIndex = tonumber(animationClip.startFrame);
     else
@@ -499,8 +505,8 @@ FRC_AnimationManager.createAnimationClip = function(data)
     -- setup the animationClip.transformations
     if (animationClip.transformations) then
       -- DEBUG:
-      print("applying ANIMATION TRANSFORMATIONS");
-      table.dump(animationClip.transformations);
+      -- print("applying ANIMATION TRANSFORMATIONS");
+      -- table.dump(animationClip.transformations);
       animationClip.xTransform = animationClip.transformations.xTransform or 0;
       animationClip.yTransform = animationClip.transformations.yTransform or 0;
       -- NOTE: alpha is set directly on the animationClip object and not on individual frames of clips
@@ -520,6 +526,8 @@ FRC_AnimationManager.createAnimationClip = function(data)
     -- print("Animation Play started at ", animationStartTime);
 
     function gotoNext(isDelay)
+      if (not animationClip or not animationClip.isPlaying or animationClip.isPaused) then return; end
+
       -- make a local variable for faster access since we are in a time critical loop
       local system_getTimer = system.getTimer;
       local nextIndex = animationClip.currentIndex;
@@ -614,7 +622,7 @@ FRC_AnimationManager.createAnimationClip = function(data)
         -- we've hit the end of the sequence, increment the iterations counter
         animationClip.iterations = animationClip.iterations + 1;
         -- DEBUG:
-        if not animationClip.autoLoop then print("Animation loop: ", self.iterations, " ending at frame ", nextIndex, " currentIndex: ", animationClip.currentIndex); end
+        -- if not animationClip.autoLoop then print("Animation loop: ", self.iterations, " ending at frame ", nextIndex, " currentIndex: ", animationClip.currentIndex); end
         if ((animationClip.maxIterations < 0) or (animationClip.iterations < animationClip.maxIterations)) then
           -- reset back to the beginning of the sequence
           -- DEBUG:
@@ -622,13 +630,13 @@ FRC_AnimationManager.createAnimationClip = function(data)
           -- this is where we will test for palindromic playback
           if (animationClip.palindromicLoop) then
             -- DEBUG:
-            print("palindromic switch");
+            -- print("palindromic switch");
             animationClip.playBackward = not animationClip.playBackward;
           end
           if (animationClip.playBackward) then
             animationClip.currentIndex = animationClip.frameCount;
             -- DEBUG:
-            print("looping backwards, resetting to frame: ", animationClip.currentIndex);
+            -- print("looping backwards, resetting to frame: ", animationClip.currentIndex);
           else
             animationClip.currentIndex = animationClip.startFrame;
           end
@@ -652,7 +660,8 @@ FRC_AnimationManager.createAnimationClip = function(data)
           -- DEBUG:
           local animationEndTime = system.getTimer();
           -- DEBUG
-          print(animationClip.id, " animation played ", animationClip.frameCount, " frames at ", (1000 / ((animationEndTime - animationStartTime) / animationClip.frameCount)), " fps");
+          -- print(animationClip.id, " animation played ", animationClip.frameCount, " frames at ", (1000 / ((animationEndTime - animationStartTime) / animationClip.frameCount)), " fps");
+          -- trigger any completion action before shutting down
           if (animationClip.onCompletion) then
             animationClip.onCompletion();
           end
@@ -660,7 +669,7 @@ FRC_AnimationManager.createAnimationClip = function(data)
           if (animationClip.showLastFrame) then
             -- reset iterations in case we get called to play again
             animationClip.iterations = 0;
-            animationClip:stop(animationClip.currentFrame); -- frameCount);
+            animationClip:stop(animationClip.frameCount);
           else
             -- wait a frame so that the screen doesn't flash between chained animation sequences
             -- timer.performWithDelay(animationClip.intervalTime * 2, function() animationClip:stop(); end, 1);
@@ -670,8 +679,9 @@ FRC_AnimationManager.createAnimationClip = function(data)
           end
         end
       end
-
     end
+    -- copy the function in for later access
+    animationClip.gotoNext = gotoNext;
 
     -- if maxIterations = 0 then don't play anything
     if (animationClip.maxIterations == 0) then
@@ -703,32 +713,36 @@ FRC_AnimationManager.createAnimationClip = function(data)
 
   animationClip.pause = function(self, autoHide)
     -- DEBUG:
-    print(animationClip.id, " animationClip.pause");
+    -- print(animationClip.id, " animationClip.pause");
     animationClip.isPlaying = false;
+    animationClip.isPaused = true;
     if (autoHide) then
       timer.performWithDelay(animationClip.intervalTime * 2, function() animationClip:hide(); end, 1);
       -- CCC 1.2.15 mod in attempt to fix pause/fastforward bug (line above was commented out)
       -- animationClip:hide();
     end
     if (animationClip.animationTimer) then
-      timer.pause(animationClip.animationTimer);
-      -- timer.cancel(animationClip.animationTimer);
-      -- animationClip.animationTimer = nil;
+      timer.cancel(animationClip.animationTimer);
+      animationClip.animationTimer = nil;
     end
   end
 
   animationClip.resume = function(self, autoShow)
     -- DEBUG:
-    print(animationClip.id, " animationClip.resume");
+    -- print(animationClip.id, " animationClip.resume");
     animationClip.isPlaying = true;
+    animationClip.isPaused = false;
     if (autoShow) then
       animationClip:show();
     end
+    --[[
     if (animationClip.animationTimer) then
       timer.resume(animationClip.animationTimer);
     end
+    --]]
     -- reset the lastFrameStartTime so when the animation resumes, it doesn't jump ahead to where it should have been if it wasn't paused
-    animationClip.lastFrameStartTime = nil;
+    animationClip.lastFrameStartTime = system.getTimer(); -- nil;
+    animationClip.animationTimer = timer.performWithDelay(animationClip.nextIntervalTime, animationClip.gotoNext, 1);
     -- animationClip.nextIntervalTime = animationClip.intervalTime;
     -- animationClip:show();
     -- animationClip.animationTimer = timer.performWithDelay(animationClip.nextIntervalTime, animationClip.play.gotoNext, 1);
@@ -738,9 +752,11 @@ FRC_AnimationManager.createAnimationClip = function(data)
     -- we need to set the visibility of the animationClip
     if (animationClip.animationParts) then
       if (animationClip.currentPart) then
-        local part = animationClip.animationParts[animationClip.currentPart];
-        if (part) then
-          part.isVisible = true;
+        local animationPart = animationClip.animationParts[animationClip.currentPart];
+        -- DEBUG
+        -- print("animationPart: ", animationPart);
+        if (animationPart) then
+          animationPart.isVisible = true;
         end
       end
     end
@@ -751,10 +767,11 @@ FRC_AnimationManager.createAnimationClip = function(data)
     if (animationClip.animationParts) then
       if (animationClip.currentPart) then
         -- DEBUG:
-        print("animationClip.hide: ", animationClip.currentPart);
-        local part = animationClip.animationParts[animationClip.currentPart];
-        if (part) then
-          part.isVisible = false;
+        -- print("animationClip.hide: ", animationClip.currentPart);
+        -- print("animationPart: ", animationPart);
+        local animationPart = animationClip.animationParts[animationClip.currentPart];
+        if (animationPart) then
+          animationPart.isVisible = false;
         end
       end
     end
@@ -772,17 +789,20 @@ FRC_AnimationManager.createAnimationClip = function(data)
     end
     if (atFrame) then
       -- DEBUG:
-      print("animationClip.stop - leaving specified frame visible: ", atFrame);
+      -- print("animationClip.stop - leaving specified frame visible: ", atFrame);
       animationClip:showFrame(atFrame);
       animationClip.isPlaying = true;
-    elseif (animationClip.showLastFrame) then
+      animationClip.isPaused = false;
+  --[[  elseif (animationClip.showLastFrame) then
       -- DEBUG:
-      print("animationClip.stop - leaving last frame visible: ", animationClip.currentIndex);
+      -- print("animationClip.stop - leaving last frame visible: ", animationClip.currentIndex);
       animationClip:showFrame(animationClip.currentIndex);
       animationClip.isPlaying = true;
+      --]]
     else
       animationClip:hide();
       animationClip.isPlaying = false;
+      animationClip.isPaused = false;
     end
   end
 
@@ -827,9 +847,16 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
     animationClipGroup.maxIterations = animationGroupProperties.maxIterations;
     animationClipGroup.transformations = animationGroupProperties.transformations;
     animationClipGroup.flip = animationGroupProperties.flip;
+    animationClipGroup.maskSource = animationGroupProperties.maskSource;
+    -- DEBUG:
+    if animationClipGroup.maskSource then print("FRC_AnimationManager.createAnimationClipGroup animationClipGroup.maskSource ASSIGNED! ", animationClipGroup.maskSource); end
     animationClipGroup.onCompletion = animationGroupProperties.onCompletion;
     animationClipGroup.onTouch = animationGroupProperties.onTouch;
     animationClipGroup.onShake = animationGroupProperties.onShake;
+    animationClipGroup.onPlay = animationGroupProperties.onPlay;
+  else
+    -- DEBUG:
+    print("FRC_AnimationManager.createAnimationClipGroup CALLED WITHOUT PROPERTIES");
   end
   -- process XML data for all animations
   if (inputFiles) then
@@ -846,16 +873,16 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
       -- look for the file in the application resources
       appLUApath = system.pathForFile( baseXMLDir .. XMLLUAfilename );
       -- DEBUG:
-      print("appLUApath should be: ", baseXMLDir .. XMLLUAfilename);
+      -- print("appLUApath should be: ", baseXMLDir .. XMLLUAfilename);
       docLUApath = system.pathForFile( XMLLUAfilename, system.DocumentsDirectory );
       -- DEBUG:
       -- if appLUApath then print("appLUAPATH: ", appLUApath); end
       -- if docLUApath then print("docLUApath: ", docLUApath); end
 
-      if (appLUApath) then
-        local path = appLUApath; --  or docLUApath;
+      if (appLUApath) then -- or docLUApath) then
+        local path = appLUApath; -- or docLUApath;
         -- DEBUG
-        print("FRC LUA PATH: ", path);
+        -- print("FRC LUA PATH: ", path);
         preexistingFile, err = io.open(path,"r");
 
         if (preexistingFile and not err) then
@@ -864,66 +891,53 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
             -- read Lua table via require
             local appLUAFilename = string.gsub( string.gsub(baseXMLDir .. XMLLUAfilename, "/", "."), ".lua", "");
             -- DEBUG:
-            print("appLUAFilename: ", appLUAFilename);
+            -- print("appLUAFilename: ", appLUAFilename);
             -- local test = require('FRC_Assets.SPMTM_Assets.Animation.XMLData.SPMTM_Title_Intro_82');
             -- table.dump(test);
             -- print("test:", test);
-            xmltable = require(appLUAFilename);
+
+            rawLUAcode = require(appLUAFilename);
             -- DEBUG:
             -- table.dump(rawLUAcode);
             -- print('#rawLUACode: ', #rawLUACode);
             -- grab the needed data structure and store it
-            -- xmltable = rawLUAcode; -- .xmltable;
-          --[[ elseif (docLUApath) then
-            preexistingFile, err = io.open(path,"r");
-            if (preexistingFile and not err) then
-              io.close(preexistingFile);
-              -- this strips off the extension of the filename and the leading / to we can convert it to a valid argument for require
-              local pathWithoutExt = string.gsub(string.gsub(string.gsub(path, ".lua", ""), "/", "", 1), "/", ".");
-              -- read Lua table via require
-              -- DEBUG:
-              print("pathWithoutExt: ", pathWithoutExt);
-              xmltable = require(pathWithoutExt);
-              -- DEBUG:
-              -- table.dump(rawLUAcode);
-              -- print(rawLUACode);
-              -- grab the needed data structure and store it
-              -- xmltable = rawLUAcode; -- .xmltable;
-            else
-              io.close(preexistingFile);
-            end
+            xmltable = rawLUAcode; -- .xmltable;
+          --[[ elseif (docLUApath and (system.getInfo("environment") == "simulator")) then
+            -- this strips off the extension of the filename and the leading / to we can convert it to a valid argument for require
+            local pathWithoutExt = string.gsub(string.gsub(path, ".lua", ""), "/", "", 1);
+            -- read Lua table via require
+            rawLUAcode = require(string.gsub(pathWithoutExt, "/", "."));
+            -- DEBUG:
+            table.dump(rawLUAcode);
+            print(rawLUACode);
+            -- grab the needed data structure and store it
+            xmltable = rawLUAcode; -- .xmltable;
             --]]
           end
         else
-          io.close(preexistingFile); -- just in case
-          -- since we could not read a Lua table, let's convert the xml and then save it for later
           xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
-          dataToSave = table.serialize( "xmltable", xmltable, "" );
-          -- DEBUG:
-          -- table.dump(dataToSave);
-          print("FRC Generating LUA file");
-          newLuaFile, err = io.open(path,"w");
-          if (newLuaFile and not err) then
+          if (system.getInfo("environment") == "simulator") then
+              -- since we could not read a Lua table, let's convert the xml and then save it for later (simulator ONLY!)
+            dataToSave = table.serialize( "xmltable", xmltable, "" );
             -- DEBUG:
-            print("FRC Generating LUA file into DocumentsDirectory for engineering:");
-            print(docLUApath);
+            -- table.dump(dataToSave);
+            print("FRC Generating LUA file");
+            newLuaFile, err = io.open(path,"w");
             newLuaFile:write( dataToSave );
+            io.close(newLuaFile);
           end
-          io.close(newLuaFile);
         end
       else
-        -- DEBUG:
-        -- since we didn't find a Lua table, let's convert the xml and then save it for later
         xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
-        dataToSave = table.serialize( "xmltable", xmltable, "" );
-        newLuaFile, err = io.open(docLUApath,"w");
-        if (newLuaFile and not err) then
+        if (system.getInfo("environment") == "simulator") then
+          -- since we didn't find a Lua table, let's convert the xml and then save it for later (simulator ONLY!)
+          dataToSave = table.serialize( "xmltable", xmltable, "" );
           -- DEBUG:
-          print("FRC Generating LUA file into DocumentsDirectory for engineering:");
-          print(docLUApath);
+          table.dump(dataToSave);
+          newLuaFile, err = io.open(docLUApath,"w");
           newLuaFile:write( dataToSave );
+          io.close(newLuaFile);
         end
-        io.close(newLuaFile);
       end
       -- DEBUG:
       -- print("FRC_AnimationManager.createAnimationClipGroup inputFile: ", i, " - ", inputFiles[i]);
@@ -948,10 +962,12 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
     local onCompletion = options.onCompletion;
     local onTouch = options.onTouch;
     local onShake = options.onShake;
+    local onPlay = options.onPlay;
 
     options.onCompletion = nil;
     options.onTouch = nil;
     options.onShake = nil;
+    options.onPlay = nil;
 
     -- loop through the subclips
     local totalClips = #self;
@@ -962,15 +978,66 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
           animation:play(options);
         else
           -- attach special events to the last subclip only
+          -- TODO:  attach these to the group object only instead
           options.onCompletion = onCompletion;
           options.onTouch = onTouch;
           options.onShake = onShake;
+          options.onPlay = onPlay;
           animation:play(options);
         end
       end
     end
   end
 
+  if (animationClipGroup.maskSource ~= nil) then
+
+    -- DEBUG:
+    --[[
+    -- load the mask image so we can get its dimensions
+    local refImage = display.newImage(animationClipGroup, baseImageDir .. animationClipGroup.maskSource, true);
+    -- ERRORCHECK:
+    assert(refImage, "ERROR: Missing animation MASK file: ", baseImageDir .. animationClipGroup.maskSource);
+    -- grab the height and width
+    local h = refImage.height;
+    local w = refImage.width;
+    print("maskSource width, height: " .. w.. ", " .. h);
+    -- dispose of the temp mask image
+    refImage:removeSelf();
+    refImage = nil;
+    -- load the mask image with exact dimensions
+    -- local maskImageSource = display.newImageRect(animationClipGroup, baseImageDir .. animationClipGroup.maskSource, w, h);
+    --]]
+    -- create the mask
+    local maskImage = graphics.newMask( baseImageDir .. animationClipGroup.maskSource );
+    -- local maskImage = graphics.newMask( maskImageSource );
+    -- store the mask in the animationClipGroup for later use
+    animationClipGroup.maskImage = maskImage;
+    -- dispose of the temp mask image again
+    -- maskImageSource:removeSelf();
+    -- maskImageSource = nil;
+    -- DEBUG:
+    print("maxTextureSize: ", system.getInfo( "maxTextureSize" ));
+    print("maxTextureUnits: ", system.getInfo( "maxTextureUnits" ));
+    print("animationClipGroup.maskImage: ", animationClipGroup.maskImage);
+    print("anim x,y,height,width".. animationClipGroup.x .. ", ".. animationClipGroup.y .. ", ".. animationClipGroup.height .. ", ".. animationClipGroup.width);
+    -- assign the mask
+    animationClipGroup:setMask( maskImage );
+    -- transform the mask to match the displayGroup we attached it to
+    animationClipGroup.maskX = animationClipGroup.x; -- contentCenterX;
+    animationClipGroup.maskY = animationClipGroup.y; -- contentCenterY;
+    -- RESEARCH:  could we use contentCenterX here instead?
+    -- animationClipGroup.maskX = animationClipGroup.x + (animationClipGroup.contentWidth * 0.5);
+    -- animationClipGroup.maskY = animationClipGroup.y + (animationClipGroup.contentHeight * 0.5);
+    -- DEBUG:
+    print("mask x,y".. animationClipGroup.maskX .. ", ".. animationClipGroup.maskY);
+    -- TEST TO SEE THE MASK
+    -- animationClipGroup.maskScaleX = 0.5;
+    -- animationClipGroup.maskScaleY = 0.5;
+    -- print("mask x,y".. animationClipGroup.maskX .. ", ".. animationClipGroup.maskY);
+    -- setup hit detection on the mask (true by default but let's be clear)
+    animationClipGroup.isHitTestMasked = true;
+    --]]
+  end
 
   return animationClipGroup;
 end
@@ -998,7 +1065,12 @@ FRC_AnimationManager.pauseAnimations = function(scene)
   for i=1,#animations do
     local animation = animations[i];
     if (animation) then
-      animation:pause();
+      -- don't impact animations which aren't playing yet
+      if (animation.isPlaying) then
+        -- DEBUG:
+        -- print("PAUSING ANIMATION: ", animation.id);
+        animation:pause(false);
+      end
     end
   end
 end
@@ -1009,7 +1081,11 @@ FRC_AnimationManager.resumeAnimations = function(scene)
   for i=1,#animations do
     local animation = animations[i];
     if (animation) then
-      animation:resume();
+      if (animation.isPaused) then
+        -- DEBUG:
+        -- print("RESUMING ANIMATION: ", animation.id);
+        animation:resume();
+      end
     end
   end
 end

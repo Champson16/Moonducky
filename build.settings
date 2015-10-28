@@ -3,6 +3,42 @@
 
 settings = {
 
+  osx = {
+        entitlements = {
+            -- ["com.apple.security.personal-information.location"] = true,
+        },
+    },
+  window = {
+        -- Settings for the desktop window; applies to both OS X and Win32 desktop apps
+				defaultMode = "normal",
+				defaultViewWidth = 1024,
+				defaultViewHeight = 768,
+				resizeable = true,
+				minViewWidth = 1024,
+				minViewHeight = 768,
+				enableCloseButton = true,
+				enableMinimizeButton = true,
+				enableMaximizeButton = true,
+				suspendWhenMinimized = true,
+				titleText = {
+            -- The "default" text will be used if the system is using a language and/or
+            -- country code not defined below. This serves as a fallback mechanism.
+            default = "MoonDucky Music Theatre",
+            -- This text is used on English language systems in the United States.
+            -- Note that the country code must be separated by a dash (-).
+            ["en‐us"] = "MoonDucky Music Theatre",
+            -- This text is used on English language systems in the United Kingdom.
+            -- Note that the country code must be separated by a dash (-).
+            ["en‐gb"] = "MoonDucky Music Theatre",
+            -- This text is used for all other English language systems.
+            ["en"] = "MoonDucky Music Theatre",
+            -- This text is used for all French language systems.
+            ["fr"] = "MoonDucky Music Theatre",
+            -- This text is used for all Spanish language systems.
+            ["es"] = "MoonDucky Music Theatre",
+        },
+    },
+
 	orientation = {
 		default = "landscapeRight",
 		supported = { "landscapeRight", "landscapeLeft" }
@@ -138,7 +174,7 @@ settings = {
 
 	android = {
 		usesExpansionFile = false, -- set this to TRUE before building a release build
-		versionCode = "1201", -- update this to match AppSettings JSON before release
+		versionCode = "1204", -- update this to match AppSettings JSON before release
 		usesPermissions = {
 			"com.android.vending.CHECK_LICENSE",
 			"android.permission.INTERNET",
