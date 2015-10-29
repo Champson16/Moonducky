@@ -12,94 +12,151 @@ end
 display.setStatusBar(display.HiddenStatusBar);
 
 --require('dispose');
+local zip = require( "plugin.zip" );
 require("FRC_Modules.FRC_Import.FRC_Import");
 require("FRC_Modules.FRC_MultiTouch.FRC_MultiTouch");
 require("FRC_Modules.FRC_MultiTouch.FRC_PinchLib");
 local FRC_AudioManager = require('FRC_Modules.FRC_AudioManager.FRC_AudioManager');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_Util = require('FRC_Modules.FRC_Util.FRC_Util');
+local FRC_AppSettings = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
 
 -- constants
-_G.APP_VERSION = '1.2.04';
+-- _G.APP_VERSION = '1.2.04';
 -- note: the schema for VERSIONNUM is major version digit, minor version digit . release build two digits 0-padded
 -- this allows us to serialize/compare app version settings files
-_G.APP_VERSIONNUM = 12.04;
+-- _G.APP_VERSIONNUM = 12.04;
 
-_G.BUNDLE_ID = 'com.fatredcouch.moonducky.musictheatre'; -- this appears to be unused
+-- _G.BUNDLE_ID = 'com.fatredcouch.moonducky.musictheatre'; -- this appears to be unused
 
 _G.MUSIC_CHANNEL = 11;
 _G.VO_CHANNEL = 12;
 _G.SFX_CHANNEL = 13;
 
 --== APP SETTINGS BEGIN ==--
--- TODO:  Move this into a separate module
 
--- load the save function into the APP_Settings
--- we can use this later to update settings that we save anywhere in the app
-local function saveAppSettings()
-  FRC_DataLib.saveTable(_G.APP_Settings, "appsettings.json");
-end
+FRC_AppSettings.init();
 
-_G.APP_Settings = FRC_DataLib.loadTable("appsettings.json");
--- DEBUG:
-table.dump(_G.APP_Settings);
-local outofDateSettings = false;
-if (not _G.APP_Settings or not _G.APP_Settings.appVersionNum) then
-  outofDateSettings = true;
-elseif ( tonumber(_G.APP_Settings.appVersionNum) < tonumber(_G.APP_VERSIONNUM) ) then
-  outofDateSettings = true;
-end
-if (not _G.APP_Settings or outofDateSettings ) then
-  -- there were either no settings or the settings file was out of date
-  -- setup the defaults
-  _G.APP_Settings = {
-    -- (system.getInfo("environment") ~= "simulator")
-    soundOn = true,
-    -- key identifier for the app
-    appID = "MDMT",
-    -- these aren't used yet.
-    -- upgraded = false,
-    -- UNUSED?
-    purchases = {
-      -- NONE AT THIS TIME
-    },
-    -- disableRateDialog = false,
-    launchCount = 0,
-    language = "en",
-    appVersion = _G.APP_VERSION,
-    appVersionNum = _G.APP_VERSIONNUM
-  };
-  -- save these for later
-  saveAppSettings();
-end
 -- sets up app for fresh launch experience (title animation and title song)
-_G.APP_Settings.freshLaunch = true;
--- increment the launchCount
-_G.APP_Settings.launchCount = _G.APP_Settings.launchCount + 1;
--- attach the function to the global table
-_G.APP_SettingsSave = saveAppSettings;
--- DEBUG:
-table.dump(_G.APP_Settings);
+-- if (not FRC_AppSettings.hasKey("freshLaunch")) then
+  FRC_AppSettings.set("freshLaunch", true);
+-- end
 
---[[]]
-if (_G.APP_Settings.soundOn) then
-  audio.setVolume(0, { channel=_G.MUSIC_CHANNEL });
-  audio.setVolume(0, { channel=_G.VO_CHANNEL });
-  audio.setVolume(0, { channel=_G.SFX_CHANNEL });
-else
+-- set volume baesd on previous setting
+if (FRC_AppSettings.get("soundOn")) then
   audio.setVolume(1.0, { channel=_G.MUSIC_CHANNEL });
   audio.setVolume(1.0, { channel=_G.VO_CHANNEL });
   audio.setVolume(1.0, { channel=_G.SFX_CHANNEL });
-  -- audio.setVolume(MUSIC_VOLUME, { channel=MUSIC_CHANNEL });
+else
+  audio.setVolume(0, { channel=_G.MUSIC_CHANNEL });
+  audio.setVolume(0, { channel=_G.VO_CHANNEL });
+  audio.setVolume(0, { channel=_G.SFX_CHANNEL });
 end
---]]
 
---[[
+local function copyFile( srcName, srcPath, dstName, dstPath, overwrite )
+  local results = true;               -- assume no errors
 
-if (not _G.APP_Settings.receipts) then
-  _G.APP_Settings.receipts = {};
+  -- Copy the source file to the destination file
+  local rfilePath = system.pathForFile( srcName, srcPath );
+  local wfilePath = system.pathForFile( dstName, dstPath );
+
+  local rfh = io.open( rfilePath, "rb" );
+  local wfh = io.open( wfilePath, "wb" );
+
+  if  not wfh then
+    print( "writeFileName open error!" );
+    results = false;                 -- error
+  else
+    -- Read the file from the Resource directory and write it to the destination directory
+    local data = rfh:read( "*a" );
+
+    if not data then
+      print( "read error!" );
+      results = false;     -- error
+    else
+      if not wfh:write( data ) then
+        print( "write error!" );
+        results = false; -- error
+      end
+    end
+  end
+
+  -- Clean up our file handles
+  rfh:close();
+  wfh:close();
+
+  return results;
 end
---]]
+
+local function helpInstallListener( event )
+  local results, reason;
+  if ( event.isError ) then
+    print( "Error!" );
+  else
+    print( "event.name: " .. event.name );
+    print( "event.type: " .. event.type );
+    if ( event.response and type(event.response) == "table" ) then
+      for i = 1, #event.response do
+        print( event.response[i] )
+      end
+    end
+    --example response
+    --event.response = {
+    --[1] = "space.jpg",
+    --[2] = "space1.jpg",
+    --}
+    -- remove the Help file now that it has been uncompressed
+    results, reason = os.remove( system.pathForFile( "Help.zip", system.CachesDirectory ) );
+
+    if results then
+       print( "Help file removed." );
+    else
+       print( "Help file does not exist. Uh oh.", reason );
+    end
+
+    -- now explicitly for iOS, we need to disable the iCloud backup of the Help files
+    -- to prevent the application submission from getting rejected
+    -- we are targeting the entire Help subfolder that we unpacked from the .zip earlier
+    --[[ results, reason = native.setSync( "Help/", { iCloudBackup = false } );
+    if results then
+      print( "Help files marked DO NOT BACKUP by iCloud Backup." );
+    else
+      print( "Help files were NOT marked DO NOT BACKUP by iCloud Backup. Uh oh.", reason );
+    end
+    --]]
+  end
+end
+
+-- install Help files if needed
+-- check to see if help files exists in the system.CachesDirectory (in case they were cleared by the OS)
+-- use the preferences by default
+local helpInstalled = FRC_AppSettings.get("helpInstalled");
+if helpInstalled then
+  -- we need to double check that the files are still there - we use "tabcontent.css" because it's in all of the Help system implementations
+  local helpTestData = FRC_DataLib.readFile("tabcontent.css", system.CachesDirectory);
+  -- if the file is not found/read, then .readFile will return false
+  if (not helpTestData) then
+    helpInstalled = false;
+  end
+end
+
+if (not helpInstalled) then
+  -- copy the .zip file from the system.ResourceDirectory to system.DocumentsDirectory
+  if copyFile( "Help.zip", system.ResourceDirectory, "Help.zip", system.CachesDirectory ) then
+    -- unpack the .zip
+    local zipOptions =
+    {
+        zipFile = "Help.zip",
+        zipBaseDir = system.CachesDirectory,
+        dstBaseDir = system.CachesDirectory,
+        listener = helpInstallListener
+    };
+    zip.uncompress( zipOptions );
+    -- update the AppSettings
+    FRC_AppSettings.set("helpInstalled", true);
+  end
+end
+
 
 --== APP SETTINGS END ==--
 
@@ -111,18 +168,26 @@ if ((_G.NOOK_DEVICE) or (_G.KINDLE_DEVICE)) then
   _G.ANDROID_DEVICE = true;
 end
 
-analytics = require('analytics');
-analytics:setCurrentProvider('flurry');
+-- perform Google Play licensing check
+if system.getInfo("environment") ~= "simulator" then
+  if (_G.ANDROID_DEVICE) then
+    local licensing = require( "licensing" );
+    licensing.init( "google" );
 
---[[
-if (_G.ANDROID_DEVICE) then
-	analytics.init('');
-else
-	analytics.init('');
+    local function licensingListener( event )
+
+       local verified = event.isVerified;
+       if not event.isVerified then
+          --failed verify app from the play store, we print a message
+          -- print( "Pirates: Walk the Plank!!!" )
+          native.showAlert( "Licensing Check Failed!", "There was a problem verifying the application license with Google Play, please try again.", { "OK" } );
+          native.requestExit();  --assuming this is how we handle pirates
+       end
+    end
+
+    licensing.verify( licensingListener );
+  end
 end
-
-analytics.logEvent('App Launched');
---]]
 
 -- Initialize analytics module and log launch event
 local analytics = import("analytics");
@@ -137,7 +202,7 @@ local FRC_Ratings = import("ratings").init(); -- FRC_Ratings.show() will display
 
 local function onSystemEvent(event)
   if (event.type == "applicationExit" or event.type == "applicationSuspend") then
-    saveAppSettings();
+    -- FRC_AppSettings.save();
   end
   if (not _G.ANDROID_DEVICE and (not system.getInfo("environment") == "simulator")) then return; end
   if (event.type == "applicationSuspend") then

@@ -99,7 +99,7 @@ FRC_AppSettings.init = function()
 		if (not settings.version) then
 			settings.version = "0.0.1";
 		end
-		
+
 	else
 		-- If version number is greater than the settings that are saved to cache, overwrite
 		if (getGreaterVersion(currentSettings.version, loadedSettings.version) == currentSettings.version) then

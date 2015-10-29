@@ -7,6 +7,7 @@ local FRC_Layout = require('FRC_Modules.FRC_Layout.FRC_Layout');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
 local FRC_DressingRoom_Settings = require('FRC_Modules.FRC_DressingRoom.FRC_DressingRoom_Settings');
+local FRC_AppSettings = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
 local storyboard = require('storyboard');
 
 local scene = FRC_ArtCenter.newScene({
@@ -148,7 +149,7 @@ scene.postCreateScene = function(self, event)
 					local webView = native.newWebView(0, 0, screenW - 100, screenH - 55);
 					webView.x = display.contentCenterX;
 					webView.y = display.contentCenterY + 20;
-					webView:request("MDMT_FRC_WebOverlay_Help_Main_ArtCenter.html", system.ResourceDirectory);
+					webView:request("Help/MDMT_FRC_WebOverlay_Help_Main_ArtCenter.html", system.DocumentsDirectory);
 
 					local closeButton = ui.button.new({
 						imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
@@ -242,7 +243,7 @@ scene.postCreateScene = function(self, event)
 
 	-- create settings bar menu at top left corner of screen
 	local musicButtonFocused = false;
-	if (_G.APP_Settings.soundOn) then musicButtonFocused = true; end
+	if (FRC_AppSettings.get("soundOn")) then musicButtonFocused = true; end
 	self.settingsBarMenu = FRC_SettingsBar.new({
 		parent = view,
 		imageUp = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_Settings_up.png',
@@ -261,13 +262,13 @@ scene.postCreateScene = function(self, event)
 				isFocused = musicButtonFocused,
 				onPress = function(event)
 					local self = event.target;
-					if (_G.APP_Settings.soundOn) then
+					if (FRC_AppSettings.get("soundOn")) then
 						self:setFocusState(false);
-						_G.APP_Settings.soundOn = false;
+						FRC_AppSettings.set("soundOn", false);
 						audio.pause(1);
 					else
 						self:setFocusState(true);
-						_G.APP_Settings.soundOn = true;
+						FRC_AppSettings.set("soundOn", true);
 						audio.resume(1);
 					end
 				end

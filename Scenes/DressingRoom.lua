@@ -6,6 +6,7 @@ local FRC_SettingsBar = require('FRC_Modules.FRC_SettingsBar.FRC_SettingsBar');
 local FRC_DressingRoom = require('FRC_Modules.FRC_DressingRoom.FRC_DressingRoom');
 local FRC_DressingRoom_Settings = require('FRC_Modules.FRC_DressingRoom.FRC_DressingRoom_Settings');
 local FRC_AudioManager = require('FRC_Modules.FRC_AudioManager.FRC_AudioManager');
+local FRC_AppSettings = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
 -- this is only needed if you want to call table.dump to inspect a table during debugging
 local FRC_Util = require('FRC_Modules.FRC_Util.FRC_Util');
 
@@ -94,7 +95,7 @@ function scene.postCreateScene(self, event)
 					local webView = native.newWebView(0, 0, screenW - 100, screenH - 55);
 					webView.x = display.contentCenterX;
 					webView.y = display.contentCenterY + 20;
-					webView:request("MDMT_FRC_WebOverlay_Help_Main_DressingRoom.html", system.ResourceDirectory);
+					webView:request("Help/MDMT_FRC_WebOverlay_Help_Main_DressingRoom.html", system.DocumentsDirectory);
 					local closeButton = ui.button.new({
 						imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
 						imageDown = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
@@ -175,7 +176,7 @@ function scene.postCreateScene(self, event)
 
 	-- create settings bar menu at top left corner of screen
 	local musicButtonFocused = false;
-	if (_G.APP_Settings.soundOn) then musicButtonFocused = true; end
+	if (FRC_AppSettings.get("soundOn")) then musicButtonFocused = true; end
 	scene.settingsBarMenu = FRC_SettingsBar.new({
 		parent = view,
 		imageUp = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_Settings_up.png',
@@ -194,16 +195,16 @@ function scene.postCreateScene(self, event)
 				isFocused = musicButtonFocused,
 				onPress = function(event)
 					local self = event.target;
-					if (_G.APP_Settings.soundOn) then
+					if (FRC_AppSettings.get("soundOn")) then
 						self:setFocusState(false);
-						_G.APP_Settings.soundOn = false;
+						FRC_AppSettings.set("soundOn", false);
 						local musicGroup = FRC_AudioManager:findGroup("music");
 						if musicGroup then
 							musicGroup:pause();
 						end
 					else
 						self:setFocusState(true);
-						_G.APP_Settings.soundOn = true;
+						FRC_AppSettings.set("soundOn", true);
 						local musicGroup = FRC_AudioManager:findGroup("music");
 						if musicGroup then
 							musicGroup:resume();

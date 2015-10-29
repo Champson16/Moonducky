@@ -5,6 +5,7 @@ local FRC_ActionBar = require('FRC_Modules.FRC_ActionBar.FRC_ActionBar');
 local FRC_SettingsBar = require('FRC_Modules.FRC_SettingsBar.FRC_SettingsBar');
 local FRC_AnimationManager = require('FRC_Modules.FRC_AnimationManager.FRC_AnimationManager');
 local FRC_AudioManager = require('FRC_Modules.FRC_AudioManager.FRC_AudioManager');
+local FRC_AppSettings = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
 local math_random = math.random;
 
 local activeBGMusic = "";
@@ -88,7 +89,7 @@ function scene.createScene(self, event)
 			local webView = native.newWebView(0, 0, screenW - 100, screenH - 55);
 			webView.x = display.contentCenterX;
 			webView.y = display.contentCenterY + 20;
-			webView:request("MDMT_FRC_WebOverlay_Learn_Credits.html", system.ResourceDirectory);
+			webView:request("Help/MDMT_FRC_WebOverlay_Learn_Credits.html", system.DocumentsDirectory);
 
 			local closeButton = ui.button.new({
 				imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
@@ -162,13 +163,23 @@ function scene.createScene(self, event)
 		return true;
 	end);
 
+	-- if (not buildText) then
+	-- 	buildText = display.newEmbossedText(_G.APP_VERSION .. ' (' .. system.getInfo('build') .. ')', 0, 0, native.systemFontBold, 13);
+	-- 	buildText:setFillColor(1, 1, 1);
+	-- 	buildText.anchorX = 1.0;
+	-- 	buildText.anchorY = 1.0;
+	-- 	buildText.x = screenW - 8;
+	-- 	buildText.y = screenH - 10;
+	-- end
+
 	if (not buildText) then
-		buildText = display.newEmbossedText(_G.APP_VERSION .. ' (' .. system.getInfo('build') .. ')', 0, 0, native.systemFontBold, 13);
+		buildText = display.newEmbossedText(FRC_AppSettings.get("version") .. ' (' .. system.getInfo('build') .. ')', 0, 0, native.systemFontBold, 11);
 		buildText:setFillColor(1, 1, 1);
 		buildText.anchorX = 1.0;
 		buildText.anchorY = 1.0;
-		buildText.x = screenW - 8;
-		buildText.y = screenH - 10;
+		FRC_Layout.scaleToFit(buildText);
+		buildText.x = FRC_Layout.right(8);
+		buildText.y = display.contentHeight - 4;
 	end
 
 	-- create action bar menu at top left corner of screen
@@ -233,7 +244,7 @@ function scene.createScene(self, event)
 					local webView = native.newWebView(0, 0, screenW - 100, screenH - 55);
 					webView.x = display.contentCenterX;
 					webView.y = display.contentCenterY + 20;
-					webView:request("MDMT_FRC_WebOverlay_Help_Main.html", system.ResourceDirectory);
+					webView:request("Help/MDMT_FRC_WebOverlay_Help_Main.html", system.DocumentsDirectory);
 					local closeButton = ui.button.new({
 						imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
 						imageDown = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
@@ -257,7 +268,7 @@ function scene.createScene(self, event)
 
 	-- create settings bar menu at top left corner of screen
 	local musicButtonFocused = false;
-	if (_G.APP_Settings.soundOn) then musicButtonFocused = true; end
+	if (FRC_AppSettings.get("soundOn")) then musicButtonFocused = true; end
 	scene.settingsBarMenu = FRC_SettingsBar.new({
 		parent = view,
 		imageUp = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_Settings_up.png',
@@ -276,16 +287,16 @@ function scene.createScene(self, event)
 				isFocused = musicButtonFocused,
 				onPress = function(event)
 					local self = event.target;
-					if (_G.APP_Settings.soundOn) then
+					if (FRC_AppSettings.get("soundOn")) then
 						self:setFocusState(false);
-						_G.APP_Settings.soundOn = false;
+						FRC_AppSettings.set("soundOn", false);
 						musicGroup = FRC_AudioManager:findGroup("music");
 						if musicGroup then
 							musicGroup:pause();
 						end
 					else
 						self:setFocusState(true);
-						_G.APP_Settings.soundOn = true;
+						FRC_AppSettings.set("soundOn", true);
 						musicGroup = FRC_AudioManager:findGroup("music");
 						if musicGroup then
 							musicGroup:resume();
@@ -304,7 +315,7 @@ function playBackgroundMusic()
 	musicGroup = FRC_AudioManager:findGroup("music");
 	-- repeatedly play all background music
 	musicGroup:playRandom({ onComplete = function() playBackgroundMusic(); end } );
-	if (not _G.APP_Settings.soundOn) then
+	if (not FRC_AppSettings.get("soundOn")) then
 		musicGroup:pause();
 	end
 end
@@ -313,7 +324,7 @@ function scene.enterScene(self, event)
 	local scene = self;
 	local view = scene.view;
 
-	if (_G.APP_Settings.freshLaunch) then
+	if (FRC_AppSettings.get("freshLaunch")) then
 		--[[ scene.skipIntroButton.isHitTestable = true;
 		for i=1, intro1AnimationSequences.numChildren do
 			intro1AnimationSequences[i]:play({
@@ -337,7 +348,7 @@ function scene.enterScene(self, event)
 
 	if (musicGroup) then
 		-- resume the background theme song that was playing when we left the Home scene
-		if (not _G.APP_Settings.soundOn) then
+		if (not FRC_AppSettings.get("soundOn")) then
 			musicGroup:pause();
 		else
 			-- DEBUG:

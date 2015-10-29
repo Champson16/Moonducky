@@ -5,6 +5,7 @@ local FRC_ActionBar = require('FRC_Modules.FRC_ActionBar.FRC_ActionBar');
 local FRC_SettingsBar = require('FRC_Modules.FRC_SettingsBar.FRC_SettingsBar');
 local FRC_SetDesign = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign');
 local FRC_SetDesign_Settings = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign_Settings');
+local FRC_AppSettings = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
 
 local scene = FRC_SetDesign.newScene();
 
@@ -104,7 +105,7 @@ function scene.postCreateScene(self, event)
 					local webView = native.newWebView(0, 0, screenW - 100, screenH - 55);
 					webView.x = display.contentCenterX;
 					webView.y = display.contentCenterY + 20;
-					webView:request("MDMT_FRC_WebOverlay_Help_Main_SetDesign.html", system.ResourceDirectory);
+					webView:request("Help/MDMT_FRC_WebOverlay_Help_Main_SetDesign.html", system.DocumentsDirectory);
 					local closeButton = ui.button.new({
 						imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
 						imageDown = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
@@ -176,7 +177,7 @@ function scene.postCreateScene(self, event)
 
 	-- create settings bar menu at top left corner of screen
 	local musicButtonFocused = false;
-	if (_G.APP_Settings.soundOn) then musicButtonFocused = true; end
+	if (FRC_AppSettings.get("soundOn")) then musicButtonFocused = true; end
 	scene.settingsBarMenu = FRC_SettingsBar.new({
 		parent = view,
 		imageUp = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_Settings_up.png',
@@ -195,13 +196,13 @@ function scene.postCreateScene(self, event)
 				isFocused = musicButtonFocused,
 				onPress = function(event)
 					local self = event.target;
-					if (_G.APP_Settings.soundOn) then
+					if (FRC_AppSettings.get("soundOn")) then
 						self:setFocusState(false);
-						_G.APP_Settings.soundOn = false;
+						FRC_AppSettings.set("soundOn", false);
 						audio.pause(1);
 					else
 						self:setFocusState(true);
-						_G.APP_Settings.soundOn = true;
+						FRC_AppSettings.set("soundOn", true);
 						audio.resume(1);
 					end
 				end

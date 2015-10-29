@@ -46,7 +46,6 @@ settings = {
 
 	iphone = {
 		plist = {
-		  -- CFBundleVersion = "1.0",
 			MinimumOSVersion = "6.0", -- can't be lower than this now with Corona SDK
 			CFBundleDisplayName = "MoonDucky",
 			CFBundleName = "MoonDucky",
@@ -176,7 +175,7 @@ settings = {
 		usesExpansionFile = false, -- set this to TRUE before building a release build
 		versionCode = "1204", -- update this to match AppSettings JSON before release
 		usesPermissions = {
-			"com.android.vending.CHECK_LICENSE",
+			-- "com.android.vending.CHECK_LICENSE",
 			"android.permission.INTERNET",
       "android.permission.READ_EXTERNAL_STORAGE",
       "android.permission.WRITE_EXTERNAL_STORAGE",
