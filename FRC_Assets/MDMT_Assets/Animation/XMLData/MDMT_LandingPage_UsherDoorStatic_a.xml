@@ -1,0 +1,12 @@
+<Animations>
+  <Animation name="MDMT_Landing_UsherDoorStatic_a" frameCount="160">
+    <Part name="MDMT_Intro_CowUsher_EyesClosed">
+      <Frame x="134.65" y="65.05" scaleX="0.400" scaleY="0.400" index="11"/>
+      <Frame x="134.65" y="65.05" scaleX="0.400" scaleY="0.400" index="12"/>
+      <Frame x="134.65" y="65.05" scaleX="0.400" scaleY="0.400" index="69"/>
+      <Frame x="134.65" y="65.05" scaleX="0.400" scaleY="0.400" index="70"/>
+      <Frame x="134.65" y="65.05" scaleX="0.400" scaleY="0.400" index="109"/>
+      <Frame x="134.65" y="65.05" scaleX="0.400" scaleY="0.400" index="110"/>
+    </Part>
+  </Animation>
+</Animations>

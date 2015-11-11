@@ -1,0 +1,30 @@
+[
+	{
+	"id": "MarqueeLights",
+"animationFiles": [  "MDMT_LandingPage_MarqueeLights_04.xml",
+"MDMT_LandingPage_MarqueeLights_03.xml",
+"MDMT_LandingPage_MarqueeLights_02.xml",
+"MDMT_LandingPage_MarqueeLights_01.xml",
+"MDMT_LandingPage_Marquee.xml" ],
+	},
+	{
+	"id": "TicketMule",
+"animationFiles": [ "MDMT_LandingPage_TicketMule.xml" ]
+	},
+	{
+	"id": "CowVideo",
+"animationFiles": [ "MDMT_LandingPage_CowVideo.xml" ]
+	},
+	{
+	"id": "HamsterVideo",
+"animationFiles": [ "MDMT_LandingPage_HamsterVideo.xml" ]
+	},
+	{
+	"id": "Cat",
+	"imageFile": "MDMT_LandingPage_Cat_up.png",
+	"width": 87,
+	"height": 109,
+	"x": 198,
+	"y": 700
+	}
+]

@@ -16,6 +16,17 @@ local scene = FRC_ArtCenter.newScene({
 	MENU_SWOOSH_AUDIO = 'FRC_Assets/FRC_ArtCenter/Audio/PUFF_global_ArtCenter_MenuSwoosh.mp3'
 });
 
+scene.backHandler = function()
+	if (webView) then
+		webView.closeButton:dispatchEvent({
+			name = "release",
+			target = webView.closeButton
+		});
+	else
+		storyboard.gotoScene('Scenes.Home');
+	end
+end
+
 local imageBase = 'FRC_Assets/MDMT_Assets/Images/';
 
 scene.preCreateScene = function(self, event)

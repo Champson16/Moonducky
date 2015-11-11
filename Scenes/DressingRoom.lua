@@ -16,6 +16,17 @@ print("FRC_DressingRoom.newScene");
 
 local imageBase = 'FRC_Assets/MDMT_Assets/Images/';
 
+scene.backHandler = function()
+	if (webView) then
+		webView.closeButton:dispatchEvent({
+			name = "release",
+			target = webView.closeButton
+		});
+	else
+		storyboard.gotoScene('Scenes.Home');
+	end
+end
+
 function scene.postCreateScene(self, event)
 	local scene = self;
 	local view = scene.view;

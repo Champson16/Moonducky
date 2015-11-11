@@ -3,6 +3,19 @@
 
 settings = {
 
+  --[[
+  excludeFiles =
+  {
+    android = { ".git*", "en.lproj", "*.xml" },
+    iphone = { ".git*", "en.lproj", "*.xml" },
+    -- Exclude unnecessary assets from OS X desktop apps
+    osx = { "Default*.png", "Icon*.png", "Icon*.ico", "Icon*.icns" },
+
+    -- Exclude unnecessary assets from Win32 desktop apps
+    win32 = { "Default*.png", "Icon*.png", "Icon*.ico", "Icon*.icns" }
+  },
+  --]]
+
   osx = {
         entitlements = {
             -- ["com.apple.security.personal-information.location"] = true,
@@ -78,43 +91,49 @@ settings = {
       UILaunchImages = {
         {  -- iPhone 4 Portrait
             ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default",
+            ["UILaunchImageName"] = "Default~iphone",
             ["UILaunchImageOrientation"] = "Portrait",
             ["UILaunchImageSize"] = "{320, 480}"
         },
         {  -- iPhone 4 LandscapeLeft
             ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default",
+            ["UILaunchImageName"] = "Default~iphone",
             ["UILaunchImageOrientation"] = "LandscapeLeft",
             ["UILaunchImageSize"] = "{320, 480}"
         },
         {  -- iPhone 4 LandscapeRight
             ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default",
+            ["UILaunchImageName"] = "Default~iphone",
             ["UILaunchImageOrientation"] = "LandscapeRight",
             ["UILaunchImageSize"] = "{320, 480}"
         },
         {  -- iPhone 5 Portrait
             ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default-568h",
+            ["UILaunchImageName"] = "Default-568h@2x~iphone",
             ["UILaunchImageOrientation"] = "Portrait",
             ["UILaunchImageSize"] = "{320, 568}"
         },
         {  -- iPhone 5 LandscapeLeft
             ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default-568h-UpsideDown",
+            ["UILaunchImageName"] = "Default-568h@2x~iphone",
             ["UILaunchImageOrientation"] = "LandscapeLeft",
             ["UILaunchImageSize"] = "{320, 568}"
         },
         {  -- iPhone 5 LandscapeRight
             ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default-568h",
+            ["UILaunchImageName"] = "Default-568h@2x~iphone",
             ["UILaunchImageOrientation"] = "LandscapeRight",
             ["UILaunchImageSize"] = "{320, 568}"
         },
+        {  -- iPad Portrait
+            ["UILaunchImageMinimumOSVersion"] = "7.0",
+            ["UILaunchImageName"] = "Default-Portrait",
+            ["UILaunchImageOrientation"] = "Portrait",
+            ["UILaunchImageSize"] = "{768, 1024}"
+        },
         {  -- iPad LandscapeLeft
             ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default-Landscape-UpsideDown",
+            ["UILaunchImageName"] = "Default-LandscapeLeft~ipad",
             ["UILaunchImageOrientation"] = "LandscapeLeft",
             ["UILaunchImageSize"] = "{768, 1024}"
         },
@@ -126,25 +145,25 @@ settings = {
         },
         {  -- iPhone 6 LandscapeLeft
             ["UILaunchImageMinimumOSVersion"] = "8.0",
-            ["UILaunchImageName"] = "Default-667h-UpsideDown",
+            ["UILaunchImageName"] = "Default-375w-667h@2x~iphone",
             ["UILaunchImageOrientation"] = "LandscapeLeft",
             ["UILaunchImageSize"] = "{375, 667}"
         },
         {  -- iPhone 6 LandscapeRight
             ["UILaunchImageMinimumOSVersion"] = "8.0",
-            ["UILaunchImageName"] = "Default-667h",
+            ["UILaunchImageName"] = "Default-375w-667h@2x~iphone",
             ["UILaunchImageOrientation"] = "LandscapeRight",
             ["UILaunchImageSize"] = "{375, 667}"
         },
         {  -- iPhone 6 Plus LandscapeLeft
             ["UILaunchImageMinimumOSVersion"] = "8.0",
-            ["UILaunchImageName"] = "Default-Landscape-736h-UpsideDown",
+            ["UILaunchImageName"] = "Default-414w-736h@3x~iphone",
             ["UILaunchImageOrientation"] = "LandscapeLeft",
             ["UILaunchImageSize"] = "{414, 736}"
         },
         {  -- iPhone 6 Plus LandscapeRight
             ["UILaunchImageMinimumOSVersion"] = "8.0",
-            ["UILaunchImageName"] = "Default-Landscape-736h",
+            ["UILaunchImageName"] = "Default-414w-736h@3x~iphone",
             ["UILaunchImageOrientation"] = "LandscapeRight",
             ["UILaunchImageSize"] = "{414, 736}"
         }
@@ -173,14 +192,22 @@ settings = {
 
 	android = {
 		usesExpansionFile = false, -- set this to TRUE before building a release build
-		versionCode = "1204", -- update this to match AppSettings JSON before release
-		usesPermissions = {
-			-- "com.android.vending.CHECK_LICENSE",
-			"android.permission.INTERNET",
-      "android.permission.READ_EXTERNAL_STORAGE",
-      "android.permission.WRITE_EXTERNAL_STORAGE",
-      "android.permission.ACCESS_FINE_LOCATION",
-      "android.permission.ACCESS_COURSE_LOCATION"
+		versionCode = "1205", -- update this to match AppSettings JSON before release
+    permissions =
+      {
+          { name = ".permission.C2D_MESSAGE", protectionLevel = "signature" },
+      },
+    usesPermissions = {
+		"com.android.vending.CHECK_LICENSE",
+		"android.permission.INTERNET",
+    "android.permission.GET_ACCOUNTS",
+    "android.permission.RECEIVE_BOOT_COMPLETED",
+    "com.google.android.c2dm.permission.RECEIVE",
+    ".permission.C2D_MESSAGE",
+    "android.permission.READ_EXTERNAL_STORAGE",
+    "android.permission.WRITE_EXTERNAL_STORAGE",
+    "android.permission.ACCESS_FINE_LOCATION",
+    "android.permission.ACCESS_COURSE_LOCATION"
 		},
 		--[[ COMMENT THIS BACK IN TO SEE THE PORTRAIT LOCK BUG IN THE SIMULATOR
 		usesFeatures = {
@@ -195,12 +222,25 @@ settings = {
 			largeScreens = true,
 			xlargeScreens = true
 		},
-		largeHeap = true -- provides support for larger textures
+    largeHeap = true, -- provides support for larger textures
+    minSdkVersion = "14"
   },
 
-	plugins = {
-		-- the following plugin can be accessed via: analytics = require("analytics"); analytics:setProvider("flurry")
-		["CoronaProvider.analytics.flurry"] = { publisherId = "com.coronalabs" },
-		["plugin.zip"] = { publisherId = "com.coronalabs" }
-	}
+  plugins = {
+    -- support for push notifications
+    ["plugin.OneSignal"] =
+    {
+        publisherId = "com.onesignal",
+    },
+    ["plugin.google.play.services"] =
+    {
+        publisherId = "com.coronalabs",
+        supportedPlatforms = { android=true, ["android-kindle"]=true },
+    },
+    -- the following plugin can be accessed via:
+    -- analytics = require("analytics"); analytics:setProvider("flurry")
+    ["CoronaProvider.analytics.flurry"] = { publisherId = "com.coronalabs" },
+    -- support for installation of Help files
+    ["plugin.zip"] = { publisherId = "com.coronalabs" }
+  }
 }

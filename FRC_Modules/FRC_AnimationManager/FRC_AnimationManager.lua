@@ -243,6 +243,7 @@ FRC_AnimationManager.createAnimationClip = function(data)
   local animationClip = display.newGroup();
   animationClip.currentIndex = 1;
   animationClip.frameCount = tonumber(data.frameCount);
+  print(animationClip.frameCount); -- DEBUG
   animationClip.intervalTime = 33.33; -- 30fps default
 
   animationClip.currentPart = nil; -- "";
@@ -285,8 +286,12 @@ FRC_AnimationManager.createAnimationClip = function(data)
 
   animationClip.showFrame = function(self, index)
     -- DEBUG:
-    -- print("showFrame: ", index);
+    -- print("showFrame index/self: ", index, self);
+    -- print("showFrame self.frameCount: ", self.frameCount);
     -- defend against an attempt to play a non-existent frame of animation
+    if (self.frameCount == nil) then
+      return
+    end
     if (index > self.frameCount) then
       return
     end

@@ -269,14 +269,21 @@ function FRC_DressingRoom_Scene:createScene(event)
 			local charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.bodyImage, charData.bodyWidth, charData.bodyHeight);
 			charBody.x, charBody.y = character_x, character_y;
 
+      -- DEBUG:
+			print(charData.eyesOpenImage);
+			print(UI('IMAGES_PATH') .. charData.eyesOpenImage);
+			print(charData.eyesShutImage);
+			print(UI('IMAGES_PATH') .. charData.eyesShutImage);
 			if (charData.eyesOpenImage and charData.eyesShutImage) then
 				local charEyesOpen = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.eyesOpenImage, charData.eyesOpenWidth, charData.eyesOpenHeight);
 				charEyesOpen.x, charEyesOpen.y = charBody.x + charData.eyesX, charBody.y + charData.eyesY;
 				charEyesOpen.isVisible = true;
+				print(charEyesOpen.x, charEyesOpen.y); -- DEBUG
 
 				local charEyesShut = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.eyesShutImage, charData.eyesShutWidth, charData.eyesShutHeight);
 				charEyesShut.x, charEyesShut.y = charBody.x + charData.eyesX, charBody.y + charData.eyesY;
 				charEyesShut.isVisible = false;
+				print(charEyesShut.x, charEyesShut.y); -- DEBUG
 
 				beginEyeAnimation(charEyesOpen, charEyesShut);
 			end

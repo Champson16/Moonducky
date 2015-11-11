@@ -1,0 +1,51 @@
+<Animations>
+  <Animation name="MDMT_Landing_UsherDoorAnim_c" frameCount="41">
+    <Part name="MDMT_Intro_Theatre_DoorLeftClosed">
+      <Frame x="-49.85" y="123.30" index="0"/>
+      <Frame x="-49.85" y="123.30" index="1"/>
+      <Frame x="-49.85" y="123.30" index="2"/>
+      <Frame x="-49.85" y="123.30" index="3"/>
+      <Frame x="-49.85" y="123.30" index="4"/>
+      <Frame x="-49.85" y="123.30" index="5"/>
+      <Frame x="-49.85" y="123.30" index="6"/>
+      <Frame x="-49.85" y="123.30" index="7"/>
+      <Frame x="-49.85" y="123.30" index="8"/>
+      <Frame x="-49.85" y="123.30" index="9"/>
+      <Frame x="-49.85" y="123.30" index="10"/>
+      <Frame x="-49.85" y="123.30" index="11"/>
+      <Frame x="-49.85" y="123.30" index="12"/>
+      <Frame x="-49.85" y="123.30" index="13"/>
+    </Part>
+    <Part name="MDMT_Intro_Theatre_DoorLeftOpen01">
+      <Frame x="-77.05" y="119.90" index="14"/>
+      <Frame x="-77.05" y="119.90" index="15"/>
+    </Part>
+    <Part name="MDMT_Intro_Theatre_DoorLeftOpen02">
+      <Frame x="-97.45" y="119.90" index="16"/>
+      <Frame x="-97.45" y="119.90" index="17"/>
+      <Frame x="-97.45" y="119.90" index="18"/>
+      <Frame x="-97.45" y="119.90" index="19"/>
+      <Frame x="-97.45" y="119.90" index="20"/>
+      <Frame x="-97.45" y="119.90" index="21"/>
+      <Frame x="-97.45" y="119.90" index="22"/>
+      <Frame x="-97.45" y="119.90" index="23"/>
+      <Frame x="-97.45" y="119.90" index="24"/>
+      <Frame x="-97.45" y="119.90" index="25"/>
+      <Frame x="-97.45" y="119.90" index="26"/>
+      <Frame x="-97.45" y="119.90" index="27"/>
+      <Frame x="-97.45" y="119.90" index="28"/>
+      <Frame x="-97.45" y="119.90" index="29"/>
+      <Frame x="-97.45" y="119.90" index="30"/>
+      <Frame x="-97.45" y="119.90" index="31"/>
+      <Frame x="-97.45" y="119.90" index="32"/>
+      <Frame x="-97.45" y="119.90" index="33"/>
+      <Frame x="-97.45" y="119.90" index="34"/>
+      <Frame x="-97.45" y="119.90" index="35"/>
+      <Frame x="-97.45" y="119.90" index="36"/>
+      <Frame x="-97.45" y="119.90" index="37"/>
+      <Frame x="-97.45" y="119.90" index="38"/>
+      <Frame x="-97.45" y="119.90" index="39"/>
+      <Frame x="-97.45" y="119.90" index="40"/>
+    </Part>
+  </Animation>
+</Animations>

@@ -1,0 +1,57 @@
+[{
+	"id": "SPMTM_OrderingRoom_ToyConveyor",
+	"imageFile": "SPMTM_OrderingRoom_ToyConveyor.png",
+	"width": 409,
+	"height": 179,
+	"left": 0,
+	"top": 300
+},
+{
+	"id": "SPMTM_OrderingRoom_TagConveyor",
+	"imageFile": "SPMTM_OrderingRoom_TagConveyor.png",
+	"width": 416,
+	"height": 179,
+	"right": 0,
+	"top": 300
+},
+{
+	"id": "SPMTM_OrderingRoom_CentralConveyor",
+	"imageFile": "SPMTM_OrderingRoom_CentralConveyor.png",
+	"width": 1152,
+	"height": 281,
+	"xCenter": 0,
+	"bottom": 20
+},
+{
+	"id": "SPMTM_OrderingRoom_ToyTubeExtender",
+	"imageFile": "SPMTM_OrderingRoom_ToyTubeExtender.png",
+	"width": 83,
+	"height": 35,
+	"left": 190,
+	"top": 0
+},
+{
+	"id": "SPMTM_OrderingRoom_TagTubeExtender",
+	"imageFile": "SPMTM_OrderingRoom_TagTubeExtender.png",
+	"width": 83,
+	"height": 35,
+	"right": 190,
+	"top": 0
+},
+{
+	"id": "SPMTM_OrderingRoom_FreeShipping",
+	"imageFile": "SPMTM_OrderingRoom_FreeShipping.png",
+	"width": 119,
+	"height": 270,
+	"left": 340,
+	"top": 0
+},
+{
+	"id": "SPMTM_OrderingRoom_Only1999",
+	"imageFile": "SPMTM_OrderingRoom_Only1999.png",
+	"width": 119,
+	"height": 270,
+	"right": 340,
+	"top": 0
+}
+]

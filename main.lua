@@ -21,6 +21,31 @@ local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_Util = require('FRC_Modules.FRC_Util.FRC_Util');
 local FRC_AppSettings = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
 
+-- push notification support
+
+-- This function gets called when the user opens a notification or one is received when the app is open and active.
+-- Change the code below to fit your app's needs.
+local function DidReceiveRemoteNotification(message, additionalData, isActive)
+    if (additionalData) then
+        if (additionalData.discount) then
+            -- native.showAlert( "Discount!", message, { "OK" } )
+            trace( "Discount!", message); -- DEBUG
+            -- Take user to your app store
+        elseif (additionalData.actionSelected) then -- Interactive notification button pressed
+            -- native.showAlert("Button Pressed!", "ButtonID:" .. additionalData.actionSelected, { "OK"} )
+            trace("Button Pressed!", "ButtonID:" .. additionalData.actionSelected); -- DEBUG
+        end
+    else
+        -- native.showAlert("OneSignal Message", message, { "OK" } )
+        trace("OneSignal Message", message); -- DEBUG
+    end
+end
+
+local OneSignal = require("plugin.OneSignal");
+-- Uncomment SetLogLevel to debug issues.
+-- OneSignal.SetLogLevel(4, 4)
+OneSignal.Init("7474c044-8712-11e5-abed-a0369f2d9328", "709462375959", DidReceiveRemoteNotification)
+
 -- constants
 -- _G.APP_VERSION = '1.2.04';
 -- note: the schema for VERSIONNUM is major version digit, minor version digit . release build two digits 0-padded
@@ -185,7 +210,8 @@ if system.getInfo("environment") ~= "simulator" then
        end
     end
 
-    licensing.verify( licensingListener );
+    -- DISABLED UNTIL RELEASE BUILD TIME
+    -- licensing.verify( licensingListener );
   end
 end
 
