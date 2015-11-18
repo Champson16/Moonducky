@@ -155,62 +155,59 @@ end
 		buildText.y = display.contentHeight - 4;
 	end
 
--- function playBackgroundMusic()
--- 	-- DEBUG:
--- 	print("playing backgroundMusic");
--- 	activeBGMusic = "backgroundMusic";
--- 	musicGroup = FRC_AudioManager:findGroup("music");
--- 	-- repeatedly play all background music
--- 	musicGroup:playRandom({ onComplete = function() playBackgroundMusic(); end } );
--- 	if (not FRC_AppSettings.get("soundOn")) then
--- 		musicGroup:pause();
--- 	end
--- end
+	function playBackgroundMusic()
+		-- DEBUG:
+		print("playing backgroundMusic");
+		activeBGMusic = "backgroundMusic";
+		musicGroup = FRC_AudioManager:findGroup("music");
+		-- repeatedly play all background music
+		musicGroup:playRandom({ onComplete = function() playBackgroundMusic(); end } );
+		if (not FRC_AppSettings.get("soundOn")) then
+			musicGroup:pause();
+		end
+	end
 
--- function scene.enterScene(self, event)
--- 	local scene = self;
--- 	local view = scene.view;
---
--- 	if (FRC_AppSettings.get("freshLaunch")) then
--- 		--[[ scene.skipIntroButton.isHitTestable = true;
--- 		for i=1, intro1AnimationSequences.numChildren do
--- 			intro1AnimationSequences[i]:play({
--- 				showLastFrame = true,
--- 				playBackward = false,
--- 				autoLoop = false,
--- 				palindromicLoop = false,
--- 				delay = 0,
--- 				intervalTime = 30,
--- 				maxIterations = 1,
--- 				onCompletion = function ()
--- 					playIntro2AnimationSequences();
--- 				end
--- 			});
--- 		end
--- 		--]]
--- 	else
--- 		-- after the title animation, we will play the introduction sequences only
--- 		-- playIntro2AltAnimationSequences();
--- 	end
---
--- 	-- play ambient animationSequences
--- 	playMarqueeLightSequences();
---
--- 	if (musicGroup) then
--- 		-- resume the background theme song that was playing when we left the Home scene
--- 		if (not FRC_AppSettings.get("soundOn")) then
--- 			musicGroup:pause();
--- 		else
--- 			-- DEBUG:
--- 			print("HOME scene RESUME background audio");
--- 			musicGroup:resume();
--- 		end
--- 	else
--- 		-- fallback to restarting one of the background theme songs
--- 		playBackgroundMusic();
--- 	end
---
--- end
+	function scene.enterScene(self, event)
+		local scene = self;
+		local view = scene.view;
+
+		if (FRC_AppSettings.get("freshLaunch")) then
+			--[[ scene.skipIntroButton.isHitTestable = true;
+			for i=1, intro1AnimationSequences.numChildren do
+				intro1AnimationSequences[i]:play({
+					showLastFrame = true,
+					playBackward = false,
+					autoLoop = false,
+					palindromicLoop = false,
+					delay = 0,
+					intervalTime = 30,
+					maxIterations = 1,
+					onCompletion = function ()
+						playIntro2AnimationSequences();
+					end
+				});
+			end
+			--]]
+		else
+			-- after the title animation, we will play the introduction sequences only
+			-- playIntro2AltAnimationSequences();
+		end
+
+		if (musicGroup) then
+			-- resume the background theme song that was playing when we left the Home scene
+			if (not FRC_AppSettings.get("soundOn")) then
+				musicGroup:pause();
+			else
+				-- DEBUG:
+				print("HOME scene RESUME background audio");
+				musicGroup:resume();
+			end
+		else
+			-- fallback to restarting one of the background theme songs
+			playBackgroundMusic();
+		end
+
+	end
 
 ----
 ----

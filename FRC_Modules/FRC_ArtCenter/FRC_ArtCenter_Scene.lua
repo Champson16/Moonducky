@@ -263,15 +263,10 @@ function FRC_ArtCenter_Scene.createScene(self, event)
 	local background = display.newImageRect(bgImage, bgWidth, bgHeight);
 	background.anchorX = 0.5;
 	background.anchorY = 0.5;
-	background.x = display.contentWidth * 0.5;
-	background.y = background.contentHeight * 0.5; --display.contentHeight * 0.5;
+	background.x = display.contentCenterX; -- display.contentWidth * 0.5;
+  background.y = display.contentCenterY; -- background.contentHeight * 0.5;
 	view:insert(background);
 	self.background = background;
-	if (FRC_ArtCenter_Settings.UI.SCALE_BACKGROUND) then
-		background.xScale = screenW / background.contentWidth;
-		background.yScale = background.xScale;
-	end
-
 
 	-- CREATE SCENE LAYOUT
 	local sceneLayoutData = DATA('SCENELAYOUT');
@@ -304,7 +299,7 @@ function FRC_ArtCenter_Scene.createScene(self, event)
 			-- get the list of animation files and create the animation object
 			-- preload the animation data (XML and images) early
 			sceneLayout[i] = FRC_AnimationManager.createAnimationClipGroup(sceneLayoutData[i].animationFiles, animationXMLBase, animationImageBase);
-			
+
 			-- mysteryBoxAnimationSequences.x = -31; -- display.contentWidth * 0.5;
 			-- mysteryBoxAnimationSequences.y = 42; -- display.contentHeight * 0.5;
 			if (sceneLayoutData[i].left) then

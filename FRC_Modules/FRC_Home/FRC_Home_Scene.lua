@@ -8,14 +8,20 @@ local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_Home_Scene = storyboard.newScene();
 local FRC_AnimationManager = require('FRC_Modules.FRC_AnimationManager.FRC_AnimationManager');
 local FRC_AudioManager = require('FRC_Modules.FRC_AudioManager.FRC_AudioManager');
+local FRC_Video = require('FRC_Modules.FRC_Video.FRC_Video');
+local FRC_AppSettings = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
 local analytics = import("analytics");
 
 local animationXMLBase = 'FRC_Assets/MDMT_Assets/Animation/XMLData/';
 local animationImageBase = 'FRC_Assets/MDMT_Assets/Animation/Images/';
 
 local theatreDoorSequences = {};
+local outboundToTheatreAnimationSequences = {};
 
 local imageBase = 'FRC_Assets/FRC_Home/Images/';
+local videoBase = 'FRC_Assets/MDMT_Assets/Videos/';
+
+local videoPlayer;
 
 function math.round(num, idp)
 	return tonumber(string.format("%." .. (idp or 0) .. "f", num));
@@ -52,6 +58,10 @@ function FRC_Home_Scene:createScene(event)
 	local screenW, screenH = FRC_Layout.getScreenDimensions();
 	local contentW, contentH = display.contentWidth, display.contentHeight;
 
+	-- create sceneLayout items
+	local sceneLayoutMethods = {};
+	local sceneLayout = {};
+
 	if ((not self.id) or (self.id == '')) then self.id = generateUniqueIdentifier(20); end
 
 	if (FRC_Home_Scene.preCreateScene) then
@@ -63,18 +73,66 @@ function FRC_Home_Scene:createScene(event)
 	FRC_Layout.scaleToFit(bgGroup);
 
 	local bg = display.newImageRect(view, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
-	-- FRC_Layout.scaleToFit(bg);
-	-- bg.x, bg.y = display.contentCenterX, display.contentCenterY;
 	bgGroup:insert(bg);
+	bg.x, bg.y = 0,0;
 
-	local xOffset = (screenW - (contentW * bg.xScale)) * 0.5;
+	function videoPlaybackComplete(event)
+		if (FRC_AppSettings.get("ambientSoundOn")) then
+			FRC_AudioManager:findGroup("ambientMusic"):resume();
+		end
+		if (videoPlayer) then
+			videoPlayer:removeSelf();
+			videoPlayer = nil;
+		end
+		return true
+	end
 
-	-- Get lua tables from JSON data
-	local sceneLayoutData = DATA('SCENELAYOUT');
+	function sceneLayoutMethods.playHamstersVideo()
+		analytics.logEvent("MDMT.Home.HamstersVideo");
+		if (FRC_AppSettings.get("ambientSoundOn")) then
+			FRC_AudioManager:findGroup("ambientMusic"):pause();
+		end
+		local videoData = {
+		HD_VIDEO_PATH = videoBase .. 'MDMT_MusicVideo_HamsterWantToBeFree_HD.m4v',
+		HD_VIDEO_SIZE = { width = 1080, height = 720 },
+		SD_VIDEO_PATH = videoBase .. 'MDMT_MusicVideo_HamsterWantToBeFree_SD.m4v',
+		SD_VIDEO_SIZE = { width = 576, height = 384 },
+		VIDEO_SCALE = 'FULLSCREEN',
+		VIDEO_LENGTH = 146000 };
+
+		videoPlayer = FRC_Video.new(view, videoData);
+		if videoPlayer then
+			videoPlayer:addEventListener('videoComplete', videoPlaybackComplete );
+		else
+			-- this will fire because we are running in the Simulator and the video playback ends before it begins!
+			videoPlaybackComplete();
+		end
+	end
+
+	function sceneLayoutMethods.playCowVideo()
+		analytics.logEvent("MDMT.Home.CowVideo");
+		if (FRC_AppSettings.get("ambientSoundOn")) then
+			FRC_AudioManager:findGroup("ambientMusic"):pause();
+		end
+		local videoData = {
+		HD_VIDEO_PATH = videoBase .. 'MDMT_MusicVideo_MechanicalCow_HD.m4v',
+		HD_VIDEO_SIZE = { width = 1080, height = 720 },
+		SD_VIDEO_PATH = videoBase .. 'MDMT_MusicVideo_MechanicalCow_SD.m4v',
+		SD_VIDEO_SIZE = { width = 576, height = 384 },
+		VIDEO_SCALE = 'FULLSCREEN',
+		VIDEO_LENGTH = 204000 };
+
+		videoPlayer = FRC_Video.new(view, videoData);
+		if videoPlayer then
+			videoPlayer:addEventListener('videoComplete', videoPlaybackComplete );
+		else
+			-- this will fire because we are running in the Simulator and the video playback ends before it begins!
+			videoPlaybackComplete();
+		end
+	end
 
 	-- query server
 	-- establish online/offline check
-
 	function scene.networkListener(event)
 		print( "address", event.address );
     print( "isReachable", event.isReachable );
@@ -94,12 +152,13 @@ function FRC_Home_Scene:createScene(event)
 	end
 	--]]
 
-	-- create sceneLayout items
-	local sceneLayoutMethods = {};
-	local sceneLayout = {};
+	-- set up the scene layout
+	-- Get lua tables from JSON data
+	local sceneLayoutData = DATA('SCENELAYOUT');
 
--- set up the scene layout
 	for i=1,#sceneLayoutData do
+		-- DEBUG
+		print("setting up scene layout object: ", sceneLayoutData[i].id);
 		if sceneLayoutData[i].imageFile then
 			sceneLayout[i] = display.newImageRect(view, UI('IMAGES_PATH') .. sceneLayoutData[i].imageFile, sceneLayoutData[i].width, sceneLayoutData[i].height);
 			FRC_Layout.scaleToFit(sceneLayout[i]);
@@ -178,10 +237,13 @@ function FRC_Home_Scene:createScene(event)
 		end
 
 		if (sceneLayoutData[i].onTouch) then
+			-- DEBUG
+			-- print("sceneLayout onTouch", sceneLayoutData[i].onTouch);
 			sceneLayout[i].onTouch = sceneLayoutMethods[sceneLayoutData[i].onTouch];
 			if (sceneLayout[i].onTouch) then
 				sceneLayout[i]:addEventListener('touch', function(e)
 					if (e.phase == "began") then
+						-- print("sceneLayout onTouch EVENT", e.target.onTouch); -- DEBUG
 						e.target.onTouch();
 					end
 					return true;
@@ -202,8 +264,8 @@ function FRC_Home_Scene:createScene(event)
 	local artCenterButton = ui.button.new({
 		imageUp = imageBase .. 'MDMT_LandingPage_Door_ArtCenter_up.png',
 		imageDown = imageBase .. 'MDMT_LandingPage_Door_ArtCenter_down.png',
-		width = 163,
-		height = 335,
+		width = 117,
+		height = 307,
 		x = 138 - 576,
 		y = 477 - 368,
 		onRelease = function()
@@ -216,11 +278,6 @@ function FRC_Home_Scene:createScene(event)
 			storyboard.gotoScene('Scenes.ArtCenter', { effect="crossFade", time="250" });
 		end
 	});
-
-	-- FRC_Layout.scaleToFit(artCenterButton)
-	-- artCenterButton.x = display.contentCenterX - (artCenterButton.contentWidth) - (50 * bg.xScale);
-	-- artCenterButton.y = contentH - (102 * bg.yScale) + ((screenH - contentH) * 0.5) - (artCenterButton.contentHeight * 0.5);
-
 	artCenterButton.anchorX = 0.5;
 	artCenterButton.anchorY = 0.5;
 	bgGroup:insert(artCenterButton);
@@ -228,10 +285,10 @@ function FRC_Home_Scene:createScene(event)
 	setDesignButton = ui.button.new({
 		imageUp = imageBase .. 'MDMT_LandingPage_Door_SetDesign_up.png',
 		imageDown = imageBase .. 'MDMT_LandingPage_Door_SetDesign_down.png',
-		width = 162,
-		height = 323,
-		x = 249 - 576,
-		y = 476 - 368,
+		width = 117,
+		height = 307,
+		x = 251 - 576,
+		y = 477 - 368,
 		onRelease = function()
 			analytics.logEvent("MDMT.Home.SetDesign");
 			storyboard.gotoScene('Scenes.SetDesign', { effect="crossFade", time="250" });
@@ -244,9 +301,9 @@ function FRC_Home_Scene:createScene(event)
 	dressingRoomButton = ui.button.new({
 		imageUp = imageBase .. 'MDMT_LandingPage_Door_DressingRoom_up.png',
 		imageDown = imageBase .. 'MDMT_LandingPage_Door_DressingRoom_down.png',
-		width = 123,
-		height = 311,
-		x = 1017 - 576,
+		width = 117,
+		height = 307,
+		x = 1016 - 576,
 		y = 477 - 368,
 		onRelease = function()
 			analytics.logEvent("MDMT.Home.DressingRoom");
@@ -257,35 +314,107 @@ function FRC_Home_Scene:createScene(event)
 	dressingRoomButton.anchorY = 0.5;
 	bgGroup:insert(dressingRoomButton);
 
+-- 	local theatreDoorFiles = {
+-- "MDMT_LandingPage_UsherDoorStatic_c.xml",
+-- "MDMT_LandingPage_UsherDoorStatic_b.xml",
+-- "MDMT_LandingPage_UsherDoorStatic_a.xml"
+--  };
+-- 	-- preload the animation data (XML and images) early
+-- 	theatreDoorSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorFiles, animationXMLBase, animationImageBase);
+-- 	FRC_Layout.scaleToFit(theatreDoorSequences);
+-- 	bgGroup:insert(theatreDoorSequences);
+--
+-- 	-- play ambient loop sequences
+-- 	if theatreDoorSequences then
+-- 		for i=1, theatreDoorSequences.numChildren do
+-- 			theatreDoorSequences[i]:play({
+-- 				showLastFrame = false,
+-- 				playBackward = false,
+-- 				autoLoop = true,
+-- 				palindromicLoop = false,
+-- 				delay = 0,
+-- 				intervalTime = 30,
+-- 				maxIterations = 1,
+-- 				onTouch = function ()
+-- 					scene.playOutboundAnimationSequences();
+-- 				end
+-- 			});
+-- 		end
+-- 	end
+
+	local outboundToTheatreAnimationFiles = {
+	"MDMT_LandingPage_UsherDoorAnim_c.xml",
+	"MDMT_LandingPage_UsherDoorAnim_b.xml",
+	"MDMT_LandingPage_UsherDoorAnim_a.xml"
+	 };
+		-- preload the animation data (XML and images) early
+	outboundToTheatreAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(outboundToTheatreAnimationFiles, animationXMLBase, animationImageBase);
+	FRC_Layout.scaleToFit(outboundToTheatreAnimationSequences);
+	bgGroup:insert(outboundToTheatreAnimationSequences);
+
+	-- exit to module sequence - TODO: need to set up to use this
+	sceneLayoutMethods.playOutboundAnimationSequences = function()
+
+		-- if (scene.trainWhistle) then
+		-- 	audio.play(scene.trainWhistle, { channel= 22 }); -- { channel=_G.SFX_CHANNEL });
+		-- end
+
+		for i=1, outboundToTheatreAnimationSequences.numChildren do
+			outboundToTheatreAnimationSequences[i]:play({
+				showLastFrame = true,
+				playBackward = false,
+				autoLoop = false,
+				palindromicLoop = false,
+				delay = 0,
+				intervalTime = 30,
+				maxIterations = 1,
+				onCompletion = function ()
+					if (outboundToTheatreAnimationSequences) then
+						if (outboundToTheatreAnimationSequences.numChildren) then
+							for i=1, outboundToTheatreAnimationSequences.numChildren do
+								local anim = outboundToTheatreAnimationSequences[i];
+								if (anim) then
+									-- if (anim.isPlaying) then
+										anim.dispose();
+									-- end
+									-- anim.remove();
+								end
+							end
+						end
+						outboundToTheatreAnimationSequences = nil;
+					end
+					--[[ timer.performWithDelay(6000, function()
+						storyboard.gotoScene(destinationModule);
+					end, 1);
+					--]]
+
+				end
+			});
+		end
+		--]]
+
+		-- this is a hokey way to move to the next module at roughly the time that the animation is completed
+		-- ideally this would be triggered by an onComplete function attached to the outboundToTheatreAnimationSequences[i]:play({ call above
+		scene.outboundTimer = timer.performWithDelay(1400, function()
+			scene.outboundTimer = nil;
+			if (outboundToTheatreAnimationSequences) then
+				for i=1, outboundToTheatreAnimationSequences.numChildren do
+					outboundToTheatreAnimationSequences[i]:stop();
+				end
+			end
+			if (not _G.ANDROID_DEVICE) then
+				if (system.getInfo("environment") ~= "simulator") then
+					native.setActivityIndicator(true);
+				end
+			end
+			storyboard.gotoScene('Scenes.Lobby', { effect="crossFade", time="250" });
+		end, 1);
+	end
+
 	-- position background group at correct location
 	bgGroup.x = display.contentCenterX;
 	bgGroup.y = display.contentCenterY;
 	view:insert(bgGroup);
-
-	local theatreDoorFiles = {
-"MDMT_LandingPage_UsherDoorStatic_c.xml",
-"MDMT_LandingPage_UsherDoorStatic_b.xml",
-"MDMT_LandingPage_UsherDoorStatic_a.xml"
- };
-	-- preload the animation data (XML and images) early
-	theatreDoorSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorFiles, animationXMLBase, animationImageBase);
-	FRC_Layout.scaleToFit(theatreDoorSequences);
-	view:insert(theatreDoorSequences);
-
-	-- play ambient loop sequences
-	if theatreDoorSequences then
-		for i=1, theatreDoorSequences.numChildren do
-			theatreDoorSequences[i]:play({
-				showLastFrame = false,
-				playBackward = false,
-				autoLoop = true,
-				palindromicLoop = false,
-				delay = 0,
-				intervalTime = 30,
-				maxIterations = 1
-			});
-		end
-	end
 
 	if (FRC_Home_Scene.postCreateScene) then
 		FRC_Home_Scene:postCreateScene(event);
@@ -333,6 +462,11 @@ end
 function FRC_Home_Scene:exitScene(event)
 	local scene = self;
 	local view = self.view;
+
+	if (scene.outboundTimer) then
+		timer.cancel(scene.outboundTimer);
+		scene.outboundTimer = nil;
+	end
 
 	if (FRC_Home_Scene.preExitScene) then
 		FRC_Home_Scene:preExitScene(event);
