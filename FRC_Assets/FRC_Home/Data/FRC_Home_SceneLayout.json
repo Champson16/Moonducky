@@ -21,7 +21,7 @@
 			"animationFiles": ["MDMT_LandingPage_UsherDoorStatic_c.xml",
 				"MDMT_LandingPage_UsherDoorStatic_b.xml",
 				"MDMT_LandingPage_UsherDoorStatic_a.xml"],
-				"onTouch": "playOutboundAnimationSequences"
+				"onTouch": "playEnteringLobbyAnimationSequences"
 			},
 			{
 				"id": "HamsterVideo",

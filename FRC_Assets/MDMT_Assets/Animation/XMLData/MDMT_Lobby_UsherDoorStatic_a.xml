@@ -1,0 +1,12 @@
+<Animations>
+  <Animation name="MDMT_Lobby_UsherDoorStatic_a" frameCount="167">
+    <Part name="MDMT_Lobby_CowUsher_EyesClosed">
+      <Frame x="-129.30" y="-109.90" scaleX="0.510" scaleY="0.510" index="19"/>
+      <Frame x="-129.30" y="-109.90" scaleX="0.510" scaleY="0.510" index="20"/>
+      <Frame x="-129.30" y="-109.90" scaleX="0.510" scaleY="0.510" index="75"/>
+      <Frame x="-129.30" y="-109.90" scaleX="0.510" scaleY="0.510" index="76"/>
+      <Frame x="-129.30" y="-109.90" scaleX="0.510" scaleY="0.510" index="148"/>
+      <Frame x="-129.30" y="-109.90" scaleX="0.510" scaleY="0.510" index="149"/>
+    </Part>
+  </Animation>
+</Animations>

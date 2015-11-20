@@ -1,0 +1,44 @@
+<Animations>
+  <Animation name="MDMT_Lobby_UsherDoorAnim_b" frameCount="30">
+    <Part name="MDMT_Lobby_TheaterDoors_001_005">
+      <Frame x="35.30" y="-16.70" index="0"/>
+      <Frame x="35.30" y="-16.70" index="1"/>
+      <Frame x="35.30" y="-16.70" index="2"/>
+      <Frame x="35.30" y="-16.70" index="3"/>
+      <Frame x="35.30" y="-16.70" index="4"/>
+      <Frame x="35.30" y="-16.70" index="5"/>
+      <Frame x="35.30" y="-16.70" index="6"/>
+      <Frame x="35.30" y="-16.70" index="7"/>
+      <Frame x="35.30" y="-16.70" index="8"/>
+      <Frame x="35.30" y="-16.70" index="9"/>
+      <Frame x="35.30" y="-16.70" index="10"/>
+      <Frame x="35.30" y="-16.70" index="11"/>
+      <Frame x="35.30" y="-16.70" index="12"/>
+      <Frame x="35.30" y="-16.70" index="13"/>
+      <Frame x="35.30" y="-16.70" index="14"/>
+    </Part>
+    <Part name="MDMT_Lobby_TheaterDoors_002_005">
+      <Frame x="35.30" y="-16.70" index="15"/>
+      <Frame x="35.30" y="-16.70" index="16"/>
+    </Part>
+    <Part name="MDMT_Lobby_TheaterDoors_003_005">
+      <Frame x="35.30" y="-16.70" index="17"/>
+      <Frame x="35.30" y="-16.70" index="18"/>
+      <Frame x="35.30" y="-16.70" index="19"/>
+      <Frame x="35.30" y="-16.70" index="20"/>
+      <Frame x="35.30" y="-16.70" index="21"/>
+      <Frame x="35.30" y="-16.70" index="22"/>
+      <Frame x="35.30" y="-16.70" index="23"/>
+    </Part>
+    <Part name="MDMT_Lobby_TheaterDoors_004_005">
+      <Frame x="35.30" y="-16.70" index="24"/>
+      <Frame x="35.30" y="-16.70" index="25"/>
+    </Part>
+    <Part name="MDMT_Lobby_TheaterDoors_005_005">
+      <Frame x="35.30" y="-16.70" index="26"/>
+      <Frame x="35.30" y="-16.70" index="27"/>
+      <Frame x="35.30" y="-16.70" index="28"/>
+      <Frame x="35.30" y="-16.70" index="29"/>
+    </Part>
+  </Animation>
+</Animations>

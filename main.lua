@@ -67,7 +67,7 @@ FRC_AppSettings.init();
   FRC_AppSettings.set("freshLaunch", true);
 -- end
 
--- set volume baesd on previous setting
+-- set volume based on previous setting
 if (FRC_AppSettings.get("soundOn")) then
   audio.setVolume(1.0, { channel=_G.MUSIC_CHANNEL });
   audio.setVolume(1.0, { channel=_G.VO_CHANNEL });

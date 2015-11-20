@@ -1,0 +1,44 @@
+<Animations>
+  <Animation name="MDMT_Lobby_UsherDoorAnim_a" frameCount="30">
+    <Part name="MDMT_Lobby_CowUsher01">
+      <Frame x="-145.00" y="10.15" scaleX="0.518" scaleY="0.518" index="0"/>
+      <Frame x="-145.00" y="10.15" scaleX="0.518" scaleY="0.518" index="1"/>
+      <Frame x="-141.75" y="15.10" scaleX="0.539" scaleY="0.501" index="2"/>
+      <Frame x="-138.40" y="20.05" scaleX="0.561" scaleY="0.485" index="3"/>
+    </Part>
+    <Part name="MDMT_Lobby_CowUsher02">
+      <Frame x="-74.60" y="17.85" scaleX="0.564" scaleY="0.491" index="4"/>
+      <Frame x="-72.55" y="15.15" scaleX="0.549" scaleY="0.500" index="5"/>
+      <Frame x="-70.50" y="12.45" scaleX="0.533" scaleY="0.509" index="6"/>
+      <Frame x="-68.45" y="9.70" scaleX="0.518" scaleY="0.518" index="7"/>
+      <Frame x="-46.05" y="10.15" scaleX="0.518" scaleY="0.518" index="23"/>
+      <Frame x="-49.65" y="10.15" scaleX="0.533" scaleY="0.518" index="24"/>
+      <Frame x="-53.35" y="10.15" scaleX="0.548" scaleY="0.518" index="25"/>
+      <Frame x="-57.05" y="10.15" scaleX="0.564" scaleY="0.518" index="26"/>
+    </Part>
+    <Part name="MDMT_Lobby_CowUsher03">
+      <Frame x="-6.45" y="10.15" scaleX="0.480" scaleY="0.518" index="8"/>
+      <Frame x="-4.10" y="10.15" scaleX="0.492" scaleY="0.518" index="9"/>
+      <Frame x="-1.75" y="10.15" scaleX="0.505" scaleY="0.518" index="10"/>
+      <Frame x="0.65" y="10.15" scaleX="0.518" scaleY="0.518" index="11"/>
+      <Frame x="-0.90" y="12.30" scaleX="0.526" scaleY="0.510" index="12"/>
+      <Frame x="-2.30" y="14.50" scaleX="0.534" scaleY="0.503" index="13"/>
+      <Frame x="-3.75" y="16.75" scaleX="0.543" scaleY="0.495" index="14"/>
+    </Part>
+    <Part name="MDMT_Lobby_CowUsher04">
+      <Frame x="14.45" y="16.75" scaleX="0.533" scaleY="0.495" index="15"/>
+      <Frame x="15.50" y="14.45" scaleX="0.528" scaleY="0.502" index="16"/>
+      <Frame x="16.55" y="12.15" scaleX="0.523" scaleY="0.510" index="17"/>
+      <Frame x="17.70" y="9.90" scaleX="0.518" scaleY="0.518" index="18"/>
+      <Frame x="17.70" y="9.90" scaleX="0.518" scaleY="0.518" index="19"/>
+      <Frame x="16.60" y="11.80" scaleX="0.523" scaleY="0.511" index="20"/>
+      <Frame x="15.55" y="13.75" scaleX="0.528" scaleY="0.505" index="21"/>
+      <Frame x="14.50" y="15.70" scaleX="0.533" scaleY="0.498" index="22"/>
+    </Part>
+    <Part name="MDMT_Lobby_CowUsher05">
+      <Frame x="-142.80" y="10.15" scaleX="0.504" scaleY="0.518" index="27"/>
+      <Frame x="-146.05" y="10.15" scaleX="0.511" scaleY="0.518" index="28"/>
+      <Frame x="-149.45" y="10.15" scaleX="0.518" scaleY="0.518" index="29"/>
+    </Part>
+  </Animation>
+</Animations>

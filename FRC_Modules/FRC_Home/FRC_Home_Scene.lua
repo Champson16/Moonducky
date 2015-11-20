@@ -15,8 +15,7 @@ local analytics = import("analytics");
 local animationXMLBase = 'FRC_Assets/MDMT_Assets/Animation/XMLData/';
 local animationImageBase = 'FRC_Assets/MDMT_Assets/Animation/Images/';
 
-local theatreDoorSequences = {};
-local outboundToTheatreAnimationSequences = {};
+local enteringLobbyAnimationSequences = {};
 
 local imageBase = 'FRC_Assets/FRC_Home/Images/';
 local videoBase = 'FRC_Assets/MDMT_Assets/Videos/';
@@ -129,6 +128,77 @@ function FRC_Home_Scene:createScene(event)
 			-- this will fire because we are running in the Simulator and the video playback ends before it begins!
 			videoPlaybackComplete();
 		end
+	end
+
+	local enteringLobbyAnimationFiles = {
+	"MDMT_LandingPage_UsherDoorAnim_c.xml",
+	"MDMT_LandingPage_UsherDoorAnim_b.xml",
+	"MDMT_LandingPage_UsherDoorAnim_a.xml"
+	 };
+		-- preload the animation data (XML and images) early
+	enteringLobbyAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(enteringLobbyAnimationFiles, animationXMLBase, animationImageBase);
+	FRC_Layout.scaleToFit(enteringLobbyAnimationSequences);
+	bgGroup:insert(enteringLobbyAnimationSequences);
+
+	-- exit to module sequence
+	sceneLayoutMethods.playEnteringLobbyAnimationSequences = function()
+
+    -- DEBUG:
+		print("sceneLayoutMethods.playEnteringLobbyAnimationSequences called");
+		-- if (scene.trainWhistle) then
+		-- 	audio.play(scene.trainWhistle, { channel= 22 }); -- { channel=_G.SFX_CHANNEL });
+		-- end
+
+		for i=1, enteringLobbyAnimationSequences.numChildren do
+			enteringLobbyAnimationSequences[i]:play({
+				showLastFrame = true,
+				playBackward = false,
+				autoLoop = false,
+				palindromicLoop = false,
+				delay = 0,
+				intervalTime = 30,
+				maxIterations = 1,
+				onCompletion = function ()
+					if (enteringLobbyAnimationSequences) then
+						if (enteringLobbyAnimationSequences.numChildren) then
+							for i=1, enteringLobbyAnimationSequences.numChildren do
+								local anim = enteringLobbyAnimationSequences[i];
+								if (anim) then
+									-- if (anim.isPlaying) then
+										anim.dispose();
+									-- end
+									-- anim.remove();
+								end
+							end
+						end
+						enteringLobbyAnimationSequences = nil;
+					end
+					--[[ timer.performWithDelay(6000, function()
+						storyboard.gotoScene(destinationModule);
+					end, 1);
+					--]]
+
+				end
+			});
+		end
+		--]]
+
+		-- this is a hokey way to move to the next module at roughly the time that the animation is completed
+		-- ideally this would be triggered by an onComplete function attached to the outboundToTheatreAnimationSequences[i]:play({ call above
+		scene.outboundTimer = timer.performWithDelay(1400, function()
+			scene.outboundTimer = nil;
+			if (enteringLobbyAnimationSequences) then
+				for i=1, enteringLobbyAnimationSequences.numChildren do
+					enteringLobbyAnimationSequences[i]:stop();
+				end
+			end
+			if (not _G.ANDROID_DEVICE) then
+				if (system.getInfo("environment") ~= "simulator") then
+					native.setActivityIndicator(true);
+				end
+			end
+			storyboard.gotoScene('Scenes.Lobby', { effect="crossFade", time="250" });
+		end, 1);
 	end
 
 	-- query server
@@ -314,103 +384,6 @@ function FRC_Home_Scene:createScene(event)
 	dressingRoomButton.anchorY = 0.5;
 	bgGroup:insert(dressingRoomButton);
 
--- 	local theatreDoorFiles = {
--- "MDMT_LandingPage_UsherDoorStatic_c.xml",
--- "MDMT_LandingPage_UsherDoorStatic_b.xml",
--- "MDMT_LandingPage_UsherDoorStatic_a.xml"
---  };
--- 	-- preload the animation data (XML and images) early
--- 	theatreDoorSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorFiles, animationXMLBase, animationImageBase);
--- 	FRC_Layout.scaleToFit(theatreDoorSequences);
--- 	bgGroup:insert(theatreDoorSequences);
---
--- 	-- play ambient loop sequences
--- 	if theatreDoorSequences then
--- 		for i=1, theatreDoorSequences.numChildren do
--- 			theatreDoorSequences[i]:play({
--- 				showLastFrame = false,
--- 				playBackward = false,
--- 				autoLoop = true,
--- 				palindromicLoop = false,
--- 				delay = 0,
--- 				intervalTime = 30,
--- 				maxIterations = 1,
--- 				onTouch = function ()
--- 					scene.playOutboundAnimationSequences();
--- 				end
--- 			});
--- 		end
--- 	end
-
-	local outboundToTheatreAnimationFiles = {
-	"MDMT_LandingPage_UsherDoorAnim_c.xml",
-	"MDMT_LandingPage_UsherDoorAnim_b.xml",
-	"MDMT_LandingPage_UsherDoorAnim_a.xml"
-	 };
-		-- preload the animation data (XML and images) early
-	outboundToTheatreAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(outboundToTheatreAnimationFiles, animationXMLBase, animationImageBase);
-	FRC_Layout.scaleToFit(outboundToTheatreAnimationSequences);
-	bgGroup:insert(outboundToTheatreAnimationSequences);
-
-	-- exit to module sequence - TODO: need to set up to use this
-	sceneLayoutMethods.playOutboundAnimationSequences = function()
-
-		-- if (scene.trainWhistle) then
-		-- 	audio.play(scene.trainWhistle, { channel= 22 }); -- { channel=_G.SFX_CHANNEL });
-		-- end
-
-		for i=1, outboundToTheatreAnimationSequences.numChildren do
-			outboundToTheatreAnimationSequences[i]:play({
-				showLastFrame = true,
-				playBackward = false,
-				autoLoop = false,
-				palindromicLoop = false,
-				delay = 0,
-				intervalTime = 30,
-				maxIterations = 1,
-				onCompletion = function ()
-					if (outboundToTheatreAnimationSequences) then
-						if (outboundToTheatreAnimationSequences.numChildren) then
-							for i=1, outboundToTheatreAnimationSequences.numChildren do
-								local anim = outboundToTheatreAnimationSequences[i];
-								if (anim) then
-									-- if (anim.isPlaying) then
-										anim.dispose();
-									-- end
-									-- anim.remove();
-								end
-							end
-						end
-						outboundToTheatreAnimationSequences = nil;
-					end
-					--[[ timer.performWithDelay(6000, function()
-						storyboard.gotoScene(destinationModule);
-					end, 1);
-					--]]
-
-				end
-			});
-		end
-		--]]
-
-		-- this is a hokey way to move to the next module at roughly the time that the animation is completed
-		-- ideally this would be triggered by an onComplete function attached to the outboundToTheatreAnimationSequences[i]:play({ call above
-		scene.outboundTimer = timer.performWithDelay(1400, function()
-			scene.outboundTimer = nil;
-			if (outboundToTheatreAnimationSequences) then
-				for i=1, outboundToTheatreAnimationSequences.numChildren do
-					outboundToTheatreAnimationSequences[i]:stop();
-				end
-			end
-			if (not _G.ANDROID_DEVICE) then
-				if (system.getInfo("environment") ~= "simulator") then
-					native.setActivityIndicator(true);
-				end
-			end
-			storyboard.gotoScene('Scenes.Lobby', { effect="crossFade", time="250" });
-		end, 1);
-	end
-
 	-- position background group at correct location
 	bgGroup.x = display.contentCenterX;
 	bgGroup.y = display.contentCenterY;
@@ -442,12 +415,12 @@ function FRC_Home_Scene:disposeAnimations(self)
 	print("FRC_Home_Scene:disposeAnimations called");
 
 	-- kill the animation objects
-	if (theatreDoorSequences) then
+	if (enteringLobbyAnimationSequences) then
 		-- DEBUG:
-		print("disposing theatreDoorSequences");
+		print("disposing enteringLobbyAnimationSequences");
 
-		for i=1, theatreDoorSequences.numChildren do
-			local anim = theatreDoorSequences[i];
+		for i=1, enteringLobbyAnimationSequences.numChildren do
+			local anim = enteringLobbyAnimationSequences[i];
 			if (anim) then
 				if (anim.isPlaying) then
 					anim:stop();
@@ -455,7 +428,7 @@ function FRC_Home_Scene:disposeAnimations(self)
 				anim:dispose();
 			end
 		end
-		theatreDoorSequences = nil;
+		enteringLobbyAnimationSequences = nil;
 	end
 end
 

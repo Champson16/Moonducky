@@ -1,0 +1,160 @@
+﻿/* mouse-memoirs-regular - latin */
+@font-face {
+  font-family: 'Mouse Memoirs';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Mouse Memoirs'), local('MouseMemoirs-Regular'),
+       url('mouse-memoirs-v4-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+ */
+       url('mouse-memoirs-v4-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+
+body
+{
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-weight: 400;
+	font-size: 24px;
+}
+
+p
+{
+	color: #000;
+	font-size: 20px;
+	text-align: left;
+}
+
+/*
+iframe[seamless]{
+    background-color: transparent;
+    border: 0px none transparent;
+    padding: 0px;
+    overflow: auto;
+	display:block;
+	width:100%!important;
+	height:100%!important;
+}
+
+
+.contentFrame {
+    position: relative;
+    padding-bottom: 100%;
+    padding-top: 30px;
+    height: 0;
+    overflow: scroll;
+}
+
+.contentFrame iframe {
+    position: absolute;
+    top: 0; 
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+*/
+
+h1,h2,h3,h4,h5,h6 { font-family:'Mouse Memoirs', Open Sans, Arial, Helvetica, sans-serif; padding:0px; margin:0px; font-weight:normal;}
+
+h1 {
+	margin: 15px 0 0px 0;
+	font-size: 40px;
+	color: #d43b29;
+	font-weight: 400;
+	text-shadow: 0px 0px;
+	border-bottom-width: thick;
+	border-bottom-style: solid;
+}
+h2 {
+	margin: 25px 0 0px 0;
+	font-size: 34px;
+	color: #0079c2;
+	font-weight: 400;
+	border-bottom-width: medium;
+	border-bottom-style: ridge;
+}
+h3 {
+	margin: 25px 0 0px 0;
+	font-size: 26px;
+	color: #0079c2;
+	font-weight: 400;
+}
+
+
+/* Tab Content */
+ul.tabs
+{
+	padding-top: 6px;
+	padding-right: 0;
+	padding-left: 0;
+	padding-bottom: 6px;
+	font-size: 0;
+	margin: 0;
+	list-style-type: none;
+	text-align: center; /*set to left, center, or right to align the tabs as desired*/
+}
+
+ul.tabs li
+{
+  display: inline;
+  margin: 0;
+  margin-right:4px; /*distance between tabs*/
+}
+
+ul.tabs li a
+{
+	font-weight: 400;
+	font-variant: normal;
+	font-style: normal;
+	font-size: 30px;
+	font-family: 'Mouse Memoirs';
+	text-decoration: none;
+	position: relative;
+	padding: 6px 14px;
+	border: 1px solid #B7B7B7;
+	color: #254f45;
+	background: url(tabbg2.gif) repeat-x 0 0;
+	border-radius: 6px 6px 0 0;
+	outline: none;
+}
+
+ul.tabs li a:visited
+{
+  color: #000;
+}
+
+ul.tabs li a:hover
+{
+	background: White url(tabbg.gif) repeat-x 0 0;
+	font-size: 30px;
+}
+
+ul.tabs li.selected a, ul.tabs li.selected a:hover
+{
+	position: relative;
+	top: 0px;
+	color: #0079c2;
+	background: white url(tabbg.gif) 0 0 repeat-x;
+	border-bottom-color: #F9F9F9;
+	border-bottom-width: 1px;
+}
+
+ul.tabs li.selected a:hover
+{
+  text-decoration: none;
+}
+
+div.tabcontents
+{
+	background-color: #FFFFFF; /* #F9F9F9; */
+	border-top: 1px solid #B7B7B7;
+	padding: 30px 16px;
+}
+.tabcontents .calloutGraphic {
+	border: medium dashed #FC9193;
+	font-family: 'Mouse Memoirs', Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	background-color: #FFE3E4;
+}
+.tabcontents .imageFloatLeft {
+	display: block;
+	float: left;
+	margin-right: 30;
+}
