@@ -173,12 +173,12 @@ function FRC_Lobby_Scene:createScene(event)
 				end
 			end
 			-- storyboard.gotoScene('Scenes.Showtime', { effect="crossFade", time="250" });
-			native.showAlert("Coming Soon!","This feature is coming soon.", { "OK" });
+			native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
 		end, 1);
 	end
 
 	sceneLayoutMethods.featureComingSoon = function()
-		native.showAlert("Coming Soon!","This feature is coming soon.", { "OK" });
+		native.showAlert("Juke Box Coming Soon!","This feature is coming soon.", { "OK" });
 	end
 
 	-- query server
@@ -406,7 +406,8 @@ function FRC_Lobby_Scene:createScene(event)
 		onRelease = function()
 			analytics.logEvent("MDMT.Lobby.Rehearsal");
 			-- storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time="250" });
-			native.showAlert("Coming Soon!","This feature is coming soon.", { "OK" });
+			--native.showAlert("Rehearsal Coming Soon!","This feature is coming soon.", { "OK" });
+         storyboard.gotoScene('Scenes.Rehearsal'); --EFM
 		end
 	});
 	rehearsalButton.anchorX = 0.5;

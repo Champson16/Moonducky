@@ -1,5 +1,10 @@
-_G.dprint  = print
---_G.print = function() end
+_G.edmode = false --EFM
+if( _G.edmode ) then
+   _G.dprint  = print --EFM
+   _G.print = function() end --EFM
+else
+   _G.dprint = function() end --EFM
+end
 --require("mobdebug").start() -- ZeroBrane Users
 -----------------------------------------------------------------------------------------
 --
