@@ -92,9 +92,9 @@ function FRC_Home_Scene:createScene(event)
 			FRC_AudioManager:findGroup("ambientMusic"):pause();
 		end
 		local videoData = {
-		HD_VIDEO_PATH = videoBase .. 'MDMT_MusicVideo_HamsterWantToBeFree_HD.m4v',
+		HD_VIDEO_PATH = videoBase .. 'MDMT_MusicVideo_HamsterWantToBeFree_HD.mp4',
 		HD_VIDEO_SIZE = { width = 1080, height = 720 },
-		SD_VIDEO_PATH = videoBase .. 'MDMT_MusicVideo_HamsterWantToBeFree_SD.m4v',
+		SD_VIDEO_PATH = videoBase .. 'MDMT_MusicVideo_HamsterWantToBeFree_SD.mp4',
 		SD_VIDEO_SIZE = { width = 576, height = 384 },
 		VIDEO_SCALE = 'FULLSCREEN',
 		VIDEO_LENGTH = 146000 };
@@ -114,9 +114,9 @@ function FRC_Home_Scene:createScene(event)
 			FRC_AudioManager:findGroup("ambientMusic"):pause();
 		end
 		local videoData = {
-		HD_VIDEO_PATH = videoBase .. 'MDMT_MusicVideo_MechanicalCow_HD.m4v',
+		HD_VIDEO_PATH = videoBase .. 'MDMT_MusicVideo_MechanicalCow_HD.mp4',
 		HD_VIDEO_SIZE = { width = 1080, height = 720 },
-		SD_VIDEO_PATH = videoBase .. 'MDMT_MusicVideo_MechanicalCow_SD.m4v',
+		SD_VIDEO_PATH = videoBase .. 'MDMT_MusicVideo_MechanicalCow_SD.mp4',
 		SD_VIDEO_SIZE = { width = 576, height = 384 },
 		VIDEO_SCALE = 'FULLSCREEN',
 		VIDEO_LENGTH = 204000 };

@@ -69,7 +69,7 @@ FRC_SplashScreen.new = function(nextScene)
       videoDimensions = videoData.SD_VIDEO_SIZE;
     end
     -- DEBUG
-    print("Playing video: ", videoFile);
+    dprint("Playing video: ", videoFile);
     if (videoFile) then
       -- we're going to fill the screen
       splashGroup.currentVideo = native.newVideo(0, 0, videoDimensions.width, videoDimensions.height);
@@ -113,6 +113,7 @@ FRC_SplashScreen.new = function(nextScene)
   -- ok so we are on device and we have videos to play
   -- let's play them one at a time
   function splashGroup.getNextVideo()
+     
     splashGroup.freeMemory();
     currentVideoIndex = currentVideoIndex + 1;
     local nextVideoData = FRC_SplashScreen_Settings.DATA.VIDEOS[currentVideoIndex];

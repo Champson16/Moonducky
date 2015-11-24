@@ -1,3 +1,6 @@
+_G.dprint  = print
+--_G.print = function() end
+--require("mobdebug").start() -- ZeroBrane Users
 -----------------------------------------------------------------------------------------
 --
 -- main.lua

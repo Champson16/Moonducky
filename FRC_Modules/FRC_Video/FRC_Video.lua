@@ -68,7 +68,7 @@ FRC_Video.new = function(parentView, videoData)
       videoDimensions = videoData.SD_VIDEO_SIZE;
     end
     -- DEBUG
-    print("Playing video: ", videoFile);
+    dprint("Playing video: ", videoFile);
     if (videoFile) then
       -- we're going to fill the screen
       videoGroup.currentVideo = native.newVideo(0, 0, videoDimensions.width, videoDimensions.height);
