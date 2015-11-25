@@ -5,18 +5,8 @@ local method = {};
 
 local function getUniqueString(digits)
 	digits = digits or 20;
-	local alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
-	local s = '';
-	for i=1,digits do
-		if (i == 1) then
-			s = s .. alphabet[math.random(1, #alphabet)];
-		elseif (math.random(0,1) == 1) then
-			s = s .. math.random(0, 9);
-		else
-			s = s .. alphabet[math.random(1, #alphabet)];
-		end
-	end
-	return tostring(s);
+   local FRC_Util = require('FRC_Modules.FRC_Util.FRC_Util');
+   return FRC_Util.generateUniqueIdentifier(digits);
 end
 
 function method.play(self, options)

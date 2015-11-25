@@ -64,7 +64,7 @@ function scene.postCreateScene(self, event)
 							-- end
 						-- end);
 					-- else
-						storyboard.gotoScene('Scenes.DressingRoom');
+						storyboard.gotoScene('Scenes.Rehearsal');
 					-- end
 				end
 			},

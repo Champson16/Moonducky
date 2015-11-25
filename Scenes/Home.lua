@@ -34,7 +34,7 @@ scene.backHandler = function()
 end
 
 	if (not buildText) then
-		buildText = display.newEmbossedText(FRC_AppSettings.get("version") .. ' (' .. system.getInfo('build') .. ')', 0, 0, native.systemFontBold, 11);
+		buildText = display.newEmbossedText(FRC_AppSettings.get("version") .. ' (' .. BUILD_INFO .. ')', 0, 0, native.systemFontBold, 11);
 		buildText:setFillColor(1, 1, 1);
 		buildText.anchorX = 1.0;
 		buildText.anchorY = 1.0;

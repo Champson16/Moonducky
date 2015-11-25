@@ -8,6 +8,8 @@ local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
 local FRC_DressingRoom_Settings = require('FRC_Modules.FRC_DressingRoom.FRC_DressingRoom_Settings');
 local FRC_AppSettings = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
+local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
+
 local storyboard = require('storyboard');
 
 local scene = FRC_ArtCenter.newScene({
@@ -199,7 +201,7 @@ scene.postCreateScene = function(self, event)
 							galleryPopup:dispose();
 							galleryPopup = nil;
 							self.canvas:save(e.id);
-							self.canvas.id = FRC_ArtCenter.generateUniqueIdentifier();
+							self.canvas.id = FRC_Util.generateUniqueIdentifier();
 							self.actionBarMenu:getItem("load"):setDisabledState(false);
 							self.canvas.isDirty = false;
 						end

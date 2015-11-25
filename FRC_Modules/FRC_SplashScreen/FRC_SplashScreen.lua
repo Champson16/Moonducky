@@ -3,13 +3,6 @@ local FRC_SplashScreen_Settings = require('FRC_Modules.FRC_SplashScreen.FRC_Spla
 local FRC_Layout = require('FRC_Modules.FRC_Layout.FRC_Layout');
 local FRC_SplashScreen = {};
 
-local ANDROID_DEVICE = (system.getInfo("platformName") == "Android");
-local NOOK_DEVICE = (system.getInfo("targetAppStore") == "nook");
-local KINDLE_DEVICE = (system.getInfo("targetAppStore") == "amazon");
-if ((NOOK_DEVICE) or (KINDLE_DEVICE)) then
-  ANDROID_DEVICE = true;
-end
-
 FRC_SplashScreen.new = function(nextScene)
 	display.setDefault("background", 1.0, 1.0, 1.0);
   local screenW, screenH = FRC_Layout.getScreenDimensions();
@@ -130,7 +123,7 @@ FRC_SplashScreen.new = function(nextScene)
 
   -- check to see if we even have videos to play
   -- first, if we are in the simulator, nevermind
-  if (system.getInfo("environment") == "simulator") then
+  if ( ON_SIMULATOR ) then
     splashGroup.gotoNextScene();
   else
     -- next, find out whether or not we have videos

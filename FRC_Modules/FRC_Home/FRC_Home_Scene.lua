@@ -10,6 +10,8 @@ local FRC_AnimationManager = require('FRC_Modules.FRC_AnimationManager.FRC_Anima
 local FRC_AudioManager = require('FRC_Modules.FRC_AudioManager.FRC_AudioManager');
 local FRC_Video = require('FRC_Modules.FRC_Video.FRC_Video');
 local FRC_AppSettings = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
+local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
+
 local analytics = import("analytics");
 
 local animationXMLBase = 'FRC_Assets/MDMT_Assets/Animation/XMLData/';
@@ -22,9 +24,6 @@ local videoBase = 'FRC_Assets/MDMT_Assets/Videos/';
 
 local videoPlayer;
 
-function math.round(num, idp)
-	return tonumber(string.format("%." .. (idp or 0) .. "f", num));
-end
 
 local function UI(key)
 	return FRC_Home_Settings.UI[key];
@@ -33,22 +32,6 @@ end
 local function DATA(key, baseDir)
 	baseDir = baseDir or system.ResourceDirectory;
 	return FRC_DataLib.readJSON(FRC_Home_Settings.DATA[key], baseDir);
-end
-
-local generateUniqueIdentifier = function(digits)
-	digits = digits or 20;
-	local alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
-	local s = '';
-	for i=1,digits do
-		if (i == 1) then
-			s = s .. alphabet[math.random(1, #alphabet)];
-		elseif (math.random(0,1) == 1) then
-			s = s .. math.random(0, 9);
-		else
-			s = s .. alphabet[math.random(1, #alphabet)];
-		end
-	end
-	return tostring(s);
 end
 
 function FRC_Home_Scene:createScene(event)
@@ -61,7 +44,7 @@ function FRC_Home_Scene:createScene(event)
 	local sceneLayoutMethods = {};
 	local sceneLayout = {};
 
-	if ((not self.id) or (self.id == '')) then self.id = generateUniqueIdentifier(20); end
+	if ((not self.id) or (self.id == '')) then self.id = FRC_Util.generateUniqueIdentifier(20); end
 
 	if (FRC_Home_Scene.preCreateScene) then
 		FRC_Home_Scene:preCreateScene(event);
@@ -193,7 +176,7 @@ function FRC_Home_Scene:createScene(event)
 				end
 			end
 			if (not _G.ANDROID_DEVICE) then
-				if (system.getInfo("environment") ~= "simulator") then
+				if ( ON_SIMULATOR ) then
 					native.setActivityIndicator(true);
 				end
 			end
@@ -341,7 +324,7 @@ function FRC_Home_Scene:createScene(event)
 		onRelease = function()
 			analytics.logEvent("MDMT.Home.ArtCenter");
 			if (not _G.ANDROID_DEVICE) then
-				if (system.getInfo("environment") ~= "simulator") then
+				if ( not ON_SIMULATOR ) then
 					native.setActivityIndicator(true);
 				end
 			end
@@ -377,7 +360,11 @@ function FRC_Home_Scene:createScene(event)
 		y = 477 - 368,
 		onRelease = function()
 			analytics.logEvent("MDMT.Home.DressingRoom");
-			storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time="250" });
+         if( _G.edmode ) then
+            storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time="250" }); -- EFM
+         else
+            storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time="250" });  -- EFM
+         end			
 		end
 	});
 	dressingRoomButton.anchorX = 0.5;

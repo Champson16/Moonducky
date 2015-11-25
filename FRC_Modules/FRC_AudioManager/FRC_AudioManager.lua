@@ -3,7 +3,6 @@ local AudioManager = {};
 
 local FRC_DataLib = require("FRC_Modules.FRC_DataLib.FRC_DataLib");
 
-math.randomseed(os.time());
 AudioManager.name = "FRC_AudioManager";
 AudioManager.groups = {};
 
@@ -27,18 +26,9 @@ function AudioManager:isGroupNameTaken(name)
 end
 
 function AudioManager:getUniqueGroupName(digits)
-	digits = digits or 5;
-	local alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
-	local s = '';
-	for i=1,digits do
-		if (i == 1) then
-			s = s .. alphabet[math.random(1, #alphabet)];
-		elseif (math.random(0,1) == 1) then
-			s = s .. math.random(0, 9);
-		else
-			s = s .. alphabet[math.random(1, #alphabet)];
-		end
-	end
+   digits = digits or 5;
+   local FRC_Util = require('FRC_Modules.FRC_Util.FRC_Util');
+   local s = FRC_Util.generateUniqueIdentifier(digits);
 
 	local name = tostring(s);
 	if (self:isGroupNameTaken(name)) then
@@ -65,17 +55,8 @@ end
 
 function AudioManager:getUniqueHandleName(digits)
 	digits = digits or 5;
-	local alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
-	local s = '';
-	for i=1,digits do
-		if (i == 1) then
-			s = s .. alphabet[math.random(1, #alphabet)];
-		elseif (math.random(0,1) == 1) then
-			s = s .. math.random(0, 9);
-		else
-			s = s .. alphabet[math.random(1, #alphabet)];
-		end
-	end
+   local FRC_Util = require('FRC_Modules.FRC_Util.FRC_Util');
+   local s = FRC_Util.generateUniqueIdentifier(digits);
 
 	local name = tostring(s);
 	if (self:isHandleNameTaken(name)) then

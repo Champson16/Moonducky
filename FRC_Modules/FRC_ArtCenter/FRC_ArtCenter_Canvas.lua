@@ -2,6 +2,8 @@ local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_
 local FRC_ArtCenter_Scene = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Scene');
 local FRC_ArtCenter = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
+local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
+
 local Canvas = {};
 
 local function fillBackground(self, r, g, b, a)
@@ -251,7 +253,7 @@ end
 local load = function(self, data)
 	-- clear canvas and generate a new id
 	FRC_ArtCenter_Scene.clearCanvas(true);
-	self.id = FRC_ArtCenter.generateUniqueIdentifier();
+	self.id = FRC_Util.generateUniqueIdentifier();
 
 	if (type(data) == "string") then
 		local loadId = data;
@@ -495,7 +497,7 @@ Canvas.new = function(width, height, x, y, borderWidth, borderHeight)
 
 	local eraserColor = FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR;
 	local canvas = display.newContainer(width, height);
-	canvas.id = FRC_ArtCenter.generateUniqueIdentifier();
+	canvas.id = FRC_Util.generateUniqueIdentifier();
 	canvas.layerBgColor = display.newGroup(); canvas:insert(canvas.layerBgColor);
 	canvas.layerBgImageColor = display.newSnapshot(width, height); canvas.layerBgImageColor.canvasMode = "discard";
 

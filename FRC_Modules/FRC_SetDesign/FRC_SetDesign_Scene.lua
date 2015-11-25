@@ -4,6 +4,8 @@ local json = require('json');
 local FRC_SetDesign_Settings = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign_Settings');
 local FRC_Layout = require('FRC_Modules.FRC_Layout.FRC_Layout');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
+local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
+
 local FRC_SetDesign_Scene = storyboard.newScene();
 local FRC_ArtCenter;
 local artCenterLoaded = pcall(function()
@@ -19,28 +21,13 @@ local function DATA(key, baseDir)
 	return FRC_DataLib.readJSON(FRC_SetDesign_Settings.DATA[key], baseDir);
 end
 
-local generateUniqueIdentifier = function(digits)
-	digits = digits or 20;
-	local alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
-	local s = '';
-	for i=1,digits do
-		if (i == 1) then
-			s = s .. alphabet[math.random(1, #alphabet)];
-		elseif (math.random(0,1) == 1) then
-			s = s .. math.random(0, 9);
-		else
-			s = s .. alphabet[math.random(1, #alphabet)];
-		end
-	end
-	return tostring(s);
-end
 
 FRC_SetDesign_Scene.setIndex = 1;
 FRC_SetDesign_Scene.backdropIndex = 1;
 
 function FRC_SetDesign_Scene:saveCurrentSet(e)
 	local id = e.id;
-	if ((not id) or (id == '')) then id = (generateUniqueIdentifier(20)); end
+	if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)); end
 	local saveGroup = self.view.saveGroup;
 
 	-- [[
@@ -80,7 +67,7 @@ end
 
 function FRC_SetDesign_Scene:loadSet(e)
 	local id = e.id;
-	if ((not id) or (id == '')) then id = (generateUniqueIdentifier(20)); end
+	if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)); end
 	self.changeSet(e.data.setIndex);
 	self.changeBackdrop(e.data.backdropIndex);
 	self.id = id;
@@ -89,7 +76,7 @@ end
 function FRC_SetDesign_Scene:createScene(event)
 	local view = self.view;
 	local screenW, screenH = FRC_Layout.getScreenDimensions();
-	if ((not self.id) or (self.id == '')) then self.id = generateUniqueIdentifier(20); end
+	if ((not self.id) or (self.id == '')) then self.id = FRC_Util.generateUniqueIdentifier(20); end
 
 	if (FRC_SetDesign_Scene.preCreateScene) then
 		FRC_SetDesign_Scene:preCreateScene(event);

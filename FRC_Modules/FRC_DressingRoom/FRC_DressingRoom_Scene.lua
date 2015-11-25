@@ -6,14 +6,12 @@ local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_DressingRoom_Scene = storyboard.newScene();
 local FRC_AnimationManager = require('FRC_Modules.FRC_AnimationManager.FRC_AnimationManager');
 local FRC_AudioManager = require('FRC_Modules.FRC_AudioManager.FRC_AudioManager');
+local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
 
 local character_x = 0;
 local character_y = -16;
 local eyeTimer;
 
-function math.round(num, idp)
-	return tonumber(string.format("%." .. (idp or 0) .. "f", num));
-end
 
 local function UI(key)
 	return FRC_DressingRoom_Settings.UI[key];
@@ -27,25 +25,9 @@ end
 local animationXMLBase = UI('ANIMATION_XML_BASE');
 local animationImageBase = UI('ANIMATION_IMAGE_BASE');
 
-local generateUniqueIdentifier = function(digits)
-	digits = digits or 20;
-	local alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
-	local s = '';
-	for i=1,digits do
-		if (i == 1) then
-			s = s .. alphabet[math.random(1, #alphabet)];
-		elseif (math.random(0,1) == 1) then
-			s = s .. math.random(0, 9);
-		else
-			s = s .. alphabet[math.random(1, #alphabet)];
-		end
-	end
-	return tostring(s);
-end
-
 function FRC_DressingRoom_Scene:save(e)
 	local id = e.id;
-	if ((not id) or (id == '')) then id = (generateUniqueIdentifier(20)); end
+	if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)); end
 	local saveGroup = self.view.saveGroup;
 
 	-- create mask (to be used for Stamp in ArtCenter)
@@ -136,7 +118,7 @@ end
 
 function FRC_DressingRoom_Scene:load(e)
 	local id = e.id;
-	if ((not id) or (id == '')) then id = (generateUniqueIdentifier(20)); end
+	if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)); end
 	self.changeItem('Character', e.data.character, v);
 	for k,v in pairs(e.data.categories) do
 		self.changeItem(k, e.data.character, v);
@@ -147,7 +129,7 @@ end
 function FRC_DressingRoom_Scene:createScene(event)
 	local view = self.view;
 	local screenW, screenH = FRC_Layout.getScreenDimensions();
-	if ((not self.id) or (self.id == '')) then self.id = generateUniqueIdentifier(20); end
+	if ((not self.id) or (self.id == '')) then self.id = FRC_Util.generateUniqueIdentifier(20); end
 
 	if (FRC_DressingRoom_Scene.preCreateScene) then
 		FRC_DressingRoom_Scene:preCreateScene(event);

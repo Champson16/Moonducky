@@ -64,11 +64,7 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_down.png',
 				onRelease = function()
-               if( _G.edmode ) then
-                  storyboard.gotoScene('Scenes.Rehearsal'); --EFM
-               else
-                  storyboard.gotoScene('Scenes.DressingRoom'); --EFM
-               end
+               storyboard.gotoScene('Scenes.DressingRoom');               
 				end
 			},
 			{

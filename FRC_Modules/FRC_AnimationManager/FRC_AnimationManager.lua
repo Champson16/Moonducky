@@ -921,7 +921,7 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
           end
         else
           xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
-          if (system.getInfo("environment") == "simulator") then
+          if ( ON_SIMULATOR ) then
               -- since we could not read a Lua table, let's convert the xml and then save it for later (simulator ONLY!)
             dataToSave = table.serialize( "xmltable", xmltable, "" );
             -- DEBUG:
@@ -934,7 +934,7 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
         end
       else
         xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
-        if (system.getInfo("environment") == "simulator") then
+        if ( ON_SIMULATOR ) then
           -- since we didn't find a Lua table, let's convert the xml and then save it for later (simulator ONLY!)
           dataToSave = table.serialize( "xmltable", xmltable, "" );
           -- DEBUG:

@@ -22,7 +22,6 @@ local defaults = {
 		}
 	}
 };
-math.randomseed(os.time());
 
 local audios = {};
 local loaded = {};

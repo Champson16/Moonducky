@@ -19,13 +19,13 @@ local function getSaveData()
 end
 
 local function detectPlatform()
-	if (system.getInfo("environment") == "simulator") then
+	if ( ON_SIMULATOR ) then
 		module.platform = debugPlatform;
 		return;
 	end
 
 	local platform = system.getInfo("platformName");
-	if (platformName == "iPhone OS") then
+	if( platformName == "iPhone OS" ) then
 		module.platform = "apple";
 		return;
 	else

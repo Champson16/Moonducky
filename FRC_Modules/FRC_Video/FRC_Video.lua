@@ -2,12 +2,6 @@ local storyboard = require('storyboard');
 local FRC_Layout = require('FRC_Modules.FRC_Layout.FRC_Layout');
 local FRC_Video = {};
 
-local ANDROID_DEVICE = (system.getInfo("platformName") == "Android");
-local NOOK_DEVICE = (system.getInfo("targetAppStore") == "nook");
-local KINDLE_DEVICE = (system.getInfo("targetAppStore") == "amazon");
-if ((NOOK_DEVICE) or (KINDLE_DEVICE)) then
-  ANDROID_DEVICE = true;
-end
 
 FRC_Video.new = function(parentView, videoData)
 	display.setDefault("background", 1.0, 1.0, 1.0);
@@ -111,7 +105,7 @@ FRC_Video.new = function(parentView, videoData)
 
   -- check to see if we even have a video to play
   -- first, if we are in the simulator, nevermind
-  if (system.getInfo("environment") == "simulator") then
+  if(  ON_SIMULATOR ) then
     videoGroup.skipVideo();
   else
     -- next, find out whether or not we have video data

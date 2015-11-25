@@ -1,3 +1,12 @@
+-- EFM 
+--
+--          This module is not currently being loaded.
+--
+--          This module also has at least one error (lines 44..45) 'platformName' refered to but not initialized
+--
+--          Tip: Use values set in FRC_Globals to init this code, or consolidate the two.
+--
+-- EFM 
 local version = "1.0.0";
 
 --[[==============================================================
@@ -26,7 +35,7 @@ module.debugPlatform = "apple";
 module.androidPlatform = false;
 module.debugMode = false;
 
-if (system.getInfo("environment") == "simulator") then
+if( ON_SIMULATOR ) then
 	module.detected = module.debugPlatform;
 	module.debugMode = true;
 	return module;
