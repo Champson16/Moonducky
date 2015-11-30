@@ -150,19 +150,22 @@ function FRC_Rehearsal_Scene:createScene(event)
    -- DEBUG:
    dprint("FRC_Rehearsal_Scene - createScene")
    
-   --[[
 	if ((self.preCreateScene) and (type(self.preCreateScene) == 'function')) then
 		self.preCreateScene(self, event);
 	end
    
+   ----[[
    -- FRC_Rehearsal.getSavedData()
    self.saveData = DATA('DATA_FILENAME', system.DocumentsDirectory)
    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal').saveData = FRC_DataLib.readJSON(saveDataFilename, system.DocumentsDirectory)
+   --]]
 
    local bg = display.newImageRect(view, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'))
    FRC_Layout.scaleToFit(bg)
    bg.x, bg.y = display.contentCenterX, display.contentCenterY
 
+   
+   --[[
    -- setup a container that will hold character and all layers of clothing
    --local chartainer = display.newContainer(display.contentWidth, display.contentHeight)
    local chartainer = display.newGroup()
@@ -346,7 +349,7 @@ function FRC_Rehearsal_Scene:createScene(event)
          changeItem(categoryData[i].id, selectedCharacter, 1)
       end
    end
-
+   
    -- create sceneLayout items
    local sceneLayoutMethods = {}
    local sceneLayout = {}
@@ -719,17 +722,17 @@ function FRC_Rehearsal_Scene:createScene(event)
 
    view:insert(categoriesContainer)
 
+   --]]
    if (FRC_Rehearsal_Scene.postCreateScene) then
       FRC_Rehearsal_Scene:postCreateScene(event)
    end
-   --]]
+   
 end
 
 
 function FRC_Rehearsal_Scene:enterScene(event)
    local view = self.view
    
-   --[[
    if (FRC_Rehearsal_Scene.preEnterScene) then
       FRC_Rehearsal_Scene:preEnterScene(event)
    end
@@ -739,31 +742,31 @@ function FRC_Rehearsal_Scene:enterScene(event)
    if (FRC_Rehearsal_Scene.postEnterScene) then
       FRC_Rehearsal_Scene:postEnterScene(event)
    end
-   --]]
+
 end
 
 
 function FRC_Rehearsal_Scene:exitScene(event)
    local view = self.view
-   --[[
    if (FRC_Rehearsal_Scene.preExitScene) then
       FRC_Rehearsal_Scene:preExitScene(event)
    end
 
+   --[[
    if (eyeTimer) then
       pcall(timer.cancel, eyeTimer)
       eyeTimer = nil
    end
+   --]]
 
    if (FRC_Rehearsal_Scene.postExitScene) then
       FRC_Rehearsal_Scene:postExitScene(event)
    end
-   --]]
+   
 end
 
 function FRC_Rehearsal_Scene:didExitScene(event)
    local view = self.view
-   --[[
    if (FRC_Rehearsal_Scene.preDidExitScene) then
       FRC_Rehearsal_Scene:preDidExitScene(event)
    end
@@ -771,7 +774,6 @@ function FRC_Rehearsal_Scene:didExitScene(event)
    if (FRC_Rehearsal_Scene.postDidExitScene) then
       FRC_Rehearsal_Scene:postDidExitScene(event)
    end
-   --]]
 end
 
 
