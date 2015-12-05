@@ -194,7 +194,7 @@ function scene.postCreateScene(self, event)
 							end
 						});
 					end
-					showLoadPopup();
+					-- showLoadPopup(); -- TEMP DISABLED UNTIL WE ARCHITECT DATA FORMAT FOR SHOWS
 				end
 			},
 			{

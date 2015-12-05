@@ -113,16 +113,6 @@ function FRC_Home_Scene:createScene(event)
 		end
 	end
 
-	local enteringLobbyAnimationFiles = {
-	"MDMT_LandingPage_UsherDoorAnim_c.xml",
-	"MDMT_LandingPage_UsherDoorAnim_b.xml",
-	"MDMT_LandingPage_UsherDoorAnim_a.xml"
-	 };
-		-- preload the animation data (XML and images) early
-	enteringLobbyAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(enteringLobbyAnimationFiles, animationXMLBase, animationImageBase);
-	FRC_Layout.scaleToFit(enteringLobbyAnimationSequences);
-	bgGroup:insert(enteringLobbyAnimationSequences);
-
 	-- exit to module sequence
 	sceneLayoutMethods.playEnteringLobbyAnimationSequences = function()
 
@@ -305,6 +295,21 @@ function FRC_Home_Scene:createScene(event)
 		end
 	end
 
+	local enteringLobbyAnimationFiles = {
+	"MDMT_LandingPage_UsherDoorAnim_c.xml",
+	"MDMT_LandingPage_UsherDoorAnim_b.xml",
+	"MDMT_LandingPage_UsherDoorAnim_a.xml"
+	 };
+		-- preload the animation data (XML and images) early
+	enteringLobbyAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(enteringLobbyAnimationFiles, animationXMLBase, animationImageBase);
+	FRC_Layout.scaleToFit(enteringLobbyAnimationSequences);
+	local xOffset = (screenW - (contentW * bg.xScale)) * 0.5;
+	enteringLobbyAnimationSequences.x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset;
+	local yOffset = (screenH - (contentH * bg.yScale)) * 0.5;
+	enteringLobbyAnimationSequences.y = ((bg.contentHeight - screenH) * 0.5) + bg.contentBounds.yMin + yOffset;
+
+	bgGroup:insert(enteringLobbyAnimationSequences);
+
 	-- insert the main function buttons
 	-- Art center
 	-- Set design
@@ -364,7 +369,7 @@ function FRC_Home_Scene:createScene(event)
             storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time="250" }); -- EFM
          else
             storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time="250" });  -- EFM
-         end			
+         end
 		end
 	});
 	dressingRoomButton.anchorX = 0.5;

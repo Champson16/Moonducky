@@ -384,7 +384,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             yScroll = false,
             leftPadding = button_spacing,
             rightPadding = button_spacing,
-            bgColor = {0.27, 0.27, 0.27, 1.0} -- { 1.0, 1.0, 1.0, 1.0 }
+            bgColor = {0.27, 0.27, 0.27, 0.35} -- { 1.0, 1.0, 1.0, 1.0 }
          })
       scroller.bg.alpha = 0.65
       view:insert(scroller)
@@ -559,7 +559,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    --local showIntrumentSample --EFM
    local testGroup = display.newGroup()
    view:insert( testGroup )
-   
+
    local idToFileMap = {}
    idToFileMap.Microphone = 8
    idToFileMap.Bass = 1

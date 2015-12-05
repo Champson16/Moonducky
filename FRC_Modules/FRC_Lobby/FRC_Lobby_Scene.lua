@@ -90,15 +90,6 @@ function FRC_Lobby_Scene:createScene(event)
 	-- 	end
 	-- end
 
-	local theatreDoorAnimationFiles = {
-	"MDMT_Lobby_UsherDoorAnim_b.xml",
-	"MDMT_Lobby_UsherDoorAnim_a.xml"
-	 };
-		-- preload the animation data (XML and images) early
-	theatreDoorSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorAnimationFiles, animationXMLBase, animationImageBase);
-	FRC_Layout.scaleToFit(theatreDoorSequences);
-	bgGroup:insert(theatreDoorSequences);
-
 	-- exit to module sequence - TODO: need to set up to use this
 	sceneLayoutMethods.playOutboundAnimationSequences = function()
 
@@ -142,16 +133,11 @@ function FRC_Lobby_Scene:createScene(event)
 
 		-- this is a hokey way to move to the next module at roughly the time that the animation is completed
 		-- ideally this would be triggered by an onComplete function attached to the outboundToTheatreAnimationSequences[i]:play({ call above
-		scene.outboundTimer = timer.performWithDelay(4400, function()
+		scene.outboundTimer = timer.performWithDelay(1600, function()
 			scene.outboundTimer = nil;
 			if (theatreDoorSequences) then
 				for i=1, theatreDoorSequences.numChildren do
 					theatreDoorSequences[i]:stop();
-				end
-			end
-			if( not ANDROID_DEVICE ) then
-				if(  ON_SIMUALTOR ) then
-					native.setActivityIndicator(true);
 				end
 			end
 			-- storyboard.gotoScene('Scenes.Showtime', { effect="crossFade", time="250" });
@@ -184,6 +170,7 @@ function FRC_Lobby_Scene:createScene(event)
 	end
 	--]]
 
+  -- TODO ED: This entire scene layout processing code block needs to be a separate component used by any scene
 	-- set up the scene layout
 	-- Get lua tables from JSON data
 	local sceneLayoutData = DATA('SCENELAYOUT');
@@ -198,12 +185,11 @@ function FRC_Lobby_Scene:createScene(event)
 			if (sceneLayoutData[i].left) then
 				sceneLayoutData[i].left = (sceneLayoutData[i].left * bg.xScale);
 				sceneLayout[i].x = sceneLayoutData[i].left - ((screenW - contentW) * 0.5) + (sceneLayout[i].contentWidth * 0.5);
-
 			elseif (sceneLayoutData[i].right) then
 				sceneLayoutData[i].right = (sceneLayoutData[i].right * bg.xScale);
 				sceneLayout[i].x = contentW - sceneLayoutData[i].right + ((screenW - contentW) * 0.5) - (sceneLayout[i].contentWidth * 0.5);
 			elseif (sceneLayoutData[i].xCenter) then
-				sceneLayout[i].x = display.contentCenterX + (sceneLayoutData[i].xCenter * bg.xScale);
+				sceneLayout[i].x = display.contentCenterX; -- + (sceneLayoutData[i].xCenter * bg.xScale);
 			else
 				sceneLayoutData[i].x = sceneLayoutData[i].x * bg.xScale;
 				sceneLayout[i].x = sceneLayoutData[i].x - ((screenW - contentW) * 0.5);
@@ -215,12 +201,14 @@ function FRC_Lobby_Scene:createScene(event)
 				sceneLayoutData[i].bottom = sceneLayoutData[i].bottom * bg.yScale;
 				sceneLayout[i].y = contentH - sceneLayoutData[i].bottom + ((screenH - contentH) * 0.5) - (sceneLayout[i].contentHeight * 0.5);
 			elseif (sceneLayoutData[i].yCenter) then
-				sceneLayout[i].x = display.contentCenterY + (sceneLayoutData[i].yCenter * bg.yScale);
+				sceneLayout[i].y = display.contentCenterY; -- + (sceneLayoutData[i].yCenter * bg.yScale);
 			else
 				sceneLayoutData[i].y = sceneLayoutData[i].y * bg.yScale;
 				sceneLayout[i].y = sceneLayoutData[i].y - ((screenH - contentH) * 0.5);
 			end
 
+			-- DEBUG
+			print("scene layout object final x/y: ", sceneLayout[i].x .. " / " .. sceneLayout[i].y);
 
 		elseif sceneLayoutData[i].animationFiles then
 			-- get the list of animation files and create the animation object
@@ -231,7 +219,6 @@ function FRC_Lobby_Scene:createScene(event)
 			if (sceneLayoutData[i].left) then
 				sceneLayoutData[i].left = (sceneLayoutData[i].left * bg.xScale);
 				sceneLayout[i].x = sceneLayoutData[i].left - ((screenW - contentW) * 0.5) + (sceneLayout[i].contentWidth * 0.5);
-
 			elseif (sceneLayoutData[i].right) then
 				sceneLayoutData[i].right = (sceneLayoutData[i].right * bg.xScale);
 				sceneLayout[i].x = contentW - sceneLayoutData[i].right + ((screenW - contentW) * 0.5) - (sceneLayout[i].contentWidth * 0.5);
@@ -283,6 +270,19 @@ function FRC_Lobby_Scene:createScene(event)
 			end
 		end
 	end
+
+	local theatreDoorAnimationFiles = {
+	"MDMT_Lobby_UsherDoorAnim_b.xml",
+	"MDMT_Lobby_UsherDoorAnim_a.xml"
+	 };
+		-- preload the animation data (XML and images) early
+	theatreDoorSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorAnimationFiles, animationXMLBase, animationImageBase);
+	FRC_Layout.scaleToFit(theatreDoorSequences);
+	local xOffset = (screenW - (contentW * bg.xScale)) * 0.5;
+	theatreDoorSequences.x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset;
+	local yOffset = (screenH - (contentH * bg.yScale)) * 0.5;
+	theatreDoorSequences.y = ((bg.contentHeight - screenH) * 0.5) + bg.contentBounds.yMin + yOffset;
+	bgGroup:insert(theatreDoorSequences);
 
 	-- insert the main function buttons
 	-- Art center

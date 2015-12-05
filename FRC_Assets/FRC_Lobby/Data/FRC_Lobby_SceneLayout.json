@@ -19,19 +19,19 @@
 			"onTouch": "playOutboundAnimationSequences"
 	},
 	{
-		"id": "Popcorn",
+		"id": "VelvetRope",
+		"imageFile": "MDMT_Lobby_VelvetRope.png",
+		"width": 385,
+		"height": 324,
+		"xCenter": true,
+		"yCenter": true
+	},
+	{
+		"id": "PopcornMachine",
 		"imageFile": "MDMT_Lobby_PopcornMachine.png",
 		"width": 197,
 		"height": 283,
 		"x": 249,
 		"y": 36
-	},
-	{
-		"id": "Ropes",
-		"imageFile": "MDMT_Lobby_VelvetRope.png",
-		"width": 385,
-		"height": 324,
-		"x": -270,
-		"y": 248
 	}
 ]
