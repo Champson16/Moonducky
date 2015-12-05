@@ -495,6 +495,231 @@ function FRC_Rehearsal_Scene:createScene(event)
 
    view:insert(categoriesContainer)
 
+
+   -- GUTS HERE *******************************************************************************
+   -- GUTS HERE *******************************************************************************
+   -- GUTS HERE *******************************************************************************
+   local showToggles = false
+   local autoRun = true
+   local doit
+   local testGroup = display.newGroup()
+   view:insert( testGroup )
+   
+   local xmlFiles = {
+      "MDMT_Animation_Chicken_Bass.xml",
+      "MDMT_Animation_Chicken_Conga.xml",
+      "MDMT_Animation_Chicken_Dance1.xml",
+      "MDMT_Animation_Chicken_Dance2.xml",
+      "MDMT_Animation_Chicken_Guitar.xml",
+      "MDMT_Animation_Chicken_Harmonica.xml",
+      "MDMT_Animation_Chicken_Maracas.xml",
+      "MDMT_Animation_Chicken_Microphone.xml",
+      "MDMT_Animation_Chicken_Piano.xml",
+      "MDMT_Animation_Chicken_RhythmComboCheeseGrater.xml",
+      "MDMT_Animation_Chicken_RhythmComboCymbal.xml",
+      "MDMT_Animation_Chicken_Sticks.xml",
+   }
+   
+   -- Create a menu to select and play the animations
+   --
+   local radioButtons = {}
+   local startX = 120
+   local startY = 120
+   local curX = startX   
+   local curY = startY
+   local width = 220
+   local height = 40
+   for i = 1, #xmlFiles do
+      local button = display.newRect( view, curX, curY, width - 10, height - 8 )
+      button.strokeWidth = 2
+      button:setFillColor(0.75, 0.75, 0.75)
+      button:setStrokeColor(1,0,0)
+      local text = xmlFiles[i]
+      text = text:gsub( "MDMT_Animation_Chicken_", "" )
+      text = text:gsub( ".xml", "" )
+      button.label = display.newText( view, i .. " - " .. text, curX, curY, native.systemFont, 12 )
+      button.label:setFillColor(0)
+      radioButtons[i] = button
+      button.touch = function(self,event)
+         if(event.phase == "ended") then
+            for j = 1, #radioButtons do
+               radioButtons[j]:setFillColor(0.75, 0.75, 0.75)
+               radioButtons[j]:setStrokeColor(1,0,0)
+            end
+            self:setFillColor(1)
+            self:setStrokeColor(0,1,0)
+            doit(i)
+         end
+      end
+      button:addEventListener("touch")
+      curY = curY + height
+   end   
+   
+   
+   local animationSequences = {}
+   doit = function( seqNum )
+      print(seqNum)
+      for i = 1, #animationSequences do
+         --animationSequences[i]:stop()
+         local sequence = animationSequences[i]
+         --print("BILLY ",  sequence.numChildren )
+         for j = 1, sequence.numChildren do
+            --sequence[j]:stop()
+            sequence[j]:dispose()
+         end
+      end
+      display.remove( testGroup )
+      testGroup = display.newGroup()
+      view:insert( testGroup )
+      
+   local FRC_Rehearsal_Tools = require("FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Tools")
+   
+      
+      --local partsList = FRC_Rehearsal_Tools.getPartsList( "efm_unified.xml", animationXMLBase )
+      
+      local partsList = FRC_Rehearsal_Tools.getPartsList( xmlFiles[seqNum], animationXMLBase )
+      
+      --table.print_r( partsList )
+      --table.dump2( partsList )
+      for i = 1, #partsList do
+         print(partsList[i].name, animationImageBase)
+      end
+      --Eyewear
+      --Headwear
+      --LowerTorso
+      --Neckwear
+      --UpperTorso
+      --Body
+      --Eyes
+      --Instrument   
+      
+      -- Create a menu to select and play the animations
+      --
+      -- Parse animations from Unified file and select just animations we want
+      local animationsToBuild = {}
+      local dressingRoomImagBase = "FRC_Assets/FRC_DressingRoom/Images/"
+      animationSequences = {}
+      local allParts = {
+         { "Body", animationImageBase },
+         { "Torso", dressingRoomImagBase },
+         { "Mouth", animationImageBase },
+         { "Eyes", animationImageBase },
+         { "Eyewear", dressingRoomImagBase },
+         { "Headwear", dressingRoomImagBase },
+         --{ "LowerTorso", dressingRoomImagBase },
+         { "Neckwear", dressingRoomImagBase },
+         --{ "UpperTorso", dressingRoomImagBase },
+         { "Instrument", animationImageBase },
+         { "LeftArm", animationImageBase },
+         { "RightArm", animationImageBase }
+      }
+      for i = 1, #allParts do
+         local partName = allParts[i][1]
+         for j = 1, #partsList do
+            print(j, partName )
+            if( string.match( partsList[j].name, partName ) ~= nil ) then 
+               FRC_Rehearsal_Tools.findAnimationParts( partsList, partName, animationsToBuild, allParts[i][2] )
+            end
+         end
+      end
+      
+      table.print_r(animationsToBuild)
+      
+      -- Create animation groups (sequences) from our list of animations to build
+      local animGroup = display.newGroup()
+      local xOffset = (screenW - (display.contentWidth * bg.xScale)) * 0.5
+      testGroup:insert(animGroup)
+      for i = 1, #animationsToBuild do
+         local animationGroupProperties = {}
+         table.dump2(animationsToBuild[i])
+         animationSequences[i] = FRC_Rehearsal_Tools.createUnifiedAnimationClipGroup( xmlFiles[seqNum], 
+                                                                                      animationsToBuild[i], 
+                                                                                      animationXMLBase, 
+                                                                                      animationsToBuild[i][3], -- animationImageBase, 
+                                                                                      animationGroupProperties )                              
+         FRC_Layout.scaleToFit(animationSequences[i], 0, 0)
+         
+         animationSequences[i].x = animationSequences[i].x --+ xOffset
+         animationSequences[i].y = animationSequences[i].y --+ bg.contentBounds.yMin
+         animGroup:insert(animationSequences[i])
+      end
+      -- Yes, I'm placing these manually for now
+      animGroup.x = 240
+      animGroup.y = 200
+      animGroup:scale(0.55,0.55)
+
+      ----[[
+
+      -- Create a menu to select and play the animations
+      --
+      local toggleButtons = {}
+      local button = display.newRect( animGroup, 500, 400, 300, 600 ) 
+      button.isHitTestable = true
+      button:setFillColor(0.5, 1, 0.5 )
+      button.alpha = 0
+      button.touch = function( self, event )         
+         if( event.phase == "ended" ) then 
+            for i = 1, #toggleButtons do
+               print( i, toggleButtons[i] ) 
+               if( toggleButtons[i].toggled ) then
+                  FRC_Rehearsal_Tools.playUnifiedAnimations( animationSequences, i )
+               end
+            end
+         end
+      end
+      button:addEventListener("touch")
+      if( autoRun ) then
+         timer.performWithDelay( 100, 
+            function()
+               for i = 1, #animationSequences do
+                  FRC_Rehearsal_Tools.playUnifiedAnimations( animationSequences, i )  
+               end
+            end )
+      end
+
+      local startX = 120
+      local startY = display.contentHeight - 80
+      local curX = startX   
+      local curY = startY
+      local width = 220
+      local height = 30
+      for i = 1, #animationsToBuild do
+         local button = display.newRect( testGroup, curX, curY, width - 10, height )
+         button.strokeWidth = 4
+         button:setStrokeColor(0,1,0)         
+         button.toggled = true
+         button.label = display.newText( testGroup, i .. " " .. animationsToBuild[i][1], curX, curY, native.systemFont, 14 )
+         button.label:setFillColor(0)
+         button.isVisible = showToggles
+         button.label.isVisible = showToggles
+         toggleButtons[i] = button
+         button.touch = function(self,event)
+            if(event.phase == "ended") then
+               self.toggled = not self.toggled
+               if( self.toggled ) then
+                  self:setStrokeColor(0,1,0)
+               else
+                  self:setStrokeColor(1,0,0)
+               end
+            end
+         end
+         button:addEventListener("touch")
+         curX = curX + width
+         if( curX > display.contentWidth - width ) then
+            curX = startX
+            curY = startY + 40 
+         end
+      end      
+      --]]
+      
+   end
+   radioButtons[1].touch( radioButtons[1], { phase = "ended" } )
+   
+   -- GUTS END HERE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+   -- GUTS END HERE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+   -- GUTS END HERE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
    if (FRC_Rehearsal_Scene.postCreateScene) then
       FRC_Rehearsal_Scene:postCreateScene(event)
    end

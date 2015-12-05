@@ -54,6 +54,89 @@ table.dump = function(t, indent)
 	if (notindent) then print('-----table-----'); end
 end
 
+-- ==
+--    table.print_r( theTable ) - Dumps indexes and values inside multi-level table (for debug)
+-- ==
+table.print_r = function ( t ) 
+	--local depth   = depth or math.huge
+	local print_r_cache={}
+	local function sub_print_r(t,indent)
+		if (print_r_cache[tostring(t)]) then
+			print(indent.."*"..tostring(t))
+		else
+			print_r_cache[tostring(t)]=true
+			if (type(t)=="table") then
+				for pos,val in pairs(t) do
+					if (type(val)=="table") then
+						print(indent.."["..pos.."] => "..tostring(t).." {")
+						sub_print_r(val,indent..string.rep(" ",string.len(pos)+1))
+						print(indent..string.rep(" ",string.len(pos)+1).."}")
+					elseif (type(val)=="string") then
+						print(indent.."["..pos..'] => "'..val..'"')
+					else
+						print(indent.."["..pos.."] => "..tostring(val))
+					end
+				end
+			else
+				print(indent..tostring(t))
+			end			
+		end
+	end
+	if (type(t)=="table") then
+		print(tostring(t).." {")
+		sub_print_r(t," ")
+		print("}")
+	else
+		sub_print_r(t," ")
+	end
+end
+
+-- ==
+--    string:rpad( len, char ) - Places padding on right side of a string, such that the new string is at least len characters long.
+-- ==
+function string:rpad(len, char)
+	local theStr = self
+    if char == nil then char = ' ' end
+    return theStr .. string.rep(char, len - #theStr)
+end
+
+
+function table.dump2(theTable, padding, marker ) -- Sorted
+	marker = marker or ""
+	local theTable = theTable or  {}
+	local function compare(a,b)
+	  return tostring(a) < tostring(b)
+	end
+	local tmp = {}
+	for n in pairs(theTable) do table.insert(tmp, n) end
+	table.sort(tmp,compare)
+
+	local padding = padding or 30
+	print("\Table Dump:")
+	print("-----")
+	if(#tmp > 0) then
+		for i,n in ipairs(tmp) do 		
+
+			local key = tmp[i]
+			local keyType = type(key)
+			local valueType = type(theTable[key])
+			local value = tostring(theTable[key])
+			local keyString = tostring(key) .. " (" .. keyType .. ")"
+			local valueString = tostring(value) .. " (" .. valueType .. ")" 
+
+			keyString = keyString:rpad(padding)
+			valueString = valueString:rpad(padding)
+
+			print( keyString .. " == " .. valueString ) 
+		end
+	else
+		print("empty")
+	end
+	print( marker .. "-----\n")
+end
+
+
+
 table.serialize = function (name, object, tabs)
 	local function serializeKeyForTable(k)
 		if type(k)=="number" then

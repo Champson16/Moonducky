@@ -141,6 +141,8 @@ FRC_AnimationManager.getAnimationData = function(xmltable, baseImageDir)
     -- load the part so we can get its height and width
     -- TODO:  replace this with a dictionary OR code that can read the width and height of a PNG/JPG image (google:  Corona PNGLib)
     -- TODO:  Put test code in to call assert if an image is missing!
+    table.dump2( partList )
+    dprint("EDOCHI", baseImageDir, pn )
     local refImage = display.newImage(baseImageDir .. pn .. ".png", true);
     -- ERRORCHECK:
     assert(refImage, "ERROR: Missing media file: ", baseImageDir .. pn .. ".png");
@@ -853,6 +855,8 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
     animationClipGroup.transformations = animationGroupProperties.transformations;
     animationClipGroup.flip = animationGroupProperties.flip;
     animationClipGroup.maskSource = animationGroupProperties.maskSource;
+    animationClipGroup.unifiedData = animationGroupProperties.unifiedData; --EFM
+    
     -- DEBUG:
     if animationClipGroup.maskSource then print("FRC_AnimationManager.createAnimationClipGroup animationClipGroup.maskSource ASSIGNED! ", animationClipGroup.maskSource); end
     animationClipGroup.onCompletion = animationGroupProperties.onCompletion;
@@ -944,6 +948,19 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
           io.close(newLuaFile);
         end
       end
+      
+      if( animationClipGroup.unifiedData ) then -- EFM
+         local unifiedData = animationClipGroup.unifiedData
+         local newPart = {}
+         local partsList = unifiedData[2]
+         local part = xmltable.Animation.Part
+         for i = 1, #partsList do
+            newPart[i] = part[partsList[i]]
+         end
+         xmltable.Animation.Part = newPart
+         xmltable.Animation.name = unifiedData[1]
+      end
+      
       -- DEBUG:
       -- print("FRC_AnimationManager.createAnimationClipGroup inputFile: ", i, " - ", inputFiles[i]);
       -- TRS  local xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
