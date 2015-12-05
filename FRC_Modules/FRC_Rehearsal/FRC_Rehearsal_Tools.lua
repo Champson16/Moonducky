@@ -81,7 +81,7 @@ function public.playUnifiedAnimations( animationSequences, num )
    -- pick a random animation sequence
    local sequence = animationSequences[num]
 
-   print("BILLY ",  sequence.numChildren )
+   --print("BILLY ",  sequence.numChildren )
    for i=1, sequence.numChildren do
       
       sequence[i]:play({

@@ -17,6 +17,7 @@ local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
 local character_x = 0
 local character_y = -16
 local eyeTimer
+local showIntrumentSample --EFM
 
 -- ====================================================================
 -- EFM - TBD BEGIN
@@ -441,6 +442,8 @@ function FRC_Rehearsal_Scene:createScene(event)
                local self = e.target
                -- CODE TO HANDLE INSTRUMENT INSERTION/CHANGE GOES HERE
                -- changeItem('Instrument', self.id)
+               showIntrumentSample( self.id )
+               --print(self.id)
             end
          })
       button.categoryId = 'Instrument'
@@ -551,24 +554,36 @@ function FRC_Rehearsal_Scene:createScene(event)
    -- GUTS HERE *******************************************************************************
    -- GUTS HERE *******************************************************************************
    local showToggles = false
-   local autoRun = true
-   local doit
+   local autoRun = false
+   --local showIntrumentSample --EFM
    local testGroup = display.newGroup()
    view:insert( testGroup )
+   
+   local idToFileMap = {}
+   idToFileMap.Microphone = 8
+   idToFileMap.Bass = 1
+   idToFileMap.Conga = 2
+   idToFileMap.Guitar = 5
+   idToFileMap.Piano = 9
+   idToFileMap.Harmonica = 6
+   idToFileMap.Maracas = 7
+   idToFileMap.Sticks = 12
+   idToFileMap.RhythmComboCheeseGrater = 10
+   idToFileMap.RhythmComboCymbal = 11
 
    local xmlFiles = {
-      "MDMT_Animation_Chicken_Bass.xml",
-      "MDMT_Animation_Chicken_Conga.xml",
-      "MDMT_Animation_Chicken_Dance1.xml",
-      "MDMT_Animation_Chicken_Dance2.xml",
-      "MDMT_Animation_Chicken_Guitar.xml",
-      "MDMT_Animation_Chicken_Harmonica.xml",
-      "MDMT_Animation_Chicken_Maracas.xml",
-      "MDMT_Animation_Chicken_Microphone.xml",
-      "MDMT_Animation_Chicken_Piano.xml",
-      "MDMT_Animation_Chicken_RhythmComboCheeseGrater.xml",
-      "MDMT_Animation_Chicken_RhythmComboCymbal.xml",
-      "MDMT_Animation_Chicken_Sticks.xml",
+      "MDMT_Animation_Chicken_Bass.xml", -- 1
+      "MDMT_Animation_Chicken_Conga.xml", -- 2
+      "MDMT_Animation_Chicken_Dance1.xml", -- 3
+      "MDMT_Animation_Chicken_Dance2.xml", -- 4
+      "MDMT_Animation_Chicken_Guitar.xml", -- 5
+      "MDMT_Animation_Chicken_Harmonica.xml", -- 6
+      "MDMT_Animation_Chicken_Maracas.xml", -- 7
+      "MDMT_Animation_Chicken_Microphone.xml", -- 8
+      "MDMT_Animation_Chicken_Piano.xml", -- 9
+      "MDMT_Animation_Chicken_RhythmComboCheeseGrater.xml", -- 10
+      "MDMT_Animation_Chicken_RhythmComboCymbal.xml", -- 11
+      "MDMT_Animation_Chicken_Sticks.xml", -- 12
    }
 
    -- Create a menu to select and play the animations
@@ -590,6 +605,8 @@ function FRC_Rehearsal_Scene:createScene(event)
       text = text:gsub( ".xml", "" )
       button.label = display.newText( view, i .. " - " .. text, curX, curY, native.systemFont, 12 )
       button.label:setFillColor(0)
+      button.alpha = 0
+      button.label.alpha = 0
       radioButtons[i] = button
       button.touch = function(self,event)
          if(event.phase == "ended") then
@@ -599,7 +616,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             end
             self:setFillColor(1)
             self:setStrokeColor(0,1,0)
-            doit(i)
+            showIntrumentSample(i)
          end
       end
       button:addEventListener("touch")
@@ -608,8 +625,12 @@ function FRC_Rehearsal_Scene:createScene(event)
 
 
    local animationSequences = {}
-   doit = function( seqNum )
-      print(seqNum)
+   showIntrumentSample = function( seqNum )
+      if( type(seqNum) == "string") then
+         dprint("Before ", seqNum)
+         seqNum = idToFileMap[seqNum]
+      end
+      dprint(seqNum)
       for i = 1, #animationSequences do
          --animationSequences[i]:stop()
          local sequence = animationSequences[i]
@@ -674,7 +695,7 @@ function FRC_Rehearsal_Scene:createScene(event)
          end
       end
 
-      table.print_r(animationsToBuild)
+      --table.print_r(animationsToBuild)
 
       -- Create animation groups (sequences) from our list of animations to build
       local animGroup = display.newGroup()
@@ -682,7 +703,7 @@ function FRC_Rehearsal_Scene:createScene(event)
       testGroup:insert(animGroup)
       for i = 1, #animationsToBuild do
          local animationGroupProperties = {}
-         table.dump2(animationsToBuild[i])
+         --table.dump2(animationsToBuild[i])
          animationSequences[i] = FRC_Rehearsal_Tools.createUnifiedAnimationClipGroup( xmlFiles[seqNum],
                                                                                       animationsToBuild[i],
                                                                                       animationXMLBase,
@@ -719,14 +740,12 @@ function FRC_Rehearsal_Scene:createScene(event)
          end
       end
       button:addEventListener("touch")
-      if( autoRun ) then
-         timer.performWithDelay( 100,
-            function()
-               for i = 1, #animationSequences do
-                  FRC_Rehearsal_Tools.playUnifiedAnimations( animationSequences, i )
-               end
-            end )
-      end
+      timer.performWithDelay( 0,
+         function()
+            for i = 1, #animationSequences do
+               FRC_Rehearsal_Tools.playUnifiedAnimations( animationSequences, i )
+            end
+         end )
 
       local startX = 120
       local startY = display.contentHeight - 80
@@ -764,7 +783,9 @@ function FRC_Rehearsal_Scene:createScene(event)
       --]]
 
    end
-   radioButtons[1].touch( radioButtons[1], { phase = "ended" } )
+   if( autoRun ) then
+      radioButtons[1].touch( radioButtons[1], { phase = "ended" } )
+   end
 
    -- GUTS END HERE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
    -- GUTS END HERE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
