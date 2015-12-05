@@ -403,6 +403,21 @@ function FRC_Rehearsal_Scene:createScene(event)
     local buttonHeight = 0
 
    -- create SetDesign scroll container
+   -- locate the user's existing SetDesign data
+   -- CODE SNIPPET
+  --  local function DATA(key, baseDir)
+  --  	baseDir = baseDir or system.ResourceDirectory;
+  --  	return FRC_DataLib.readJSON(FRC_SetDesign_Settings.DATA[key], baseDir);
+  --  end
+  ----------- Another snippet
+  -- FRC_SetDesign.saveData = FRC_DataLib.readJSON(saveDataFilename, system.DocumentsDirectory);
+  -- if (not FRC_SetDesign.saveData) then
+  -- 	FRC_DataLib.saveJSON(saveDataFilename, emptyDataFile);
+  -- 	FRC_SetDesign.saveData = emptyDataFile;
+  -- end
+  ---------- code used to pass saved data structure to FRC_GalleryPopup
+  -- data = scene.saveData.savedItems,
+  -- basically we need to have the scroller operate like a differently laid out version of FRC_GalleryPopup
 
    -- create Instruments scroll container
    -- This is for testing. TODO: store the show's song ID somewhere and reference it here
