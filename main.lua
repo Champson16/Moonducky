@@ -3,10 +3,10 @@
 -- main.lua
 --
 -----------------------------------------------------------------------------------------
-_G.edmode = true --EFM
+_G.edmode = false --EFM
 if( _G.edmode ) then
    _G.dprint  = _G.print --EFM
-   --_G.print = function() end --EFM
+   _G.print = function() end --EFM
 else
    _G.dprint = function() end --EFM
 end
