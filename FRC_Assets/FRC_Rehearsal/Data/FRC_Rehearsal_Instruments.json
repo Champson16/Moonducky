@@ -1,0 +1,67 @@
+[{
+	"id": "HamstersWantToBeFree",
+	"instruments" :
+		[{
+		"id": "Sticks",
+		"imageUp": "FRC_Rehearsal_Icon_Instrument_Sticks_up.png",
+		"imageDown": "FRC_Rehearsal_Icon_Instrument_Sticks_down.png",
+		"imageFocused": "FRC_Rehearsal_Icon_Instrument_Sticks_focused.png",
+		"imageDisabled": "FRC_Rehearsal_Icon_Instrument_Sticks_disabled.png",
+		"width": 128,
+		"height": 128
+		},
+		{
+			"id": "RhythmComboCheeseGrater",
+			"imageUp": "FRC_Rehearsal_Icon_Instrument_RhythmComboCheeseGrater_up.png",
+			"imageDown": "FRC_Rehearsal_Icon_Instrument_RhythmComboCheeseGrater_down.png",
+			"imageFocused": "FRC_Rehearsal_Icon_Instrument_RhythmComboCheeseGrater_focused.png",
+			"imageDisabled": "FRC_Rehearsal_Icon_Instrument_RhythmComboCheeseGrater_disabled.png",
+			"width": 128,
+			"height": 128
+		},
+		{
+			"id": "Maracas",
+			"imageUp": "FRC_Rehearsal_Icon_Instrument_Maracas_up.png",
+			"imageDown": "FRC_Rehearsal_Icon_Instrument_Maracas_down.png",
+			"imageFocused": "FRC_Rehearsal_Icon_Instrument_Maracas_focused.png",
+			"imageDisabled": "FRC_Rehearsal_Icon_Instrument_Maracas_disabled.png",
+			"width": 128,
+			"height": 128
+		},
+		{
+			"id": "Harmonica",
+			"imageUp": "FRC_Rehearsal_Icon_Instrument_Harmonica_up.png",
+			"imageDown": "FRC_Rehearsal_Icon_Instrument_Harmonica_down.png",
+			"imageFocused": "FRC_Rehearsal_Icon_Instrument_Harmonica_focused.png",
+			"imageDisabled": "FRC_Rehearsal_Icon_Instrument_Harmonica_disabled.png",
+			"width": 128,
+			"height": 128
+		},
+		{
+			"id": "Guitar",
+			"imageUp": "FRC_Rehearsal_Icon_Instrument_Guitar_up.png",
+			"imageDown": "FRC_Rehearsal_Icon_Instrument_Guitar_down.png",
+			"imageFocused": "FRC_Rehearsal_Icon_Instrument_Guitar_focused.png",
+			"imageDisabled": "FRC_Rehearsal_Icon_Instrument_Guitar_disabled.png",
+			"width": 128,
+			"height": 128
+		},
+		{
+			"id": "Conga",
+			"imageUp": "FRC_Rehearsal_Icon_Instrument_Conga_up.png",
+			"imageDown": "FRC_Rehearsal_Icon_Instrument_Conga_down.png",
+			"imageFocused": "FRC_Rehearsal_Icon_Instrument_Conga_focused.png",
+			"imageDisabled": "FRC_Rehearsal_Icon_Instrument_Conga_disabled.png",
+			"width": 128,
+			"height": 128
+		},
+		{
+			"id": "Bass",
+			"imageUp": "FRC_Rehearsal_Icon_Instrument_Bass_up.png",
+			"imageDown": "FRC_Rehearsal_Icon_Instrument_Bass_down.png",
+			"imageFocused": "FRC_Rehearsal_Icon_Instrument_Bass_focused.png",
+			"imageDisabled": "FRC_Rehearsal_Icon_Instrument_Bass_disabled.png",
+			"width": 128,
+			"height": 128
+		}]
+}]

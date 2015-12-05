@@ -2,10 +2,13 @@ local FRC_Rehearsal_Settings = {}
 
 FRC_Rehearsal_Settings.UI = {
    IMAGES_PATH = 'FRC_Assets/FRC_Rehearsal/Images/',
-   SCENE_BACKGROUND_IMAGE = 'FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_Background.jpg',
+   SCENE_BACKGROUND_IMAGE = 'FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_Background.png',
    SCENE_BACKGROUND_WIDTH = 1152,
    SCENE_BACKGROUND_HEIGHT = 768,
-   COSTUME_NONE_IMAGE = 'FRC_Rehearsal_Costume_None.png',
+   COSTUME_NONE_IMAGE = 'FRC_Rehearsal_Scroller_None.png',
+   COSTUME_NONE_WIDTH = 128,
+   COSTUME_NONE_HEIGHT = 81,
+   COSTUME_NONE_IMAGE = 'FRC_Rehearsal_Scroller_None.png',
    COSTUME_NONE_WIDTH = 128,
    COSTUME_NONE_HEIGHT = 81,
    THUMBNAIL_WIDTH = 256,
@@ -14,11 +17,16 @@ FRC_Rehearsal_Settings.UI = {
    ANIMATION_IMAGE_BASE = 'FRC_Assets/MDMT_Assets/Animation/Images/'
 }
 
+-- TODO: work on how to point to user data for SetDesign and Costume
 FRC_Rehearsal_Settings.DATA = {
-   SAVE_PROMPT = 'Save Your Character Costume',
-   LOAD_PROMPT = 'Load Your Character Costume',
-   CHARACTER = 'FRC_Assets/FRC_Rehearsal/Data/FRC_Rehearsal_Character.json',
+   SAVE_PROMPT = 'Save Your Show',
+   LOAD_PROMPT = 'Load Your Show',
+   PUBLISH_PROMPT = 'Publish Your Show',
    CATEGORY = 'FRC_Assets/FRC_Rehearsal/Data/FRC_Rehearsal_Category.json',
+   SETDESIGN = 'FRC_SetDesign_SaveData.json',
+   INSTRUMENT = 'FRC_Assets/FRC_Rehearsal/Data/FRC_Rehearsal_Character.json',
+   CHARACTER = 'FRC_Assets/FRC_Rehearsal/Data/FRC_Rehearsal_Character.json',
+   COSTUME = 'FRC_DressingRoom_SaveData.json',
    SCENELAYOUT = 'FRC_Assets/FRC_Rehearsal/Data/FRC_Rehearsal_SceneLayout.json',
    EMPTY_DATAFILE = '{ "owner": "FRC_Rehearsal", "savedItems": [] }',
    DATA_FILENAME = 'FRC_Rehearsal_SaveData.json'

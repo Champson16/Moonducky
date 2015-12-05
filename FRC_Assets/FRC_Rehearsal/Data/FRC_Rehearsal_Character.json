@@ -377,7 +377,7 @@
 },
 {
 	"id": "Chicken",
-	"bodyImage": "MDMT_Rehearsal_Chicken.png",
+	"bodyThumb": "MDMT_Rehearsal_global_BaseCharacter_Chicken_thumbnail.png",
 	"bodyWidth": 430,
 	"bodyHeight": 469,
 	"eyesOpenImage": "MDMT_Rehearsal_Chicken_EyesOpen.png",
@@ -754,7 +754,7 @@
 },
 {
 	"id": "Sheep",
-	"bodyImage": "MDMT_Rehearsal_Sheep.png",
+	"bodyThumb": "MDMT_Rehearsal_global_BaseCharacter_Sheep_thumbnail.png",
 	"bodyWidth": 329,
 	"bodyHeight": 454,
 	"eyesOpenImage": "MDMT_Rehearsal_Sheep_EyesOpen.png",
@@ -1131,7 +1131,6 @@
 },
 {
 	"id": "Pig",
-	"bodyImage": "MDMT_Rehearsal_Costume_Pig_Pig.png",
 	"bodyThumb": "MDMT_Rehearsal_global_BaseCharacter_Pig_thumbnail.png",
 	"bodyWidth": 329,
 	"bodyHeight": 466,
@@ -1509,7 +1508,6 @@
 },
 {
 	"id": "Goat",
-	"bodyImage": "MDMT_Rehearsal_Goat.png",
 	"bodyThumb": "MDMT_Rehearsal_global_BaseCharacter_Goat_thumbnail.png",
 	"bodyWidth": 245,
 	"bodyHeight": 497,
@@ -1887,7 +1885,6 @@
 },
 {
 	"id": "Cat",
-	"bodyImage": "MDMT_Rehearsal_Cat.png",
 	"bodyThumb": "MDMT_Rehearsal_global_BaseCharacter_Cat_thumbnail.png",
 	"bodyWidth": 291,
 	"bodyHeight": 447,
@@ -2265,7 +2262,6 @@
 },
 {
 	"id": "Dog",
-	"bodyImage": "MDMT_Rehearsal_Dog.png",
 	"bodyThumb": "MDMT_Rehearsal_global_BaseCharacter_Dog_thumbnail.png",
 	"bodyWidth": 257,
 	"bodyHeight": 470,

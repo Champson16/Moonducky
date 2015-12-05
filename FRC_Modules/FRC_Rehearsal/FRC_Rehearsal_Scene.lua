@@ -34,6 +34,7 @@ local animationImageBase = UI('ANIMATION_IMAGE_BASE')
 
 
 function FRC_Rehearsal_Scene:save(e)
+   --[[
    local id = e.id
    if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)) end
    local saveGroup = self.view.saveGroup
@@ -122,9 +123,11 @@ function FRC_Rehearsal_Scene:save(e)
    end
    FRC_DataLib.saveJSON(saveDataFilename, self.saveData)
    self.id = id
+   --]]
 end
 
 function FRC_Rehearsal_Scene:load(e)
+  --[[
    local id = e.id
    if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)) end
    self.changeItem('Character', e.data.character, v)
@@ -132,6 +135,7 @@ function FRC_Rehearsal_Scene:load(e)
       self.changeItem(k, e.data.character, v)
    end
    self.id = id
+   --]]
 end
 -- ====================================================================
 -- EFM - TBD END
@@ -149,11 +153,11 @@ function FRC_Rehearsal_Scene:createScene(event)
 
    -- DEBUG:
    dprint("FRC_Rehearsal_Scene - createScene")
-   
+
 	if ((self.preCreateScene) and (type(self.preCreateScene) == 'function')) then
 		self.preCreateScene(self, event);
 	end
-   
+
    ----[[
    -- FRC_Rehearsal.getSavedData()
    self.saveData = DATA('DATA_FILENAME', system.DocumentsDirectory)
@@ -164,24 +168,16 @@ function FRC_Rehearsal_Scene:createScene(event)
    FRC_Layout.scaleToFit(bg)
    bg.x, bg.y = display.contentCenterX, display.contentCenterY
 
-   
-   --[[
-   -- setup a container that will hold character and all layers of clothing
-   --local chartainer = display.newContainer(display.contentWidth, display.contentHeight)
-   local chartainer = display.newGroup()
-   chartainer.anchorChildren = true
-   view:insert(chartainer)
-   chartainer.x, chartainer.y = display.contentCenterX + 10, display.contentCenterY - 10
-   chartainer:scale(0.80, 0.80)
-   chartainer:scale(bg.xScale, bg.yScale)
-   view.saveGroup = chartainer
-
    -- Get lua tables from JSON data
-   local characterData = DATA('CHARACTER')
    local categoryData = DATA('CATEGORY')
+   local setDesignData = DATA('SETDESIGN')
+   local instrumentData = DATA('INSTRUMENT')
+   local characterData = DATA('CHARACTER')
+   local costumeData = DATA('COSTUME')
    local sceneLayoutData = DATA('SCENELAYOUT')
 
    -- Insert 'None' as first item of all character costume categories
+   --[[
    local none = {
       id = 'none',
       imageFile = UI('COSTUME_NONE_IMAGE'),
@@ -198,17 +194,9 @@ function FRC_Rehearsal_Scene:createScene(event)
 
    local layers = {}
    local selectedCharacter = ''
+   --]]
 
-   -- create a new layer for each category, manually creating the first (character)
-   -- at the bottom of the layer stack
-   layers['Character'] = display.newGroup()
-   chartainer:insert(layers['Character'])
-   for i=#categoryData,2,-1 do
-      layers[categoryData[i].id] = display.newGroup()
-      chartainer:insert(layers[categoryData[i].id])
-   end
-
-   local getDataForCharacter = function(character)
+   local getCostumeForCharacter = function(character)
       local charData
       for i=1,#characterData do
          if (characterData[i].id == character) then
@@ -217,35 +205,9 @@ function FRC_Rehearsal_Scene:createScene(event)
          end
       end
       if (not charData) then
-         error('No character data for "' .. character .. '"')
+         error('No costume data for "' .. character .. '"')
       end
       return charData
-   end
-
-   local function beginEyeAnimation(open, shut)
-      if (eyeTimer) then pcall(timer.cancel, eyeTimer) end
-      open.isVisible = true
-      shut.isVisible = false
-      eyeTimer = timer.performWithDelay(math.random(1000,3000), function()
-            open.isVisible = false
-            shut.isVisible = true
-            eyeTimer = timer.performWithDelay(100, function()
-                  open.isVisible = true
-                  shut.isVisible = false
-                  eyeTimer = timer.performWithDelay(200, function()
-                        open.isVisible = false
-                        shut.isVisible = true
-                        eyeTimer = timer.performWithDelay(75, function()
-                              open.isVisible = true
-                              shut.isVisible = false
-                              eyeTimer = timer.performWithDelay(math.random(1000,3000), function()
-                                    eyeTimer = nil
-                                    beginEyeAnimation(open, shut)
-                                 end, 1)
-                           end, 1)
-                     end, 1)
-               end, 1)
-         end, 1)
    end
 
    local function clearLayer(categoryId)
@@ -261,131 +223,18 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
    end
 
-   -- handles swapping out of characters and specific clothing items
-   local function changeItem(categoryId, character, index)
-      clearLayer(categoryId)
-
-      local charData = getDataForCharacter(character)
-
-      if (categoryId == 'Character') then
-         selectedCharacter = character
-         local charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.bodyImage, charData.bodyWidth, charData.bodyHeight)
-         charBody.x, charBody.y = character_x, character_y
-
-         -- DEBUG:
-         print(charData.eyesOpenImage)
-         print(UI('IMAGES_PATH') .. charData.eyesOpenImage)
-         print(charData.eyesShutImage)
-         print(UI('IMAGES_PATH') .. charData.eyesShutImage)
-         if (charData.eyesOpenImage and charData.eyesShutImage) then
-            local charEyesOpen = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.eyesOpenImage, charData.eyesOpenWidth, charData.eyesOpenHeight)
-            charEyesOpen.x, charEyesOpen.y = charBody.x + charData.eyesX, charBody.y + charData.eyesY
-            charEyesOpen.isVisible = true
-            print(charEyesOpen.x, charEyesOpen.y) -- DEBUG
-
-            local charEyesShut = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.eyesShutImage, charData.eyesShutWidth, charData.eyesShutHeight)
-            charEyesShut.x, charEyesShut.y = charBody.x + charData.eyesX, charBody.y + charData.eyesY
-            charEyesShut.isVisible = false
-            print(charEyesShut.x, charEyesShut.y) -- DEBUG
-
-            beginEyeAnimation(charEyesOpen, charEyesShut)
-         end
-
-         if (index ~= 0) then
-            for i=2,#categoryData do
-               changeItem(categoryData[i].id, selectedCharacter, layers[categoryData[i].id].selectedIndex or 1)
-            end
-         end
-      else
-         local clothingData = charData.clothing[categoryId][index]
-         if (not clothingData) then return end
-         if (clothingData.id ~= 'none') then
-            local item = display.newImageRect(layers[categoryId], UI('IMAGES_PATH') .. clothingData.imageFile, clothingData.width, clothingData.height)
-            -- ERRORCHECK
-            if not item then
-               assert(refImage, "ERROR: Missing costume media file: ", UI('IMAGES_PATH') .. clothingData.imageFile)
-            end
-            item.x, item.y = character_x + clothingData.xOffset, character_y + clothingData.yOffset
-            -- check to see if we need to use the special altBodyImage
-            if (categoryId == 'Headwear') then
-               if (clothingData.altBodyImage) then
-                  -- DEBUG:
-                  -- print("Swapping in altBodyImage: ", UI('IMAGES_PATH') .. charData.altBodyImage)
-                  clearLayer('Character')
-                  charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.altBodyImage, charData.bodyWidth, charData.bodyHeight)
-                  charBody.x, charBody.y = character_x, character_y
-               else
-                  -- sloppy but we have to switch back to the baseimage
-                  -- DEBUG:
-                  -- print("Swapping in bodyImage: ", UI('IMAGES_PATH') .. charData.bodyImage)
-                  clearLayer('Character')
-                  charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.bodyImage, charData.bodyWidth, charData.bodyHeight)
-                  charBody.x, charBody.y = character_x, character_y
-               end
-            end
-         else
-            if (categoryId == 'Headwear') then
-               -- we only reset the body if they chose the none option for Headwear
-               clearLayer('Character')
-               charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.bodyImage, charData.bodyWidth, charData.bodyHeight)
-               charBody.x, charBody.y = character_x, character_y
-            end
-         end
-         layers[categoryId].selectedIndex = index
-      end
-      view.currentData = {
-         character = character,
-         categories = {}
-      }
-      for k,v in pairs(layers) do
-         view.currentData.categories[k] = layers[k].selectedIndex
-      end
-   end
-   self.changeItem = changeItem
-
    self.startOver = function()
+      --[[
       changeItem('Character', selectedCharacter, 0)
       for i=1,#categoryData do
          changeItem(categoryData[i].id, selectedCharacter, 1)
       end
+      --]]
    end
-   
+
    -- create sceneLayout items
    local sceneLayoutMethods = {}
    local sceneLayout = {}
-   -- setup the randomly fired mysteryBoxAnimations
-   local mysteryBoxAnimationFiles = {}
-   local mysteryBoxAnimationSequences = {}
-
-   -- ambient loop sequence
-   function sceneLayoutMethods.playMysteryBoxAnimationSequence()
-      -- pick a random animation sequence
-      local sequence = mysteryBoxAnimationSequences[math.random(1,4)]
-      for i=1, sequence.numChildren do
-         sequence[i]:play({
-               showLastFrame = false,
-               playBackward = false,
-               autoLoop = false,
-               palindromicLoop = false,
-               delay = 0,
-               intervalTime = 30,
-               maxIterations = 1
-            })
-      end
-      -- set a timer and after a delay, change the costume randomly
-      timer.performWithDelay(1500,
-         function ()
-            for i=2,#categoryData do
-               changeItem(categoryData[i].id, selectedCharacter, math.random(2, #getDataForCharacter(selectedCharacter).clothing[categoryData[i].id]))
-            end
-         end, 1)
-   end
-
-   function sceneLayoutMethods.randomCostume()
-      -- play the mystery box animation
-      sceneLayoutMethods.playMysteryBoxAnimationSequence()
-   end
-
    local sceneLayoutAnimationSequences
 
    for i=1,#sceneLayoutData do
@@ -475,91 +324,6 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
    end
 
-   mysteryBoxAnimationFiles[1] = {
-      "SPMTM_Rehearsal_MysteryBox_v01_15.xml",
-      "SPMTM_Rehearsal_MysteryBox_v01_14.xml",
-      "SPMTM_Rehearsal_MysteryBox_v01_13.xml",
-      "SPMTM_Rehearsal_MysteryBox_v01_12.xml",
-      "SPMTM_Rehearsal_MysteryBox_v01_11.xml",
-      "SPMTM_Rehearsal_MysteryBox_v01_10.xml",
-      "SPMTM_Rehearsal_MysteryBox_v01_09.xml",
-      "SPMTM_Rehearsal_MysteryBox_v01_08.xml",
-      "SPMTM_Rehearsal_MysteryBox_v01_07.xml",
-      "SPMTM_Rehearsal_MysteryBox_v01_06.xml",
-      "SPMTM_Rehearsal_MysteryBox_v01_05.xml",
-      "SPMTM_Rehearsal_MysteryBox_v01_04.xml",
-      "SPMTM_Rehearsal_MysteryBox_v01_03.xml",
-      "SPMTM_Rehearsal_MysteryBox_v01_02.xml",
-      "SPMTM_Rehearsal_MysteryBox_v01_01.xml"
-   }
-
-   mysteryBoxAnimationFiles[2] = {
-      "SPMTM_Rehearsal_MysteryBox_v02_15.xml",
-      "SPMTM_Rehearsal_MysteryBox_v02_14.xml",
-      "SPMTM_Rehearsal_MysteryBox_v02_13.xml",
-      "SPMTM_Rehearsal_MysteryBox_v02_12.xml",
-      "SPMTM_Rehearsal_MysteryBox_v02_11.xml",
-      "SPMTM_Rehearsal_MysteryBox_v02_10.xml",
-      "SPMTM_Rehearsal_MysteryBox_v02_09.xml",
-      "SPMTM_Rehearsal_MysteryBox_v02_08.xml",
-      "SPMTM_Rehearsal_MysteryBox_v02_07.xml",
-      "SPMTM_Rehearsal_MysteryBox_v02_06.xml",
-      "SPMTM_Rehearsal_MysteryBox_v02_05.xml",
-      "SPMTM_Rehearsal_MysteryBox_v02_04.xml",
-      "SPMTM_Rehearsal_MysteryBox_v02_03.xml",
-      "SPMTM_Rehearsal_MysteryBox_v02_02.xml",
-      "SPMTM_Rehearsal_MysteryBox_v02_01.xml"
-   }
-
-   mysteryBoxAnimationFiles[3] = {
-      "SPMTM_Rehearsal_MysteryBox_v03_13.xml",
-      "SPMTM_Rehearsal_MysteryBox_v03_12.xml",
-      "SPMTM_Rehearsal_MysteryBox_v03_11.xml",
-      "SPMTM_Rehearsal_MysteryBox_v03_10.xml",
-      "SPMTM_Rehearsal_MysteryBox_v03_09.xml",
-      "SPMTM_Rehearsal_MysteryBox_v03_08.xml",
-      "SPMTM_Rehearsal_MysteryBox_v03_07.xml",
-      "SPMTM_Rehearsal_MysteryBox_v03_06.xml",
-      "SPMTM_Rehearsal_MysteryBox_v03_05.xml",
-      "SPMTM_Rehearsal_MysteryBox_v03_04.xml",
-      "SPMTM_Rehearsal_MysteryBox_v03_03.xml",
-      "SPMTM_Rehearsal_MysteryBox_v03_02.xml",
-      "SPMTM_Rehearsal_MysteryBox_v03_01.xml"
-   }
-
-   mysteryBoxAnimationFiles[4] = {
-      "SPMTM_Rehearsal_MysteryBox_v05_15.xml",
-      "SPMTM_Rehearsal_MysteryBox_v05_14.xml",
-      "SPMTM_Rehearsal_MysteryBox_v05_13.xml",
-      "SPMTM_Rehearsal_MysteryBox_v05_12.xml",
-      "SPMTM_Rehearsal_MysteryBox_v05_11.xml",
-      "SPMTM_Rehearsal_MysteryBox_v05_10.xml",
-      "SPMTM_Rehearsal_MysteryBox_v05_09.xml",
-      "SPMTM_Rehearsal_MysteryBox_v05_08.xml",
-      "SPMTM_Rehearsal_MysteryBox_v05_07.xml",
-      "SPMTM_Rehearsal_MysteryBox_v05_06.xml",
-      "SPMTM_Rehearsal_MysteryBox_v05_05.xml",
-      "SPMTM_Rehearsal_MysteryBox_v05_04.xml",
-      "SPMTM_Rehearsal_MysteryBox_v05_03.xml",
-      "SPMTM_Rehearsal_MysteryBox_v05_02.xml",
-      "SPMTM_Rehearsal_MysteryBox_v05_01.xml"
-   }
-
-   for i=1,#mysteryBoxAnimationFiles do
-      -- preload the animation data (XML and images) early
-
-      mysteryBoxAnimationSequences[i] = FRC_AnimationManager.createAnimationClipGroup(mysteryBoxAnimationFiles[i], animationXMLBase, animationImageBase)
-      FRC_Layout.scaleToFit(mysteryBoxAnimationSequences[i], -31, 42)
-      local xOffset = (screenW - (display.contentWidth * bg.xScale)) * 0.5
-      mysteryBoxAnimationSequences[i].x = mysteryBoxAnimationSequences[i].x + xOffset
-      mysteryBoxAnimationSequences[i].y = mysteryBoxAnimationSequences[i].y + bg.contentBounds.yMin
-      view:insert(mysteryBoxAnimationSequences[i])
-   end
-
-   -- by default, place naked first character onto the dressing room floor
-   changeItem('Character', characterData[1].id, 0)
-   view:insert(chartainer)
-
    local category_button_spacing = 48
    local button_spacing = 24
    local button_scale = 0.75
@@ -631,7 +395,11 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
    end
 
-   -- create character scroll container
+   -- create SetDesign scroll container
+
+   -- create Instruments scroll container
+
+   -- create Character scroll container
    local x = -(screenW * 0.5) + button_spacing
    local buttonHeight = 0
    for i=1,#characterData do
@@ -647,7 +415,8 @@ function FRC_Rehearsal_Scene:createScene(event)
             pressAlpha = 0.5,
             onRelease = function(e)
                local self = e.target
-               changeItem('Character', self.id)
+               -- CODE TO HANDLE CHARACTER INSERTION/CHANGE GOES HERE
+               -- changeItem('Character', self.id)
             end
          })
       button.categoryId = 'Character'
@@ -657,8 +426,11 @@ function FRC_Rehearsal_Scene:createScene(event)
       x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)
    end
 
+   -- create the Costume scroll container
+
    -- create the clothing scroll containers using the first character's images
 
+   --[[
    local thumbnailExtension = ""
    if (FRC_Rehearsal_Settings.CONFIG.costumes) then
       if (FRC_Rehearsal_Settings.CONFIG.costumes.customThumbnails) then
@@ -719,20 +491,20 @@ function FRC_Rehearsal_Scene:createScene(event)
          x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)
       end
    end
+   --]]
 
    view:insert(categoriesContainer)
 
-   --]]
    if (FRC_Rehearsal_Scene.postCreateScene) then
       FRC_Rehearsal_Scene:postCreateScene(event)
    end
-   
+
 end
 
 
 function FRC_Rehearsal_Scene:enterScene(event)
    local view = self.view
-   
+
    if (FRC_Rehearsal_Scene.preEnterScene) then
       FRC_Rehearsal_Scene:preEnterScene(event)
    end
@@ -762,7 +534,7 @@ function FRC_Rehearsal_Scene:exitScene(event)
    if (FRC_Rehearsal_Scene.postExitScene) then
       FRC_Rehearsal_Scene:postExitScene(event)
    end
-   
+
 end
 
 function FRC_Rehearsal_Scene:didExitScene(event)

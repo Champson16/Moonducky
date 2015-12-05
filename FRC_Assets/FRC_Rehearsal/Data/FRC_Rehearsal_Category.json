@@ -1,4 +1,22 @@
 [{
+	"id": "SetDesign",
+	"imageUp": "FRC_Rehearsal_Icon_SetDesign_up.png",
+	"imageDown": "FRC_Rehearsal_Icon_SetDesign_down.png",
+	"imageFocused": "FRC_Rehearsal_Icon_SetDesign_focused.png",
+	"imageDisabled": "FRC_Rehearsal_Icon_SetDesign_disabled.png",
+	"width": 128,
+	"height": 128
+},
+{
+	"id": "Instrument",
+	"imageUp": "FRC_Rehearsal_Icon_Instrument_up.png",
+	"imageDown": "FRC_Rehearsal_Icon_Instrument_down.png",
+	"imageFocused": "FRC_Rehearsal_Icon_Instrument_focused.png",
+	"imageDisabled": "FRC_Rehearsal_Icon_Instrument_disabled.png",
+	"width": 128,
+	"height": 128
+},
+{
 	"id": "Character",
 	"imageUp": "FRC_Rehearsal_Icon_CharacterMoonducky_up.png",
 	"imageDown": "FRC_Rehearsal_Icon_CharacterMoonducky_down.png",
@@ -8,47 +26,20 @@
 	"height": 128
 },
 {
-	"id": "Headwear",
-	"imageUp": "FRC_Rehearsal_Icon_Headwear_up.png",
-	"imageDown": "FRC_Rehearsal_Icon_Headwear_down.png",
-	"imageFocused": "FRC_Rehearsal_Icon_Headwear_focused.png",
-	"imageDisabled": "FRC_Rehearsal_Icon_Headwear_disabled.png",
+	"id": "Costume",
+	"imageUp": "FRC_Rehearsal_Icon_Costume_up.png",
+	"imageDown": "FRC_Rehearsal_Icon_Costume_down.png",
+	"imageFocused": "FRC_Rehearsal_Icon_Costume_focused.png",
+	"imageDisabled": "FRC_Rehearsal_Icon_Costume_disabled.png",
 	"width": 128,
 	"height": 128
 },
 {
-	"id": "Eyewear",
-	"imageUp": "FRC_Rehearsal_Icon_Eyewear_up.png",
-	"imageDown": "FRC_Rehearsal_Icon_Eyewear_down.png",
-	"imageFocused": "FRC_Rehearsal_Icon_Eyewear_focused.png",
-	"imageDisabled": "FRC_Rehearsal_Icon_Eyewear_disabled.png",
-	"width": 128,
-	"height": 128
-},
-{
-	"id": "UpperTorso",
-	"imageUp": "FRC_Rehearsal_Icon_UpperTorso_up.png",
-	"imageDown": "FRC_Rehearsal_Icon_UpperTorso_down.png",
-	"imageFocused": "FRC_Rehearsal_Icon_UpperTorso_focused.png",
-	"imageDisabled": "FRC_Rehearsal_Icon_UpperTorso_disabled.png",
-	"width": 128,
-	"height": 128
-},
-{
-	"id": "Neckwear",
-	"imageUp": "FRC_Rehearsal_Icon_Neckwear_up.png",
-	"imageDown": "FRC_Rehearsal_Icon_Neckwear_down.png",
-	"imageFocused": "FRC_Rehearsal_Icon_Neckwear_focused.png",
-	"imageDisabled": "FRC_Rehearsal_Icon_Neckwear_disabled.png",
-	"width": 128,
-	"height": 128
-},
-{
-	"id": "LowerTorso",
-	"imageUp": "FRC_Rehearsal_Icon_LowerTorso_up.png",
-	"imageDown": "FRC_Rehearsal_Icon_LowerTorso_down.png",
-	"imageFocused": "FRC_Rehearsal_Icon_LowerTorso_focused.png",
-	"imageDisabled": "FRC_Rehearsal_Icon_LowerTorso_disabled.png",
+	"id": "Showtime",
+	"imageUp": "FRC_Rehearsal_Icon_Showtime_up.png",
+	"imageDown": "FRC_Rehearsal_Icon_Showtime_down.png",
+	"imageFocused": "FRC_Rehearsal_Icon_Showtime_focused.png",
+	"imageDisabled": "FRC_Rehearsal_Icon_Showtime_disabled.png",
 	"width": 128,
 	"height": 128
 }]
