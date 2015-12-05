@@ -555,6 +555,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    -- GUTS HERE *******************************************************************************
    local showToggles = false
    local autoRun = false
+   local radioMenuIsVisible = false
    --local showIntrumentSample --EFM
    local testGroup = display.newGroup()
    view:insert( testGroup )
@@ -605,8 +606,8 @@ function FRC_Rehearsal_Scene:createScene(event)
       text = text:gsub( ".xml", "" )
       button.label = display.newText( view, i .. " - " .. text, curX, curY, native.systemFont, 12 )
       button.label:setFillColor(0)
-      button.alpha = 0
-      button.label.alpha = 0
+      button.isVisible = radioMenuIsVisible
+      button.label.isVisible = radioMenuIsVisible
       radioButtons[i] = button
       button.touch = function(self,event)
          if(event.phase == "ended") then
@@ -625,12 +626,12 @@ function FRC_Rehearsal_Scene:createScene(event)
 
 
    local animationSequences = {}
-   showIntrumentSample = function( seqNum )
-      if( type(seqNum) == "string") then
-         dprint("Before ", seqNum)
-         seqNum = idToFileMap[seqNum]
+   showIntrumentSample = function( xmlNum )
+      if( type(xmlNum) == "string") then
+         dprint("Before ", xmlNum)
+         xmlNum = idToFileMap[xmlNum]
       end
-      dprint(seqNum)
+      dprint(xmlNum)
       for i = 1, #animationSequences do
          --animationSequences[i]:stop()
          local sequence = animationSequences[i]
@@ -644,17 +645,18 @@ function FRC_Rehearsal_Scene:createScene(event)
       testGroup = display.newGroup()
       view:insert( testGroup )
 
-   local FRC_Rehearsal_Tools = require("FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Tools")
+
+      local FRC_Rehearsal_Tools = require("FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Tools")
 
 
       --local partsList = FRC_Rehearsal_Tools.getPartsList( "efm_unified.xml", animationXMLBase )
 
-      local partsList = FRC_Rehearsal_Tools.getPartsList( xmlFiles[seqNum], animationXMLBase )
+      local partsList = FRC_Rehearsal_Tools.getPartsList( xmlFiles[xmlNum], animationXMLBase )
 
       --table.print_r( partsList )
       --table.dump2( partsList )
       for i = 1, #partsList do
-         print(partsList[i].name, animationImageBase)
+         dprint(partsList[i].name, animationImageBase)
       end
       --Eyewear
       --Headwear
@@ -671,25 +673,100 @@ function FRC_Rehearsal_Scene:createScene(event)
       local animationsToBuild = {}
       local dressingRoomImagBase = "FRC_Assets/FRC_DressingRoom/Images/"
       animationSequences = {}
-      local allParts = {
-         { "Body", animationImageBase },
-         { "Torso", dressingRoomImagBase },
-         { "Mouth", animationImageBase },
-         { "Eyes", animationImageBase },
-         { "Eyewear", dressingRoomImagBase },
-         { "Headwear", dressingRoomImagBase },
-         --{ "LowerTorso", dressingRoomImagBase },
-         { "Neckwear", dressingRoomImagBase },
-         --{ "UpperTorso", dressingRoomImagBase },
-         { "Instrument", animationImageBase },
-         { "LeftArm", animationImageBase },
-         { "RightArm", animationImageBase }
-      }
+      local allParts 
+      
+      if( xmlNum == 7 ) then
+         allParts = {
+            { "Body", animationImageBase },
+            { "Torso", dressingRoomImagBase },
+            { "Mouth", animationImageBase },
+            { "Eyes", animationImageBase },
+            { "Eyewear", dressingRoomImagBase },
+            { "Headwear", dressingRoomImagBase },
+            --{ "LowerTorso", dressingRoomImagBase },
+            { "Neckwear", dressingRoomImagBase },
+            --{ "UpperTorso", dressingRoomImagBase },
+            --{ "Instrument", animationImageBase },
+            { "Instrument_Maracas_Left", animationImageBase },
+            { "Instrument_Maracas_Right", animationImageBase },         
+            { "LeftArm", animationImageBase },
+            { "RightArm", animationImageBase },
+         }
+      elseif( xmlNum == 10 ) then
+         allParts = {
+            { "Body", animationImageBase },
+            { "Torso", dressingRoomImagBase },
+            { "Mouth", animationImageBase },
+            { "Eyes", animationImageBase },
+            { "Eyewear", dressingRoomImagBase },
+            { "Headwear", dressingRoomImagBase },
+            --{ "LowerTorso", dressingRoomImagBase },
+            { "Neckwear", dressingRoomImagBase },
+            --{ "UpperTorso", dressingRoomImagBase },
+            { "Instrument", animationImageBase },
+            { "LeftArm", animationImageBase },
+            { "RightArm", animationImageBase },
+            --{ "Instrument_RhythmComboCheeseGrater_Fork", animationImageBase },
+            --{ "Instrument_RhythmComboCheeseGrater", animationImageBase },         
+         }
+      elseif( xmlNum == 11 ) then
+         dprint("xmlNum 11")
+         allParts = {
+            { "Body", animationImageBase },
+            { "Torso", dressingRoomImagBase },
+            { "Mouth", animationImageBase },
+            { "Eyes", animationImageBase },
+            { "Eyewear", dressingRoomImagBase },
+            { "Headwear", dressingRoomImagBase },
+            { "Neckwear", dressingRoomImagBase },
+            --{ "Instrument_RhythmComboCymbal_Cymbal", animationImageBase },
+            --{ "Instrument_RhythmComboCymbal_Stick", animationImageBase },
+            { "Instrument", animationImageBase },
+            { "LeftArm", animationImageBase },
+            { "RightArm", animationImageBase },
+            
+         }
+      elseif( xmlNum == 12 ) then
+         allParts = {
+            { "Body", animationImageBase },
+            { "Torso", dressingRoomImagBase },
+            { "Mouth", animationImageBase },
+            { "Eyes", animationImageBase },
+            { "Eyewear", dressingRoomImagBase },
+            { "Headwear", dressingRoomImagBase },
+            --{ "LowerTorso", dressingRoomImagBase },
+            { "Neckwear", dressingRoomImagBase },
+            --{ "UpperTorso", dressingRoomImagBase },
+            --{ "Instrument", animationImageBase },
+            { "Instrument_Sticks_Left", animationImageBase },
+            { "Instrument_Sticks_Right", animationImageBase },         
+            { "LeftArm", animationImageBase },
+            { "RightArm", animationImageBase },
+         }
+      
+      else
+         allParts = {
+            { "Body", animationImageBase },
+            { "Torso", dressingRoomImagBase },
+            { "Mouth", animationImageBase },
+            { "Eyes", animationImageBase },
+            { "Eyewear", dressingRoomImagBase },
+            { "Headwear", dressingRoomImagBase },
+            --{ "LowerTorso", dressingRoomImagBase },
+            { "Neckwear", dressingRoomImagBase },
+            --{ "UpperTorso", dressingRoomImagBase },
+            { "Instrument", animationImageBase },
+            { "LeftArm", animationImageBase },
+            { "RightArm", animationImageBase },
+         }
+      end
+      
       for i = 1, #allParts do
          local partName = allParts[i][1]
          for j = 1, #partsList do
-            print(j, partName )
+            --dprint(j, partName )
             if( string.match( partsList[j].name, partName ) ~= nil ) then
+               --dprint(j, partName )
                FRC_Rehearsal_Tools.findAnimationParts( partsList, partName, animationsToBuild, allParts[i][2] )
             end
          end
@@ -704,7 +781,7 @@ function FRC_Rehearsal_Scene:createScene(event)
       for i = 1, #animationsToBuild do
          local animationGroupProperties = {}
          --table.dump2(animationsToBuild[i])
-         animationSequences[i] = FRC_Rehearsal_Tools.createUnifiedAnimationClipGroup( xmlFiles[seqNum],
+         animationSequences[i] = FRC_Rehearsal_Tools.createUnifiedAnimationClipGroup( xmlFiles[xmlNum],
                                                                                       animationsToBuild[i],
                                                                                       animationXMLBase,
                                                                                       animationsToBuild[i][3], -- animationImageBase,
