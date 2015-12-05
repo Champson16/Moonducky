@@ -1,0 +1,94 @@
+[{
+	"id": "HamstersWantToBeFree",
+	"instruments" :
+		[{
+			"id": "Microphone",
+			"imageUp": "MDMT_Rehearsal_Icon_Instrument_Microphone.png",
+			"imageDown": "MDMT_Rehearsal_Icon_Instrument_Microphone.png",
+			"imageFocused": "MDMT_Rehearsal_Icon_Instrument_Microphone.png",
+			"imageDisabled": "MDMT_Rehearsal_Icon_Instrument_Microphone.png",
+			"width": 128,
+			"height": 128
+		},
+		{
+			"id": "Bass",
+			"imageUp": "MDMT_Rehearsal_Icon_Instrument_Bass.png",
+			"imageDown": "MDMT_Rehearsal_Icon_Instrument_Bass.png",
+			"imageFocused": "MDMT_Rehearsal_Icon_Instrument_Bass.png",
+			"imageDisabled": "MDMT_Rehearsal_Icon_Instrument_Bass.png",
+			"width": 128,
+			"height": 128
+		},
+		{
+			"id": "Conga",
+			"imageUp": "MDMT_Rehearsal_Icon_Instrument_Conga.png",
+			"imageDown": "MDMT_Rehearsal_Icon_Instrument_Conga.png",
+			"imageFocused": "MDMT_Rehearsal_Icon_Instrument_Conga.png",
+			"imageDisabled": "MDMT_Rehearsal_Icon_Instrument_Conga.png",
+			"width": 128,
+			"height": 128
+		},
+		{
+			"id": "Guitar",
+			"imageUp": "MDMT_Rehearsal_Icon_Instrument_Guitar.png",
+			"imageDown": "MDMT_Rehearsal_Icon_Instrument_Guitar.png",
+			"imageFocused": "MDMT_Rehearsal_Icon_Instrument_Guitar.png",
+			"imageDisabled": "MDMT_Rehearsal_Icon_Instrument_Guitar.png",
+			"width": 128,
+			"height": 128
+		},
+		{
+			"id": "Piano",
+			"imageUp": "MDMT_Rehearsal_Icon_Instrument_Piano.png",
+			"imageDown": "MDMT_Rehearsal_Icon_Instrument_Piano.png",
+			"imageFocused": "MDMT_Rehearsal_Icon_Instrument_Piano.png",
+			"imageDisabled": "MDMT_Rehearsal_Icon_Instrument_Piano.png",
+			"width": 128,
+			"height": 128
+		},
+		{
+			"id": "Harmonica",
+			"imageUp": "MDMT_Rehearsal_Icon_Instrument_Harmonica.png",
+			"imageDown": "MDMT_Rehearsal_Icon_Instrument_Harmonica.png",
+			"imageFocused": "MDMT_Rehearsal_Icon_Instrument_Harmonica.png",
+			"imageDisabled": "MDMT_Rehearsal_Icon_Instrument_Harmonica.png",
+			"width": 128,
+			"height": 128
+		},
+		{
+			"id": "Maracas",
+			"imageUp": "MDMT_Rehearsal_Icon_Instrument_Maracas.png",
+			"imageDown": "MDMT_Rehearsal_Icon_Instrument_Maracas.png",
+			"imageFocused": "MDMT_Rehearsal_Icon_Instrument_Maracas.png",
+			"imageDisabled": "MDMT_Rehearsal_Icon_Instrument_Maracas.png",
+			"width": 128,
+			"height": 128
+		},
+		{
+			"id": "Sticks",
+			"imageUp": "MDMT_Rehearsal_Icon_Instrument_Sticks.png",
+			"imageDown": "MDMT_Rehearsal_Icon_Instrument_Sticks.png",
+			"imageFocused": "MDMT_Rehearsal_Icon_Instrument_Sticks.png",
+			"imageDisabled": "MDMT_Rehearsal_Icon_Instrument_Sticks.png",
+			"width": 128,
+			"height": 128
+		},
+		{
+			"id": "RhythmComboCheeseGrater",
+			"imageUp": "MDMT_Rehearsal_Icon_Instrument_RhythmComboCheeseGrater.png",
+			"imageDown": "MDMT_Rehearsal_Icon_Instrument_RhythmComboCheeseGrater.png",
+			"imageFocused": "MDMT_Rehearsal_Icon_Instrument_RhythmComboCheeseGrater.png",
+			"imageDisabled": "MDMT_Rehearsal_Icon_Instrument_RhythmComboCheeseGrater.png",
+			"width": 128,
+			"height": 128
+		},
+		{
+			"id": "RhythmComboCymbal",
+			"imageUp": "MDMT_Rehearsal_Icon_Instrument_RhythmComboCymbal.png",
+			"imageDown": "MDMT_Rehearsal_Icon_Instrument_RhythmComboCymbal.png",
+			"imageFocused": "MDMT_Rehearsal_Icon_Instrument_RhythmComboCymbal.png",
+			"imageDisabled": "MDMT_Rehearsal_Icon_Instrument_RhythmComboCymbal.png",
+			"width": 128,
+			"height": 128
+		}]
+}]

@@ -343,7 +343,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    -- create button panel for categories (aligned to the bottom of the screen)
    local categoriesContainer = display.newContainer(categoriesWidth, categoriesHeight)
    local categoriesBg = display.newRoundedRect(categoriesContainer, 0, 0, categoriesWidth, categoriesHeight, 11)
-   categoriesBg:setFillColor(1.0, 1.0, 1.0, 0.35)
+   categoriesBg:setFillColor(0.27, 0.27, 0.27, 0.35)
    categoriesBg.x, categoriesBg.y = 0, 0
    categoriesContainer.x = display.contentCenterX
    categoriesContainer.y = display.contentHeight - (categoriesHeight * 0.5) + (category_button_spacing * 1.65)
@@ -358,8 +358,10 @@ function FRC_Rehearsal_Scene:createScene(event)
             width = categoryData[i].width * button_scale,
             height = categoryData[i].height * button_scale,
             onPress = function(e)
+               -- show the focused state for the selected category icon
                local self = e.target
                self:setFocusState(true)
+               -- present the scroller contain the selected category's content
                itemScrollers[self.id].isVisible = true
                for i=2,categoriesContainer.numChildren do
                   if (categoriesContainer[i] ~= self) then
@@ -393,15 +395,49 @@ function FRC_Rehearsal_Scene:createScene(event)
          button:setFocusState(true)
          scroller.isVisible = true
       end
-   end
+    end
+
+    -- setup for container construction
+    local button_scale = 0.75;
+    local x = -(screenW * 0.5) + button_spacing
+    local buttonHeight = 0
 
    -- create SetDesign scroll container
 
    -- create Instruments scroll container
+   -- This is for testing. TODO: store the show's song ID somewhere and reference it here
+   local songID = "HamstersWantToBeFree";
+   -- for now, just grab the first song's instrument list
+   local songInstruments = instrumentData[1].instruments;
+   for i=1,#songInstruments do
+      local scroller = itemScrollers['Instrument']
+      buttonHeight = scroller.contentHeight - button_spacing
+      local button = ui.button.new({
+            id = songInstruments[i].id,
+            imageUp = UI('IMAGES_PATH') .. songInstruments[i].imageUp,
+            imageDown = UI('IMAGES_PATH') .. songInstruments[i].imageDown,
+            imageFocused = UI('IMAGES_PATH') .. songInstruments[i].imageFocused,
+            imageDisabled = UI('IMAGES_PATH') .. songInstruments[i].imageDisabled,
+            width = songInstruments[i].width * button_scale,
+            height = songInstruments[i].height * button_scale,
+            parentScrollContainer = scroller,
+            pressAlpha = 0.5,
+            onRelease = function(e)
+               local self = e.target
+               -- CODE TO HANDLE INSTRUMENT INSERTION/CHANGE GOES HERE
+               -- changeItem('Instrument', self.id)
+            end
+         })
+      button.categoryId = 'Instrument'
+      scroller:insert(button)
+      x = x + (button.contentWidth * 0.5)
+      button.x, button.y = x, 0
+      x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)
+   end
 
    -- create Character scroll container
-   local x = -(screenW * 0.5) + button_spacing
-   local buttonHeight = 0
+   -- reset x
+   x = -(screenW * 0.5) + button_spacing
    for i=1,#characterData do
       local scroller = itemScrollers['Character']
       buttonHeight = scroller.contentHeight - button_spacing
@@ -504,7 +540,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    local doit
    local testGroup = display.newGroup()
    view:insert( testGroup )
-   
+
    local xmlFiles = {
       "MDMT_Animation_Chicken_Bass.xml",
       "MDMT_Animation_Chicken_Conga.xml",
@@ -519,13 +555,13 @@ function FRC_Rehearsal_Scene:createScene(event)
       "MDMT_Animation_Chicken_RhythmComboCymbal.xml",
       "MDMT_Animation_Chicken_Sticks.xml",
    }
-   
+
    -- Create a menu to select and play the animations
    --
    local radioButtons = {}
    local startX = 120
    local startY = 120
-   local curX = startX   
+   local curX = startX
    local curY = startY
    local width = 220
    local height = 40
@@ -553,9 +589,9 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
       button:addEventListener("touch")
       curY = curY + height
-   end   
-   
-   
+   end
+
+
    local animationSequences = {}
    doit = function( seqNum )
       print(seqNum)
@@ -571,14 +607,14 @@ function FRC_Rehearsal_Scene:createScene(event)
       display.remove( testGroup )
       testGroup = display.newGroup()
       view:insert( testGroup )
-      
+
    local FRC_Rehearsal_Tools = require("FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Tools")
-   
-      
+
+
       --local partsList = FRC_Rehearsal_Tools.getPartsList( "efm_unified.xml", animationXMLBase )
-      
+
       local partsList = FRC_Rehearsal_Tools.getPartsList( xmlFiles[seqNum], animationXMLBase )
-      
+
       --table.print_r( partsList )
       --table.dump2( partsList )
       for i = 1, #partsList do
@@ -591,8 +627,8 @@ function FRC_Rehearsal_Scene:createScene(event)
       --UpperTorso
       --Body
       --Eyes
-      --Instrument   
-      
+      --Instrument
+
       -- Create a menu to select and play the animations
       --
       -- Parse animations from Unified file and select just animations we want
@@ -617,14 +653,14 @@ function FRC_Rehearsal_Scene:createScene(event)
          local partName = allParts[i][1]
          for j = 1, #partsList do
             print(j, partName )
-            if( string.match( partsList[j].name, partName ) ~= nil ) then 
+            if( string.match( partsList[j].name, partName ) ~= nil ) then
                FRC_Rehearsal_Tools.findAnimationParts( partsList, partName, animationsToBuild, allParts[i][2] )
             end
          end
       end
-      
+
       table.print_r(animationsToBuild)
-      
+
       -- Create animation groups (sequences) from our list of animations to build
       local animGroup = display.newGroup()
       local xOffset = (screenW - (display.contentWidth * bg.xScale)) * 0.5
@@ -632,13 +668,13 @@ function FRC_Rehearsal_Scene:createScene(event)
       for i = 1, #animationsToBuild do
          local animationGroupProperties = {}
          table.dump2(animationsToBuild[i])
-         animationSequences[i] = FRC_Rehearsal_Tools.createUnifiedAnimationClipGroup( xmlFiles[seqNum], 
-                                                                                      animationsToBuild[i], 
-                                                                                      animationXMLBase, 
-                                                                                      animationsToBuild[i][3], -- animationImageBase, 
-                                                                                      animationGroupProperties )                              
+         animationSequences[i] = FRC_Rehearsal_Tools.createUnifiedAnimationClipGroup( xmlFiles[seqNum],
+                                                                                      animationsToBuild[i],
+                                                                                      animationXMLBase,
+                                                                                      animationsToBuild[i][3], -- animationImageBase,
+                                                                                      animationGroupProperties )
          FRC_Layout.scaleToFit(animationSequences[i], 0, 0)
-         
+
          animationSequences[i].x = animationSequences[i].x --+ xOffset
          animationSequences[i].y = animationSequences[i].y --+ bg.contentBounds.yMin
          animGroup:insert(animationSequences[i])
@@ -653,14 +689,14 @@ function FRC_Rehearsal_Scene:createScene(event)
       -- Create a menu to select and play the animations
       --
       local toggleButtons = {}
-      local button = display.newRect( animGroup, 500, 400, 300, 600 ) 
+      local button = display.newRect( animGroup, 500, 400, 300, 600 )
       button.isHitTestable = true
       button:setFillColor(0.5, 1, 0.5 )
       button.alpha = 0
-      button.touch = function( self, event )         
-         if( event.phase == "ended" ) then 
+      button.touch = function( self, event )
+         if( event.phase == "ended" ) then
             for i = 1, #toggleButtons do
-               print( i, toggleButtons[i] ) 
+               print( i, toggleButtons[i] )
                if( toggleButtons[i].toggled ) then
                   FRC_Rehearsal_Tools.playUnifiedAnimations( animationSequences, i )
                end
@@ -669,24 +705,24 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
       button:addEventListener("touch")
       if( autoRun ) then
-         timer.performWithDelay( 100, 
+         timer.performWithDelay( 100,
             function()
                for i = 1, #animationSequences do
-                  FRC_Rehearsal_Tools.playUnifiedAnimations( animationSequences, i )  
+                  FRC_Rehearsal_Tools.playUnifiedAnimations( animationSequences, i )
                end
             end )
       end
 
       local startX = 120
       local startY = display.contentHeight - 80
-      local curX = startX   
+      local curX = startX
       local curY = startY
       local width = 220
       local height = 30
       for i = 1, #animationsToBuild do
          local button = display.newRect( testGroup, curX, curY, width - 10, height )
          button.strokeWidth = 4
-         button:setStrokeColor(0,1,0)         
+         button:setStrokeColor(0,1,0)
          button.toggled = true
          button.label = display.newText( testGroup, i .. " " .. animationsToBuild[i][1], curX, curY, native.systemFont, 14 )
          button.label:setFillColor(0)
@@ -707,14 +743,14 @@ function FRC_Rehearsal_Scene:createScene(event)
          curX = curX + width
          if( curX > display.contentWidth - width ) then
             curX = startX
-            curY = startY + 40 
+            curY = startY + 40
          end
-      end      
+      end
       --]]
-      
+
    end
    radioButtons[1].touch( radioButtons[1], { phase = "ended" } )
-   
+
    -- GUTS END HERE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
    -- GUTS END HERE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
    -- GUTS END HERE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
