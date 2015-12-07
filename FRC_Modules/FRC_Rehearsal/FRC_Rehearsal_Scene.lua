@@ -10,6 +10,11 @@ local FRC_Rehearsal_Scene     = storyboard.newScene()
 local FRC_AnimationManager    = require('FRC_Modules.FRC_AnimationManager.FRC_AnimationManager')
 local FRC_AudioManager        = require('FRC_Modules.FRC_AudioManager.FRC_AudioManager')
 local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
+local FRC_SetDesign_Settings  = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign_Settings');
+local FRC_ArtCenter;
+local artCenterLoaded = pcall(function()
+	FRC_ArtCenter = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter');
+end);
 
 -- ====================================================================
 -- Locals
@@ -25,14 +30,23 @@ local showIntrumentSample --EFM
 local function UI(key)
    return FRC_Rehearsal_Settings.UI[key]
 end
+local function SETDESIGNUI(key)
+   return FRC_SetDesign_Settings.UI[key]
+end
 
 local function DATA(key, baseDir)
    baseDir = baseDir or system.ResourceDirectory
    return FRC_DataLib.readJSON(FRC_Rehearsal_Settings.DATA[key], baseDir)
 end
+local function SETDESIGNDATA(key, baseDir)
+   baseDir = baseDir or system.ResourceDirectory
+   return FRC_DataLib.readJSON(FRC_SetDesign_Settings.DATA[key], baseDir)
+end
 local animationXMLBase = UI('ANIMATION_XML_BASE')
 local animationImageBase = UI('ANIMATION_IMAGE_BASE')
 
+FRC_Rehearsal_Scene.setIndex = 1;
+FRC_Rehearsal_Scene.backdropIndex = 1;
 
 function FRC_Rehearsal_Scene:save(e)
    --[[
@@ -168,6 +182,99 @@ function FRC_Rehearsal_Scene:createScene(event)
    local bg = display.newImageRect(view, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'))
    FRC_Layout.scaleToFit(bg)
    bg.x, bg.y = display.contentCenterX, display.contentCenterY
+
+   -- Get lua tables from JSON data
+   local setData = SETDESIGNDATA('SETS');
+   local backdropData = SETDESIGNDATA('BACKDROPS');
+
+   -- Load in existing ArtCenter images as Backdrops
+   if (artCenterLoaded) then
+     FRC_ArtCenter.getSavedData();
+     if ((FRC_ArtCenter.savedData) and (#FRC_ArtCenter.savedData.savedItems > 0)) then
+       for i=#FRC_ArtCenter.savedData.savedItems,1,-1 do
+         local item = FRC_ArtCenter.savedData.savedItems[i];
+         table.insert(backdropData, 1, {
+           id = item.id,
+           imageFile = item.id .. item.fullSuffix,
+           thumbFile = item.id .. item.thumbSuffix,
+           width = item.fullWidth,
+           height = item.fullHeight,
+           baseDir = "DocumentsDirectory"
+         });
+       end
+     end
+   end
+
+   local setScale = 1;
+   view.setDesignGroup = display.newGroup(); view:insert(view.setDesignGroup);
+   local backdropGroup = display.newGroup(); view.setDesignGroup:insert(backdropGroup);
+   local setGroup = display.newGroup(); view.setDesignGroup:insert(setGroup);
+
+   local repositionSet = function()
+     view.setDesignGroup.xScale = setScale;
+     view.setDesignGroup.yScale = setScale;
+     view.setDesignGroup.x = (display.contentWidth - (display.contentWidth * setScale)) * 0.5;
+     view.setDesignGroup.y = (display.contentHeight - (display.contentHeight * setScale)) * 0.5;
+     -- view.setDesignGroup.y = view.setDesignGroup.y - 80;
+   end
+
+   local changeSet = function(index)
+     if (index == FRC_Rehearsal_Scene.setIndex) then return; end
+     index = index or FRC_Rehearsal_Scene.setIndex;
+     if (setGroup.numChildren > 0) then
+       setGroup[1]:removeSelf();
+       setGroup[1] = nil;
+     end
+
+     local setBackground = display.newImageRect(setGroup, SETDESIGNUI('IMAGES_PATH') .. setData[index].imageFile, setData[index].width, setData[index].height);
+     setBackground.x = display.contentCenterX;
+     setBackground.y = display.contentCenterY;
+     local frameRect = setData[index].frameRect;
+     setBackground.frameRect = frameRect;
+     FRC_Rehearsal_Scene.setIndex = index;
+
+     -- resize selected backdrop to fit in selected set
+     local selectedBackdrop = backdropGroup[1];
+     if (not selectedBackdrop) then return; end
+     local currentWidth = backdropData[FRC_Rehearsal_Scene.backdropIndex].width;
+     local currentHeight = backdropData[FRC_Rehearsal_Scene.backdropIndex].height;
+     selectedBackdrop.xScale = (frameRect.width / currentWidth);
+     selectedBackdrop.yScale = (frameRect.height / currentHeight);
+     selectedBackdrop.x = frameRect.left - ((setBackground.width - display.contentWidth) * 0.5);
+     selectedBackdrop.y = frameRect.top - ((setBackground.height - display.contentHeight) * 0.5);
+   end
+   self.changeSet = changeSet;
+   changeSet();
+
+   local changeBackdrop = function(index)
+     if (index == FRC_Rehearsal_Scene.backdropIndex) then return; end
+     if (not backdropData[index]) then index = 1; end -- ArtCenter image set as backdrop, but image was deleted (reset index to 1)
+     index = index or FRC_Rehearsal_Scene.backdropIndex;
+     if (backdropGroup.numChildren > 0) then
+       backdropGroup[1]:removeSelf();
+       backdropGroup[1] = nil;
+     end
+
+     local frameRect = setGroup[1].frameRect;
+     local imageFile = SETDESIGNUI('IMAGES_PATH') .. backdropData[index].imageFile;
+     local baseDir = system.ResourceDirectory;
+     if (backdropData[index].baseDir) then
+       imageFile = backdropData[index].imageFile;
+       baseDir = system[backdropData[index].baseDir];
+     end
+     local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, backdropData[index].width, backdropData[index].height);
+     backdropBackground.anchorX = 0;
+     backdropBackground.anchorY = 0;
+     backdropBackground.xScale = (frameRect.width / backdropData[index].width);
+     backdropBackground.yScale = (frameRect.height / backdropData[index].height);
+     backdropBackground.x = frameRect.left - ((setGroup[1].width - display.contentWidth) * 0.5);
+     backdropBackground.y = frameRect.top - ((setGroup[1].height - display.contentHeight) * 0.5);
+     FRC_Rehearsal_Scene.backdropIndex = index;
+   end
+   self.changeBackdrop = changeBackdrop;
+   changeBackdrop();
+   repositionSet();
+
 
    -- Get lua tables from JSON data
    local categoryData = DATA('CATEGORY')
@@ -673,8 +780,8 @@ function FRC_Rehearsal_Scene:createScene(event)
       local animationsToBuild = {}
       local dressingRoomImagBase = "FRC_Assets/FRC_DressingRoom/Images/"
       animationSequences = {}
-      local allParts 
-      
+      local allParts
+
       if( xmlNum == 7 ) then
          allParts = {
             { "Body", animationImageBase },
@@ -688,7 +795,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             --{ "UpperTorso", dressingRoomImagBase },
             --{ "Instrument", animationImageBase },
             { "Instrument_Maracas_Left", animationImageBase },
-            { "Instrument_Maracas_Right", animationImageBase },         
+            { "Instrument_Maracas_Right", animationImageBase },
             { "LeftArm", animationImageBase },
             { "RightArm", animationImageBase },
          }
@@ -707,7 +814,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             { "LeftArm", animationImageBase },
             { "RightArm", animationImageBase },
             --{ "Instrument_RhythmComboCheeseGrater_Fork", animationImageBase },
-            --{ "Instrument_RhythmComboCheeseGrater", animationImageBase },         
+            --{ "Instrument_RhythmComboCheeseGrater", animationImageBase },
          }
       elseif( xmlNum == 11 ) then
          dprint("xmlNum 11")
@@ -724,7 +831,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             { "Instrument", animationImageBase },
             { "LeftArm", animationImageBase },
             { "RightArm", animationImageBase },
-            
+
          }
       elseif( xmlNum == 12 ) then
          allParts = {
@@ -739,11 +846,11 @@ function FRC_Rehearsal_Scene:createScene(event)
             --{ "UpperTorso", dressingRoomImagBase },
             --{ "Instrument", animationImageBase },
             { "Instrument_Sticks_Left", animationImageBase },
-            { "Instrument_Sticks_Right", animationImageBase },         
+            { "Instrument_Sticks_Right", animationImageBase },
             { "LeftArm", animationImageBase },
             { "RightArm", animationImageBase },
          }
-      
+
       else
          allParts = {
             { "Body", animationImageBase },
@@ -760,7 +867,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             { "RightArm", animationImageBase },
          }
       end
-      
+
       for i = 1, #allParts do
          local partName = allParts[i][1]
          for j = 1, #partsList do
