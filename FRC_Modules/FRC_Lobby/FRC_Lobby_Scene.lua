@@ -70,6 +70,55 @@ function FRC_Lobby_Scene:createScene(event)
 		return true
 	end
 
+	local theatreDoorAnimationFiles = {
+		"MDMT_Lobby_UsherDoorStatic_g.xml",
+			"MDMT_Lobby_UsherDoorStatic_f.xml",
+			"MDMT_Lobby_UsherDoorStatic_e.xml",
+			"MDMT_Lobby_UsherDoorStatic_d.xml",
+			"MDMT_Lobby_UsherDoorStatic_c.xml",
+			"MDMT_Lobby_UsherDoorStatic_b.xml",
+			"MDMT_Lobby_UsherDoorStatic_a.xml"
+	}
+
+	theatreDoorAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorAnimationFiles, animationXMLBase, animationImageBase);
+	FRC_Layout.scaleToFit(theatreDoorAnimationSequences);
+	local xOffset = (screenW - (contentW * bg.xScale)) * 0.5;
+	theatreDoorAnimationSequences.x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset;
+	local yOffset = (screenH - (contentH * bg.yScale)) * 0.5;
+	theatreDoorAnimationSequences.y = ((bg.contentHeight - screenH) * 0.5) + bg.contentBounds.yMin + yOffset;
+
+	bgGroup:insert(theatreDoorAnimationSequences);
+
+	for i=1, theatreDoorAnimationSequences.numChildren do
+		theatreDoorAnimationSequences[i]:play({
+			showLastFrame = true,
+			playBackward = false,
+			autoLoop = true,
+			palindromicLoop = false,
+			delay = 0,
+			intervalTime = 30,
+			maxIterations = 1
+		});
+	end
+
+	theatreDoorAnimationSequences:addEventListener('touch', function(e)
+		if (theatreDoorAnimationSequences) then
+			if (theatreDoorAnimationSequences.numChildren) then
+				for i=1, theatreDoorAnimationSequences.numChildren do
+					local anim = theatreDoorAnimationSequences[i];
+					if (anim) then
+						-- if (anim.isPlaying) then
+							anim.dispose();
+						-- end
+						-- anim.remove();
+					end
+				end
+			end
+			theatreDoorAnimationSequences = nil;
+		end
+		sceneLayoutMethods["playOutboundAnimationSequences"]();
+	end);
+
 	-- function sceneLayoutMethods.playHamstersVideo()
 	-- 	analytics.logEvent("MDMT.Home.HamstersVideo");
 	-- 	if (FRC_AppSettings.get("ambientSoundOn")) then
@@ -183,38 +232,38 @@ function FRC_Lobby_Scene:createScene(event)
 		if sceneLayoutData[i].imageFile then
 			sceneLayout[i] = display.newImageRect(bgGroup, UI('IMAGES_PATH') .. sceneLayoutData[i].imageFile, sceneLayoutData[i].width, sceneLayoutData[i].height);
 			FRC_Layout.scaleToFit(sceneLayout[i]);
-         
+
          print("scene layout object before x/y: ", sceneLayoutData[i].id, sceneLayout[i].x .. " / " .. sceneLayout[i].y);
 
 			if (sceneLayoutData[i].left) then
 				sceneLayoutData[i].left = (sceneLayoutData[i].left * bg.xScale);
 				sceneLayout[i].x = sceneLayoutData[i].left - ((screenW - contentW) * 0.5) + (sceneLayout[i].contentWidth * 0.5);
-			
+
          elseif (sceneLayoutData[i].right) then
 				sceneLayoutData[i].right = (sceneLayoutData[i].right * bg.xScale);
 				sceneLayout[i].x = contentW - sceneLayoutData[i].right + ((screenW - contentW) * 0.5) - (sceneLayout[i].contentWidth * 0.5);
-			
+
          elseif (sceneLayoutData[i].xCenter) then
 				--sceneLayout[i].x = display.contentCenterX; -- + (sceneLayoutData[i].xCenter * bg.xScale);
             sceneLayout[i].x = 0;
-			
+
          else
 				sceneLayoutData[i].x = sceneLayoutData[i].x * bg.xScale;
 				sceneLayout[i].x = sceneLayoutData[i].x - ((screenW - contentW) * 0.5);
 			end
-			
+
          if (sceneLayoutData[i].top) then
 				sceneLayout[i].y = sceneLayoutData[i].top - ((screenH - contentH) * 0.5) + (sceneLayout[i].contentHeight * 0.5);
 				sceneLayout[i].y = sceneLayout[i].y + bg.contentBounds.yMin;
-			
+
          elseif (sceneLayoutData[i].bottom) then
 				sceneLayoutData[i].bottom = sceneLayoutData[i].bottom * bg.yScale;
 				sceneLayout[i].y = contentH - sceneLayoutData[i].bottom + ((screenH - contentH) * 0.5) - (sceneLayout[i].contentHeight * 0.5);
-			
+
          elseif (sceneLayoutData[i].yCenter) then
 				--sceneLayout[i].y = display.contentCenterY; -- + (sceneLayoutData[i].yCenter * bg.yScale);
             sceneLayout[i].y = 0;
-			
+
          else
 				sceneLayoutData[i].y = sceneLayoutData[i].y * bg.yScale;
 				sceneLayout[i].y = sceneLayoutData[i].y - ((screenH - contentH) * 0.5);
@@ -436,7 +485,7 @@ function FRC_Lobby_Scene:enterScene(event)
 	if (FRC_Lobby_Scene.postEnterScene) then
 		FRC_Lobby_Scene:postEnterScene(event);
 	end
-   
+
    --view:scale(0.5,0.5)
    --view.x = 200
    --view.y = 200

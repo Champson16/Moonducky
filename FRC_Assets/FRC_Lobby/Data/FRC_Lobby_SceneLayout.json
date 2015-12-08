@@ -1,16 +1,5 @@
 [
 	{
-		"id": "TheatreDoor",
-		"animationFiles": ["MDMT_Lobby_UsherDoorStatic_g.xml",
-			"MDMT_Lobby_UsherDoorStatic_f.xml",
-			"MDMT_Lobby_UsherDoorStatic_e.xml",
-			"MDMT_Lobby_UsherDoorStatic_d.xml",
-			"MDMT_Lobby_UsherDoorStatic_c.xml",
-			"MDMT_Lobby_UsherDoorStatic_b.xml",
-			"MDMT_Lobby_UsherDoorStatic_a.xml"],
-			"onTouch": "playOutboundAnimationSequences"
-	},
-	{
 		"id": "VelvetRope",
 		"imageFile": "MDMT_Lobby_VelvetRope.png",
 		"width": 385,

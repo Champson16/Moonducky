@@ -593,6 +593,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    -- basically we need to have the scroller operate like a differently laid out version of FRC_GalleryPopup
 
    -- create Instruments scroll container
+	 x = -(screenW * 0.5) + button_spacing
    -- This is for testing. TODO: store the show's song ID somewhere and reference it here
    local songID = "HamstersWantToBeFree";
    -- for now, just grab the first song's instrument list
