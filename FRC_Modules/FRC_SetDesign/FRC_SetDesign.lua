@@ -19,6 +19,15 @@ if (not FRC_SetDesign.saveData) then
 	FRC_SetDesign.saveData = emptyDataFile;
 end
 
+local getSavedData = function()
+	FRC_SetDesign.saveData = FRC_DataLib.readJSON(saveDataFilename, system.DocumentsDirectory);
+	if (not FRC_SetDesign.saveData) then
+		FRC_DataLib.saveJSON(saveDataFilename, emptyDataFile);
+		FRC_SetDesign.saveData = emptyDataFile;
+	end
+end
+FRC_SetDesign.getSavedData = getSavedData;
+
 function FRC_SetDesign.newScene(settings)
 	local settings = settings or {};
 

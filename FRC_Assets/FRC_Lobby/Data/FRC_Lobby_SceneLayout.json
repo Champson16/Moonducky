@@ -1,13 +1,5 @@
 [
 	{
-		"id": "Jukebox",
-		"animationFiles": [  "MDMT_Lobby_Jukebox.xml",
-			"MDMT_Lobby_JukeboxLight_Bottom.xml",
-			"MDMT_Lobby_JukeboxLight_Sides.xml",
-			"MDMT_Lobby_JukeboxLight_Top.xml" ],
-			"onTouch": "featureComingSoon"
-	},
-	{
 		"id": "TheatreDoor",
 		"animationFiles": ["MDMT_Lobby_UsherDoorStatic_g.xml",
 			"MDMT_Lobby_UsherDoorStatic_f.xml",
@@ -23,8 +15,8 @@
 		"imageFile": "MDMT_Lobby_VelvetRope.png",
 		"width": 385,
 		"height": 324,
-		"x": -10,
-		"y": 222
+		"x": -270,
+		"y": 248
 	},
 	{
 		"id": "PopcornMachine",
@@ -33,5 +25,13 @@
 		"height": 283,
 		"x": 249,
 		"y": 36
+	},
+	{
+		"id": "Jukebox",
+		"animationFiles": [  "MDMT_Lobby_Jukebox.xml",
+			"MDMT_Lobby_JukeboxLight_Bottom.xml",
+			"MDMT_Lobby_JukeboxLight_Sides.xml",
+			"MDMT_Lobby_JukeboxLight_Top.xml" ],
+			"onTouch": "featureComingSoon"
 	}
 ]

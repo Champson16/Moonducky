@@ -11,6 +11,7 @@ local FRC_AnimationManager    = require('FRC_Modules.FRC_AnimationManager.FRC_An
 local FRC_AudioManager        = require('FRC_Modules.FRC_AudioManager.FRC_AudioManager')
 local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
 local FRC_SetDesign_Settings  = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign_Settings');
+local FRC_SetDesign           = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign');
 local FRC_ArtCenter;
 local artCenterLoaded = pcall(function()
       FRC_ArtCenter = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter');
@@ -511,12 +512,70 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
    end
 
-   -- setup for container construction
-   local button_scale = 0.75;
-   local x = -(screenW * 0.5) + button_spacing
-   local buttonHeight = 0
+    -- setup for container construction
+    button_scale = 0.75;
+    x = -(screenW * 0.5) + button_spacing
+    local buttonHeight = 0
 
    -- create SetDesign scroll container
+	 local setDesignData = {}; -- scene.saveData.savedItems
+
+	 FRC_SetDesign.getSavedData();
+	 if ((FRC_SetDesign.saveData) and (#FRC_SetDesign.saveData.savedItems > 0)) then
+		 for i=#FRC_SetDesign.saveData.savedItems,1,-1 do
+			 local item = FRC_SetDesign.saveData.savedItems[i];
+			 table.insert(setDesignData, 1, {
+				 id = item.id,
+				 imageFile = item.id .. item.thumbSuffix,
+				 width = item.thumbWidth,
+				 height = item.thumbHeight,
+				 setIndex = item.setIndex,
+				 backdropIndex = item.backdropIndex,
+				 baseDir = "DocumentsDirectory"
+			 });
+			  -- DEBUG
+			  -- print('id:', item.id, 'width:', item.thumbWidth, 'height:', item.thumbHeight);
+		 end
+	 end
+
+   for i=1,#setDesignData do
+		 -- DEBUG
+		 print('width', setDesignData[i].width * button_scale);
+		 -- print('id:', setDesignData[i].id, 'width:', setDesignData[i].width, 'height:', setDesignData[i].height);
+
+      local scroller = itemScrollers['SetDesign']
+      buttonHeight = scroller.contentHeight - button_spacing;
+
+      local button = ui.button.new({
+            id = setDesignData[i].id,
+            imageUp = setDesignData[i].imageFile,
+            imageDown = setDesignData[i].imageFile,
+            width = setDesignData[i].width * button_scale,
+            height = setDesignData[i].height * button_scale,
+						baseDirectory = system[setDesignData[i].baseDir],
+            parentScrollContainer = scroller,
+            pressAlpha = 0.5,
+            onRelease = function(e)
+              local self = e.target
+              -- CODE TO HANDLE SETDESIGN CHANGE GOES HERE
+					  	for i=1,#setDesignData do
+							 	if (setDesignData[i].id == self.id) then
+	                changeSet(setDesignData[i].setIndex)
+							    changeBackdrop(setDesignData[i].backdropIndex);
+								  repositionSet();
+									return;
+								end
+							end
+               --print(self.id)
+            end
+         })
+      button.categoryId = 'SetDesign'
+      scroller:insert(button)
+      x = x + (button.contentWidth * 0.5)
+      button.x, button.y = x, 0
+      x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)
+   end
+
    -- locate the user's existing SetDesign data
    -- CODE SNIPPET
    --  local function DATA(key, baseDir)
