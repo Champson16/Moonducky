@@ -1,6 +1,6 @@
 [{
 	"id": "Hamster",
-	"bodyImage": "MDMT_Rehearsal_Hamster.png",
+	"bodyThumb": "MDMT_Rehearsal_global_BaseCharacter_Hamster_thumbnail.png",
 	"bodyWidth": 261,
 	"bodyHeight": 431,
 	"eyesOpenImage": "MDMT_Rehearsal_Hamster_EyesOpen.png",

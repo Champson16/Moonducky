@@ -451,7 +451,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    -- create button panel for categories (aligned to the bottom of the screen)
    local categoriesContainer = display.newContainer(categoriesWidth, categoriesHeight)
    local categoriesBg = display.newRoundedRect(categoriesContainer, 0, 0, categoriesWidth, categoriesHeight, 11)
-   categoriesBg:setFillColor(0.27, 0.27, 0.27, 0.35)
+   categoriesBg:setFillColor(1.0, 1.0, 1.0, 0.35)
    categoriesBg.x, categoriesBg.y = 0, 0
    categoriesContainer.x = display.contentCenterX
    categoriesContainer.y = display.contentHeight - (categoriesHeight * 0.5) + (category_button_spacing * 1.65)
@@ -468,15 +468,21 @@ function FRC_Rehearsal_Scene:createScene(event)
             onPress = function(e)
                -- show the focused state for the selected category icon
                local self = e.target
-               self:setFocusState(true)
-               -- present the scroller contain the selected category's content
-               itemScrollers[self.id].isVisible = true
-               for i=2,categoriesContainer.numChildren do
-                  if (categoriesContainer[i] ~= self) then
-                     categoriesContainer[i]:setFocusState(false)
-                     itemScrollers[categoriesContainer[i].id].isVisible = false
-                  end
-               end
+							 if self:getFocusState() then
+								 -- hide the itemScroller
+								 itemScrollers[self.id].isVisible = false;
+								 self:setFocusState(false)
+							 else
+	               self:setFocusState(true)
+	               -- present the scroller contain the selected category's content
+	               itemScrollers[self.id].isVisible = true
+	               for i=2,categoriesContainer.numChildren do
+	                  if (categoriesContainer[i] ~= self) then
+	                     categoriesContainer[i]:setFocusState(false)
+	                     itemScrollers[categoriesContainer[i].id].isVisible = false
+	                  end
+	               end
+							 end
             end
          })
       categoriesContainer:insert(button)

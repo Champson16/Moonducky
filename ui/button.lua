@@ -149,6 +149,7 @@ button.new = function(options)
 	view.pressAlpha = options.pressAlpha;
 	view.pressColor = options.pressColor;
 	view.setFocusState = button.setFocusState;
+	view.getFocusState = button.getFocusState;
 	view.setDisabledState = button.setDisabledState;
 	view.setFillColor = button.setFillColor;
 	view.setStrokeColor = button.setStrokeColor;
@@ -336,6 +337,10 @@ button.setFocusState = function(self, focused)
 		self.focusState.isVisible = false;
 		self.focused = false;
 	end
+end
+
+button.getFocusState = function(self)
+	return self.focused
 end
 
 button.setDisabledState = function(self, disabled)

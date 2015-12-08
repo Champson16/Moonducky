@@ -295,7 +295,7 @@ function FRC_Lobby_Scene:createScene(event)
 
 	local learnButton = ui.button.new({
 		imageUp = imageBase .. 'MDMT_Lobby_LearnPoster.png',
-		imageDown = imageBase .. 'MDMT_Lobby_LearnPoster.png',
+		imageDown = imageBase .. 'MDMT_Lobby_LearnPoster_down.png',
 		width = 141,
 		height = 116,
 		x = 929 - 576,
@@ -337,7 +337,7 @@ function FRC_Lobby_Scene:createScene(event)
 
 	discoverButton = ui.button.new({
 		imageUp = imageBase .. 'MDMT_Lobby_DiscoverPoster.png',
-		imageDown = imageBase .. 'MDMT_Lobby_DiscoverPoster.png',
+		imageDown = imageBase .. 'MDMT_Lobby_DiscoverPoster_down.png',
 		width = 158,
 		height = 102,
 		x = 1004 - 576,
@@ -380,7 +380,7 @@ function FRC_Lobby_Scene:createScene(event)
 
 	rehearsalButton = ui.button.new({
 		imageUp = imageBase .. 'MDMT_Lobby_RehearsalDoor.png',
-		imageDown = imageBase .. 'MDMT_Lobby_RehearsalDoor.png',
+		imageDown = imageBase .. 'MDMT_Lobby_RehearsalDoor_down.png',
 		width = 133,
 		height = 327,
 		x = 222 - 576,

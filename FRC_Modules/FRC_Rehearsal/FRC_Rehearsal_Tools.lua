@@ -3,13 +3,13 @@ local FRC_AnimationManager    = require('FRC_Modules.FRC_AnimationManager.FRC_An
 local public = {}
 local private = {}
    -- GUTS HERE
-   
+
 function public.readXML( fileName, baseXMLDir )
    local rawLUAcode, xmltable, preexistingFile, newLuaFile, err, dataToSave, appLUApath, docLUApath;
    local XMLfilename = fileName;
-   local XMLLUAfilename = string.sub(XMLfilename, 1, string.len(XMLfilename)-3) .."lua";      
-   local XMLfilepath = baseXMLDir .. XMLfilename;      
-   appLUApath = system.pathForFile( baseXMLDir .. XMLLUAfilename );      
+   local XMLLUAfilename = string.sub(XMLfilename, 1, string.len(XMLfilename)-3) .."lua";
+   local XMLfilepath = baseXMLDir .. XMLfilename;
+   appLUApath = system.pathForFile( baseXMLDir .. XMLLUAfilename );
    docLUApath = system.pathForFile( XMLLUAfilename, system.DocumentsDirectory );
 
    if (appLUApath) then -- or docLUApath) then
@@ -50,7 +50,7 @@ function public.getPartsList( sourceFile, animationXMLBase )
    local xmltable = public.readXML( sourceFile, animationXMLBase  )
    local partsList = xmltable.Animation.Part
    for i = 1, #partsList do
-      --print(partsList[i].name)   
+      --print(partsList[i].name)
    end
    return partsList
 end
@@ -62,7 +62,7 @@ function public.findAnimationParts( parts, partSubName, toTable, animationImageB
          subParts[#subParts+1] = i
       end
    end
-   if(toTable) then 
+   if(toTable) then
       toTable[#toTable+1] = { partSubName, subParts, animationImageBase }
    end
    return subParts
@@ -83,21 +83,21 @@ function public.playUnifiedAnimations( animationSequences, num )
 
    --print("BILLY ",  sequence.numChildren )
    for i=1, sequence.numChildren do
-      
+
       sequence[i]:play({
             showLastFrame = true,
             playBackward = false,
-            autoLoop = false,
+            autoLoop = true,
             palindromicLoop = false,
             delay = 0,
             intervalTime = 30,
-            maxIterations = 1, 
+            maxIterations = 1,
             --onCompletion = onCompletion,
             --stopGate = true -- Not transfered yet
          })
       --timer.performWithDelay(33, function() sequence[i]:pause() end )
    end
-end   
+end
 
-     
+
 return public

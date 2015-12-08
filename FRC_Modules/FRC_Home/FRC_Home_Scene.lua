@@ -18,6 +18,7 @@ local animationXMLBase = 'FRC_Assets/MDMT_Assets/Animation/XMLData/';
 local animationImageBase = 'FRC_Assets/MDMT_Assets/Animation/Images/';
 
 local enteringLobbyAnimationSequences = {};
+local theatreDoorAnimationSequences = {};
 
 local imageBase = 'FRC_Assets/FRC_Home/Images/';
 local videoBase = 'FRC_Assets/MDMT_Assets/Videos/';
@@ -118,9 +119,6 @@ function FRC_Home_Scene:createScene(event)
 
     -- DEBUG:
 		print("sceneLayoutMethods.playEnteringLobbyAnimationSequences called");
-		-- if (scene.trainWhistle) then
-		-- 	audio.play(scene.trainWhistle, { channel= 22 }); -- { channel=_G.SFX_CHANNEL });
-		-- end
 
 		for i=1, enteringLobbyAnimationSequences.numChildren do
 			enteringLobbyAnimationSequences[i]:play({
@@ -294,6 +292,51 @@ function FRC_Home_Scene:createScene(event)
 			end
 		end
 	end
+
+	local theatreDoorAnimationFiles = {
+		"MDMT_LandingPage_UsherDoorStatic_c.xml",
+		"MDMT_LandingPage_UsherDoorStatic_b.xml",
+		"MDMT_LandingPage_UsherDoorStatic_a.xml",
+	}
+
+	theatreDoorAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorAnimationFiles, animationXMLBase, animationImageBase);
+	FRC_Layout.scaleToFit(theatreDoorAnimationSequences);
+	local xOffset = (screenW - (contentW * bg.xScale)) * 0.5;
+	theatreDoorAnimationSequences.x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset;
+	local yOffset = (screenH - (contentH * bg.yScale)) * 0.5;
+	theatreDoorAnimationSequences.y = ((bg.contentHeight - screenH) * 0.5) + bg.contentBounds.yMin + yOffset;
+
+	bgGroup:insert(theatreDoorAnimationSequences);
+
+	for i=1, theatreDoorAnimationSequences.numChildren do
+		theatreDoorAnimationSequences[i]:play({
+			showLastFrame = true,
+			playBackward = false,
+			autoLoop = true,
+			palindromicLoop = false,
+			delay = 0,
+			intervalTime = 30,
+			maxIterations = 1
+		});
+	end
+
+	theatreDoorAnimationSequences:addEventListener('touch', function(e)
+		if (theatreDoorAnimationSequences) then
+			if (theatreDoorAnimationSequences.numChildren) then
+				for i=1, theatreDoorAnimationSequences.numChildren do
+					local anim = theatreDoorAnimationSequences[i];
+					if (anim) then
+						-- if (anim.isPlaying) then
+							anim.dispose();
+						-- end
+						-- anim.remove();
+					end
+				end
+			end
+			theatreDoorAnimationSequences = nil;
+		end
+		sceneLayoutMethods["playEnteringLobbyAnimationSequences"]();
+	end);
 
 	local enteringLobbyAnimationFiles = {
 	"MDMT_LandingPage_UsherDoorAnim_c.xml",
