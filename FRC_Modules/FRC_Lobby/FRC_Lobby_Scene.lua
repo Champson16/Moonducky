@@ -50,12 +50,14 @@ function FRC_Lobby_Scene:createScene(event)
 	end
 
 	local bgGroup = display.newGroup();
+   view:insert(bgGroup)
 	bgGroup.anchorChildren = false;
 	FRC_Layout.scaleToFit(bgGroup);
 
-	local bg = display.newImageRect(view, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
+	local bg = display.newImageRect(bgGroup, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
 	bgGroup:insert(bg);
 	bg.x, bg.y = 0,0;
+   --bg.alpha = 0.2
 
 	function videoPlaybackComplete(event)
 		if (FRC_AppSettings.get("ambientSoundOn")) then
@@ -177,38 +179,49 @@ function FRC_Lobby_Scene:createScene(event)
 
 	for i=1,#sceneLayoutData do
 		-- DEBUG
-		print("setting up scene layout object: ", sceneLayoutData[i].id);
+		print("Pre - setting up scene layout object: ", sceneLayoutData[i].id, sceneLayoutData[i].xCenter, sceneLayoutData[i].yCenter);
 		if sceneLayoutData[i].imageFile then
-			sceneLayout[i] = display.newImageRect(view, UI('IMAGES_PATH') .. sceneLayoutData[i].imageFile, sceneLayoutData[i].width, sceneLayoutData[i].height);
+			sceneLayout[i] = display.newImageRect(bgGroup, UI('IMAGES_PATH') .. sceneLayoutData[i].imageFile, sceneLayoutData[i].width, sceneLayoutData[i].height);
 			FRC_Layout.scaleToFit(sceneLayout[i]);
+         
+         print("scene layout object before x/y: ", sceneLayoutData[i].id, sceneLayout[i].x .. " / " .. sceneLayout[i].y);
 
 			if (sceneLayoutData[i].left) then
 				sceneLayoutData[i].left = (sceneLayoutData[i].left * bg.xScale);
 				sceneLayout[i].x = sceneLayoutData[i].left - ((screenW - contentW) * 0.5) + (sceneLayout[i].contentWidth * 0.5);
-			elseif (sceneLayoutData[i].right) then
+			
+         elseif (sceneLayoutData[i].right) then
 				sceneLayoutData[i].right = (sceneLayoutData[i].right * bg.xScale);
 				sceneLayout[i].x = contentW - sceneLayoutData[i].right + ((screenW - contentW) * 0.5) - (sceneLayout[i].contentWidth * 0.5);
-			elseif (sceneLayoutData[i].xCenter) then
-				sceneLayout[i].x = display.contentCenterX; -- + (sceneLayoutData[i].xCenter * bg.xScale);
-			else
+			
+         elseif (sceneLayoutData[i].xCenter) then
+				--sceneLayout[i].x = display.contentCenterX; -- + (sceneLayoutData[i].xCenter * bg.xScale);
+            sceneLayout[i].x = 0;
+			
+         else
 				sceneLayoutData[i].x = sceneLayoutData[i].x * bg.xScale;
 				sceneLayout[i].x = sceneLayoutData[i].x - ((screenW - contentW) * 0.5);
 			end
-			if (sceneLayoutData[i].top) then
+			
+         if (sceneLayoutData[i].top) then
 				sceneLayout[i].y = sceneLayoutData[i].top - ((screenH - contentH) * 0.5) + (sceneLayout[i].contentHeight * 0.5);
 				sceneLayout[i].y = sceneLayout[i].y + bg.contentBounds.yMin;
-			elseif (sceneLayoutData[i].bottom) then
+			
+         elseif (sceneLayoutData[i].bottom) then
 				sceneLayoutData[i].bottom = sceneLayoutData[i].bottom * bg.yScale;
 				sceneLayout[i].y = contentH - sceneLayoutData[i].bottom + ((screenH - contentH) * 0.5) - (sceneLayout[i].contentHeight * 0.5);
-			elseif (sceneLayoutData[i].yCenter) then
-				sceneLayout[i].y = display.contentCenterY; -- + (sceneLayoutData[i].yCenter * bg.yScale);
-			else
+			
+         elseif (sceneLayoutData[i].yCenter) then
+				--sceneLayout[i].y = display.contentCenterY; -- + (sceneLayoutData[i].yCenter * bg.yScale);
+            sceneLayout[i].y = 0;
+			
+         else
 				sceneLayoutData[i].y = sceneLayoutData[i].y * bg.yScale;
 				sceneLayout[i].y = sceneLayoutData[i].y - ((screenH - contentH) * 0.5);
 			end
 
 			-- DEBUG
-			print("scene layout object final x/y: ", sceneLayout[i].x .. " / " .. sceneLayout[i].y);
+			print("scene layout object final x/y: ", sceneLayoutData[i].id, sceneLayout[i].x .. " / " .. sceneLayout[i].y);
 
 		elseif sceneLayoutData[i].animationFiles then
 			-- get the list of animation files and create the animation object
@@ -423,6 +436,10 @@ function FRC_Lobby_Scene:enterScene(event)
 	if (FRC_Lobby_Scene.postEnterScene) then
 		FRC_Lobby_Scene:postEnterScene(event);
 	end
+   
+   --view:scale(0.5,0.5)
+   --view.x = 200
+   --view.y = 200
 end
 
 function FRC_Lobby_Scene:disposeAnimations(self)

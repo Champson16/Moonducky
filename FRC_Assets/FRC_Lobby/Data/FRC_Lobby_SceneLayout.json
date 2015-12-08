@@ -23,8 +23,8 @@
 		"imageFile": "MDMT_Lobby_VelvetRope.png",
 		"width": 385,
 		"height": 324,
-		"xCenter": true,
-		"yCenter": true
+		"x": -10,
+		"y": 222
 	},
 	{
 		"id": "PopcornMachine",
