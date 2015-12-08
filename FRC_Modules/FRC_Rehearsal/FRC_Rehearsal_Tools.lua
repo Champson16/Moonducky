@@ -2,7 +2,7 @@ local FRC_AnimationManager    = require('FRC_Modules.FRC_AnimationManager.FRC_An
 
 local public = {}
 local private = {}
-   -- GUTS HERE
+-- GUTS HERE
 
 function public.readXML( fileName, baseXMLDir )
    local rawLUAcode, xmltable, preexistingFile, newLuaFile, err, dataToSave, appLUApath, docLUApath;
@@ -60,7 +60,7 @@ function public.findAnimationParts( parts, partSubName, partExcludeName, toTable
    for i = 1, #parts do
       if( partExcludeName and string.len(partExcludeName) > 0 ) then
          if( string.match( parts[i].name, partSubName ) and
-             string.match( parts[i].name, partExcludeName ) == nil ) then
+            string.match( parts[i].name, partExcludeName ) == nil ) then
             subParts[#subParts+1] = i
          end
       else            

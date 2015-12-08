@@ -13,8 +13,8 @@ local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
 local FRC_SetDesign_Settings  = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign_Settings');
 local FRC_ArtCenter;
 local artCenterLoaded = pcall(function()
-	FRC_ArtCenter = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter');
-end);
+      FRC_ArtCenter = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter');
+   end);
 
 -- ====================================================================
 -- Locals
@@ -142,7 +142,7 @@ function FRC_Rehearsal_Scene:save(e)
 end
 
 function FRC_Rehearsal_Scene:load(e)
-  --[[
+   --[[
    local id = e.id
    if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)) end
    self.changeItem('Character', e.data.character, v)
@@ -169,9 +169,9 @@ function FRC_Rehearsal_Scene:createScene(event)
    -- DEBUG:
    dprint("FRC_Rehearsal_Scene - createScene")
 
-	if ((self.preCreateScene) and (type(self.preCreateScene) == 'function')) then
-		self.preCreateScene(self, event);
-	end
+   if ((self.preCreateScene) and (type(self.preCreateScene) == 'function')) then
+      self.preCreateScene(self, event);
+   end
 
    ----[[
    -- FRC_Rehearsal.getSavedData()
@@ -189,20 +189,20 @@ function FRC_Rehearsal_Scene:createScene(event)
 
    -- Load in existing ArtCenter images as Backdrops
    if (artCenterLoaded) then
-     FRC_ArtCenter.getSavedData();
-     if ((FRC_ArtCenter.savedData) and (#FRC_ArtCenter.savedData.savedItems > 0)) then
-       for i=#FRC_ArtCenter.savedData.savedItems,1,-1 do
-         local item = FRC_ArtCenter.savedData.savedItems[i];
-         table.insert(backdropData, 1, {
-           id = item.id,
-           imageFile = item.id .. item.fullSuffix,
-           thumbFile = item.id .. item.thumbSuffix,
-           width = item.fullWidth,
-           height = item.fullHeight,
-           baseDir = "DocumentsDirectory"
-         });
-       end
-     end
+      FRC_ArtCenter.getSavedData();
+      if ((FRC_ArtCenter.savedData) and (#FRC_ArtCenter.savedData.savedItems > 0)) then
+         for i=#FRC_ArtCenter.savedData.savedItems,1,-1 do
+            local item = FRC_ArtCenter.savedData.savedItems[i];
+            table.insert(backdropData, 1, {
+                  id = item.id,
+                  imageFile = item.id .. item.fullSuffix,
+                  thumbFile = item.id .. item.thumbSuffix,
+                  width = item.fullWidth,
+                  height = item.fullHeight,
+                  baseDir = "DocumentsDirectory"
+               });
+         end
+      end
    end
 
    local setScale = 1;
@@ -211,65 +211,65 @@ function FRC_Rehearsal_Scene:createScene(event)
    local setGroup = display.newGroup(); view.setDesignGroup:insert(setGroup);
 
    local repositionSet = function()
-     view.setDesignGroup.xScale = setScale;
-     view.setDesignGroup.yScale = setScale;
-     view.setDesignGroup.x = (display.contentWidth - (display.contentWidth * setScale)) * 0.5;
-     view.setDesignGroup.y = (display.contentHeight - (display.contentHeight * setScale)) * 0.5;
-     -- view.setDesignGroup.y = view.setDesignGroup.y - 80;
+      view.setDesignGroup.xScale = setScale;
+      view.setDesignGroup.yScale = setScale;
+      view.setDesignGroup.x = (display.contentWidth - (display.contentWidth * setScale)) * 0.5;
+      view.setDesignGroup.y = (display.contentHeight - (display.contentHeight * setScale)) * 0.5;
+      -- view.setDesignGroup.y = view.setDesignGroup.y - 80;
    end
 
    local changeSet = function(index)
-     if (index == FRC_Rehearsal_Scene.setIndex) then return; end
-     index = index or FRC_Rehearsal_Scene.setIndex;
-     if (setGroup.numChildren > 0) then
-       setGroup[1]:removeSelf();
-       setGroup[1] = nil;
-     end
+      if (index == FRC_Rehearsal_Scene.setIndex) then return; end
+      index = index or FRC_Rehearsal_Scene.setIndex;
+      if (setGroup.numChildren > 0) then
+         setGroup[1]:removeSelf();
+         setGroup[1] = nil;
+      end
 
-     local setBackground = display.newImageRect(setGroup, SETDESIGNUI('IMAGES_PATH') .. setData[index].imageFile, setData[index].width, setData[index].height);
-     setBackground.x = display.contentCenterX;
-     setBackground.y = display.contentCenterY;
-     local frameRect = setData[index].frameRect;
-     setBackground.frameRect = frameRect;
-     FRC_Rehearsal_Scene.setIndex = index;
+      local setBackground = display.newImageRect(setGroup, SETDESIGNUI('IMAGES_PATH') .. setData[index].imageFile, setData[index].width, setData[index].height);
+      setBackground.x = display.contentCenterX;
+      setBackground.y = display.contentCenterY;
+      local frameRect = setData[index].frameRect;
+      setBackground.frameRect = frameRect;
+      FRC_Rehearsal_Scene.setIndex = index;
 
-     -- resize selected backdrop to fit in selected set
-     local selectedBackdrop = backdropGroup[1];
-     if (not selectedBackdrop) then return; end
-     local currentWidth = backdropData[FRC_Rehearsal_Scene.backdropIndex].width;
-     local currentHeight = backdropData[FRC_Rehearsal_Scene.backdropIndex].height;
-     selectedBackdrop.xScale = (frameRect.width / currentWidth);
-     selectedBackdrop.yScale = (frameRect.height / currentHeight);
-     selectedBackdrop.x = frameRect.left - ((setBackground.width - display.contentWidth) * 0.5);
-     selectedBackdrop.y = frameRect.top - ((setBackground.height - display.contentHeight) * 0.5);
+      -- resize selected backdrop to fit in selected set
+      local selectedBackdrop = backdropGroup[1];
+      if (not selectedBackdrop) then return; end
+      local currentWidth = backdropData[FRC_Rehearsal_Scene.backdropIndex].width;
+      local currentHeight = backdropData[FRC_Rehearsal_Scene.backdropIndex].height;
+      selectedBackdrop.xScale = (frameRect.width / currentWidth);
+      selectedBackdrop.yScale = (frameRect.height / currentHeight);
+      selectedBackdrop.x = frameRect.left - ((setBackground.width - display.contentWidth) * 0.5);
+      selectedBackdrop.y = frameRect.top - ((setBackground.height - display.contentHeight) * 0.5);
    end
    self.changeSet = changeSet;
    changeSet();
 
    local changeBackdrop = function(index)
-     if (index == FRC_Rehearsal_Scene.backdropIndex) then return; end
-     if (not backdropData[index]) then index = 1; end -- ArtCenter image set as backdrop, but image was deleted (reset index to 1)
-     index = index or FRC_Rehearsal_Scene.backdropIndex;
-     if (backdropGroup.numChildren > 0) then
-       backdropGroup[1]:removeSelf();
-       backdropGroup[1] = nil;
-     end
+      if (index == FRC_Rehearsal_Scene.backdropIndex) then return; end
+      if (not backdropData[index]) then index = 1; end -- ArtCenter image set as backdrop, but image was deleted (reset index to 1)
+      index = index or FRC_Rehearsal_Scene.backdropIndex;
+      if (backdropGroup.numChildren > 0) then
+         backdropGroup[1]:removeSelf();
+         backdropGroup[1] = nil;
+      end
 
-     local frameRect = setGroup[1].frameRect;
-     local imageFile = SETDESIGNUI('IMAGES_PATH') .. backdropData[index].imageFile;
-     local baseDir = system.ResourceDirectory;
-     if (backdropData[index].baseDir) then
-       imageFile = backdropData[index].imageFile;
-       baseDir = system[backdropData[index].baseDir];
-     end
-     local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, backdropData[index].width, backdropData[index].height);
-     backdropBackground.anchorX = 0;
-     backdropBackground.anchorY = 0;
-     backdropBackground.xScale = (frameRect.width / backdropData[index].width);
-     backdropBackground.yScale = (frameRect.height / backdropData[index].height);
-     backdropBackground.x = frameRect.left - ((setGroup[1].width - display.contentWidth) * 0.5);
-     backdropBackground.y = frameRect.top - ((setGroup[1].height - display.contentHeight) * 0.5);
-     FRC_Rehearsal_Scene.backdropIndex = index;
+      local frameRect = setGroup[1].frameRect;
+      local imageFile = SETDESIGNUI('IMAGES_PATH') .. backdropData[index].imageFile;
+      local baseDir = system.ResourceDirectory;
+      if (backdropData[index].baseDir) then
+         imageFile = backdropData[index].imageFile;
+         baseDir = system[backdropData[index].baseDir];
+      end
+      local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, backdropData[index].width, backdropData[index].height);
+      backdropBackground.anchorX = 0;
+      backdropBackground.anchorY = 0;
+      backdropBackground.xScale = (frameRect.width / backdropData[index].width);
+      backdropBackground.yScale = (frameRect.height / backdropData[index].height);
+      backdropBackground.x = frameRect.left - ((setGroup[1].width - display.contentWidth) * 0.5);
+      backdropBackground.y = frameRect.top - ((setGroup[1].height - display.contentHeight) * 0.5);
+      FRC_Rehearsal_Scene.backdropIndex = index;
    end
    self.changeBackdrop = changeBackdrop;
    changeBackdrop();
@@ -468,21 +468,21 @@ function FRC_Rehearsal_Scene:createScene(event)
             onPress = function(e)
                -- show the focused state for the selected category icon
                local self = e.target
-							 if self:getFocusState() then
-								 -- hide the itemScroller
-								 itemScrollers[self.id].isVisible = false;
-								 self:setFocusState(false)
-							 else
-	               self:setFocusState(true)
-	               -- present the scroller contain the selected category's content
-	               itemScrollers[self.id].isVisible = true
-	               for i=2,categoriesContainer.numChildren do
-	                  if (categoriesContainer[i] ~= self) then
-	                     categoriesContainer[i]:setFocusState(false)
-	                     itemScrollers[categoriesContainer[i].id].isVisible = false
-	                  end
-	               end
-							 end
+               if self:getFocusState() then
+                  -- hide the itemScroller
+                  itemScrollers[self.id].isVisible = false;
+                  self:setFocusState(false)
+               else
+                  self:setFocusState(true)
+                  -- present the scroller contain the selected category's content
+                  itemScrollers[self.id].isVisible = true
+                  for i=2,categoriesContainer.numChildren do
+                     if (categoriesContainer[i] ~= self) then
+                        categoriesContainer[i]:setFocusState(false)
+                        itemScrollers[categoriesContainer[i].id].isVisible = false
+                     end
+                  end
+               end
             end
          })
       categoriesContainer:insert(button)
@@ -509,29 +509,29 @@ function FRC_Rehearsal_Scene:createScene(event)
          button:setFocusState(true)
          scroller.isVisible = true
       end
-    end
+   end
 
-    -- setup for container construction
-    local button_scale = 0.75;
-    local x = -(screenW * 0.5) + button_spacing
-    local buttonHeight = 0
+   -- setup for container construction
+   local button_scale = 0.75;
+   local x = -(screenW * 0.5) + button_spacing
+   local buttonHeight = 0
 
    -- create SetDesign scroll container
    -- locate the user's existing SetDesign data
    -- CODE SNIPPET
-  --  local function DATA(key, baseDir)
-  --  	baseDir = baseDir or system.ResourceDirectory;
-  --  	return FRC_DataLib.readJSON(FRC_SetDesign_Settings.DATA[key], baseDir);
-  --  end
-  ----------- Another snippet
-  -- FRC_SetDesign.saveData = FRC_DataLib.readJSON(saveDataFilename, system.DocumentsDirectory);
-  -- if (not FRC_SetDesign.saveData) then
-  -- 	FRC_DataLib.saveJSON(saveDataFilename, emptyDataFile);
-  -- 	FRC_SetDesign.saveData = emptyDataFile;
-  -- end
-  ---------- code used to pass saved data structure to FRC_GalleryPopup
-  -- data = scene.saveData.savedItems,
-  -- basically we need to have the scroller operate like a differently laid out version of FRC_GalleryPopup
+   --  local function DATA(key, baseDir)
+   --  	baseDir = baseDir or system.ResourceDirectory;
+   --  	return FRC_DataLib.readJSON(FRC_SetDesign_Settings.DATA[key], baseDir);
+   --  end
+   ----------- Another snippet
+   -- FRC_SetDesign.saveData = FRC_DataLib.readJSON(saveDataFilename, system.DocumentsDirectory);
+   -- if (not FRC_SetDesign.saveData) then
+   -- 	FRC_DataLib.saveJSON(saveDataFilename, emptyDataFile);
+   -- 	FRC_SetDesign.saveData = emptyDataFile;
+   -- end
+   ---------- code used to pass saved data structure to FRC_GalleryPopup
+   -- data = scene.saveData.savedItems,
+   -- basically we need to have the scroller operate like a differently laid out version of FRC_GalleryPopup
 
    -- create Instruments scroll container
    -- This is for testing. TODO: store the show's song ID somewhere and reference it here
@@ -884,10 +884,10 @@ function FRC_Rehearsal_Scene:createScene(event)
          local animationGroupProperties = {}
          --table.dump2(animationsToBuild[i])
          animationSequences[i] = FRC_Rehearsal_Tools.createUnifiedAnimationClipGroup( xmlFiles[xmlNum],
-                                                                                      animationsToBuild[i],
-                                                                                      animationXMLBase,
-                                                                                      animationsToBuild[i][3], -- animationImageBase,
-                                                                                      animationGroupProperties )
+            animationsToBuild[i],
+            animationXMLBase,
+            animationsToBuild[i][3], -- animationImageBase,
+            animationGroupProperties )
          FRC_Layout.scaleToFit(animationSequences[i], 0, 0)
 
          animationSequences[i].x = animationSequences[i].x --+ xOffset
