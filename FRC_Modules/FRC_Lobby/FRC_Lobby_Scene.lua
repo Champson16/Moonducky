@@ -444,7 +444,7 @@ function FRC_Lobby_Scene:disposeAnimations(self)
 				anim:dispose();
 			end
 		end
-		theatreDoorSequences = nil;
+		-- theatreDoorSequences = nil; -- commented out until we actually have code to go to Showtime
 	end
 end
 
