@@ -3,7 +3,7 @@
 -- main.lua
 --
 -----------------------------------------------------------------------------------------
-_G.edmode = true --EFM
+_G.edmode = false --EFM
 if( _G.edmode ) then
    _G.dprint  = _G.print --EFM
    require ("FRC_Modules.FRC_Extensions.FRC_Extensions") 
