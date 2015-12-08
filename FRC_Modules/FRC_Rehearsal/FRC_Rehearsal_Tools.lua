@@ -55,11 +55,18 @@ function public.getPartsList( sourceFile, animationXMLBase )
    return partsList
 end
 
-function public.findAnimationParts( parts, partSubName, toTable, animationImageBase )
+function public.findAnimationParts( parts, partSubName, partExcludeName, toTable, animationImageBase )
    local subParts = {}
    for i = 1, #parts do
-      if( string.match( parts[i].name, partSubName ) ) then
-         subParts[#subParts+1] = i
+      if( partExcludeName and string.len(partExcludeName) > 0 ) then
+         if( string.match( parts[i].name, partSubName ) and
+             string.match( parts[i].name, partExcludeName ) == nil ) then
+            subParts[#subParts+1] = i
+         end
+      else            
+         if( string.match( parts[i].name, partSubName ) ) then
+            subParts[#subParts+1] = i
+         end
       end
    end
    if(toTable) then
@@ -87,7 +94,7 @@ function public.playUnifiedAnimations( animationSequences, num )
       sequence[i]:play({
             showLastFrame = true,
             playBackward = false,
-            autoLoop = true,
+            autoLoop = false,
             palindromicLoop = false,
             delay = 0,
             intervalTime = 30,

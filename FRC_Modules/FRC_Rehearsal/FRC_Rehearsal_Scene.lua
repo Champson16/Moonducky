@@ -667,8 +667,8 @@ function FRC_Rehearsal_Scene:createScene(event)
    -- GUTS HERE *******************************************************************************
    -- GUTS HERE *******************************************************************************
    local showToggles = false
+   local showRadioMenu = false
    local autoRun = false
-   local radioMenuIsVisible = false
    --local showIntrumentSample --EFM
    local testGroup = display.newGroup()
    view:insert( testGroup )
@@ -719,8 +719,8 @@ function FRC_Rehearsal_Scene:createScene(event)
       text = text:gsub( ".xml", "" )
       button.label = display.newText( view, i .. " - " .. text, curX, curY, native.systemFont, 12 )
       button.label:setFillColor(0)
-      button.isVisible = radioMenuIsVisible
-      button.label.isVisible = radioMenuIsVisible
+      button.isVisible = showRadioMenu
+      button.label.isVisible = showRadioMenu
       radioButtons[i] = button
       button.touch = function(self,event)
          if(event.phase == "ended") then
@@ -790,97 +790,86 @@ function FRC_Rehearsal_Scene:createScene(event)
 
       if( xmlNum == 7 ) then
          allParts = {
-            { "Body", animationImageBase },
-            { "Torso", dressingRoomImagBase },
-            { "Mouth", animationImageBase },
-            { "Eyes", animationImageBase },
-            { "Eyewear", dressingRoomImagBase },
-            { "Headwear", dressingRoomImagBase },
-            --{ "LowerTorso", dressingRoomImagBase },
-            { "Neckwear", dressingRoomImagBase },
-            --{ "UpperTorso", dressingRoomImagBase },
-            --{ "Instrument", animationImageBase },
-            { "Instrument_Maracas_Left", animationImageBase },
-            { "Instrument_Maracas_Right", animationImageBase },
-            { "LeftArm", animationImageBase },
-            { "RightArm", animationImageBase },
+            { "Body", "", animationImageBase },
+            { "Torso", "", dressingRoomImagBase },
+            { "Mouth", "", animationImageBase },
+            { "Eyes", "", animationImageBase },
+            { "Eyewear", "", dressingRoomImagBase },
+            { "Headwear", "", dressingRoomImagBase },
+            { "Neckwear", "", dressingRoomImagBase },
+            { "Instrument_Maracas_Left", "", animationImageBase },
+            { "Instrument_Maracas_Right", "", animationImageBase },
+            { "LeftArm", "", animationImageBase },
+            { "RightArm", "", animationImageBase },
          }
       elseif( xmlNum == 10 ) then
          allParts = {
-            { "Body", animationImageBase },
-            { "Torso", dressingRoomImagBase },
-            { "Mouth", animationImageBase },
-            { "Eyes", animationImageBase },
-            { "Eyewear", dressingRoomImagBase },
-            { "Headwear", dressingRoomImagBase },
-            --{ "LowerTorso", dressingRoomImagBase },
-            { "Neckwear", dressingRoomImagBase },
-            --{ "UpperTorso", dressingRoomImagBase },
-            { "Instrument", animationImageBase },
-            { "LeftArm", animationImageBase },
-            { "RightArm", animationImageBase },
-            --{ "Instrument_RhythmComboCheeseGrater_Fork", animationImageBase },
-            --{ "Instrument_RhythmComboCheeseGrater", animationImageBase },
+            { "Body", "", animationImageBase },
+            { "Torso", "", dressingRoomImagBase },
+            { "Mouth", "", animationImageBase },
+            { "Eyes", "", animationImageBase },
+            { "Eyewear", "", dressingRoomImagBase },
+            { "Headwear", "", dressingRoomImagBase },
+            { "Neckwear", "", dressingRoomImagBase },
+            { "Instrument_RhythmComboCheeseGrater", "Instrument_RhythmComboCheeseGrater_Fork", animationImageBase },
+            { "RightArm", "", animationImageBase },
+            { "Instrument_RhythmComboCheeseGrater_Fork", "", animationImageBase },
+            { "LeftArm", "", animationImageBase },
          }
       elseif( xmlNum == 11 ) then
          dprint("xmlNum 11")
          allParts = {
-            { "Body", animationImageBase },
-            { "Torso", dressingRoomImagBase },
-            { "Mouth", animationImageBase },
-            { "Eyes", animationImageBase },
-            { "Eyewear", dressingRoomImagBase },
-            { "Headwear", dressingRoomImagBase },
-            { "Neckwear", dressingRoomImagBase },
-            --{ "Instrument_RhythmComboCymbal_Cymbal", animationImageBase },
-            --{ "Instrument_RhythmComboCymbal_Stick", animationImageBase },
-            { "Instrument", animationImageBase },
-            { "LeftArm", animationImageBase },
-            { "RightArm", animationImageBase },
+            { "Body", "", animationImageBase },
+            { "Torso", "", dressingRoomImagBase },
+            { "Mouth", "", animationImageBase },
+            { "Eyes", "", animationImageBase },
+            { "Eyewear", "", dressingRoomImagBase },
+            { "Headwear", "", dressingRoomImagBase },
+            { "Neckwear", "", dressingRoomImagBase },
+            { "Instrument_RhythmComboCymbal", "Instrument_RhythmComboCymbal_Stick", animationImageBase },
+            { "Instrument_RhythmComboCymbal_Stick", "", animationImageBase },
+            { "LeftArm", "", animationImageBase },
+            { "RightArm", "", animationImageBase },
 
          }
       elseif( xmlNum == 12 ) then
          allParts = {
-            { "Body", animationImageBase },
-            { "Torso", dressingRoomImagBase },
-            { "Mouth", animationImageBase },
-            { "Eyes", animationImageBase },
-            { "Eyewear", dressingRoomImagBase },
-            { "Headwear", dressingRoomImagBase },
-            --{ "LowerTorso", dressingRoomImagBase },
-            { "Neckwear", dressingRoomImagBase },
-            --{ "UpperTorso", dressingRoomImagBase },
-            --{ "Instrument", animationImageBase },
-            { "Instrument_Sticks_Left", animationImageBase },
-            { "Instrument_Sticks_Right", animationImageBase },
-            { "LeftArm", animationImageBase },
-            { "RightArm", animationImageBase },
+            { "Body", "", animationImageBase },
+            { "Torso", "", dressingRoomImagBase },
+            { "Mouth", "", animationImageBase },
+            { "Eyes", "", animationImageBase },
+            { "Eyewear", "", dressingRoomImagBase },
+            { "Headwear", "", dressingRoomImagBase },
+            { "Neckwear", "", dressingRoomImagBase },
+            { "Instrument_Sticks_Left", "", animationImageBase },
+            { "Instrument_Sticks_Right", "", animationImageBase },
+            { "LeftArm", "", animationImageBase },
+            { "RightArm", "", animationImageBase },
          }
 
       else
          allParts = {
-            { "Body", animationImageBase },
-            { "Torso", dressingRoomImagBase },
-            { "Mouth", animationImageBase },
-            { "Eyes", animationImageBase },
-            { "Eyewear", dressingRoomImagBase },
-            { "Headwear", dressingRoomImagBase },
-            --{ "LowerTorso", dressingRoomImagBase },
-            { "Neckwear", dressingRoomImagBase },
-            --{ "UpperTorso", dressingRoomImagBase },
-            { "Instrument", animationImageBase },
-            { "LeftArm", animationImageBase },
-            { "RightArm", animationImageBase },
+            { "Body", "", animationImageBase },
+            { "Torso", "", dressingRoomImagBase },
+            { "Mouth", "", animationImageBase },
+            { "Eyes", "", animationImageBase },
+            { "Eyewear", "", dressingRoomImagBase },
+            { "Headwear", "", dressingRoomImagBase },
+            { "Neckwear", "", dressingRoomImagBase },
+            { "Instrument", "", animationImageBase },
+            { "LeftArm", "", animationImageBase },
+            { "RightArm", "", animationImageBase },
          }
       end
 
       for i = 1, #allParts do
          local partName = allParts[i][1]
+         local partExcludeName = allParts[i][2]
          for j = 1, #partsList do
             --dprint(j, partName )
             if( string.match( partsList[j].name, partName ) ~= nil ) then
                --dprint(j, partName )
-               FRC_Rehearsal_Tools.findAnimationParts( partsList, partName, animationsToBuild, allParts[i][2] )
+               FRC_Rehearsal_Tools.findAnimationParts( partsList, partName, partExcludeName, animationsToBuild, allParts[i][3] )
             end
          end
       end
