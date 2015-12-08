@@ -300,7 +300,13 @@ FRC_AnimationManager.createAnimationClip = function(data)
     -- grab the new frame's data
     local frameData = animData.frameData[tostring(index)];
     -- check if there is frame data for this frame in the sequence
-    if (frameData) then
+    if (not frameData) then
+      if (animationClip.animationParts and animationClip.currentPart) then
+        if (animationClip.animationParts[animationClip.currentPart]) then
+          newPart = animationClip.animationParts[animationClip.currentPart];
+        end
+      end
+    elseif (frameData) then
       -- get the part
       local p = frameData.part;
       -- if the part is different, then switch the graphic
@@ -455,6 +461,11 @@ FRC_AnimationManager.createAnimationClip = function(data)
     -- showLastFrame:boolean (false means call dispose() when the animation is over so it goes away, otherwise leave the last frame visible at the end)
     -- palindromicLoop:boolean (true means to reverse direction for the next iteration)
     -- playBackward: false (default), true means to play from the last frame to the first frame
+    
+    animationClip.stopDelay = options.stopDelay; 
+    
+    animationClip.stopGate = options.stopGate; 
+
     animationClip.autoLoop = options.autoLoop or false;
     animationClip.palindromicLoop = options.palindromicLoop or false;
     animationClip.showFirstFrame = options.showFirstFrame or false;
@@ -681,8 +692,17 @@ FRC_AnimationManager.createAnimationClip = function(data)
             -- wait a frame so that the screen doesn't flash between chained animation sequences
             -- timer.performWithDelay(animationClip.intervalTime * 2, function() animationClip:stop(); end, 1);
             -- CCC 1.2.15 mod in attempt to fix pause/fastforward bug (line above was commented out)
-            animationClip:stop();
-            -- animationClip:hide();
+              
+              if( animationClip.stopGate == true ) then 
+                --dprint("STOP GATED")
+                            
+              elseif( animationClip.stopDelay and animationClip.stopDelay > 0 ) then
+                --dprint("STOP DELAYED delay == ", animationClip.stopDelay)
+                timer.performWithDelay(animationClip.stopDelay, function() animationClip:stop(); end )
+              
+              else
+                animationClip:stop();
+              end
           end
         end
       end
@@ -855,10 +875,15 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
     animationClipGroup.transformations = animationGroupProperties.transformations;
     animationClipGroup.flip = animationGroupProperties.flip;
     animationClipGroup.maskSource = animationGroupProperties.maskSource;
+    animationClipGroup.maskRect = animationGroupProperties.maskRect; 
+    animationClipGroup.onMaskTouch = animationGroupProperties.onMaskTouch; 
+    animationClipGroup.maskDebugEn = animationGroupProperties.maskDebugEn; 
     animationClipGroup.unifiedData = animationGroupProperties.unifiedData; --EFM
     
     -- DEBUG:
-    if animationClipGroup.maskSource then print("FRC_AnimationManager.createAnimationClipGroup animationClipGroup.maskSource ASSIGNED! ", animationClipGroup.maskSource); end
+    if animationClipGroup.maskSource then 
+       dprint("FRC_AnimationManager.createAnimationClipGroup animationClipGroup.maskSource ASSIGNED! ", animationClipGroup.maskSource); 
+    end
     animationClipGroup.onCompletion = animationGroupProperties.onCompletion;
     animationClipGroup.onTouch = animationGroupProperties.onTouch;
     animationClipGroup.onShake = animationGroupProperties.onShake;
@@ -932,7 +957,7 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
             -- table.dump(dataToSave);
             print("FRC Generating LUA file");
             newLuaFile, err = io.open(path,"w");
-            newLuaFile:write( dataToSave );
+            if newLuaFile then newLuaFile:write( dataToSave ); end
             io.close(newLuaFile);
           end
         end
@@ -944,7 +969,7 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
           -- DEBUG:
           table.dump(dataToSave);
           newLuaFile, err = io.open(docLUApath,"w");
-          newLuaFile:write( dataToSave );
+          if newLuaFile then newLuaFile:write( dataToSave ); end
           io.close(newLuaFile);
         end
       end
@@ -999,6 +1024,7 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
         if (i < totalClips) then
           animation:play(options);
         else
+          --animation:play(options); 
           -- attach special events to the last subclip only
           -- TODO:  attach these to the group object only instead
           options.onCompletion = onCompletion;
@@ -1011,54 +1037,46 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
     end
   end
 
-  if (animationClipGroup.maskSource ~= nil) then
+  if (animationClipGroup.maskSource and animationClipGroup.maskRect) then 
+     ----[[
+     local maskRect = animationClipGroup.maskRect
+     local maskPath = baseImageDir .. animationClipGroup.maskSource
+     local onTouch  = animationClipGroup.onTouch
+     local x = display.contentCenterX + maskRect.x
+     local y = display.contentCenterY + maskRect.y
+     --local touchProxy = display.newRect(animationClipGroup, x, y, maskRect.w, maskRect.h )
+     local touchProxy = display.newRect( x, y, maskRect.w, maskRect.h )
+     
+     local storyboard = require "storyboard"
+     local sceneName = storyboard.getCurrentSceneName()
+     local currentScene = storyboard.getScene( sceneName )
+     currentScene.view:insert( touchProxy ) -- No affect on insertion
+     if( animationClipGroup.maskDebugEn == true ) then
+        touchProxy:setFillColor(1,0,1)
+     else
+        touchProxy:toBack()  
+        touchProxy.isVisible = false
+        timer.performWithDelay( 100, 
+           function()
+              -- In case it was removed in the interim:
+              if( not touchProxy or not touchProxy.removeSelf ) then return end 
+              -- Otherwise, proceed:
+              touchProxy.isVisible = true
+              currentScene.view:insert( 4, touchProxy )
+            end )
+     end
+      
+     animationClipGroup.touchProxy = touchProxy
+     touchProxy.alpha = 0.5
+     local mask = graphics.newMask( maskPath )
+     touchProxy:setMask( mask )
+     touchProxy.isHitTestMasked = true
+     
+     function touchProxy.finalize( self )
+        Runtime:removeEventListener("enterFrame", self) 
+     end
+     touchProxy:addEventListener("finalize")
 
-    -- DEBUG:
-    --[[
-    -- load the mask image so we can get its dimensions
-    local refImage = display.newImage(animationClipGroup, baseImageDir .. animationClipGroup.maskSource, true);
-    -- ERRORCHECK:
-    assert(refImage, "ERROR: Missing animation MASK file: ", baseImageDir .. animationClipGroup.maskSource);
-    -- grab the height and width
-    local h = refImage.height;
-    local w = refImage.width;
-    print("maskSource width, height: " .. w.. ", " .. h);
-    -- dispose of the temp mask image
-    refImage:removeSelf();
-    refImage = nil;
-    -- load the mask image with exact dimensions
-    -- local maskImageSource = display.newImageRect(animationClipGroup, baseImageDir .. animationClipGroup.maskSource, w, h);
-    --]]
-    -- create the mask
-    local maskImage = graphics.newMask( baseImageDir .. animationClipGroup.maskSource );
-    -- local maskImage = graphics.newMask( maskImageSource );
-    -- store the mask in the animationClipGroup for later use
-    animationClipGroup.maskImage = maskImage;
-    -- dispose of the temp mask image again
-    -- maskImageSource:removeSelf();
-    -- maskImageSource = nil;
-    -- DEBUG:
-    print("maxTextureSize: ", system.getInfo( "maxTextureSize" ));
-    print("maxTextureUnits: ", system.getInfo( "maxTextureUnits" ));
-    print("animationClipGroup.maskImage: ", animationClipGroup.maskImage);
-    print("anim x,y,height,width".. animationClipGroup.x .. ", ".. animationClipGroup.y .. ", ".. animationClipGroup.height .. ", ".. animationClipGroup.width);
-    -- assign the mask
-    animationClipGroup:setMask( maskImage );
-    -- transform the mask to match the displayGroup we attached it to
-    animationClipGroup.maskX = animationClipGroup.x; -- contentCenterX;
-    animationClipGroup.maskY = animationClipGroup.y; -- contentCenterY;
-    -- RESEARCH:  could we use contentCenterX here instead?
-    -- animationClipGroup.maskX = animationClipGroup.x + (animationClipGroup.contentWidth * 0.5);
-    -- animationClipGroup.maskY = animationClipGroup.y + (animationClipGroup.contentHeight * 0.5);
-    -- DEBUG:
-    print("mask x,y".. animationClipGroup.maskX .. ", ".. animationClipGroup.maskY);
-    -- TEST TO SEE THE MASK
-    -- animationClipGroup.maskScaleX = 0.5;
-    -- animationClipGroup.maskScaleY = 0.5;
-    -- print("mask x,y".. animationClipGroup.maskX .. ", ".. animationClipGroup.maskY);
-    -- setup hit detection on the mask (true by default but let's be clear)
-    animationClipGroup.isHitTestMasked = true;
-    --]]
   end
 
   return animationClipGroup;
