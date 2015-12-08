@@ -191,7 +191,7 @@ function FRC_Lobby_Scene:createScene(event)
 					theatreDoorSequences[i]:stop();
 				end
 			end
-			-- storyboard.gotoScene('Scenes.Showtime', { effect="crossFade", time="250" });
+			-- storyboard.gotoScene('Scenes.Showtime', { effect="crossFade", time=250 });
 			native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
 		end, 1);
 	end
@@ -451,7 +451,7 @@ function FRC_Lobby_Scene:createScene(event)
 			analytics.logEvent("MDMT.Lobby.Rehearsal");
          --if( _G.edmode ) then
             storyboard.gotoScene('Scenes.Rehearsal'); --EFM
-            -- storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time="250" });
+            -- storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time=250 });
          --else
             --native.showAlert("Rehearsal Coming Soon!","Ed Maurina is working on this feature.  Flip  edmode to 'true' in main.lua to see current state of scene.", { "OK" });
          --end

@@ -1,13 +1,143 @@
+local public = {}
 --
 -- This file contains extensions to existing Lua and Corona Libraries
 --
 -- Note: This content was originally in FRC_Util.
 --
 
+local json = require( "json" )
 --
 -- Localizations (for speedup)
 --
 local mRand = math.random
+
+--
+-- io.* Extensions
+--
+
+function io.exists( fileName, base )
+	local base = base or system.DocumentsDirectory	
+	local fileName = fileName
+
+	if( base ) then
+		fileName = system.pathForFile( fileName, base )
+	end
+	if not fileName then return false end
+	local f=io.open(fileName,"r")
+	if (f == nil) then 
+		return false
+	end
+	io.close(f)
+	return true 
+end
+
+
+if( io.readFile ) then
+	print("ERROR! io.readFile() exists already")
+else
+	function io.readFile( fileName, base )
+		local base = base or system.DocumentsDirectory
+		local fileContents
+
+		if( io.exists( fileName, base ) == false ) then
+			return nil
+		end
+
+		local fileName = fileName
+		if( base ) then
+			fileName = system.pathForFile( fileName, base )
+		end
+
+		local f=io.open(fileName,"r")
+		if (f == nil) then 
+			return nil
+		end
+
+		fileContents = f:read( "*a" )
+
+		io.close(f)
+
+		return fileContents
+	end
+end
+
+if( io.writeFile ) then
+	print("ERROR! io.writeFile() exists already")
+else
+	function io.writeFile( dataToWrite, fileName, base )
+		local base = base or system.DocumentsDirectory
+
+		local fileName = fileName
+		if( base ) then
+			fileName = system.pathForFile( fileName, base )
+		end
+
+		local f=io.open(fileName,"w")
+		if (f == nil) then 
+			return nil
+		end
+
+		f:write( dataToWrite )
+
+		io.close(f)
+
+	end
+end
+
+if( io.appendFile ) then
+	print("ERROR! io.appendFile() exists already")
+else
+	function io.appendFile( dataToWrite, fileName, base )
+		local base = base or system.DocumentsDirectory
+
+		local fileName = fileName
+		if( base ) then
+			fileName = system.pathForFile( fileName, base )
+		end
+
+		local f=io.open(fileName,"a")
+		if (f == nil) then 
+			return nil
+		end
+
+		f:write( dataToWrite )
+
+		io.close(f)
+	end
+end
+
+
+if( io.readFileTable ) then
+	print("ERROR! io.readFileTable() exists already")
+else
+	function io.readFileTable( fileName, base )
+		local base = base or system.DocumentsDirectory
+		local fileContents = {}
+
+		if( io.exists( fileName, base ) == false ) then
+			return fileContents
+		end
+
+		local fileName = fileName
+		if( base ) then
+			fileName = system.pathForFile( fileName, base )
+		end
+
+		local f=io.open(fileName,"r")
+		if (f == nil) then 
+			return fileContents
+		end
+
+		for line in f:lines() do
+			fileContents[ #fileContents + 1 ] = line
+		end
+
+		io.close( f )
+
+		return fileContents
+	end
+end
+
 
 
 --
@@ -33,6 +163,160 @@ table.shuffle = function(t)
 	return t;
 end
 
+
+-- ==
+--    table.combineUnique( ... ) - Combines n tables into a single table containing only unique members from each source table.
+-- ==
+function table.combineUnique( ... )
+	local newTable = {}
+	
+	for i=1, #arg do
+		for k,v in pairs( arg[i] ) do
+			newTable[v] = v
+		end
+	end
+
+	return newTable
+end
+
+-- ==
+--    table.combineUnique_i( ... ) - Combines n tables into a single table containing only unique members from each source table.
+-- ==
+function table.combineUnique_i( ... )
+	local newTable = {}
+	local tmpTable = table.combineUnique( unpack(arg) )	
+	local i = 1
+	for k,v in pairs( tmpTable ) do
+		newTable[i] = tmpTable[k]
+		i = i + 1
+	end
+	return newTable
+end
+
+-- ==
+--    table.shallowCopy( src [ , dst ]) - Copies single-level tables; handles non-integer indexes; does not copy metatable
+-- ==
+function table.shallowCopy( src, dst )
+	local dst = dst or {}
+	if( not src ) then return dst end
+	for k,v in pairs(src) do 
+		dst[k] = v
+	end
+	return dst
+end
+
+-- ==
+--    table.deepCopy( src [ , dst ]) - Copies multi-level tables; handles non-integer indexes; does not copy metatable
+-- ==
+function table.deepCopy( src, dst )
+	local dst = dst or {}
+	for k,v in pairs(src) do 
+		if( type(v) == "table" ) then
+			dst[k] = table.deepCopy( v, nil )
+		else
+			dst[k] = v
+		end		
+	end
+	return dst
+end
+
+-- ==
+--    table.deepStripCopy( src [ , dst ]) - Copies multi-level tables, but strips out metatable(s) and ...
+--
+--    Fields with these value types: 
+--       functions
+--       userdata
+--
+--    Fields with these these names: 
+--       _class
+--       __index
+--
+--
+--  This function is primarily meant to be used in preparation for serializing a table to a file.
+--  Because you can't serialize a table with the above types and fields, they need to be removed first.
+--  Of course, when you load the file back up, it will be up to  you to reattach the removed parts.
+-- 
+-- ==
+function table.deepStripCopy( src, dst )
+	local dst = dst or {}
+	for k,v in pairs(src) do 
+		local key = tostring(k)
+		local value = tostring(v)
+		local keyType = type(k)
+		local valueType = type(v)
+
+		if( valueType == "function" or 
+		    valueType == "userdata" or 
+			key == "_class"         or
+			key == "__index"           ) then
+
+			-- STRIP (SKIP IT)
+
+		elseif( valueType == "table" ) then
+
+			dst[k] = table.deepStripCopy( v, nil )
+
+		else
+			dst[k] = v
+		end		
+	end
+	return dst
+end
+
+-- ==
+--    table.save( theTable, fileName [, base ] ) - Saves table to file (Uses JSON library as intermediary)
+-- ==
+function table.save( theTable, fileName, base  )
+	local base = base or  system.DocumentsDirectory
+	local path = system.pathForFile( fileName, base )
+	local fh = io.open( path, "w" )
+
+	if(fh) then
+		fh:write(json.encode( theTable ))
+		io.close( fh )
+		return true
+	end	
+	return false
+end
+
+-- ==
+--    table.stripSave( theTable, fileName [, base ] ) - Saves table to file (Uses JSON library as intermediary)
+-- ==
+function table.stripSave( theTable, fileName, base )
+	local base = base or  system.DocumentsDirectory
+	local path = system.pathForFile( fileName, base )
+	local fh = io.open( path, "w" )
+
+	local tmpTable = table.deepStripCopy(theTable)
+
+	if(fh) then
+		fh:write(json.encode( tmpTable ))
+		io.close( fh )
+		return true
+	end	
+	return false
+end
+
+-- ==
+--    table.load( fileName [, base ] ) - Loads table from file (Uses JSON library as intermediary)
+-- ==
+function table.load( fileName, base )
+	local base = base or  system.DocumentsDirectory
+	local path = system.pathForFile( fileName, base )
+	if(path == nil) then return nil end
+	local fh, reason = io.open( path, "r" )
+	
+	if fh then
+		local contents = fh:read( "*a" )
+		io.close( fh )
+		local newTable = json.decode( contents )
+		return newTable
+	else
+		return nil
+	end
+end
+
+
 -- utility function for dumping out a table of data
 table.dump = function(t, indent)
 	local notindent = (indent == nil);
@@ -54,9 +338,11 @@ table.dump = function(t, indent)
 	if (notindent) then print('-----table-----'); end
 end
 
+
 -- ==
 --    table.print_r( theTable ) - Dumps indexes and values inside multi-level table (for debug)
 -- ==
+local print = _G.print
 table.print_r = function ( t ) 
 	--local depth   = depth or math.huge
 	local print_r_cache={}
@@ -94,13 +380,12 @@ end
 -- ==
 --    string:rpad( len, char ) - Places padding on right side of a string, such that the new string is at least len characters long.
 -- ==
+local print = _G.print
 function string:rpad(len, char)
 	local theStr = self
     if char == nil then char = ' ' end
     return theStr .. string.rep(char, len - #theStr)
 end
-
-
 function table.dump2(theTable, padding, marker ) -- Sorted
 	marker = marker or ""
 	local theTable = theTable or  {}
@@ -136,7 +421,9 @@ function table.dump2(theTable, padding, marker ) -- Sorted
 end
 
 
-
+-- ==
+--    table.serialize(name, object, tabs) -
+-- ==
 table.serialize = function (name, object, tabs)
 	local function serializeKeyForTable(k)
 		if type(k)=="number" then
@@ -226,3 +513,4 @@ storyboard.gotoScene = function(sceneName, options)
 	end
 end
 
+return public

@@ -168,7 +168,7 @@ function FRC_Home_Scene:createScene(event)
 					native.setActivityIndicator(true);
 				end
 			end
-			storyboard.gotoScene('Scenes.Lobby', { effect="crossFade", time="250" });
+			storyboard.gotoScene('Scenes.Lobby', { effect="crossFade", time=250 });
 		end, 1);
 	end
 
@@ -376,7 +376,7 @@ function FRC_Home_Scene:createScene(event)
 					native.setActivityIndicator(true);
 				end
 			end
-			storyboard.gotoScene('Scenes.ArtCenter', { effect="crossFade", time="250" });
+			storyboard.gotoScene('Scenes.ArtCenter', { effect="crossFade", time=250 });
 		end
 	});
 	artCenterButton.anchorX = 0.5;
@@ -392,7 +392,7 @@ function FRC_Home_Scene:createScene(event)
 		y = 477 - 368,
 		onRelease = function()
 			analytics.logEvent("MDMT.Home.SetDesign");
-			storyboard.gotoScene('Scenes.SetDesign', { effect="crossFade", time="250" });
+			storyboard.gotoScene('Scenes.SetDesign', { effect="crossFade", time=250 });
 		end
 	});
 	setDesignButton.anchorX = 0.5;
@@ -409,15 +409,30 @@ function FRC_Home_Scene:createScene(event)
 		onRelease = function()
 			analytics.logEvent("MDMT.Home.DressingRoom");
          if( _G.edmode ) then
-            storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time="250" }); -- EFM
+            storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time=250 }); -- EFM
          else
-            storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time="250" });  -- EFM
+            storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time=250 });  -- EFM
          end
 		end
 	});
 	dressingRoomButton.anchorX = 0.5;
 	dressingRoomButton.anchorY = 0.5;
 	bgGroup:insert(dressingRoomButton);
+
+   --EFM DEBUG begin
+   if( _G.edmode ) then
+      local function onKey( event )
+         if( event.phase ~= "up" ) then return false end
+         if( event.keyName == "d" ) then
+            storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time=0 });  -- EFM            
+         elseif( event.keyName == "r" ) then
+            storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time=0 }); -- EFM
+         end
+      end
+      Runtime:addEventListener( "key", onKey )   
+   end
+   
+   --EFM DEBUG end
 
 	-- position background group at correct location
 	bgGroup.x = display.contentCenterX;
