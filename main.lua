@@ -3,16 +3,31 @@
 -- main.lua
 --
 -----------------------------------------------------------------------------------------
-_G.edmode = false --EFM
-if( _G.edmode ) then
+local edmode = false --EFM
+if( edmode ) then
    _G.dprint  = _G.print --EFM
    require ("FRC_Modules.FRC_Extensions.FRC_Extensions") 
    _G.print = function() end
+
+   local function onKey( event )
+      local storyboard = require("storyboard");
+      if( event.phase ~= "up" ) then return false end
+      if( event.keyName == "d" ) then
+         storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time=0 });  -- EFM            
+      elseif( event.keyName == "r" ) then
+         storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time=0 }); -- EFM
+      end
+   end
+   Runtime:addEventListener( "key", onKey )   
 else
    _G.dprint = function() end --EFM
 end
 --require("mobdebug").start() -- ZeroBrane Users
 -----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+
+
 display.setStatusBar(display.HiddenStatusBar);
 
 local FRC_Globals = require('FRC_Modules.FRC_Globals.FRC_Globals');

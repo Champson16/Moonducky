@@ -449,12 +449,7 @@ function FRC_Lobby_Scene:createScene(event)
 		y = 360 - 368,
 		onRelease = function()
 			analytics.logEvent("MDMT.Lobby.Rehearsal");
-         --if( _G.edmode ) then
-            storyboard.gotoScene('Scenes.Rehearsal'); --EFM
-            -- storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time=250 });
-         --else
-            --native.showAlert("Rehearsal Coming Soon!","Ed Maurina is working on this feature.  Flip  edmode to 'true' in main.lua to see current state of scene.", { "OK" });
-         --end
+         storyboard.gotoScene('Scenes.Rehearsal'); --EFM      
 		end
 	});
 	rehearsalButton.anchorX = 0.5;

@@ -12,7 +12,7 @@ local FRC_AudioManager        = require('FRC_Modules.FRC_AudioManager.FRC_AudioM
 local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
 local FRC_SetDesign_Settings  = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign_Settings');
 local FRC_SetDesign           = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign');
-local FRC_ChickenTest         = require('FRC_Modules.FRC_Rehearsal.FRC_ChickenTest') --EFM
+local FRC_CharacterBuilder    = require('FRC_Modules.FRC_Rehearsal.FRC_CharacterBuilder') --EFM
 
 local FRC_ArtCenter;
 local artCenterLoaded = pcall(function()
@@ -26,9 +26,6 @@ local character_x = 0
 local character_y = -16
 local eyeTimer
 
--- ====================================================================
--- EFM - TBD BEGIN
--- ====================================================================
 local function UI(key)
    return FRC_Rehearsal_Settings.UI[key]
 end
@@ -154,9 +151,6 @@ function FRC_Rehearsal_Scene:load(e)
    self.id = id
    --]]
 end
--- ====================================================================
--- EFM - TBD END
--- ====================================================================
 
 
 -- ====================================================================
@@ -458,7 +452,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    categoriesContainer.x = display.contentCenterX
    categoriesContainer.y = display.contentHeight - (categoriesHeight * 0.5) + (category_button_spacing * 1.65)
 
-   for i=1,#categoryData do
+   for i=1,#categoryData do      
       local button = ui.button.new({
             id = categoryData[i].id,
             imageUp = UI('IMAGES_PATH') .. categoryData[i].imageUp,
@@ -492,7 +486,7 @@ function FRC_Rehearsal_Scene:createScene(event)
       button.y = -category_button_spacing * 0.75
 
       -- create corresponding item scroll containers
-      local scroller = ui.scrollcontainer.new({
+      local scroller = ui.scrollcontainer.new({   -- EFM EDO
             width = screenW,
             height = (categoriesHeight * button_scale) - 5,
             xScroll = true,
@@ -602,6 +596,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    for i=1,#songInstruments do
       local scroller = itemScrollers['Instrument']
       buttonHeight = scroller.contentHeight - button_spacing
+      --table.dump2(songInstruments[i]) --EFM
       local button = ui.button.new({
             id = songInstruments[i].id,
             imageUp = UI('IMAGES_PATH') .. songInstruments[i].imageUp,
@@ -616,7 +611,8 @@ function FRC_Rehearsal_Scene:createScene(event)
                local self = e.target
                -- CODE TO HANDLE INSTRUMENT INSERTION/CHANGE GOES HERE
                -- changeItem('Instrument', self.id)
-               FRC_ChickenTest.showIntrumentSample( self.id )
+               --FRC_CharacterBuilder.showIntrumentSample( self.id )
+               FRC_CharacterBuilder.placeNewInstrument( self.id )
                --print(self.id)
             end
          })
@@ -633,6 +629,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    for i=1,#characterData do
       local scroller = itemScrollers['Character']
       buttonHeight = scroller.contentHeight - button_spacing
+      table.dump2(characterData[i]) --EFM
       local button = ui.button.new({
             id = characterData[i].id,
             imageUp = UI('IMAGES_PATH') .. (characterData[i].bodyThumb or characterData[i].bodyImage),
@@ -644,7 +641,11 @@ function FRC_Rehearsal_Scene:createScene(event)
             onRelease = function(e)
                local self = e.target
                -- CODE TO HANDLE CHARACTER INSERTION/CHANGE GOES HERE
-               -- changeItem('Character', self.id)
+               --changeItem('Character', self.id)
+               dprint( self.id ) -- EFM EDO
+               FRC_CharacterBuilder.setCurrentCharacterType( self.id ) --EFM
+               FRC_CharacterBuilder.rebuildCostumeScroller() --EFM
+               
             end
          })
       button.categoryId = 'Character'
@@ -654,8 +655,35 @@ function FRC_Rehearsal_Scene:createScene(event)
       x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)
    end
 
-   -- create the Costume scroll container
-
+   -- create the Costume scroll container -- EDOCHI
+   --[[
+   x = -(screenW * 0.5) + button_spacing
+   for i=1,#characterData do
+      local scroller = itemScrollers['Costume']
+      buttonHeight = scroller.contentHeight - button_spacing
+      table.dump2(characterData[i]) --EFM
+      local button = ui.button.new({
+            id = characterData[i].id,
+            imageUp = UI('IMAGES_PATH') .. (characterData[i].bodyThumb or characterData[i].bodyImage),
+            imageDown = UI('IMAGES_PATH') .. (characterData[i].bodyThumb or characterData[i].bodyImage),
+            width = buttonHeight * (characterData[i].bodyWidth / characterData[i].bodyHeight),
+            height = buttonHeight,
+            parentScrollContainer = scroller,
+            pressAlpha = 0.5,
+            onRelease = function(e)
+               local self = e.target
+               -- CODE TO HANDLE CHARACTER INSERTION/CHANGE GOES HERE
+               --changeItem('Character', self.id)
+               dprint( self.id ) -- EFM EDO
+            end
+         })
+      button.categoryId = 'Character'
+      scroller:insert(button)
+      x = x + (button.contentWidth * 0.5)
+      button.x, button.y = x, 0
+      x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)
+   end
+   --]]
    -- create the clothing scroll containers using the first character's images
 
    --[[
@@ -723,7 +751,8 @@ function FRC_Rehearsal_Scene:createScene(event)
 
    view:insert(categoriesContainer)
 
-   FRC_ChickenTest.create( view, screenW, screenH, FRC_Layout, bg, animationXMLBase, animationImageBase ) -- EFM
+   FRC_CharacterBuilder.create( view, screenW, screenH, FRC_Layout, bg, animationXMLBase, animationImageBase, itemScrollers, categoriesContainer ) -- EFM
+   FRC_CharacterBuilder.rebuildCostumeScroller( )
 
    if (FRC_Rehearsal_Scene.postCreateScene) then
       FRC_Rehearsal_Scene:postCreateScene(event)

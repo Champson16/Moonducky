@@ -408,29 +408,13 @@ function FRC_Home_Scene:createScene(event)
 		y = 477 - 368,
 		onRelease = function()
 			analytics.logEvent("MDMT.Home.DressingRoom");
-         if( _G.edmode ) then
-            storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time=250 }); -- EFM
-         else
-            storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time=250 });  -- EFM
-         end
+         storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time=250 });  -- EFM
 		end
 	});
 	dressingRoomButton.anchorX = 0.5;
 	dressingRoomButton.anchorY = 0.5;
 	bgGroup:insert(dressingRoomButton);
 
-   --EFM DEBUG begin
-   if( _G.edmode ) then
-      local function onKey( event )
-         if( event.phase ~= "up" ) then return false end
-         if( event.keyName == "d" ) then
-            storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time=0 });  -- EFM            
-         elseif( event.keyName == "r" ) then
-            storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time=0 }); -- EFM
-         end
-      end
-      Runtime:addEventListener( "key", onKey )   
-   end
    
    --EFM DEBUG end
 
