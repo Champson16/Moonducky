@@ -69,7 +69,7 @@ function public.findAnimationParts( parts, partSubName, partExcludeName, toTable
          end
       end
    end
-   if(toTable) then
+   if(toTable and #subParts > 0) then
       toTable[#toTable+1] = { partSubName, subParts, animationImageBase }
    end
    return subParts

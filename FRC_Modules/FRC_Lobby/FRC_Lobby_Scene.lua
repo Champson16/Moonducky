@@ -221,7 +221,7 @@ function FRC_Lobby_Scene:createScene(event)
 	end
 	--]]
 
-  -- TODO ED: This entire scene layout processing code block needs to be a separate component used by any scene
+  -- TODO EFM: This entire scene layout processing code block needs to be a separate component used by any scene
 	-- set up the scene layout
 	-- Get lua tables from JSON data
 	local sceneLayoutData = DATA('SCENELAYOUT');

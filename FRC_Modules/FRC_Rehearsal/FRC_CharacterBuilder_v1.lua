@@ -1,29 +1,6 @@
 local FRC_AnimationManager    = require('FRC_Modules.FRC_AnimationManager.FRC_AnimationManager')
 local FRC_Rehearsal_Tools = require("FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Tools")
 
-local instrumentNameMap = {}
-instrumentNameMap.Microphone = 8
-instrumentNameMap.Bass = 1
-instrumentNameMap.Conga = 2
-instrumentNameMap.Guitar = 5
-instrumentNameMap.Piano = 9
-instrumentNameMap.Harmonica = 6
-instrumentNameMap.Maracas = 7
-instrumentNameMap.Sticks = 12
-instrumentNameMap.RhythmComboCheeseGrater = 10
-instrumentNameMap.RhythmComboCymbal = 11
-instrumentNameMap[1] = "Bass"
-instrumentNameMap[2] = "Conga"
-instrumentNameMap[5] = "Guitar"
-instrumentNameMap[6] = "Harmonica"
-instrumentNameMap[7] = "Maracas"
-instrumentNameMap[8] = "Microphone"
-instrumentNameMap[9] = "Piano"
-instrumentNameMap[12] = "Sticks"
-instrumentNameMap[10] = "RhythmComboCheeseGrater"
-instrumentNameMap[11] = "RhythmComboCymbal"
-
---local animals = { "Chicken", "Cat", "Dog", "Hamster", "Pig", "Sheep", "Goat" }
 
 local mRand = math.random
 
@@ -47,121 +24,238 @@ function public.init( _view, _screenW, _screenH, _FRC_Layout, _bg, _animationXML
    itemScrollers        = _itemScrollers
    categoriesContainer  = _categoriesContainer
    
-   timer.performWithDelay( 1000, function()
-      --view:scale(0.5, 0.5)
-      --view.x = 200
-      --view.y = 200
-      end )
-   
 end
 
-local testGroup
-function public.createNewAnimal( characterData ) --animalType, instrumentType )
-   local animalType = characterData.character
-   animalType = "Chicken"
-   local instrumentType = characterData.instrument or "Bass" -- EFM TBD
+function public.create_orig( _view, _screenW, _screenH, _FRC_Layout, _bg, _animationXMLBase, _animationImageBase, _itemScrollers, _categoriesContainer )    
+   view                 = _view
+   screenW              = _screenW
+   screenH              = _screenH
+   FRC_Layout           = _FRC_Layout
+   bg                   = _bg
+   animationXMLBase     = _animationXMLBase
+   animationImageBase   = _animationImageBase
+   itemScrollers        = _itemScrollers
+   categoriesContainer  = _categoriesContainer
    
-   if( animalType ~= "Chicken" and animalType ~= "Cat" ) then 
-      dprint("Only chickens and cats supported right now....")
-      return
-   end
-   local animationSequences = {}
-   
-   display.remove( testGroup )
-   testGroup   = display.newGroup()
-   testGroup.x = display.contentCenterX
-   testGroup.y = display.contentCenterY
+   local testGroup      = display.newGroup()
    view:insert( testGroup )
-   
-   
+
+   local idToFileMap = {}
+   idToFileMap.Microphone = 8
+   idToFileMap.Bass = 1
+   idToFileMap.Conga = 2
+   idToFileMap.Guitar = 5
+   idToFileMap.Piano = 9
+   idToFileMap.Harmonica = 6
+   idToFileMap.Maracas = 7
+   idToFileMap.Sticks = 12
+   idToFileMap.RhythmComboCheeseGrater = 10
+   idToFileMap.RhythmComboCymbal = 11
 
    local xmlFiles = {
-      "MDMT_Animation_" .. animalType .. "_Bass.xml", -- 1
-      "MDMT_Animation_" .. animalType .. "_Conga.xml", -- 2
-      "MDMT_Animation_" .. animalType .. "_Dance1.xml", -- 3
-      "MDMT_Animation_" .. animalType .. "_Dance2.xml", -- 4
-      "MDMT_Animation_" .. animalType .. "_Guitar.xml", -- 5
-      "MDMT_Animation_" .. animalType .. "_Harmonica.xml", -- 6
-      "MDMT_Animation_" .. animalType .. "_Maracas.xml", -- 7
-      "MDMT_Animation_" .. animalType .. "_Microphone.xml", -- 8
-      "MDMT_Animation_" .. animalType .. "_Piano.xml", -- 9
-      "MDMT_Animation_" .. animalType .. "_RhythmComboCheeseGrater.xml", -- 10
-      "MDMT_Animation_" .. animalType .. "_RhythmComboCymbal.xml", -- 11
-      "MDMT_Animation_" .. animalType .. "_Sticks.xml", -- 12
+      "MDMT_Animation_Chicken_Bass.xml", -- 1
+      "MDMT_Animation_Chicken_Conga.xml", -- 2
+      "MDMT_Animation_Chicken_Dance1.xml", -- 3
+      "MDMT_Animation_Chicken_Dance2.xml", -- 4
+      "MDMT_Animation_Chicken_Guitar.xml", -- 5
+      "MDMT_Animation_Chicken_Harmonica.xml", -- 6
+      "MDMT_Animation_Chicken_Maracas.xml", -- 7
+      "MDMT_Animation_Chicken_Microphone.xml", -- 8
+      "MDMT_Animation_Chicken_Piano.xml", -- 9
+      "MDMT_Animation_Chicken_RhythmComboCheeseGrater.xml", -- 10
+      "MDMT_Animation_Chicken_RhythmComboCymbal.xml", -- 11
+      "MDMT_Animation_Chicken_Sticks.xml", -- 12
    }
 
-   
-   if( type(instrumentType) == "string") then
-      dprint("Before ", animalType, instrumentType)
-      instrumentType = instrumentNameMap[instrumentType]
-      dprint("After ", animalType, instrumentType)
-   end
-   
-   for i = 1, #animationSequences do
-      local sequence = animationSequences[i]
-      for j = 1, sequence.numChildren do
-         sequence[j]:dispose()
+
+   local animationSequences = {}
+   public.showIntrumentSample = function( xmlNum )
+      if( type(xmlNum) == "string") then
+         dprint("Before ", xmlNum)
+         xmlNum = idToFileMap[xmlNum]
       end
-   end
-
-   local partsList = FRC_Rehearsal_Tools.getPartsList( xmlFiles[instrumentType], animationXMLBase )
-   for i = 1, #partsList do
-      dprint( "partsList[" .. i .. "] ", partsList[i].name, animationImageBase )      
-   end
-   
-   -- Create a menu to select and play the animations
-   --
-   -- Parse animations from Unified file and select just animations we want
-   local animationsToBuild = {}   
-   local allParts = private.getAllPartsList( instrumentType )
-
-   for i = 1, #allParts do
-      local partName = allParts[i][1]
-      local partExcludeName = allParts[i][2]
-      for j = 1, #partsList do
-         if( string.match( partsList[j].name, partName ) ~= nil ) then
-            FRC_Rehearsal_Tools.findAnimationParts( partsList, partName, partExcludeName, animationsToBuild, allParts[i][3] )
+      dprint(xmlNum)
+      for i = 1, #animationSequences do
+         --animationSequences[i]:stop()
+         local sequence = animationSequences[i]
+         --print("BILLY ",  sequence.numChildren )
+         for j = 1, sequence.numChildren do
+            --sequence[j]:stop()
+            sequence[j]:dispose()
          end
       end
+      display.remove( testGroup )
+      testGroup = display.newGroup()
+      view:insert( testGroup )
+
+      --local partsList = FRC_Rehearsal_Tools.getPartsList( "efm_unified.xml", animationXMLBase )
+
+      local partsList = FRC_Rehearsal_Tools.getPartsList( xmlFiles[xmlNum], animationXMLBase )
+
+      --table.print_r( partsList )
+      --table.dump2( partsList )
+      for i = 1, #partsList do
+         dprint(partsList[i].name, animationImageBase)
+      end
+      --Eyewear
+      --Headwear
+      --LowerTorso
+      --Neckwear
+      --UpperTorso
+      --Body
+      --Eyes
+      --Instrument
+
+      -- Create a menu to select and play the animations
+      --
+      -- Parse animations from Unified file and select just animations we want
+      local animationsToBuild = {}
+      local dressingRoomImagBase = "FRC_Assets/FRC_DressingRoom/Images/"
+      animationSequences = {}
+      local allParts
+
+      if( xmlNum == 5 ) then -- Guitar
+         allParts = {
+            { "Body", "", animationImageBase },
+            { "Torso_Guitar", "", animationImageBase },
+            { "Neckwear", "", dressingRoomImagBase },
+            { "LowerTorso", "", dressingRoomImagBase },
+            { "UpperTorso", "", dressingRoomImagBase },
+            { "Mouth", "", animationImageBase },
+            { "Eyes", "", animationImageBase },
+            { "Eyewear", "", dressingRoomImagBase },
+            { "Headwear", "", dressingRoomImagBase },
+            { "Instrument", "", animationImageBase },
+            { "LeftArm", "", animationImageBase },
+            { "RightArm", "", animationImageBase },
+         }
+      elseif( xmlNum == 7 ) then -- Maracas
+         allParts = {
+            { "Body", "", animationImageBase },
+            { "Neckwear", "", dressingRoomImagBase },
+            { "LowerTorso", "", dressingRoomImagBase },
+            { "UpperTorso", "", dressingRoomImagBase },
+            { "Mouth", "", animationImageBase },
+            { "Eyes", "", animationImageBase },
+            { "Eyewear", "", dressingRoomImagBase },
+            { "Headwear", "", dressingRoomImagBase },
+            { "Instrument_Maracas_Left", "", animationImageBase },
+            { "Instrument_Maracas_Right", "", animationImageBase },
+            { "LeftArm", "", animationImageBase },
+            { "RightArm", "", animationImageBase },
+         }
+      elseif( xmlNum == 10 ) then -- Cheese Grater
+         allParts = {
+            { "Body", "", animationImageBase },
+            { "Neckwear", "", dressingRoomImagBase },
+            { "LowerTorso", "", dressingRoomImagBase },
+            { "UpperTorso", "", dressingRoomImagBase },
+            { "Mouth", "", animationImageBase },
+            { "Eyes", "", animationImageBase },
+            { "Eyewear", "", dressingRoomImagBase },
+            { "Headwear", "", dressingRoomImagBase },
+            { "Instrument_RhythmComboCheeseGrater", "Instrument_RhythmComboCheeseGrater_Fork", animationImageBase },
+            { "RightArm", "", animationImageBase },
+            { "Instrument_RhythmComboCheeseGrater_Fork", "", animationImageBase },
+            { "LeftArm", "", animationImageBase },
+         }
+      elseif( xmlNum == 11 ) then -- Combo Cymbal
+         dprint("xmlNum 11")
+         allParts = {
+            { "Body", "", animationImageBase },
+            { "Neckwear", "", dressingRoomImagBase },
+            { "LowerTorso", "", dressingRoomImagBase },
+            { "UpperTorso", "", dressingRoomImagBase },
+            { "Mouth", "", animationImageBase },
+            { "Eyes", "", animationImageBase },
+            { "Eyewear", "", dressingRoomImagBase },
+            { "Headwear", "", dressingRoomImagBase },
+            { "Instrument_RhythmComboCymbal", "Instrument_RhythmComboCymbal_Stick", animationImageBase },
+            { "Instrument_RhythmComboCymbal_Stick", "", animationImageBase },
+            { "LeftArm", "", animationImageBase },
+            { "RightArm", "", animationImageBase },
+
+         }
+      elseif( xmlNum == 12 ) then -- Sticks
+         allParts = {
+            { "Body", "", animationImageBase },
+            { "Neckwear", "", dressingRoomImagBase },
+            { "LowerTorso", "", dressingRoomImagBase },
+            { "UpperTorso", "", dressingRoomImagBase },
+            { "Mouth", "", animationImageBase },
+            { "Eyes", "", animationImageBase },
+            { "Eyewear", "", dressingRoomImagBase },
+            { "Headwear", "", dressingRoomImagBase },
+            { "Instrument_Sticks_Left", "", animationImageBase },
+            { "Instrument_Sticks_Right", "", animationImageBase },
+            { "LeftArm", "", animationImageBase },
+            { "RightArm", "", animationImageBase },
+         }
+
+      else
+         allParts = {
+            { "Body", "", animationImageBase },
+            { "Neckwear", "", dressingRoomImagBase },
+            { "LowerTorso", "", dressingRoomImagBase },
+            { "UpperTorso", "", dressingRoomImagBase },
+            { "Mouth", "", animationImageBase },
+            { "Eyes", "", animationImageBase },
+            { "Eyewear", "", dressingRoomImagBase },
+            { "Headwear", "", dressingRoomImagBase },
+            { "Instrument", "", animationImageBase },
+            { "LeftArm", "", animationImageBase },
+            { "RightArm", "", animationImageBase },
+         }
+      end
+
+      for i = 1, #allParts do
+         local partName = allParts[i][1]
+         local partExcludeName = allParts[i][2]
+         for j = 1, #partsList do
+            --dprint(j, partName )
+            if( string.match( partsList[j].name, partName ) ~= nil ) then
+               dprint(j, partName )
+               FRC_Rehearsal_Tools.findAnimationParts( partsList, partName, partExcludeName, animationsToBuild, allParts[i][3] )
+            end
+         end
+      end
+
+      --table.print_r(animationsToBuild)
+
+      -- Create animation groups (sequences) from our list of animations to build
+      local animGroup = display.newGroup()
+      local xOffset = (screenW - (display.contentWidth * bg.xScale)) * 0.5
+      testGroup:insert(animGroup)
+      for i = 1, #animationsToBuild do
+         local animationGroupProperties = {}
+         --table.dump2(animationsToBuild[i])
+         animationSequences[i] = FRC_Rehearsal_Tools.createUnifiedAnimationClipGroup( xmlFiles[xmlNum],
+            animationsToBuild[i],
+            animationXMLBase,
+            animationsToBuild[i][3], -- animationImageBase,
+            animationGroupProperties )
+         FRC_Layout.scaleToFit(animationSequences[i], 0, 0)
+
+         animationSequences[i].x = animationSequences[i].x --+ xOffset
+         animationSequences[i].y = animationSequences[i].y --+ bg.contentBounds.yMin
+         animGroup:insert(animationSequences[i])
+      end
+      -- Yes, I'm placing these manually for now
+      animGroup.x = 240
+      animGroup.y = 200
+      animGroup:scale(0.55,0.55)
+
+      -- Create a menu to select and play the animations
+      --
+      timer.performWithDelay( 0,
+         function()
+            for i = 1, #animationSequences do
+               FRC_Rehearsal_Tools.playUnifiedAnimations( animationSequences, i )
+            end
+         end )
+
    end
-   
-   table.print_r(animationsToBuild)
-   -- Create animation groups (sequences) from our list of animations to build
-   local animGroup = display.newGroup()
-   local xOffset = -(display.actualContentWidth/2)
-   local yOffset = -(display.actualContentHeight/2)
-   testGroup:insert(animGroup)
-   for i = 1, #animationsToBuild do
-      local animationGroupProperties = {}
-      animationSequences[i] = FRC_Rehearsal_Tools.createUnifiedAnimationClipGroup( 
-         xmlFiles[instrumentType],
-         animationsToBuild[i],
-         animationXMLBase,
-         animationsToBuild[i][3], -- animationImageBase,
-         animationGroupProperties )
-      --FRC_Layout.scaleToFit(animationSequences[i], 0, 0)
-      animationSequences[i].x = xOffset
-      animationSequences[i].y = yOffset      
-      animGroup:insert(animationSequences[i])
-   end
-   
-   testGroup:scale(0.5, 0.5)
-   
-   dprint("EFM - ", testGroup.contentWidth, testGroup.contentHeight )
-   
-     
-   --table.print_r(animationSequences)
-   -- Yes, I'm placing these manually for now
-   --animGroup.x = 240
-   --animGroup.y = 200
-   --animGroup:scale(0.55,0.55)
-   -- Create a menu to select and play the animations
-   --
-   for i = 1, #animationSequences do
-      FRC_Rehearsal_Tools.playUnifiedAnimations( animationSequences, i )
-   end
-   
-   return animationSequences
+      
 end
 
 
@@ -180,7 +274,7 @@ function public.rebuildCostumeScroller( )
    end
    
    -- Get current characters
-   local characters = public.getDressingRoomDataByAnimalType( currentCharacterType, 1 ) --EFM
+   local characters = public.getCharacters( currentCharacterType, 2 ) --EFM
    
    
    
@@ -222,10 +316,7 @@ end
 -- placeNewCharacter() - 
 --
 function public.placeNewCharacter( data )
-   --table.print_r(data)
-   --public.createNewAnimal( "Chicken", "Bass" )
-   --public.showIntrumentSample(1)
-   public.createNewAnimal( data )
+   public.showIntrumentSample(1)
 end
 
 -- 
@@ -245,80 +336,36 @@ function public.placeNewInstrument( instrumentName )
 end
 
 -- 
--- getDressingRoomDataByAnimalType( characterType ) - Extract just 'characterType' characters from saved list of (dressing room) characters
+-- getCharacters( characterType ) - Extract just 'characterType' characters from saved list of (dressing room) characters
 --
-function public.getDressingRoomDataByAnimalType( characterType, debugLevel )
+function public.getCharacters( characterType, debugLevel )
    
    local characters = {}
    local dressingRoomDataPath = "FRC_DressingRoom_SaveData.json"
    local allSaved = table.load( dressingRoomDataPath ) or {}   
    if( not allSaved.savedItems ) then 
       if( debugLevel and debugLevel > 0 ) then
-         dprint("No charactes/costumes saved, can't search for this animal type: ", characterType )
-         private.easyAlert( "No saved costumes", 
-                            "No charactes/costumes saved, can't search for this animal type: " .. 
-                            tostring(characterType) .. "\n\n Please go save some constumes first.", 
-                            { {"OK", nil} } )
+         dprint("No charactes/costumes of this type found: ", characterType )
       end
       return characters 
    end   
-   local savedItems = allSaved.savedItems      
+   local savedItems = allSaved.savedItems   
+   --table.print_r( savedItems )
    for i = 1, #savedItems do
-      local current = savedItems[i]      
+      local current = savedItems[i]
+      --table.dump2( current )
       if( current.character == characterType ) then
          characters[#characters+1] = current
       end
    end  
    if( debugLevel and debugLevel > 0 ) then
-      if( #characters == 0 ) then
-         private.easyAlert( "No saved costumes", 
-                            "No charactes/costumes saved for this animal type: " .. 
-                            tostring(characterType) .. "\n\n Please go save some constumes first.", 
-                            { {"OK", nil} } )                        
-      end         
       dprint("Found ", tostring(#characters), " of charactes/costumes of this type: ", characterType )
    end
    if( debugLevel and debugLevel > 1 ) then
       table.print_r(characters)
-      dprint("getDressingRoomDataByAnimalType()")
    end
    
    return characters
-end
-
--- 
--- getDressingRoomDataByID( characterType ) - Extract just 'characterType' characters from saved list of (dressing room) characters
---
-function public.getDressingRoomDataByID( id, debugLevel )
-   local dressingRoomDataPath = "FRC_DressingRoom_SaveData.json"
-   local allSaved = table.load( dressingRoomDataPath ) or {}   
-   if( not allSaved.savedItems ) then 
-      if( debugLevel and debugLevel > 0 ) then
-         private.easyAlert( "No saved costumes", 
-                            "No charactes/costumes saved, can't search for this id: " .. 
-                            tostring(id) .. "\n\n Please go save some constumes first.", 
-                            { {"OK", nil} } )
-         
-         dprint("No charactes/costumes saved, can't search for this id: ", id )
-      end
-      return nil 
-   end   
-   local savedItems = allSaved.savedItems      
-   for i = 1, #savedItems do
-      local current = savedItems[i]      
-      if( current.id == id ) then
-         dprint("Found character by ID: ", id )
-         return character
-      end
-   end     
-   
-   if( debugLevel and debugLevel > 0 ) then  
-      private.easyAlert( "Unknown Dressing Room ID", 
-                      "No charactes/costumes found matching this ID: " .. tostring(characterType), 
-                      { {"OK", nil} } )
-   end
-
-   return nil
 end
 
 
@@ -332,8 +379,8 @@ function public.misc()
    end
    local characterData = DATA('CHARACTER');
    
-   --table.dump2( characterData[2], nil,"public.misc()" )
-   --table.dump2( characterData[2].clothing, nil,"public.misc()" )
+   table.dump2( characterData[2] )
+   table.dump2( characterData[2].clothing )
 --[[
 	local none = {
 		id = 'none',
@@ -374,7 +421,7 @@ function private.costumeTouch( self, event )
             if( self.data == "none" ) then 
                dprint( "Remove costume" )
             else 
-               --table.print_r(self.data)
+               table.print_r(self.data)
                public.placeNewCharacter(self.data)
             end
          end
@@ -422,137 +469,6 @@ function private.dragNDrop( self, event )
    end
    return true
 end
-
-
-function private.getAllPartsList( instrumentType )
-   local dressingRoomImageBase = "FRC_Assets/FRC_DressingRoom/Images/"
-   local allParts
-   dprint("Getting allParts layer ordering table for instrument type: ", instrumentType, instrumentNameMap[instrumentType] )
-   if( instrumentType == 5 ) then -- Guitar
-      allParts = {
-         { "Body", "", animationImageBase },
-         { "Torso_Guitar", "", animationImageBase },
-         { "Neckwear", "", dressingRoomImageBase },
-         { "LowerTorso", "", dressingRoomImageBase },
-         { "UpperTorso", "", dressingRoomImageBase },
-         { "Mouth", "", animationImageBase },
-         { "Eyes", "WithEyes", animationImageBase },
-         { "Eyewear", "", dressingRoomImageBase },
-         { "Headwear", "", dressingRoomImageBase },
-         { "Instrument", "", animationImageBase },
-         { "LeftArm", "", animationImageBase },
-         { "RightArm", "", animationImageBase },
-      }
-   elseif( instrumentType == 7 ) then -- Maracas
-      allParts = {
-         { "Body", "", animationImageBase },
-         { "Neckwear", "", dressingRoomImageBase },
-         { "LowerTorso", "", dressingRoomImageBase },
-         { "UpperTorso", "", dressingRoomImageBase },
-         { "Mouth", "", animationImageBase },
-         { "Eyes", "WithEyes", animationImageBase },
-         { "Eyewear", "", dressingRoomImageBase },
-         { "Headwear", "", dressingRoomImageBase },
-         { "Instrument_Maracas_Left", "", animationImageBase },
-         { "Instrument_Maracas_Right", "", animationImageBase },
-         { "LeftArm", "", animationImageBase },
-         { "RightArm", "", animationImageBase },
-      }
-   elseif( instrumentType == 10 ) then -- Cheese Grater
-      allParts = {
-         { "Body", "", animationImageBase },
-         { "Neckwear", "", dressingRoomImageBase },
-         { "LowerTorso", "", dressingRoomImageBase },
-         { "UpperTorso", "", dressingRoomImageBase },
-         { "Mouth", "", animationImageBase },
-         { "Eyes", "WithEyes", animationImageBase },
-         { "Eyewear", "", dressingRoomImageBase },
-         { "Headwear", "", dressingRoomImageBase },
-         { "Instrument_RhythmComboCheeseGrater", "Instrument_RhythmComboCheeseGrater_Fork", animationImageBase },
-         { "RightArm", "", animationImageBase },
-         { "Instrument_RhythmComboCheeseGrater_Fork", "", animationImageBase },
-         { "LeftArm", "", animationImageBase },
-      }
-   elseif( instrumentType == 11 ) then -- Combo Cymbal
-      allParts = {
-         { "Body", "", animationImageBase },
-         { "Neckwear", "", dressingRoomImageBase },
-         { "LowerTorso", "", dressingRoomImageBase },
-         { "UpperTorso", "", dressingRoomImageBase },
-         { "Mouth", "", animationImageBase },
-         { "Eyes", "WithEyes", animationImageBase },
-         { "Eyewear", "", dressingRoomImageBase },
-         { "Headwear", "", dressingRoomImageBase },
-         { "Instrument_RhythmComboCymbal", "Instrument_RhythmComboCymbal_Stick", animationImageBase },
-         { "Instrument_RhythmComboCymbal_Stick", "", animationImageBase },
-         { "LeftArm", "", animationImageBase },
-         { "RightArm", "", animationImageBase },
-
-      }
-   elseif( instrumentType == 12 ) then -- Sticks
-      allParts = {
-         { "Body", "", animationImageBase },
-         { "Neckwear", "", dressingRoomImageBase },
-         { "LowerTorso", "", dressingRoomImageBase },
-         { "UpperTorso", "", dressingRoomImageBase },
-         { "Mouth", "", animationImageBase },
-         { "Eyes", "WithEyes", animationImageBase },
-         { "Eyewear", "", dressingRoomImageBase },
-         { "Headwear", "", dressingRoomImageBase },
-         { "Instrument_Sticks_Left", "", animationImageBase },
-         { "Instrument_Sticks_Right", "", animationImageBase },
-         { "LeftArm", "", animationImageBase },
-         { "RightArm", "", animationImageBase },
-      }
-
-   else
-      allParts = {
-         { "Body", "", animationImageBase },
-         { "Neckwear", "", dressingRoomImageBase },
-         { "LowerTorso", "", dressingRoomImageBase },
-         { "UpperTorso", "", dressingRoomImageBase },
-         { "Mouth", "", animationImageBase },
-         --{ "Eyes", "WithEyes", animationImageBase },
-         { "Eyes", "WithEyes", dressingRoomImageBase },
-         --{ "Eyewear", "", dressingRoomImageBase },
-         { "Headwear", "", dressingRoomImageBase },
-         { "Instrument", "", animationImageBase },
-         { "LeftArm", "", animationImageBase },
-         { "RightArm", "", animationImageBase },
-      }
-   end
-   return allParts
-end
-
-
--- Easy alert popup
---
--- title - Name on popup.
--- msg - message in popup.
--- buttons - table of tables like this:
--- { { "button 1", opt_func1 }, { "button 2", opt_func2 }, ...}
---
-function private.easyAlert( title, msg, buttons )
-
-	local function onComplete( event )
-		local action = event.action
-		local index = event.index
-		if( action == "clicked" ) then
-			local func = buttons[index][2]
-			if( func ) then func() end 
-	    end
-	    --native.cancelAlert()
-	end
-
-	local names = {}
-	for i = 1, #buttons do
-		names[i] = buttons[i][1]
-	end
-	--print( title, msg, names, onComplete )
-	local alert = native.showAlert( title, msg, names, onComplete )
-	return alert
-end
-
 
 return public
 
@@ -654,7 +570,7 @@ return public
    for i=1,#songInstruments do
       local scroller = itemScrollers['Instrument']
       buttonHeight = scroller.contentHeight - button_spacing
-      --table.dump2(songInstruments[i]) --EFM
+      table.dump2(songInstruments[i]) --EFM
       local button = ui.button.new({
             id = songInstruments[i].id,
             imageUp = UI('IMAGES_PATH') .. songInstruments[i].imageUp,

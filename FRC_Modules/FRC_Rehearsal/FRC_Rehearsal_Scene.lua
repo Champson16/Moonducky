@@ -629,7 +629,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    for i=1,#characterData do
       local scroller = itemScrollers['Character']
       buttonHeight = scroller.contentHeight - button_spacing
-      table.dump2(characterData[i]) --EFM
+      --table.dump2(characterData[i]) --EFM
       local button = ui.button.new({
             id = characterData[i].id,
             imageUp = UI('IMAGES_PATH') .. (characterData[i].bodyThumb or characterData[i].bodyImage),
@@ -661,7 +661,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    for i=1,#characterData do
       local scroller = itemScrollers['Costume']
       buttonHeight = scroller.contentHeight - button_spacing
-      table.dump2(characterData[i]) --EFM
+      --table.dump2(characterData[i]) --EFM
       local button = ui.button.new({
             id = characterData[i].id,
             imageUp = UI('IMAGES_PATH') .. (characterData[i].bodyThumb or characterData[i].bodyImage),
@@ -751,7 +751,7 @@ function FRC_Rehearsal_Scene:createScene(event)
 
    view:insert(categoriesContainer)
 
-   FRC_CharacterBuilder.create( view, screenW, screenH, FRC_Layout, bg, animationXMLBase, animationImageBase, itemScrollers, categoriesContainer ) -- EFM
+   FRC_CharacterBuilder.init( view, screenW, screenH, FRC_Layout, bg, animationXMLBase, animationImageBase, itemScrollers, categoriesContainer ) -- EFM
    FRC_CharacterBuilder.rebuildCostumeScroller( )
 
    if (FRC_Rehearsal_Scene.postCreateScene) then
