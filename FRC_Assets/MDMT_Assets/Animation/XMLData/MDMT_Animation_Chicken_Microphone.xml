@@ -494,7 +494,7 @@
       <Frame x="-6.90" y="-6.00" scaleX="1.060" scaleY="1.060" rotation="-2.501" index="78"/>
       <Frame x="-6.90" y="-6.00" scaleX="1.060" scaleY="1.060" rotation="-2.501" index="79"/>
     </Part>
-    <Part name="MDMT_MusicTheatre_Chicken_Eyes_Open">
+    <Part name="MDMT_DressingRoom_Chicken_Eyes_Open">
       <Frame x="-5.50" y="-159.00" index="0"/>
       <Frame x="-5.50" y="-159.00" index="1"/>
       <Frame x="-5.50" y="-159.00" index="2"/>

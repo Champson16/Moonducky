@@ -58,7 +58,7 @@ end
 local testGroup
 function public.createNewAnimal( characterData ) --animalType, instrumentType )
    local animalType = characterData.character
-   animalType = "Chicken"
+   --animalType = "Chicken"
    local instrumentType = characterData.instrument or "Bass" -- EFM TBD
    
    if( animalType ~= "Chicken" and animalType ~= "Cat" ) then 
