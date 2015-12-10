@@ -1,10 +1,10 @@
 local FRC_AnimationManager    = require('FRC_Modules.FRC_AnimationManager.FRC_AnimationManager')
 
-local public = {}
+local private = {}
 local private = {}
 -- GUTS HERE
 
-function public.readXML( fileName, baseXMLDir )
+function private.readXML( fileName, baseXMLDir )
    local rawLUAcode, xmltable, preexistingFile, newLuaFile, err, dataToSave, appLUApath, docLUApath;
    local XMLfilename = fileName;
    local XMLLUAfilename = string.sub(XMLfilename, 1, string.len(XMLfilename)-3) .."lua";
@@ -46,8 +46,8 @@ function public.readXML( fileName, baseXMLDir )
    return xmltable
 end
 
-function public.getPartsList( sourceFile, animationXMLBase )
-   local xmltable = public.readXML( sourceFile, animationXMLBase  )
+function private.getPartsList( sourceFile, animationXMLBase )
+   local xmltable = private.readXML( sourceFile, animationXMLBase  )
    local partsList = xmltable.Animation.Part
    for i = 1, #partsList do
       --print(partsList[i].name)
@@ -55,7 +55,7 @@ function public.getPartsList( sourceFile, animationXMLBase )
    return partsList
 end
 
-function public.findAnimationParts( parts, partSubName, partExcludeName, toTable, animationImageBase )
+function private.findAnimationParts( parts, partSubName, partExcludeName, toTable, animationImageBase )
    local subParts = {}
    for i = 1, #parts do
       if( partExcludeName and string.len(partExcludeName) > 0 ) then
@@ -76,14 +76,14 @@ function public.findAnimationParts( parts, partSubName, partExcludeName, toTable
 end
 
 
-function public.createUnifiedAnimationClipGroup( sourceFile, unifiedData, animationXMLBase, animationImageBase, animationGroupProperties )
+function private.createUnifiedAnimationClipGroup( sourceFile, unifiedData, animationXMLBase, animationImageBase, animationGroupProperties )
    animationGroupProperties = animationGroupProperties or {}
    animationGroupProperties.unifiedData = unifiedData
    return FRC_AnimationManager.createAnimationClipGroup( { sourceFile }, animationXMLBase, animationImageBase, animationGroupProperties )
 end
 
 
-function public.playUnifiedAnimations( animationSequences, num )
+function private.playUnifiedAnimations( animationSequences, num )
    num = num or math.random(1,#animationSequences)
    -- pick a random animation sequence
    local sequence = animationSequences[num]
@@ -107,4 +107,4 @@ function public.playUnifiedAnimations( animationSequences, num )
 end
 
 
-return public
+return private

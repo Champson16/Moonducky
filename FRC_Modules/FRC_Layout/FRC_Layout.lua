@@ -125,7 +125,6 @@ m.scaleToFit = function(displayObject, xOffset, yOffset)
 		diff = ((refHeight * scale) - display.contentHeight) * 0.5;
 		y = -(diff - diffScaled);
 	end
-  
 
 	displayObject.xScale, displayObject.yScale = scale, scale;
 	displayObject.x, displayObject.y = x + (xOffset * scale), y + (yOffset * scale);

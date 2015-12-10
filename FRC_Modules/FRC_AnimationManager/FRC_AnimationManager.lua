@@ -984,6 +984,14 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
             end
             xmltable.Animation.Part = newPart
             xmltable.Animation.name = unifiedData[1]
+            
+            if( unifiedData[4] ) then 
+               local part = xmltable.Animation.Part
+               for i = 1, #part do
+                  part[i].name = string.gsub( string.lower(part[i].name), string.lower(unifiedData[4].fromPart), unifiedData[4].toPart )
+               end
+               --table.print_r( xmltable ) 
+            end
          end
 
          -- DEBUG:
