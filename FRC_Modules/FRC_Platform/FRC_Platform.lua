@@ -1,19 +1,18 @@
--- EFM 
+-- EFM TRS
 --
---          This module is not currently being loaded.
+--          This module is loaded via FRC_Import configuration:
+--          "platform": "FRC_Modules.FRC_Platform.FRC_Platform",
 --
---          This module also has at least one error (lines 44..45) 'platformName' refered to but not initialized
+--          TODO: Consolidate relevant global values set in FRC_Globals
+--                into this code.
 --
---          Tip: Use values set in FRC_Globals to init this code, or consolidate the two.
---
--- EFM 
-local version = "1.0.0";
+-- EFM
+local version = "1.1.0";
 
 --[[==============================================================
 USAGE:
 
-local platform = require("FRC_Modules.FRC_Platform.FRC_Platform");
-print(platform.detected);
+local platformName = import("platform").detected;
 
 Possible values for platform.detected:
 
@@ -23,6 +22,9 @@ Possible values for platform.detected:
 - amazon
 - tabeo
 - samsung
+- windows
+- winphone
+- mac
 
 In the Corona Simulator, platform.detected will be the same
 value as module.debugPlatform (defaults to "apple")
@@ -34,32 +36,41 @@ local module = {};
 module.debugPlatform = "apple";
 module.androidPlatform = false;
 module.debugMode = false;
+module.isDesktop = false;
 
-if( ON_SIMULATOR ) then
+if (system.getInfo("environment") == "simulator") then
 	module.detected = module.debugPlatform;
 	module.debugMode = true;
 	return module;
 end
 
-local detected = system.getInfo("platformName");
-if (platformName == "iPhone OS") then
+local devicePlatformName = system.getInfo("platformName");
+if (devicePlatformName == "iPhone OS") then
 	module.detected = "apple";
 	module.androidPlatform = false;
-elseif (platformName == "WinPhone") then
+elseif (devicePlatformName == "Mac OS X") then
+	module.detected = "mac";
+	module.androidPlatform = false;
+	module.isDesktop = true;
+elseif (devicePlatformName == "Win") then
 	module.detected = "windows";
 	module.androidPlatform = false;
+	module.isDesktop = true;
+elseif (devicePlatformName == "WinPhone") then
+	module.detected = "winphone";
+	module.androidPlatform = false;
 else
-	local targetAppStore = system.getInfo("targetAppStore");
-	if (targetAppStore == "nook") then
+	local deviceTargetAppStore = system.getInfo("targetAppStore");
+	if (deviceTargetAppStore == "nook") then
 		module.detected = "nook";
 		module.androidPlatform = true;
-	elseif (targetAppStore == "amazon") then
+	elseif (deviceTargetAppStore == "amazon") then
 		module.detected = "amazon";
 		module.androidPlatform = true;
-	elseif (targetAppStore == "samsung") then
+	elseif (deviceTargetAppStore == "samsung") then
 		module.detected = "samsung";
 		module.androidPlatform = true;
-	elseif (platformName == "Android") then
+	elseif (devicePlatformName == "Android") then
 		-- check for Tabeo device
 		if (string.find(system.getInfo("model"), "TABEO")) then
 			module.detected = "tabeo";
@@ -71,5 +82,8 @@ else
 		module.detected = detected;
 	end
 end
+
+-- DEBUG
+-- native.showAlert("Platform Test", "Current platform is: " .. module.detected, { "OK" }); --  .. " AND androidPlatform is: " .. module.androidPlatform);
 
 return module;

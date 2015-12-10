@@ -118,81 +118,52 @@ function FRC_Lobby_Scene:createScene(event)
 		end
 		sceneLayoutMethods["playOutboundAnimationSequences"]();
 	end);
-
-	-- function sceneLayoutMethods.playHamstersVideo()
-	-- 	analytics.logEvent("MDMT.Home.HamstersVideo");
-	-- 	if (FRC_AppSettings.get("ambientSoundOn")) then
-	-- 		FRC_AudioManager:findGroup("ambientMusic"):pause();
-	-- 	end
-	-- 	local videoData = {
-	-- 	HD_VIDEO_PATH = videoBase .. 'MDMT_MusicVideo_HamsterWantToBeFree_HD.m4v',
-	-- 	HD_VIDEO_SIZE = { width = 1080, height = 720 },
-	-- 	SD_VIDEO_PATH = videoBase .. 'MDMT_MusicVideo_HamsterWantToBeFree_SD.m4v',
-	-- 	SD_VIDEO_SIZE = { width = 576, height = 384 },
-	-- 	VIDEO_SCALE = 'FULLSCREEN',
-	-- 	VIDEO_LENGTH = 146000 };
-	--
-	-- 	videoPlayer = FRC_Video.new(view, videoData);
-	-- 	if videoPlayer then
-	-- 		videoPlayer:addEventListener('videoComplete', videoPlaybackComplete );
-	-- 	else
-	-- 		-- this will fire because we are running in the Simulator and the video playback ends before it begins!
-	-- 		videoPlaybackComplete();
-	-- 	end
-	-- end
-
-	-- exit to module sequence - TODO: need to set up to use this
 	sceneLayoutMethods.playOutboundAnimationSequences = function()
 
-		-- if (scene.trainWhistle) then
-		-- 	audio.play(scene.trainWhistle, { channel= 22 }); -- { channel=_G.SFX_CHANNEL });
-		-- end
-
-		for i=1, theatreDoorSequences.numChildren do
-			theatreDoorSequences[i]:play({
-				showLastFrame = true,
-				playBackward = false,
-				autoLoop = false,
-				palindromicLoop = false,
-				delay = 0,
-				intervalTime = 30,
-				maxIterations = 1,
-				onCompletion = function ()
-					if (theatreDoorSequences) then
-						if (theatreDoorSequences.numChildren) then
-							for i=1, theatreDoorSequences.numChildren do
-								local anim = theatreDoorSequences[i];
-								if (anim) then
-									-- if (anim.isPlaying) then
-										anim.dispose();
-									-- end
-									-- anim.remove();
-								end
+	for i=1, theatreDoorSequences.numChildren do
+		theatreDoorSequences[i]:play({
+			showLastFrame = true,
+			playBackward = false,
+			autoLoop = false,
+			palindromicLoop = false,
+			delay = 0,
+			intervalTime = 30,
+			maxIterations = 1,
+			onCompletion = function ()
+				if (theatreDoorSequences) then
+					if (theatreDoorSequences.numChildren) then
+						for i=1, theatreDoorSequences.numChildren do
+							local anim = theatreDoorSequences[i];
+							if (anim) then
+								-- if (anim.isPlaying) then
+									anim.dispose();
+								-- end
+								-- anim.remove();
 							end
 						end
-						theatreDoorSequences = nil;
 					end
-					--[[ timer.performWithDelay(6000, function()
-						storyboard.gotoScene(destinationModule);
-					end, 1);
-					--]]
-
+					theatreDoorSequences = nil;
 				end
-			});
-		end
-		--]]
+				--[[ timer.performWithDelay(6000, function()
+					storyboard.gotoScene(destinationModule);
+				end, 1);
+				--]]
 
-		-- this is a hokey way to move to the next module at roughly the time that the animation is completed
-		-- ideally this would be triggered by an onComplete function attached to the outboundToTheatreAnimationSequences[i]:play({ call above
-		scene.outboundTimer = timer.performWithDelay(1600, function()
-			scene.outboundTimer = nil;
-			if (theatreDoorSequences) then
-				for i=1, theatreDoorSequences.numChildren do
-					theatreDoorSequences[i]:stop();
-				end
 			end
-			-- storyboard.gotoScene('Scenes.Showtime', { effect="crossFade", time=250 });
-			native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
+		});
+	end
+
+	-- this is a hokey way to move to the next module at roughly the time that the animation is completed
+	-- ideally this would be triggered by an onComplete function attached to the outboundToTheatreAnimationSequences[i]:play({ call above
+	scene.outboundTimer = timer.performWithDelay(1600, function()
+		scene.outboundTimer = nil;
+		if (theatreDoorSequences) then
+			for i=1, theatreDoorSequences.numChildren do
+				theatreDoorSequences[i]:stop();
+			end
+		end
+		-- storyboard.gotoScene('Scenes.Showtime', { effect="crossFade", time="250" });
+		native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
 		end, 1);
 	end
 
@@ -449,7 +420,12 @@ function FRC_Lobby_Scene:createScene(event)
 		y = 360 - 368,
 		onRelease = function()
 			analytics.logEvent("MDMT.Lobby.Rehearsal");
-         storyboard.gotoScene('Scenes.Rehearsal'); --EFM      
+         --if( _G.edmode ) then
+            storyboard.gotoScene('Scenes.Rehearsal'); --EFM
+            -- storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time="250" });
+         --else
+            --native.showAlert("Rehearsal Coming Soon!","Ed Maurina is working on this feature.  Flip  edmode to 'true' in main.lua to see current state of scene.", { "OK" });
+         --end
 		end
 	});
 	rehearsalButton.anchorX = 0.5;

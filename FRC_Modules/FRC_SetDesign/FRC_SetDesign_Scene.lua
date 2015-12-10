@@ -220,14 +220,22 @@ function FRC_SetDesign_Scene:createScene(event)
 			width = categoryData[i].width * category_button_scale,
 			height = categoryData[i].height * category_button_scale,
 			onPress = function(e)
-				local self = e.target;
-				self:setFocusState(true);
-				itemScrollers[self.id].isVisible = true;
-				for i=2,categoriesContainer.numChildren do
-					if (categoriesContainer[i] ~= self) then
-						categoriesContainer[i]:setFocusState(false);
-						itemScrollers[categoriesContainer[i].id].isVisible = false;
-					end
+				-- show the focused state for the selected category icon
+				local self = e.target
+				if self:getFocusState() then
+					 -- hide the itemScroller
+					 itemScrollers[self.id].isVisible = false;
+					 self:setFocusState(false)
+				else
+					 self:setFocusState(true)
+					 -- present the scroller contain the selected category's content
+					 itemScrollers[self.id].isVisible = true
+					 for i=2,categoriesContainer.numChildren do
+							if (categoriesContainer[i] ~= self) then
+								 categoriesContainer[i]:setFocusState(false)
+								 itemScrollers[categoriesContainer[i].id].isVisible = false
+							end
+					 end
 				end
 			end
 		});

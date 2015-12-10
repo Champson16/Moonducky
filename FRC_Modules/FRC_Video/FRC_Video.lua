@@ -2,6 +2,7 @@ local storyboard = require('storyboard');
 local FRC_Layout = require('FRC_Modules.FRC_Layout.FRC_Layout');
 local FRC_Video = {};
 
+-- updated 12092015 TRS
 
 FRC_Video.new = function(parentView, videoData)
 	display.setDefault("background", 1.0, 1.0, 1.0);
@@ -9,6 +10,7 @@ FRC_Video.new = function(parentView, videoData)
 	local videoGroup = display.newGroup();
   local currentVideoLength = 0;
 
+  -- put in a black background on the entire screen
   local bg = display.newRect(videoGroup, 0, 0, screenW, screenH);
   bg:setFillColor(1.0);
   FRC_Layout.alignToLeft(bg);
@@ -36,8 +38,6 @@ FRC_Video.new = function(parentView, videoData)
 
   function videoGroup.skipVideo(event)
     if (not event or event.phase == "began") then
-      -- let the parent view know that the video is finished
-      parentView:dispatchEvent({ name = 'videoComplete' });
       if videoGroup.bg then
         videoGroup.bg:removeSelf();
         videoGroup.bg = nil;
@@ -45,6 +45,8 @@ FRC_Video.new = function(parentView, videoData)
       videoGroup.freeMemory();
       videoGroup:removeSelf();
       if (videoGroup) then videoGroup = nil; end
+			-- let the parent view know that the video is finished
+      parentView:dispatchEvent({ name = 'videoComplete' });
     end
     -- we handled the event
     return true;
@@ -91,7 +93,14 @@ FRC_Video.new = function(parentView, videoData)
       videoGroup.skipVideoButton:addEventListener('touch', videoGroup.skipVideo );
       videoGroup.skipVideoButton.isHitTestable = true;
     else
-      -- videoGroup.gotoNextScene();
+      if videoGroup.bg then
+        videoGroup.bg:removeSelf();
+        videoGroup.bg = nil;
+      end
+			videoGroup.freeMemory();
+      videoGroup:removeSelf();
+      if (videoGroup) then videoGroup = nil; end
+			parentView:dispatchEvent({ name = 'videoComplete' });
     end
   end
 
