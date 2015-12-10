@@ -1,0 +1,9 @@
+[{
+	"id": "StopRehearsal",
+	"imageUp": "FRC_Rehearsal_Icon_Stop_up.png",
+	"imageDown": "FRC_Rehearsal_Icon_Stop_down.png",
+	"imageFocused": "FRC_Rehearsal_Icon_Stop_focused.png",
+	"imageDisabled": "FRC_Rehearsal_Icon_Stop_disabled.png",
+	"width": 128,
+	"height": 128
+}]
