@@ -49,7 +49,7 @@ function FRC_Lobby_Scene:createScene(event)
 		FRC_Lobby_Scene:preCreateScene(event);
 	end
 
-	local bgGroup = display.newGroup();
+	--[[ local bgGroup = display.newGroup();
    view:insert(bgGroup)
 	bgGroup.anchorChildren = false;
 	FRC_Layout.scaleToFit(bgGroup);
@@ -58,6 +58,19 @@ function FRC_Lobby_Scene:createScene(event)
 	bgGroup:insert(bg);
 	bg.x, bg.y = 0,0;
    --bg.alpha = 0.2
+	 --]]
+
+	local bgGroup = display.newGroup();
+ 	bgGroup.anchorChildren = false;
+	view:insert(bgGroup);
+
+ 	local bg = display.newImageRect(view, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
+ 	bgGroup:insert(bg);
+ 	bg.x, bg.y = 0,0;
+
+ 	FRC_Layout.scaleToFit(bgGroup);
+ 	bgGroup.x = display.contentCenterX;
+ 	bgGroup.y = display.contentCenterY;
 
 	function videoPlaybackComplete(event)
 		if (FRC_AppSettings.get("ambientSoundOn")) then
@@ -82,12 +95,12 @@ function FRC_Lobby_Scene:createScene(event)
 
 	theatreDoorAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorAnimationFiles, animationXMLBase, animationImageBase);
 	FRC_Layout.scaleToFit(theatreDoorAnimationSequences);
-	local xOffset = (screenW - (contentW * bg.xScale)) * 0.5;
-	theatreDoorAnimationSequences.x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset;
-	local yOffset = (screenH - (contentH * bg.yScale)) * 0.5;
-	theatreDoorAnimationSequences.y = ((bg.contentHeight - screenH) * 0.5) + bg.contentBounds.yMin + yOffset;
+	-- local xOffset = (screenW - (contentW * bg.xScale)) * 0.5;
+	-- theatreDoorAnimationSequences.x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset;
+	-- local yOffset = (screenH - (contentH * bg.yScale)) * 0.5;
+	-- theatreDoorAnimationSequences.y = ((bg.contentHeight - screenH) * 0.5) + bg.contentBounds.yMin + yOffset;
 
-	bgGroup:insert(theatreDoorAnimationSequences);
+	view:insert(theatreDoorAnimationSequences);
 
 	for i=1, theatreDoorAnimationSequences.numChildren do
 		theatreDoorAnimationSequences[i]:play({
@@ -313,11 +326,11 @@ function FRC_Lobby_Scene:createScene(event)
 		-- preload the animation data (XML and images) early
 	theatreDoorSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorAnimationFiles, animationXMLBase, animationImageBase);
 	FRC_Layout.scaleToFit(theatreDoorSequences);
-	local xOffset = (screenW - (contentW * bg.xScale)) * 0.5;
-	theatreDoorSequences.x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset;
-	local yOffset = (screenH - (contentH * bg.yScale)) * 0.5;
-	theatreDoorSequences.y = ((bg.contentHeight - screenH) * 0.5) + bg.contentBounds.yMin + yOffset;
-	bgGroup:insert(theatreDoorSequences);
+	-- local xOffset = (screenW - (contentW * bg.xScale)) * 0.5;
+	-- theatreDoorSequences.x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset;
+	-- local yOffset = (screenH - (contentH * bg.yScale)) * 0.5;
+	-- theatreDoorSequences.y = ((bg.contentHeight - screenH) * 0.5) + bg.contentBounds.yMin + yOffset;
+	view:insert(theatreDoorSequences);
 
 	-- insert the main function buttons
 	-- Art center
@@ -435,10 +448,12 @@ function FRC_Lobby_Scene:createScene(event)
 	bgGroup:insert(rehearsalButton);
 
 
+	--[[
 	-- position background group at correct location
 	bgGroup.x = display.contentCenterX;
 	bgGroup.y = display.contentCenterY;
 	view:insert(bgGroup);
+	--]]
 
 	if (FRC_Lobby_Scene.postCreateScene) then
 		FRC_Lobby_Scene:postCreateScene(event);

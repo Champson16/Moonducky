@@ -53,11 +53,17 @@ function FRC_Home_Scene:createScene(event)
 
 	local bgGroup = display.newGroup();
 	bgGroup.anchorChildren = false;
-	FRC_Layout.scaleToFit(bgGroup);
+	-- bgGroup.x = display.contentCenterX;
+	-- bgGroup.y = display.contentCenterY;
+	view:insert(bgGroup);
 
 	local bg = display.newImageRect(view, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
 	bgGroup:insert(bg);
 	bg.x, bg.y = 0,0;
+
+	FRC_Layout.scaleToFit(bgGroup);
+	bgGroup.x = display.contentCenterX;
+	bgGroup.y = display.contentCenterY;
 
 	function videoPlaybackComplete(event)
 		if (FRC_AppSettings.get("ambientSoundOn")) then
@@ -313,12 +319,14 @@ function FRC_Home_Scene:createScene(event)
 
 	theatreDoorAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorAnimationFiles, animationXMLBase, animationImageBase);
 	FRC_Layout.scaleToFit(theatreDoorAnimationSequences);
-	local xOffset = (screenW - (contentW * bg.xScale)) * 0.5;
-	theatreDoorAnimationSequences.x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset;
-	local yOffset = (screenH - (contentH * bg.yScale)) * 0.5;
-	theatreDoorAnimationSequences.y = ((bg.contentHeight - screenH) * 0.5) + bg.contentBounds.yMin + yOffset;
+	-- local xOffset = (screenW - (contentW * bg.xScale)) * 0.5;
+	-- theatreDoorAnimationSequences.x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset;
+	-- local yOffset = (screenH - (contentH * bg.yScale)) * 0.5;
+	-- theatreDoorAnimationSequences.y = ((bg.contentHeight - screenH) * 0.5) + bg.contentBounds.yMin + yOffset;
 
-	bgGroup:insert(theatreDoorAnimationSequences);
+	view:insert(theatreDoorAnimationSequences);
+	-- The problem is that we should ALWAYS be attaching animations to the VIEW
+	-- FIX PROBLEM, when switching to using view, the animation isn't rendered in correct position
 
 	for i=1, theatreDoorAnimationSequences.numChildren do
 		theatreDoorAnimationSequences[i]:play({
@@ -358,12 +366,12 @@ function FRC_Home_Scene:createScene(event)
 		-- preload the animation data (XML and images) early
 	enteringLobbyAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(enteringLobbyAnimationFiles, animationXMLBase, animationImageBase);
 	FRC_Layout.scaleToFit(enteringLobbyAnimationSequences);
-	local xOffset = (screenW - (contentW * bg.xScale)) * 0.5;
-	enteringLobbyAnimationSequences.x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset;
-	local yOffset = (screenH - (contentH * bg.yScale)) * 0.5;
-	enteringLobbyAnimationSequences.y = ((bg.contentHeight - screenH) * 0.5) + bg.contentBounds.yMin + yOffset;
+	-- local xOffset = (screenW - (contentW * bg.xScale)) * 0.5;
+	-- enteringLobbyAnimationSequences.x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset;
+	-- local yOffset = (screenH - (contentH * bg.yScale)) * 0.5;
+	-- enteringLobbyAnimationSequences.y = ((bg.contentHeight - screenH) * 0.5) + bg.contentBounds.yMin + yOffset;
 
-	bgGroup:insert(enteringLobbyAnimationSequences);
+	view:insert(enteringLobbyAnimationSequences);
 
 	-- insert the main function buttons
 	-- Art center
@@ -431,9 +439,9 @@ function FRC_Home_Scene:createScene(event)
    --EFM DEBUG end
 
 	-- position background group at correct location
-	bgGroup.x = display.contentCenterX;
-	bgGroup.y = display.contentCenterY;
-	view:insert(bgGroup);
+	-- bgGroup.x = display.contentCenterX;
+	-- bgGroup.y = display.contentCenterY;
+	-- view:insert(bgGroup);
 
 	if (FRC_Home_Scene.postCreateScene) then
 		FRC_Home_Scene:postCreateScene(event);

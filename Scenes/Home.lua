@@ -149,10 +149,17 @@ function scene.postCreateScene(self, event)
 				end
 			},
 			{
+				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Rehearsal_up.png',
+				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Rehearsal_down.png',
+				onRelease = function()
+							 storyboard.gotoScene('Scenes.Rehearsal');
+				end
+			},
+			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_down.png',
 				onRelease = function()
-							 storyboard.gotoScene('Scenes.Rehearsal');
+							 storyboard.gotoScene('Scenes.Showtime');
 				end
 			},
 			{
