@@ -1,6 +1,7 @@
 [{
 	"id": "Hamster",
 	"bodyImage": "MDMT_DressingRoom_Hamster.png",
+	"bodyThumb": "MDMT_DressingRoom_global_BaseCharacter_Hamster_thumbnail.png",
 	"bodyWidth": 261,
 	"bodyHeight": 431,
 	"eyesOpenImage": "MDMT_DressingRoom_Hamster_EyesOpen.png",
@@ -378,6 +379,7 @@
 {
 	"id": "Chicken",
 	"bodyImage": "MDMT_DressingRoom_Chicken.png",
+	"bodyThumb": "MDMT_DressingRoom_global_BaseCharacter_Chicken_thumbnail.png",
 	"bodyWidth": 430,
 	"bodyHeight": 469,
 	"eyesOpenImage": "MDMT_DressingRoom_Chicken_EyesOpen.png",
@@ -755,6 +757,7 @@
 {
 	"id": "Sheep",
 	"bodyImage": "MDMT_DressingRoom_Sheep.png",
+  "bodyThumb": "MDMT_DressingRoom_global_BaseCharacter_Sheep_thumbnail.png",
 	"bodyWidth": 329,
 	"bodyHeight": 454,
 	"eyesOpenImage": "MDMT_DressingRoom_Sheep_EyesOpen.png",
