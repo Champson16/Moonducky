@@ -17,10 +17,10 @@ settings = {
   --]]
 
   osx = {
-        entitlements = {
-            -- ["com.apple.security.personal-information.location"] = true,
-        },
-    },
+      entitlements = {
+          -- ["com.apple.security.personal-information.location"] = true,
+      },
+  },
   window = {
         -- Settings for the desktop window; applies to both OS X and Win32 desktop apps
 				defaultMode = "normal",
@@ -59,6 +59,9 @@ settings = {
 
 	iphone = {
 		plist = {
+      -- disables requirement for SSL protocol (iOS 9.x) when accessing external web resources
+      -- NOTE: Keep this key at the top of the list
+      NSAppTransportSecurity = { NSAllowsArbitraryLoads = true },
 			UIBackgroundModes = {"remote-notification"},
       MinimumOSVersion = "6.0", -- can't be lower than this now with Corona SDK
       CFBundleDisplayName = "MoonDucky", -- app icon name
@@ -81,6 +84,7 @@ settings = {
         "Icon-72@2x.png",
         "Icon-76.png",
         "Icon-76@2x.png",
+        "Icon-167.png",
         "Icon-Small-40.png",
         "Icon-Small-40@2x.png",
         "Icon-Small-40@3x.png",
@@ -92,55 +96,37 @@ settings = {
 			},
 			--launch image files table
       UILaunchImages = {
-        {  -- iPhone 4 Portrait
-            ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default~iphone",
-            ["UILaunchImageOrientation"] = "Portrait",
-            ["UILaunchImageSize"] = "{320, 480}"
-        },
         {  -- iPhone 4 LandscapeLeft
             ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default~iphone",
+            ["UILaunchImageName"] = "Default",
             ["UILaunchImageOrientation"] = "LandscapeLeft",
             ["UILaunchImageSize"] = "{320, 480}"
         },
         {  -- iPhone 4 LandscapeRight
             ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default~iphone",
+            ["UILaunchImageName"] = "Default",
             ["UILaunchImageOrientation"] = "LandscapeRight",
             ["UILaunchImageSize"] = "{320, 480}"
         },
-        {  -- iPhone 5 Portrait
-            ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default-568h@2x~iphone",
-            ["UILaunchImageOrientation"] = "Portrait",
-            ["UILaunchImageSize"] = "{320, 568}"
-        },
         {  -- iPhone 5 LandscapeLeft
             ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default-568h@2x~iphone",
+            ["UILaunchImageName"] = "Default-568h",
             ["UILaunchImageOrientation"] = "LandscapeLeft",
             ["UILaunchImageSize"] = "{320, 568}"
         },
         {  -- iPhone 5 LandscapeRight
             ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default-568h@2x~iphone",
+            ["UILaunchImageName"] = "Default-568h",
             ["UILaunchImageOrientation"] = "LandscapeRight",
             ["UILaunchImageSize"] = "{320, 568}"
         },
-        {  -- iPad Portrait
+        {  -- iPad / iPad Retina LandscapeLeft
             ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default-Portrait",
-            ["UILaunchImageOrientation"] = "Portrait",
-            ["UILaunchImageSize"] = "{768, 1024}"
-        },
-        {  -- iPad LandscapeLeft
-            ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default-LandscapeLeft~ipad",
+            ["UILaunchImageName"] = "Default-Landscape",
             ["UILaunchImageOrientation"] = "LandscapeLeft",
             ["UILaunchImageSize"] = "{768, 1024}"
         },
-        {  -- iPad LandscapeRight
+        {  -- iPad / iPad Retina LandscapeRight
             ["UILaunchImageMinimumOSVersion"] = "7.0",
             ["UILaunchImageName"] = "Default-Landscape",
             ["UILaunchImageOrientation"] = "LandscapeRight",
@@ -148,27 +134,39 @@ settings = {
         },
         {  -- iPhone 6 LandscapeLeft
             ["UILaunchImageMinimumOSVersion"] = "8.0",
-            ["UILaunchImageName"] = "Default-375w-667h@2x~iphone",
+            ["UILaunchImageName"] = "Default-667h",
             ["UILaunchImageOrientation"] = "LandscapeLeft",
             ["UILaunchImageSize"] = "{375, 667}"
         },
         {  -- iPhone 6 LandscapeRight
             ["UILaunchImageMinimumOSVersion"] = "8.0",
-            ["UILaunchImageName"] = "Default-375w-667h@2x~iphone",
+            ["UILaunchImageName"] = "Default-667h",
             ["UILaunchImageOrientation"] = "LandscapeRight",
             ["UILaunchImageSize"] = "{375, 667}"
         },
         {  -- iPhone 6 Plus LandscapeLeft
             ["UILaunchImageMinimumOSVersion"] = "8.0",
-            ["UILaunchImageName"] = "Default-414w-736h@3x~iphone",
+            ["UILaunchImageName"] = "Default-Landscape-736h",
             ["UILaunchImageOrientation"] = "LandscapeLeft",
             ["UILaunchImageSize"] = "{414, 736}"
         },
         {  -- iPhone 6 Plus LandscapeRight
             ["UILaunchImageMinimumOSVersion"] = "8.0",
-            ["UILaunchImageName"] = "Default-414w-736h@3x~iphone",
+            ["UILaunchImageName"] = "Default-Landscape-736h",
             ["UILaunchImageOrientation"] = "LandscapeRight",
             ["UILaunchImageSize"] = "{414, 736}"
+        },
+        { -- iPad Pro Landscape Right
+            ["UILaunchImageMinimumOSVersion"] = "9.0",
+            ["UILaunchImageName"] = "Default-Landscape-1336",
+            ["UILaunchImageOrientation"] = "LandscapeRight",
+            ["UILaunchImageSize"] = "{1024, 1366}"
+        },
+        { -- iPad Pro Landscape Left
+            ["UILaunchImageMinimumOSVersion"] = "9.0",
+            ["UILaunchImageName"] = "Default-Landscape-1336",
+            ["UILaunchImageOrientation"] = "LandscapeLeft",
+            ["UILaunchImageSize"] = "{1024, 1366}"
         }
       },
 			UIStatusBarHidden = true,
