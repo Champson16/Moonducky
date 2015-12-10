@@ -247,6 +247,7 @@ function FRC_DressingRoom_Scene:createScene(event)
 		local charData = getDataForCharacter(character);
 
 		if (categoryId == 'Character') then
+			if (eyeTimer) then pcall(timer.cancel, eyeTimer); end
 			selectedCharacter = character;
 			local charBody = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.bodyImage, charData.bodyWidth, charData.bodyHeight);
 			charBody.x, charBody.y = character_x, character_y;
