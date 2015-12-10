@@ -26,7 +26,7 @@
 		"imageFile": "MDMT_LandingPage_Cat_up.png",
 		"width": 87,
 		"height": 109,
-		"x": 198,
-		"y": 700
+		"left": 198,
+		"bottom": 0
 	}
 ]

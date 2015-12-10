@@ -23,6 +23,7 @@ FRC_Rehearsal_Settings.DATA = {
    LOAD_PROMPT = 'Load Your Show',
    PUBLISH_PROMPT = 'Publish Your Show',
    CATEGORY = 'FRC_Assets/FRC_Rehearsal/Data/FRC_Rehearsal_Category.json',
+   REHEARSAL = 'FRC_Assets/FRC_Rehearsal/Data/FRC_Rehearsal_RehearsalMode.json',
    SETDESIGN = 'FRC_SetDesign_SaveData.json',
    INSTRUMENT = 'FRC_Assets/FRC_Rehearsal/Data/FRC_Rehearsal_Instrument.json',
    CHARACTER = 'FRC_Assets/FRC_Rehearsal/Data/FRC_Rehearsal_Character.json',

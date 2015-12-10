@@ -274,7 +274,9 @@ function FRC_Lobby_Scene:createScene(event)
 
 			sceneLayout[i].y = sceneLayout[i].y + bg.contentBounds.yMin;
 
-			bgGroup:insert(sceneLayout[i]);
+			-- MUST INSERT ANIMATIONS INTO VIEW NOT BGGROUP
+			view:insert(sceneLayout[i]);
+
 			for j=1, sceneLayout[i].numChildren do
 				sceneLayout[i][j]:play({
 					showLastFrame = false,

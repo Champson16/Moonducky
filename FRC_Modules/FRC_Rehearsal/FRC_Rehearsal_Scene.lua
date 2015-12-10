@@ -202,15 +202,17 @@ function FRC_Rehearsal_Scene:createScene(event)
    end
 
    local setScale = 1;
-   view.setDesignGroup = display.newGroup(); view:insert(view.setDesignGroup);
+   local setDesignGroup = display.newGroup(); view:insert(setDesignGroup);
+   view.setDesignGroup = setDesignGroup;
    local backdropGroup = display.newGroup(); view.setDesignGroup:insert(backdropGroup);
    local setGroup = display.newGroup(); view.setDesignGroup:insert(setGroup);
 
    local repositionSet = function()
-      view.setDesignGroup.xScale = setScale;
-      view.setDesignGroup.yScale = setScale;
-      view.setDesignGroup.x = (display.contentWidth - (display.contentWidth * setScale)) * 0.5;
-      view.setDesignGroup.y = (display.contentHeight - (display.contentHeight * setScale)) * 0.5;
+      -- view.setDesignGroup.xScale = setScale;
+      -- view.setDesignGroup.yScale = setScale;
+      -- view.setDesignGroup.x = (display.contentWidth - (display.contentWidth * setScale)) * 0.5;
+      -- view.setDesignGroup.y = (display.contentHeight - (display.contentHeight * setScale)) * 0.5;
+      FRC_Layout.scaleToFit(setDesignGroup);
       -- view.setDesignGroup.y = view.setDesignGroup.y - 80;
    end
 
@@ -274,6 +276,7 @@ function FRC_Rehearsal_Scene:createScene(event)
 
    -- Get lua tables from JSON data
    local categoryData = DATA('CATEGORY')
+   local rehearsalPlaybackData = DATA('REHEARSAL')
    local setDesignData = DATA('SETDESIGN')
    local instrumentData = DATA('INSTRUMENT')
    local characterData = DATA('CHARACTER')
@@ -433,7 +436,71 @@ function FRC_Rehearsal_Scene:createScene(event)
    local button_scale = 0.75
    local categoriesWidth = button_spacing
    local categoriesHeight = 0
-   local itemScrollers = {}
+
+   -- SETUP OF REHEARSAL MODE CATEGORY SELECTOR
+   -- calculate panel dimensions for category buttons
+   for i=1,#rehearsalPlaybackData do
+      categoriesWidth = categoriesWidth + (rehearsalPlaybackData[i].width * button_scale) + category_button_spacing;
+      if ((rehearsalPlaybackData[i].height * button_scale) > categoriesHeight) then
+         categoriesHeight = rehearsalPlaybackData[i].height * button_scale;
+      end
+   end
+   categoriesHeight = categoriesHeight + (category_button_spacing * 1.25); -- (category_button_spacing * 2)
+
+   -- create button panel for categories (aligned to the bottom of the screen)
+   local rehearsalContainer = display.newContainer(categoriesWidth, categoriesHeight)
+   local rehearsalContainerBg = display.newRoundedRect(rehearsalContainer, 0, 0, categoriesWidth, categoriesHeight, 11)
+   rehearsalContainerBg:setFillColor(0, 0, 0, 0.75); -- 1.0, 1.0, 1.0, 0.35)
+   rehearsalContainerBg.x, rehearsalContainerBg.y = 0, 0
+   rehearsalContainer.x = display.contentCenterX
+   rehearsalContainer.y = display.contentHeight - (categoriesHeight * 0.5) + (category_button_spacing * 1.65)
+
+   for i=1,#rehearsalPlaybackData do
+      local button = ui.button.new({
+            id = rehearsalPlaybackData[i].id,
+            imageUp = UI('IMAGES_PATH') .. rehearsalPlaybackData[i].imageUp,
+            imageDown = UI('IMAGES_PATH') .. rehearsalPlaybackData[i].imageDown,
+            focusState = UI('IMAGES_PATH') .. rehearsalPlaybackData[i].imageFocused,
+            disabled = UI('IMAGES_PATH') .. rehearsalPlaybackData[i].imageDisabled,
+            width = rehearsalPlaybackData[i].width * button_scale,
+            height = rehearsalPlaybackData[i].height * button_scale,
+            onPress = function(e)
+               -- show the focused state for the selected category icon
+               local self = e.target
+               if (self.id == "StopRehearsal") then
+                 -- eventually we will transition animate on offscreen and the other onscreen
+                 categoriesContainer.isVisible = true;
+                 rehearsalItemScrollers[categoriesContainer[1].id].isVisible = true
+                 rehearsalContainer.isVisible = false;
+               elseif self:getFocusState() then
+                  -- hide the itemScroller
+                  rehearsalItemScrollers[self.id].isVisible = false;
+                  self:setFocusState(false)
+               else
+                  self:setFocusState(true)
+                  -- present the scroller contain the selected category's content
+                  rehearsalItemScrollers[self.id].isVisible = true
+                  for i=2,rehearsalContainer.numChildren do
+                     if (rehearsalContainer[i] ~= self) then
+                        rehearsalContainer[i]:setFocusState(false)
+                        rehearsalItemScrollers[rehearsalContainer[i].id].isVisible = false
+                     end
+                  end
+               end
+            end
+         })
+      rehearsalContainer:insert(button);
+      button.x = (-(categoriesWidth * 0.5) + (button.contentWidth * 0.5) + category_button_spacing) + (i - 1) * (button.contentWidth + category_button_spacing)
+      button.y = -category_button_spacing * 0.75
+      -- hide this by default
+      rehearsalContainer.isVisible = false;
+
+    end
+
+    local itemScrollers = {}
+    categoriesWidth = button_spacing;
+    categoriesHeight = 0;
+    x = -(screenW * 0.5) + button_spacing;
 
    -- calculate panel dimensions for category buttons
    for i=1,#categoryData do
@@ -447,12 +514,12 @@ function FRC_Rehearsal_Scene:createScene(event)
    -- create button panel for categories (aligned to the bottom of the screen)
    local categoriesContainer = display.newContainer(categoriesWidth, categoriesHeight)
    local categoriesBg = display.newRoundedRect(categoriesContainer, 0, 0, categoriesWidth, categoriesHeight, 11)
-   categoriesBg:setFillColor(1.0, 1.0, 1.0, 0.35)
+   categoriesBg:setFillColor(0, 0, 0, 0.75); -- 1.0, 1.0, 1.0, 0.35)
    categoriesBg.x, categoriesBg.y = 0, 0
    categoriesContainer.x = display.contentCenterX
    categoriesContainer.y = display.contentHeight - (categoriesHeight * 0.5) + (category_button_spacing * 1.65)
 
-   for i=1,#categoryData do      
+   for i=1,#categoryData do
       local button = ui.button.new({
             id = categoryData[i].id,
             imageUp = UI('IMAGES_PATH') .. categoryData[i].imageUp,
@@ -464,7 +531,14 @@ function FRC_Rehearsal_Scene:createScene(event)
             onPress = function(e)
                -- show the focused state for the selected category icon
                local self = e.target
-               if self:getFocusState() then
+               if (self.id == "StartRehearsal") then
+                 categoriesContainer.visible = false;
+                 for i=1,categoriesContainer.numChildren do
+                   print(i, categoriesContainer[i].id);
+                    itemScrollers[categoriesContainer[i].id].isVisible = false
+                 end
+                 rehearsalContainer.visible = true;
+               elseif self:getFocusState() then
                   -- hide the itemScroller
                   itemScrollers[self.id].isVisible = false;
                   self:setFocusState(false)
@@ -507,10 +581,10 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
    end
 
-    -- setup for container construction
-    button_scale = 0.75;
-    x = -(screenW * 0.5) + button_spacing
-    local buttonHeight = 0
+   -- setup for container construction
+   button_scale = 0.75;
+   x = -(screenW * 0.5) + button_spacing
+   local buttonHeight = 0
 
    -- create SetDesign scroll container
 	 local setDesignData = {}; -- scene.saveData.savedItems
@@ -645,7 +719,7 @@ function FRC_Rehearsal_Scene:createScene(event)
                dprint( self.id ) -- EFM EDO
                FRC_CharacterBuilder.setCurrentCharacterType( self.id ) --EFM
                FRC_CharacterBuilder.rebuildCostumeScroller() --EFM
-               
+
             end
          })
       button.categoryId = 'Character'
