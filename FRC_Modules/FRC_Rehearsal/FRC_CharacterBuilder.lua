@@ -27,6 +27,7 @@ local strGSub     = string.gsub
 -- ======================================================================
 local snapDist       = 100 ^ 2
 local characterScale = 0.5 -- Scale all placed characters and instruments by this much
+local instrumentScale = 0.35
 local stagePieces 
 local view, animationXMLBase, animationImageBase, itemsScroller, categoriesContainer
 local screenW, screenH = FRC_Layout.getScreenDimensions()
@@ -84,6 +85,8 @@ function public.init( params )
    instrumentsInUse     = {}
          
    params.view.setDesignGroup:insert( stagePieces )
+   
+   private.attachTouchClear()
 end
 
 
@@ -154,15 +157,19 @@ function public.placeNewInstrument( x, y, instrumentName )
                 { {"OK", nil} } )
       dprint("Duplicate instrument", "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage." )
       return
-   end      
-      
-   local stagePiece = display.newImage( stagePieces, "FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_Icon_Instrument_" .. instrumentName .. ".png"  ) --EFM: hardcoded
+   end
+   
+   
+   local stagePiece = display.newImage( stagePieces, "FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_Stage_Instrument_" .. instrumentName .. ".png"  ) --EFM: hardcoded
    stagePiece.x = x
    stagePiece.y = y
    stagePiece.pieceType = "instrument"
-   stagePiece.instrument = instrumentName   
-   private.attachDragger( stagePiece )
-   stagePiece:scale(characterScale,characterScale)   
+   stagePiece.instrument = instrumentName 
+   
+   private.attachDragger(stagePiece)
+   
+   stagePiece:scale(instrumentScale,instrumentScale)   
+   
    instrumentsInUse[instrumentName] = instrumentName
    function stagePiece.destroy( self )
       instrumentsInUse[self.instrument] = nil
@@ -184,7 +191,13 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    x = x or display.contentCenterX
    y = y or display.contentCenterY
 
-   local characterData = private.getDressingRoomDataByID( characterID, 0 )
+   local characterData 
+   if( type( characterID ) == "table" ) then
+      characterData = characterID
+   else
+      characterData = private.getDressingRoomDataByID( characterID, 0 )
+   end
+   
    --table.print_r(characterData)
    
    local animalType           = characterData.character
@@ -349,16 +362,46 @@ function public.rebuildCostumeScroller( )
    -- Get current characters
    local characters = private.getDressingRoomDataByAnimalType( currentCharacterType, 0 ) --EFM
    
-   -- Insert costumes for current animal type into scroller 
+   -- Insert costumes for current animal type into scroller    
+   --
+   -- 'None' Button
+   --
    local button_spacing = 80
    local x = -(screenW * 0.5) + button_spacing   
    local tmp = display.newImage( "FRC_Assets/FRC_Rehearsal/Images/FRC_Rehearsal_Scroller_None.png"  )
    tmp.x = x
-   tmp.data = "none"
+   tmp.data = { id = "none" }
    scroller:insert( tmp )
    tmp.touch = private.scrollerCostumeTouch
    tmp:addEventListener( "touch" ) 
-   
+
+   --
+   -- 'Mystery Box' Button
+   --
+   if( #characters > 1 ) then
+      x = x + button_spacing
+      local tmp = display.newImage( "FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_Scroller_MysteryBox.png"  )
+      tmp:scale(0.20, 0.20)
+      tmp.x = x
+      tmp.data = { id = "mysterybox", character = currentCharacterType, characters = characters }
+      scroller:insert( tmp )
+      tmp.touch = private.scrollerCostumeTouch
+      tmp:addEventListener( "touch" ) 
+   end
+      
+   --
+   -- 'No Costume' Button
+   --
+   x = x + button_spacing
+   local tmp = display.newImage( "FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_global_BaseCharacter_" .. currentCharacterType .. "_thumbnail.png"  )
+   tmp:scale(0.32, 0.32)
+   tmp.x = x
+   tmp.data = { id = "nocostume", character = currentCharacterType, categories = { Headwear = 1,  LowerTorso = 1, Neckwear = 1, UpperTorso = 1, Eyewear = 1 } }
+   scroller:insert( tmp )
+   tmp.touch = private.scrollerCostumeTouch
+   tmp:addEventListener( "touch" ) 
+      
+      
    for i = 1, #characters do      
       x = x + button_spacing
       local curChar = characters[i]
@@ -374,6 +417,16 @@ function public.rebuildCostumeScroller( )
 end
 
 
+--
+-- Scroller Instrument Touch Handler
+--
+function public.newInstrument( instrument ) 
+   if( currentStagePiece ) then
+      private.replaceInstrument( currentStagePiece, instrument )
+   else
+      public.placeNewInstrument( nil, nil, instrument )
+   end
+end
 
 
 -- ======================================================================
@@ -485,8 +538,9 @@ function private.getCostumeData( animalType )
 end
 
 
+
 --
--- Costume Touch Handler
+-- Scroller Costume Touch Handler
 --
 function private.scrollerCostumeTouch( self, event ) 
    if( event.phase == "began" ) then
@@ -501,13 +555,60 @@ function private.scrollerCostumeTouch( self, event )
       if( event.phase == "ended" ) then
          display.currentStage:setFocus( self, nil )
          self.isFocus = false
+         table.print_r(self)
          if( isWithinBounds ) then
-            if( self.data == "none" ) then 
-               dprint( "Remove costume" )
-            else 
-               --table.print_r(self.data)
-               public.placeNewCharacter( nil, nil, self.data.id)
-            end
+            
+            if( currentStagePiece ) then
+               if( currentStagePiece.pieceType == "instrument" ) then -- MODIFYING INSTRUMENT
+                  if( self.data.id == "none" ) then 
+                     -- Do nothing
+                  elseif( self.data.id == "nocostume" ) then 
+                     private.replaceWithCharacter( currentStagePiece, self.data )
+                     
+                  elseif( self.data.id == "mysterybox" ) then 
+                     local character = self.data.characters[mRand(1,#self.data.characters)]
+                     private.replaceWithCharacter( currentStagePiece, character.id )
+                     
+                  else 
+                     private.replaceWithCharacter( currentStagePiece, self.data.id )
+                  end  
+
+               else -- MODIFYING CHARACTER
+                  if( self.data.id == "none" ) then 
+                     -- Remove character
+                     instrumentsInUse[currentStagePiece.instrument] = nil
+                     display.remove(currentStagePiece)
+                     currentStagePiece = nil
+                     private.highlightSelected()
+
+                  elseif( self.data.id == "nocostume" ) then 
+                     private.replaceWithCharacter( currentStagePiece, self.data )
+                  
+                  elseif( self.data.id == "mysterybox" ) then
+                     local character = self.data.characters[mRand(1,#self.data.characters)]
+                     private.replaceWithCharacter( currentStagePiece, character.id )
+                     
+                  else                      
+                     private.replaceWithCharacter( currentStagePiece, self.data.id)
+                  end
+               end
+
+            else -- CREATING CHARACTER
+               if( self.data.id == "none" ) then 
+                  -- Do nothing
+               elseif( self.data.id == "nocostume" ) then 
+                  public.placeNewCharacter( nil, nil, self.data )
+               
+               elseif( self.data.id == "mysterybox" ) then 
+                  local character = self.data.characters[mRand(1,#self.data.characters)]
+                  public.placeNewCharacter( nil, nil, character.id)
+                  dprint( "Mystery Box" )
+               else 
+                  table.print_r(self.data)
+                  public.placeNewCharacter( nil, nil, self.data.id)
+               end
+            end            
+
          end
       end
    end
@@ -518,6 +619,7 @@ end
 -- Common Drag & Drop Handler
 --
 function private.attachDragger( obj )
+   --obj.isHitTestMasked = true
    obj.touch = private.dragNDrop
    obj:addEventListener( "touch" )
 end
@@ -738,6 +840,7 @@ function private.readXML( fileName, baseXMLDir )
             xmltable = rawLUAcode; -- .xmltable;
          end
       else
+         --dprint( "EDO 1", XMLfilepath )
          xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
          if ( ON_SIMULATOR ) then
             dataToSave = table.serialize( "xmltable", xmltable, "" );
@@ -747,6 +850,7 @@ function private.readXML( fileName, baseXMLDir )
          end
       end
    else
+      --dprint( "EDO 2", XMLfilepath )
       xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
 
       if ( ON_SIMULATOR ) then
@@ -863,12 +967,12 @@ end
 function private.addSelectionIndicator( stagePiece )
    if( stagePiece.pieceType == "instrument" ) then
       stagePiece.indicator = stagePiece
-      stagePiece.strokeWidth = 4
+      stagePiece.strokeWidth = 6
       return 
    end
    local indicator = display.newRect( stagePiece, 0, 0, stagePiece.contentWidth * 1/characterScale + 40, stagePiece.contentHeight * 1/characterScale + 60 )
    indicator:setFillColor(0,0,0,0)
-   indicator.strokeWidth = 4
+   indicator.strokeWidth = 6
    indicator:toBack()
    stagePiece.indicator = indicator
 end
@@ -883,7 +987,7 @@ function private.highlightSelected()
       stagePiece.indicator.stroke.effect = nil
    end
    if( not currentStagePiece ) then return end
-   currentStagePiece.indicator.strokeWidth = 4
+   currentStagePiece.indicator.strokeWidth = 6
    currentStagePiece.indicator.stroke.effect = "generator.marchingAnts"
 end
 
@@ -917,6 +1021,54 @@ function private.doDrop( dropPiece )
          end
       end         
    end   
+end
+
+--
+-- replaceInstrument() - 
+--
+function private.replaceInstrument( target, instrument )
+   if( instrumentsInUse[instrument] ) then return end
+   
+   if( target.pieceType == "instrument" ) then               
+      instrumentsInUse[target.instrument] = nil      
+      public.placeNewInstrument(  target.x, target.y, instrument  ) 
+      display.remove( target )       
+
+   elseif( target.pieceType == "character" ) then
+      instrumentsInUse[target.instrument] = nil
+      public.placeNewCharacter(  target.x, target.y, target.characterID, instrument, target.danceNumber  ) 
+      display.remove( target ) 
+   end  
+end
+
+--
+-- replaceWithCharacter() - 
+--
+function private.replaceWithCharacter( target, characterID )
+   
+   if( target.pieceType == "instrument" ) then               
+      instrumentsInUse[target.instrument] = nil
+      public.placeNewCharacter(  target.x, target.y, characterID, target.instrument, target.danceNumber  ) 
+      display.remove( target ) 
+
+   elseif( target.pieceType == "character" ) then
+      instrumentsInUse[target.instrument] = nil
+      public.placeNewCharacter(  target.x, target.y, characterID, target.instrument, target.danceNumber  ) 
+      display.remove( target ) 
+   end  
+end
+
+
+function private.attachTouchClear()
+   function view.touch( self, event )
+         --table.dump2(event)
+         if( event.phase == "ended" ) then
+            currentStagePiece = nil
+            private.highlightSelected() 
+         end
+         return false
+   end
+   view:addEventListener("touch")
 end
 
 

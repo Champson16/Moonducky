@@ -536,12 +536,11 @@ function FRC_Rehearsal_Scene:createScene(event)
             height = categoryData[i].height * button_scale,
             onPress = function(e)
                -- show the focused state for the selected category icon
-               local self = e.target
+               local self = e.target --EDO
                if (self.id == "StartRehearsal") then
                  categoriesContainer.visible = false;
-                 for i=1,categoriesContainer.numChildren do
-                   print(i, categoriesContainer[i].id);
-                    itemScrollers[categoriesContainer[i].id].isVisible = false
+                 for k,v in pairs( itemScrollers ) do
+                    v.isVisible = false
                  end
                  rehearsalContainer.visible = true;
                elseif self:getFocusState() then
@@ -715,7 +714,8 @@ function FRC_Rehearsal_Scene:createScene(event)
             pressAlpha = 0.5,
             onRelease = function(e)
                local self = e.target
-               FRC_CharacterBuilder.placeNewInstrument( nil, nil, self.id )
+               FRC_CharacterBuilder.newInstrument( self.id )
+               return true
             end
          })
       button.categoryId = 'Instrument'
@@ -744,6 +744,20 @@ function FRC_Rehearsal_Scene:createScene(event)
                local self = e.target
                FRC_CharacterBuilder.setCurrentCharacterType( self.id ) --EFM
                FRC_CharacterBuilder.rebuildCostumeScroller() --EFM
+               local charactersButton = categoriesContainer[4] --EDO
+               local costumesButton = categoriesContainer[5] --EDO     
+               charactersButton:setFocusState(false)
+               costumesButton:setFocusState(true)
+               for k,v in pairs( itemScrollers ) do
+                  v.isVisible = false
+               end
+               itemScrollers.Costume.isVisible = true
+               costumesButton:press()
+               costumesButton:release()
+               table.dump2( costumesButton )               
+               
+               
+               
             end
          })
       button.categoryId = 'Character'
