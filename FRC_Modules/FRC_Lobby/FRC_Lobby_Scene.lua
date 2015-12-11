@@ -184,6 +184,27 @@ function FRC_Lobby_Scene:createScene(event)
 		native.showAlert("Juke Box Coming Soon!","This feature is coming soon.", { "OK" });
 	end
 
+	rehearsalButton = ui.button.new({
+		imageUp = imageBase .. 'MDMT_Lobby_RehearsalDoor.png',
+		imageDown = imageBase .. 'MDMT_Lobby_RehearsalDoor_down.png',
+		width = 133,
+		height = 327,
+		x = 222 - 576,
+		y = 360 - 368,
+		onRelease = function()
+			analytics.logEvent("MDMT.Lobby.Rehearsal");
+				 --if( _G.edmode ) then
+						storyboard.gotoScene('Scenes.Rehearsal'); --EFM
+						-- storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time="250" });
+				 --else
+						--native.showAlert("Rehearsal Coming Soon!","Ed Maurina is working on this feature.  Flip  edmode to 'true' in main.lua to see current state of scene.", { "OK" });
+				 --end
+		end
+	});
+	rehearsalButton.anchorX = 0.5;
+	rehearsalButton.anchorY = 0.5;
+	bgGroup:insert(rehearsalButton);
+
 	-- query server
 	-- establish online/offline check
 	function scene.networkListener(event)
@@ -425,27 +446,6 @@ function FRC_Lobby_Scene:createScene(event)
 	discoverButton.anchorX = 0.5;
 	discoverButton.anchorY = 0.5;
 	bgGroup:insert(discoverButton);
-
-	rehearsalButton = ui.button.new({
-		imageUp = imageBase .. 'MDMT_Lobby_RehearsalDoor.png',
-		imageDown = imageBase .. 'MDMT_Lobby_RehearsalDoor_down.png',
-		width = 133,
-		height = 327,
-		x = 222 - 576,
-		y = 360 - 368,
-		onRelease = function()
-			analytics.logEvent("MDMT.Lobby.Rehearsal");
-         --if( _G.edmode ) then
-            storyboard.gotoScene('Scenes.Rehearsal'); --EFM
-            -- storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time="250" });
-         --else
-            --native.showAlert("Rehearsal Coming Soon!","Ed Maurina is working on this feature.  Flip  edmode to 'true' in main.lua to see current state of scene.", { "OK" });
-         --end
-		end
-	});
-	rehearsalButton.anchorX = 0.5;
-	rehearsalButton.anchorY = 0.5;
-	bgGroup:insert(rehearsalButton);
 
 
 	--[[
