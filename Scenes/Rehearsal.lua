@@ -201,7 +201,7 @@ function scene.postCreateScene(self, event)
 							end
 						});
 					end
-					-- showLoadPopup(); -- TEMP DISABLED UNTIL WE ARCHITECT DATA FORMAT FOR SHOWS
+					 showLoadPopup(); -- TEMP DISABLED UNTIL WE ARCHITECT DATA FORMAT FOR SHOWS
 				end
 			},
 			{

@@ -48,12 +48,12 @@ FRC_Rehearsal_Scene.setIndex = 1;
 FRC_Rehearsal_Scene.backdropIndex = 1;
 
 function FRC_Rehearsal_Scene:save(e)
-   --[[
    local id = e.id
    if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)) end
-   local saveGroup = self.view.saveGroup
+   --local saveGroup = self.view.saveGroup
+   local saveGroup = self.view.setDesignGroup
 
-   -- create mask (to be used for Stamp in ArtCenter)
+   -- create mask
    -- mask must have a minimum of 3px padding on all sides, and be a multiple of 4
    local capture = display.capture(saveGroup)
    local cw = ((capture.contentWidth + 12) * display.contentScaleX)
@@ -114,9 +114,7 @@ function FRC_Rehearsal_Scene:save(e)
    local saveDataFilename = FRC_Rehearsal_Settings.DATA.DATA_FILENAME
    local newSave = {
       id = id,
-      character = self.view.currentData.character,
-      categories = self.view.currentData.categories,
-      index = self.view.currentData.index,
+      setIndex = FRC_Rehearsal_Scene.setIndex, 
       thumbWidth = thumbWidth,
       thumbHeight = thumbHeight,
       thumbSuffix = '_thumbnail.png',
@@ -135,12 +133,14 @@ function FRC_Rehearsal_Scene:save(e)
    if (not exists) then
       table.insert(self.saveData.savedItems, newSave)
    end
+   FRC_CharacterBuilder.save(newSave)
    FRC_DataLib.saveJSON(saveDataFilename, self.saveData)
    self.id = id
-   --]]
+   
 end
 
 function FRC_Rehearsal_Scene:load(e)
+   table.print_r(e)
    --[[
    local id = e.id
    if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)) end
@@ -150,6 +150,10 @@ function FRC_Rehearsal_Scene:load(e)
    end
    self.id = id
    --]]
+   if( e.data.setIndex ) then 
+      FRC_Rehearsal_Scene.changeSet(e.data.setIndex)
+   end
+   FRC_CharacterBuilder.load(e.data)
 end
 
 
@@ -161,7 +165,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    local view = self.view
    local screenW, screenH = FRC_Layout.getScreenDimensions()
    if ((not self.id) or (self.id == '')) then self.id = FRC_Util.generateUniqueIdentifier(20) end
-
+  
    -- DEBUG:
    dprint("FRC_Rehearsal_Scene - createScene")
 
@@ -169,11 +173,9 @@ function FRC_Rehearsal_Scene:createScene(event)
       self.preCreateScene(self, event);
    end
 
-   ----[[
    -- FRC_Rehearsal.getSavedData()
    self.saveData = DATA('DATA_FILENAME', system.DocumentsDirectory)
    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal').saveData = FRC_DataLib.readJSON(saveDataFilename, system.DocumentsDirectory)
-   --]]
 
    local bg = display.newImageRect(view, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'))
    FRC_Layout.scaleToFit(bg)
@@ -610,7 +612,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    for i=1,#setDesignData do
 		 -- DEBUG
 		 print('width', setDesignData[i].width * button_scale);
-		 -- print('id:', setDesignData[i].id, 'width:', setDesignData[i].width, 'height:', setDesignData[i].height);
+		 dprint('id:', setDesignData[i].id, 'width:', setDesignData[i].width, 'height:', setDesignData[i].height);
 
       local scroller = itemScrollers['SetDesign']
       buttonHeight = scroller.contentHeight - button_spacing;
@@ -683,11 +685,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             pressAlpha = 0.5,
             onRelease = function(e)
                local self = e.target
-               -- CODE TO HANDLE INSTRUMENT INSERTION/CHANGE GOES HERE
-               -- changeItem('Instrument', self.id)
-               --FRC_CharacterBuilder.showIntrumentSample( self.id )
-               FRC_CharacterBuilder.placeNewInstrument( self.id )
-               --print(self.id)
+               FRC_CharacterBuilder.placeNewInstrument( nil, nil, self.id )
             end
          })
       button.categoryId = 'Instrument'
@@ -714,12 +712,8 @@ function FRC_Rehearsal_Scene:createScene(event)
             pressAlpha = 0.5,
             onRelease = function(e)
                local self = e.target
-               -- CODE TO HANDLE CHARACTER INSERTION/CHANGE GOES HERE
-               --changeItem('Character', self.id)
-               dprint( self.id ) -- EFM EDO
                FRC_CharacterBuilder.setCurrentCharacterType( self.id ) --EFM
                FRC_CharacterBuilder.rebuildCostumeScroller() --EFM
-
             end
          })
       button.categoryId = 'Character'
@@ -729,103 +723,19 @@ function FRC_Rehearsal_Scene:createScene(event)
       x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)
    end
 
-   -- create the Costume scroll container -- EDOCHI
-   --[[
-   x = -(screenW * 0.5) + button_spacing
-   for i=1,#characterData do
-      local scroller = itemScrollers['Costume']
-      buttonHeight = scroller.contentHeight - button_spacing
-      --table.dump2(characterData[i]) --EFM
-      local button = ui.button.new({
-            id = characterData[i].id,
-            imageUp = UI('IMAGES_PATH') .. (characterData[i].bodyThumb or characterData[i].bodyImage),
-            imageDown = UI('IMAGES_PATH') .. (characterData[i].bodyThumb or characterData[i].bodyImage),
-            width = buttonHeight * (characterData[i].bodyWidth / characterData[i].bodyHeight),
-            height = buttonHeight,
-            parentScrollContainer = scroller,
-            pressAlpha = 0.5,
-            onRelease = function(e)
-               local self = e.target
-               -- CODE TO HANDLE CHARACTER INSERTION/CHANGE GOES HERE
-               --changeItem('Character', self.id)
-               dprint( self.id ) -- EFM EDO
-            end
-         })
-      button.categoryId = 'Character'
-      scroller:insert(button)
-      x = x + (button.contentWidth * 0.5)
-      button.x, button.y = x, 0
-      x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)
-   end
-   --]]
-   -- create the clothing scroll containers using the first character's images
 
-   --[[
-   local thumbnailExtension = ""
-   if (FRC_Rehearsal_Settings.CONFIG.costumes) then
-      if (FRC_Rehearsal_Settings.CONFIG.costumes.customThumbnails) then
-         thumbnailExtension = "_thumbnail"
-      end
-   end
-   -- DEBUG:
-   print("costume thumbnail extension: ", thumbnailExtension)
-
-   for k,v in pairs(characterData[1].clothing) do
-      local categoryId = k
-      local scroller = itemScrollers[categoryId]
-      local x = -(scroller.contentWidth * 0.5) + scroller.leftPadding
-      for j=1,#v do
-         -- DEBUG:
-         -- this is to find issues with bad character data
-         -- print("characterData[1].clothing:" .. v[j].id)
-         -- width = buttonHeight * (v[j].width / v[j].height),
-         -- need to constrain the image to fit a maximum width area
-         local scaledWidth = buttonHeight * (v[j].width / v[j].height)
-         local constrainedWidth = buttonHeight * 1.5
-         local tempwidth = math.min(scaledWidth, constrainedWidth)
-         local tempheight = buttonHeight -- default
-         if (tempwidth == constrainedWidth) then
-            -- we had to constrain the width artificially so we need to scale down the height to reflect that
-            tempheight = buttonHeight * (constrainedWidth / scaledWidth)
-         end
-         -- if there's a custom thumbnail extension (instead of using the first character's costume images)
-         -- we need to rewrite the imageFile path
-         local imageFilePath = UI('IMAGES_PATH') .. v[j].imageFile
-         -- DEBUG:
-         -- print(imageFilePath)
-         if ( thumbnailExtension ~= "" ) then
-            imageFilePath = string.gsub(imageFilePath, ".png", thumbnailExtension .. ".png", 1)
-            -- DEBUG:
-            -- print(imageFilePath)
-         end
-         local button = ui.button.new({
-               id = v[j].id,
-               imageUp = imageFilePath,
-               imageDown = imageFilePath,
-               width = tempwidth,
-               height = tempheight,
-               parentScrollContainer = scroller,
-               pressAlpha = 0.5,
-               onRelease = function(e)
-                  local self = e.target
-                  changeItem(self.categoryId, selectedCharacter, self.index)
-               end
-            })
-         button.categoryId = categoryId
-         button.index = j
-         button.xOffset = v[j].xOffset
-         button.yOffset = v[j].yOffset
-         scroller:insert(button)
-         x = x + (button.contentWidth * 0.5)
-         button.x, button.y = x, 0
-         x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)
-      end
-   end
-   --]]
+   --
+   -- EFM costume scroller is filled on demand in FRC_CharacterBuilder.lua as a side-effect of selecting the current'animal' category
+   --
 
    view:insert(categoriesContainer)
 
-   FRC_CharacterBuilder.init( view, screenW, screenH, FRC_Layout, bg, animationXMLBase, animationImageBase, itemScrollers, categoriesContainer ) -- EFM
+   FRC_CharacterBuilder.init( { view                  = view,
+                                animationXMLBase      = animationXMLBase, 
+                                animationImageBase    = animationImageBase, 
+                                itemScrollers         = itemScrollers, 
+                                categoriesContainer   = categoriesContainer } ) -- EFM
+   
    FRC_CharacterBuilder.rebuildCostumeScroller( )
 
    if (FRC_Rehearsal_Scene.postCreateScene) then
