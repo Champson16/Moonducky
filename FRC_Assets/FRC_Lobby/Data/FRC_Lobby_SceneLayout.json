@@ -1,13 +1,5 @@
 [
 	{
-		"id": "VelvetRope",
-		"imageFile": "MDMT_Lobby_VelvetRope.png",
-		"width": 385,
-		"height": 324,
-		"left": 50,
-		"bottom": 0
-	},
-	{
 		"id": "PopcornMachine",
 		"imageFile": "MDMT_Lobby_PopcornMachine.png",
 		"width": 197,
