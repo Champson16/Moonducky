@@ -116,7 +116,7 @@ function scene.postCreateScene(self, event)
 		disabled = 'FRC_Assets/FRC_ActionBar/Images/MDMT_ActionBar_Button_ActionBar_disabled.png',
 		buttonWidth = 100,
 		buttonHeight = 100,
-		buttonPadding = 0,
+		buttonPadding = -20,
 		bgColor = { 1, 1, 1, .95 },
 		alwaysVisible = true,
 		buttons = {
@@ -155,13 +155,14 @@ function scene.postCreateScene(self, event)
 							 storyboard.gotoScene('Scenes.Rehearsal');
 				end
 			},
-			{
-				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_up.png',
-				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_down.png',
-				onRelease = function()
-							 storyboard.gotoScene('Scenes.Showtime');
-				end
-			},
+			-- COMMENTED OUT UNTIL SHOWTIME IS IMPLEMENTED
+			-- {
+			-- 	imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_up.png',
+			-- 	imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_down.png',
+			-- 	onRelease = function()
+			-- 				 storyboard.gotoScene('Scenes.Showtime');
+			-- 	end
+			-- },
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_down.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_up.png',

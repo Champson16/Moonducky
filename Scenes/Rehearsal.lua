@@ -58,13 +58,14 @@ function scene.postCreateScene(self, event)
 					storyboard.gotoScene('Scenes.Lobby');
 				end
 			},
-			{
-				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_up.png',
-				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_down.png',
-				onRelease = function()
-					storyboard.gotoScene('Scenes.Showtime');
-				end
-			},
+			-- COMMENTED OUT UNTIL SHOWTIME IS IMPLEMENTED
+			-- {
+			-- 	imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_up.png',
+			-- 	imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_down.png',
+			-- 	onRelease = function()
+			-- 				 storyboard.gotoScene('Scenes.Showtime');
+			-- 	end
+			-- },
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_ArtCenter_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_ArtCenter_down.png',

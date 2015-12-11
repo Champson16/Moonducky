@@ -330,7 +330,7 @@ function FRC_Home_Scene:createScene(event)
 
 	for i=1, theatreDoorAnimationSequences.numChildren do
 		theatreDoorAnimationSequences[i]:play({
-			showLastFrame = true,
+			showLastFrame = false,
 			playBackward = false,
 			autoLoop = true,
 			palindromicLoop = false,

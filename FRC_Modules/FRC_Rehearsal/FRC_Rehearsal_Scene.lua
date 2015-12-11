@@ -219,6 +219,10 @@ function FRC_Rehearsal_Scene:createScene(event)
    end
 
    local changeSet = function(index)
+
+      -- EDF TODO: Handle index value of 0 and remove the backdrop and background
+      -- THIS will be when I introduce the NONE option
+      -- We may also want to support random value (-1) for the MysteryBox
       if (index == FRC_Rehearsal_Scene.setIndex) then return; end
       index = index or FRC_Rehearsal_Scene.setIndex;
       if (setGroup.numChildren > 0) then
@@ -608,6 +612,31 @@ function FRC_Rehearsal_Scene:createScene(event)
 			  -- print('id:', item.id, 'width:', item.thumbWidth, 'height:', item.thumbHeight);
 		 end
 	 end
+   -- add a none option
+   -- Insert 'None' as first item of all character costume categories
+   --[[ local none = {
+     id = 'none',
+     imageFile = UI('SCROLLER_NONE_IMAGE'),
+     width = UI('SCROLLER_NONE_WIDTH'),
+     height = UI('SCROLLER_NONE_HEIGHT'),
+     xOffset = 0,
+     yOffset = 0,
+     setIndex = 0,
+     backdropIndex = 0
+   };
+   local mysterybox = {
+     id = 'mysterybox',
+     imageFile = UI('MYSTERYBOX_NONE_IMAGE'),
+     width = UI('MYSTERYBOX_NONE_WIDTH'),
+     height = UI('MYSTERYBOX_NONE_HEIGHT'),
+     xOffset = 0,
+     yOffset = 0,
+     setIndex = -1,
+     backdropIndex = -1
+   };
+   table.insert(setDesignData, 1, none);
+   table.insert(setDesignData, 1, mysterybox);
+   --]]
 
    for i=1,#setDesignData do
 		 -- DEBUG
@@ -631,6 +660,7 @@ function FRC_Rehearsal_Scene:createScene(event)
               -- CODE TO HANDLE SETDESIGN CHANGE GOES HERE
 					  	for i=1,#setDesignData do
 							 	if (setDesignData[i].id == self.id) then
+                  -- ADD CODE TO SPECIAL CASE HANDLE 'none' and 'mysterybox' ids
 	                changeSet(setDesignData[i].setIndex)
 							    changeBackdrop(setDesignData[i].backdropIndex);
 								  repositionSet();

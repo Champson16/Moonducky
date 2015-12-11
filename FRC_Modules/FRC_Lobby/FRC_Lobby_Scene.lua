@@ -104,7 +104,7 @@ function FRC_Lobby_Scene:createScene(event)
 
 	for i=1, theatreDoorAnimationSequences.numChildren do
 		theatreDoorAnimationSequences[i]:play({
-			showLastFrame = true,
+			showLastFrame = false,
 			playBackward = false,
 			autoLoop = true,
 			palindromicLoop = false,
@@ -135,7 +135,7 @@ function FRC_Lobby_Scene:createScene(event)
 
 	for i=1, theatreDoorSequences.numChildren do
 		theatreDoorSequences[i]:play({
-			showLastFrame = true,
+			showLastFrame = false,
 			playBackward = false,
 			autoLoop = false,
 			palindromicLoop = false,

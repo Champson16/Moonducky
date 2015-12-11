@@ -43,7 +43,7 @@ function scene.postCreateScene(self, event)
 		disabled = 'FRC_Assets/FRC_ActionBar/Images/MDMT_ActionBar_Button_ActionBar_disabled.png',
 		buttonWidth = 100,
 		buttonHeight = 100,
-		buttonPadding = 0,
+		buttonPadding = -20,
 		bgColor = { 1, 1, 1, .95 },
 		buttons = {
 			{
@@ -53,6 +53,21 @@ function scene.postCreateScene(self, event)
 					storyboard.gotoScene('Scenes.Home');
 				end
 			},
+			{
+				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Rehearsal_up.png',
+				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Rehearsal_down.png',
+				onRelease = function()
+							 storyboard.gotoScene('Scenes.Rehearsal');
+				end
+			},
+			-- COMMENTED OUT UNTIL SHOWTIME IS IMPLEMENTED
+			-- {
+			-- 	imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_up.png',
+			-- 	imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_down.png',
+			-- 	onRelease = function()
+			-- 				 storyboard.gotoScene('Scenes.Showtime');
+			-- 	end
+			-- },
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_ArtCenter_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_ArtCenter_down.png',
@@ -64,7 +79,14 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_down.png',
 				onRelease = function()
-               storyboard.gotoScene('Scenes.DressingRoom');               
+               storyboard.gotoScene('Scenes.DressingRoom');
+				end
+			},
+			{
+				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SetDesign_up.png',
+				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SetDesign_down.png',
+				onRelease = function()
+					storyboard.gotoScene('Scenes.SetDesign');
 				end
 			},
 			{
