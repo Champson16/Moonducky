@@ -51,18 +51,18 @@ function scene.postCreateScene(self, event)
 					storyboard.gotoScene('Scenes.Home');
 				end
 			},
-			{
-				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_up.png',
-				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_down.png',
-				onRelease = function()
-							 storyboard.gotoScene('Scenes.DressingRoom');
-				end
-			},
       {
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_ArtCenter_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_ArtCenter_down.png',
 				onRelease = function()
 					storyboard.gotoScene('Scenes.ArtCenter');
+				end
+			},
+			{
+				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SetDesign_up.png',
+				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SetDesign_down.png',
+				onRelease = function()
+					storyboard.gotoScene('Scenes.SetDesign');
 				end
 			},
 			{

@@ -75,21 +75,6 @@ function scene.postCreateScene(self, event)
 				end
 			},
 			{
-				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_up.png',
-				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_down.png',
-				onRelease = function()
-					-- if (self.canvas.isDirty) then
-						-- native.showAlert('Exit?', 'If you exit, your unsaved progress will be lost.\nIf you want to save first, tap Cancel now and then use the Save feature.', { 'Cancel', 'OK' }, function(event)
-							-- if (event.index == 2) then
-								-- storyboard.gotoScene('Scenes.DressingRoom');
-							-- end
-						-- end);
-					-- else
-						storyboard.gotoScene('Scenes.Rehearsal');
-					-- end
-				end
-			},
-			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_down.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_up.png',
 				onRelease = function(e)
