@@ -72,6 +72,72 @@ FRC_AnimationManager.loadXMLData = function(inputFile, baseDir)
    return xmltable;
 end
 
+--
+-- loadAnimationData() 
+--
+-- This function will load an existing LUA file containing the animation data for 
+-- the existing XML file.  If it cannot find a LUA equivalent, it will read the XML source
+-- and save a LUA file to the documents folder.
+--
+function FRC_AnimationManager.loadAnimationData( fileName, baseXMLDir )
+   --dprint( "-------------------------------------", fileName, baseXMLDir )
+   --
+   -- 1. Try to find and load an existing lua table version of XML file
+   --   
+   fileName = string.gsub( fileName, "%.xml", "" )
+   local luaPath = string.gsub( baseXMLDir .. fileName, "%/", "." )
+   local luaFileExists = pcall( require, luaPath )
+   if( luaFileExists ) then   
+      local retVal = require( luaPath )
+      return retVal
+   end
+   
+   --
+   -- 2. Failing that, read the XML file, save a lua file to the DocumentsDirectory and return xml table.
+   --   
+   local xmlPath  = baseXMLDir .. fileName .. ".xml"
+   fileName = fileName .. ".lua"
+   xmltable = FRC_AnimationManager.loadXMLData( xmlPath, system.ResourceDirectory );     
+   local tmp = table.serialize( "xmltable", xmltable, "" );
+   io.writeFile( tmp, fileName  )   
+   
+   return xmltable
+end
+--EFM This method is being used exclusively for unified XML files because the serialization processing failing for large tables.  Not sure why
+local unifiedCache = {}
+function FRC_AnimationManager.loadAnimationDataUnified( fileName, baseXMLDir )
+   --dprint( "-------------------------------------", fileName, baseXMLDir )
+   
+   --
+   -- 0. Speedup code till we figure out serialization (load from 'disk' first time; get from memory next time)
+   --
+   if( unifiedCache[baseXMLDir..fileName] ) then
+      return unifiedCache[baseXMLDir..fileName]
+   end
+   
+   --
+   -- 1. Try to find and load an existing lua table version of XML file
+   --   
+   fileName = string.gsub( fileName, "%.xml", "" )
+   local jsonPath = baseXMLDir .. fileName .. ".xjson" 
+   local xmltable = table.load( jsonPath, system.ResourceDirectory )   
+   if( xmltable ) then      
+      unifiedCache[baseXMLDir..fileName] = xmltable
+      return xmltable
+   end
+   
+   --
+   -- 2. Failing that, read the XML file, save a lua file to the DocumentsDirectory and return xml table.
+   --   
+   local xmlPath  = baseXMLDir .. fileName .. ".xml"
+   xmltable = FRC_AnimationManager.loadXMLData( xmlPath, system.ResourceDirectory );   
+   --local xmltable = FRC_AnimationManager.loadXMLData( fileName .. ".xml", baseXMLDir );
+   table.save( xmltable, fileName  .. ".xjson" ) 
+   unifiedCache[baseXMLDir..fileName] = xmltable   
+   return xmltable
+end
+
+
 -- this function processes a Lua table of XML animation data from Flash into
 -- a table that we can use with createAnimationClip in Corona
 FRC_AnimationManager.getAnimationData = function(xmltable, baseImageDir)
@@ -142,7 +208,7 @@ FRC_AnimationManager.getAnimationData = function(xmltable, baseImageDir)
       -- TODO:  replace this with a dictionary OR code that can read the width and height of a PNG/JPG image (google:  Corona PNGLib)
       -- TODO:  Put test code in to call assert if an image is missing!
       --table.dump2( partList )
-      dprint("FRC_AnimationManager.getAnimationData() newImage =>", baseImageDir, pn ) -- EFM EDO
+      --dprint("FRC_AnimationManager.getAnimationData() newImage =>", baseImageDir, pn ) -- EFM EDO
       local refImage = display.newImage(baseImageDir .. pn .. ".png", true);
       -- ERRORCHECK:
       assert(refImage, "ERROR: Missing media file: ", baseImageDir .. pn .. ".png");
@@ -892,126 +958,50 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
       -- DEBUG:
       print("FRC_AnimationManager.createAnimationClipGroup CALLED WITHOUT PROPERTIES");
    end
-   -- process XML data for all animations
+   
+   
+   -- Original code can be located at bottom of file marked EFM151212_OLD
+   
+   -- Load (and if need be generate LUA files from) XML animation data from files.
+   -- EFM151212_NEW BEGIN
    if (inputFiles) then
-      -- DEBUG:
-      -- local now = os.time();
       for i=1, #inputFiles do
-         -- load the XML data from a Lua file table if it already exists
-         local rawLUAcode, xmltable, preexistingFile, newLuaFile, err, dataToSave, appLUApath, docLUApath;
-         local XMLfilename = inputFiles[i];
-         local XMLLUAfilename = string.sub(XMLfilename, 1, string.len(XMLfilename)-3) .."lua";
-         -- DEBUG:
-         -- print("FRC DEBUG DATA - XMLLUAfilename: ", XMLLUAfilename);
-         local XMLfilepath = baseXMLDir .. XMLfilename;
-         -- look for the file in the application resources
-         appLUApath = system.pathForFile( baseXMLDir .. XMLLUAfilename );
-         -- DEBUG:
-         -- print("appLUApath should be: ", baseXMLDir .. XMLLUAfilename);
-         docLUApath = system.pathForFile( XMLLUAfilename, system.DocumentsDirectory );
-         -- DEBUG:
-         -- if appLUApath then print("appLUAPATH: ", appLUApath); end
-         -- if docLUApath then print("docLUApath: ", docLUApath); end
-
-         if (appLUApath) then -- or docLUApath) then
-            local path = appLUApath; -- or docLUApath;
-            -- DEBUG
-            -- print("FRC LUA PATH: ", path);
-            preexistingFile, err = io.open(path,"r");
-
-            if (preexistingFile and not err) then
-               io.close(preexistingFile);
-               if (appLUApath) then
-                  -- read Lua table via require
-                  local appLUAFilename = string.gsub( string.gsub(baseXMLDir .. XMLLUAfilename, "/", "."), ".lua", "");
-                  -- DEBUG:
-                  -- print("appLUAFilename: ", appLUAFilename);
-                  -- local test = require('FRC_Assets.SPMTM_Assets.Animation.XMLData.SPMTM_Title_Intro_82');
-                  -- table.dump(test);
-                  -- print("test:", test);
-
-                  rawLUAcode = require(appLUAFilename);
-                  -- DEBUG:
-                  -- table.dump(rawLUAcode);
-                  -- print('#rawLUACode: ', #rawLUACode);
-                  -- grab the needed data structure and store it
-                  xmltable = rawLUAcode; -- .xmltable;
-                  --[[ elseif (docLUApath and (system.getInfo("environment") == "simulator")) then
-            -- this strips off the extension of the filename and the leading / to we can convert it to a valid argument for require
-            local pathWithoutExt = string.gsub(string.gsub(path, ".lua", ""), "/", "", 1);
-            -- read Lua table via require
-            rawLUAcode = require(string.gsub(pathWithoutExt, "/", "."));
-            -- DEBUG:
-            table.dump(rawLUAcode);
-            print(rawLUACode);
-            -- grab the needed data structure and store it
-            xmltable = rawLUAcode; -- .xmltable;
-            --]]
-               end
-            else
-               xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
-               if ( ON_SIMULATOR ) then
-                  -- since we could not read a Lua table, let's convert the xml and then save it for later (simulator ONLY!)
-                  dataToSave = table.serialize( "xmltable", xmltable, "" );
-                  -- DEBUG:
-                  -- table.dump(dataToSave);
-                  print("FRC Generating LUA file");
-                  newLuaFile, err = io.open(path,"w");
-                  if newLuaFile then newLuaFile:write( dataToSave ); end
-                  io.close(newLuaFile);
-               end
-            end
+         local sourceFile = inputFiles[i];
+         local xmltable 
+         if( animationClipGroup.unifiedData ) then
+            xmltable = FRC_AnimationManager.loadAnimationDataUnified( sourceFile, baseXMLDir  )
          else
-            xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
-            if ( ON_SIMULATOR ) then
-               -- since we didn't find a Lua table, let's convert the xml and then save it for later (simulator ONLY!)
-               dataToSave = table.serialize( "xmltable", xmltable, "" );
-               -- DEBUG:
-               table.dump(dataToSave);
-               newLuaFile, err = io.open(docLUApath,"w");
-               if newLuaFile then newLuaFile:write( dataToSave ); end
-               io.close(newLuaFile);
-            end
+            xmltable = FRC_AnimationManager.loadAnimationData( sourceFile, baseXMLDir  )   
          end
-
+         
+         -- EXTRA Processing for UNIFIED ANIMATION SOURCES
+         --
          if( animationClipGroup.unifiedData ) then -- EFM
             local unifiedData = animationClipGroup.unifiedData
             local newPart = {}
             local partsList = unifiedData[2]
             local part = xmltable.Animation.Part
             for i = 1, #partsList do
-               newPart[i] = part[partsList[i]]
+               newPart[i] = part[partsList[i] ]
             end
             xmltable.Animation.Part = newPart
-            xmltable.Animation.name = unifiedData[1]
-            
+            xmltable.Animation.name = unifiedData[1]            
             if( unifiedData[4] ) then 
                local part = xmltable.Animation.Part
                for i = 1, #part do
                   part[i].name = string.gsub( string.lower(part[i].name), string.lower(unifiedData[4].fromPart), unifiedData[4].toPart )
-               end
-               --table.print_r( xmltable ) 
+               end               
             end
          end
-
-         -- DEBUG:
-         -- print("FRC_AnimationManager.createAnimationClipGroup inputFile: ", i, " - ", inputFiles[i]);
-         -- TRS  local xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
-         -- get the data processed
+         
          local animData = FRC_AnimationManager.getAnimationData(xmltable, baseImageDir);
-         -- convert the animation data table into a ready to use animation sequence object
-         -- store it for later playback
-         -- animationClipGroup[i] = FRC_AnimationManager.createAnimationClip(animData);
-         -- we're making a group of clip groups
          animationClipGroup:insert(FRC_AnimationManager.createAnimationClip(animData));
       end
-      -- DEBUG:
-      -- print("FRC PROFILING DATA - XML processed in: ", os.time() - now);
    else
-      -- DEBUG:
-      print("WARNING:  FRC_AnimationManager.createAnimationClipGroup was called without specifying XML files.");
+      print("WARNING:  FRC_AnimationManager.createAnimationClipGroup was called without specifying XML files.");   
    end
-
+   -- EFM151212_NEW END
+   
    animationClipGroup.play = function(self, options)
       -- store special functions for the last clip
       local onCompletion = options.onCompletion;
@@ -1164,3 +1154,131 @@ FRC_AnimationManager.disposeAnimations = function(scene)
 end
 
 return FRC_AnimationManager;
+
+-- *************************************************************************
+-- TEMPORARY SCRATCH PAD -- TEMPORARY SCRATCH PAD -- TEMPORARY SCRATCH PAD
+-- *************************************************************************
+
+   -- EFM151212_OLD BEGIN
+   --[[ EFM - I replaced this with a simpler version.  However, 
+   -- process XML data for all animations
+   if (inputFiles) then
+      -- DEBUG:
+      -- local now = os.time();
+      for i=1, #inputFiles do
+         -- load the XML data from a Lua file table if it already exists
+         local rawLUAcode, xmltable, preexistingFile, newLuaFile, err, dataToSave, appLUApath, docLUApath;
+         local XMLfilename = inputFiles[i];
+         local XMLLUAfilename = string.sub(XMLfilename, 1, string.len(XMLfilename)-3) .."lua";
+         -- DEBUG:
+         -- print("FRC DEBUG DATA - XMLLUAfilename: ", XMLLUAfilename);
+         local XMLfilepath = baseXMLDir .. XMLfilename;
+         -- look for the file in the application resources
+         appLUApath = system.pathForFile( baseXMLDir .. XMLLUAfilename );
+         -- DEBUG:
+         -- print("appLUApath should be: ", baseXMLDir .. XMLLUAfilename);
+         docLUApath = system.pathForFile( XMLLUAfilename, system.DocumentsDirectory );
+         -- DEBUG:
+         -- if appLUApath then print("appLUAPATH: ", appLUApath); end
+         -- if docLUApath then print("docLUApath: ", docLUApath); end
+
+         if (appLUApath) then -- or docLUApath) then
+            local path = appLUApath; -- or docLUApath;
+            -- DEBUG
+            -- print("FRC LUA PATH: ", path);
+            preexistingFile, err = io.open(path,"r");
+
+            if (preexistingFile and not err) then
+               io.close(preexistingFile);
+               if (appLUApath) then
+                  -- read Lua table via require
+                  local appLUAFilename = string.gsub( string.gsub(baseXMLDir .. XMLLUAfilename, "/", "."), ".lua", "");
+                  -- DEBUG:
+                  -- print("appLUAFilename: ", appLUAFilename);
+                  -- local test = require('FRC_Assets.SPMTM_Assets.Animation.XMLData.SPMTM_Title_Intro_82');
+                  -- table.dump(test);
+                  -- print("test:", test);
+
+                  rawLUAcode = require(appLUAFilename);
+                  -- DEBUG:
+                  -- table.dump(rawLUAcode);
+                  -- print('#rawLUACode: ', #rawLUACode);
+                  -- grab the needed data structure and store it
+                  xmltable = rawLUAcode; -- .xmltable;
+--                   elseif (docLUApath and (system.getInfo("environment") == "simulator")) then
+--            -- this strips off the extension of the filename and the leading / to we can convert it to a valid argument for require
+--            local pathWithoutExt = string.gsub(string.gsub(path, ".lua", ""), "/", "", 1);
+--            -- read Lua table via require
+--            rawLUAcode = require(string.gsub(pathWithoutExt, "/", "."));
+--            -- DEBUG:
+--            table.dump(rawLUAcode);
+--            print(rawLUACode);
+--            -- grab the needed data structure and store it
+--            xmltable = rawLUAcode; -- .xmltable;
+--
+               end
+            else
+               xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
+               if ( ON_SIMULATOR ) then
+                  -- since we could not read a Lua table, let's convert the xml and then save it for later (simulator ONLY!)
+                  dataToSave = table.serialize( "xmltable", xmltable, "" );
+                  -- DEBUG:
+                  -- table.dump(dataToSave);
+                  print("FRC Generating LUA file");
+                  newLuaFile, err = io.open(path,"w");
+                  if newLuaFile then newLuaFile:write( dataToSave ); end
+                  io.close(newLuaFile);
+               end
+            end
+         else
+            xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
+            if ( ON_SIMULATOR ) then
+               -- since we didn't find a Lua table, let's convert the xml and then save it for later (simulator ONLY!)
+               dataToSave = table.serialize( "xmltable", xmltable, "" );
+               -- DEBUG:
+               table.dump(dataToSave);
+               newLuaFile, err = io.open(docLUApath,"w");
+               if newLuaFile then newLuaFile:write( dataToSave ); end
+               io.close(newLuaFile);
+            end
+         end
+
+         if( animationClipGroup.unifiedData ) then -- EFM
+            local unifiedData = animationClipGroup.unifiedData
+            local newPart = {}
+            local partsList = unifiedData[2]
+            local part = xmltable.Animation.Part
+            for i = 1, #partsList do
+               newPart[i] = part[partsList[i] ]
+            end
+            xmltable.Animation.Part = newPart
+            xmltable.Animation.name = unifiedData[1]
+            
+            if( unifiedData[4] ) then 
+               local part = xmltable.Animation.Part
+               for i = 1, #part do
+                  part[i].name = string.gsub( string.lower(part[i].name), string.lower(unifiedData[4].fromPart), unifiedData[4].toPart )
+               end
+               --table.print_r( xmltable ) 
+            end
+         end
+
+         -- DEBUG:
+         -- print("FRC_AnimationManager.createAnimationClipGroup inputFile: ", i, " - ", inputFiles[i]);
+         -- TRS  local xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
+         -- get the data processed
+         local animData = FRC_AnimationManager.getAnimationData(xmltable, baseImageDir);
+         -- convert the animation data table into a ready to use animation sequence object
+         -- store it for later playback
+         -- animationClipGroup[i] = FRC_AnimationManager.createAnimationClip(animData);
+         -- we're making a group of clip groups
+         animationClipGroup:insert(FRC_AnimationManager.createAnimationClip(animData));
+      end
+      -- DEBUG:
+      -- print("FRC PROFILING DATA - XML processed in: ", os.time() - now);
+   else
+      -- DEBUG:
+      print("WARNING:  FRC_AnimationManager.createAnimationClipGroup was called without specifying XML files.");
+   end
+   --]]
+   -- EFM151212_OLD BEGIN

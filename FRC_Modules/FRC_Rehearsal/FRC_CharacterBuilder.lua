@@ -94,7 +94,7 @@ end
 -- save() - Save all stage elements (excluding stage backdrop which is handled in FRC_Rehearsal_Scene.)
 --
 function public.save(saveTable)
-   table.print_r(saveTable)
+   --table.print_r(saveTable)
    
    currentStagePiece = nil
    private.highlightSelected() 
@@ -113,7 +113,7 @@ function public.save(saveTable)
       record.characterID      = stagePiece.characterID
       savePieces[#savePieces+1] = record
    end
-   table.print_r( savePieces ) 
+   --table.print_r( savePieces ) 
 end
 
 -- 
@@ -322,7 +322,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
       animGroup:insert(animationSequences[i])
    end  
    
-   table.print_r(animationsToBuild)
+   --table.print_r(animationsToBuild)
    
    stagePiece:scale(characterScale,characterScale)
    private.attachDragger(stagePiece)
@@ -429,6 +429,17 @@ function public.newInstrument( instrument )
    else
       public.placeNewInstrument( nil, nil, instrument )
    end
+end
+
+--
+-- getInstrumentsInUse() - Returns a numerically indexed list containing the names of instruments currently on the stage.
+--
+function public.getInstrumentsInUse()
+   local tmp = {}
+   for k,v in pairs( instrumentsInUse ) do
+      tmp[#tmp+1] = k
+   end
+   return tmp
 end
 
 
@@ -558,7 +569,7 @@ function private.scrollerCostumeTouch( self, event )
       if( event.phase == "ended" ) then
          display.currentStage:setFocus( self, nil )
          self.isFocus = false
-         table.print_r(self)
+         --table.print_r(self)
          if( isWithinBounds ) then
             
             if( currentStagePiece ) then
@@ -607,7 +618,7 @@ function private.scrollerCostumeTouch( self, event )
                   public.placeNewCharacter( nil, nil, character.id)
                   dprint( "Mystery Box" )
                else 
-                  table.print_r(self.data)
+                  --table.print_r(self.data)
                   public.placeNewCharacter( nil, nil, self.data.id)
                end
             end            
@@ -822,60 +833,40 @@ function private.getXMLFileNames( animalType )
    return xmlFiles
 end
 
+--[[
 --
 -- readXML() - Extracted XML reader (from animationManager) (EFM - Needs additional changes when I fix LUA bug)
 --
 function private.readXML( fileName, baseXMLDir )
-   dprint( fileName, baseXMLDir )
-   local rawLUAcode, xmltable, preexistingFile, newLuaFile, err, dataToSave, appLUApath, docLUApath;
-   local XMLfilename = fileName;
-   local XMLLUAfilename = string.sub(XMLfilename, 1, string.len(XMLfilename)-3) .."lua";
-   local XMLfilepath = baseXMLDir .. XMLfilename;
-   appLUApath = system.pathForFile( baseXMLDir .. XMLLUAfilename );
-   docLUApath = system.pathForFile( XMLLUAfilename, system.DocumentsDirectory );
-
-   if (appLUApath) then -- or docLUApath) then
-      local path = appLUApath; -- or docLUApath;
-      preexistingFile, err = io.open(path,"r");
-
-      if (preexistingFile and not err) then
-         io.close(preexistingFile);
-         if (appLUApath) then
-            local appLUAFilename = strGSub( strGSub(baseXMLDir .. XMLLUAfilename, "/", "."), ".lua", "");
-            rawLUAcode = require(appLUAFilename);
-            xmltable = rawLUAcode; -- .xmltable;
-         end
-      else
-         --dprint( "EDO 1", XMLfilepath )
-         xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
-         if ( ON_SIMULATOR ) then
-            dataToSave = table.serialize( "xmltable", xmltable, "" );
-            newLuaFile, err = io.open(path,"w");
-            newLuaFile:write( dataToSave );
-            io.close(newLuaFile);
-         end
-      end
-   else
-      --dprint( "EDO 2", XMLfilepath )
-      xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
-
-      if ( ON_SIMULATOR ) then
-         dataToSave = table.serialize( "xmltable", xmltable, "" );
-         --table.dump(dataToSave);
-         newLuaFile, err = io.open(docLUApath,"w");
-         newLuaFile:write( dataToSave );
-         io.close(newLuaFile);
-      end
+   dprint( "-------------------------------------", fileName, baseXMLDir )
+   --
+   -- 1. Try to find and load an existing lua table version of XML file
+   --   
+   fileName = strGSub( fileName, "%.xml", "" )
+   local luaPath = strGSub( baseXMLDir .. fileName, "%/", "." )
+   local luaFileExists = pcall( require, luaPath )
+   if( luaFileExists ) then      
+      return require( luaPath )
    end
+   
+   --
+   -- 2. Failing that, read the XML file, save a lua file to the DocumentsDirectory and return xml table.
+   --   
+   local xmlPath  = baseXMLDir .. fileName .. ".xml"
+   local xmltable = FRC_AnimationManager.loadXMLData( xmlPath, system.ResourceDirectory );   
+   --local xmltable = FRC_AnimationManager.loadXMLData( fileName .. ".xml", baseXMLDir );
+   table.save( xmltable, fileName ) 
+   
    return xmltable
 end
+--]]
 
 --
 -- getPartsList() - Get the parts list for this unified animation file (so we can parse and manipulate it).
 --
 function private.getPartsList( sourceFile, animationXMLBase, debugEn )
-   --dprint( sourceFile, animationXMLBase, debugEn )
-   local xmltable = private.readXML( sourceFile, animationXMLBase  )
+   dprint( sourceFile, animationXMLBase, debugEn )
+   local xmltable = FRC_AnimationManager.loadAnimationDataUnified( sourceFile, animationXMLBase  )
    local partsList = xmltable.Animation.Part
    if( debugEn == true ) then
       for i = 1, #partsList do
@@ -1065,6 +1056,9 @@ function private.replaceWithCharacter( target, characterID )
 end
 
 
+--
+-- attachTouchClear() - Adds a listener to clear the current selection when touching off of a character/instrument.
+--
 function private.attachTouchClear()
    function view.touch( self, event )
          --table.dump2(event)
@@ -1076,6 +1070,8 @@ function private.attachTouchClear()
    end
    view:addEventListener("touch")
 end
+
+
 
 
 -- Easy alert popup
@@ -1138,3 +1134,53 @@ return public
 --]]
 -- ======================================================================
 
+--[[
+
+--
+-- readXML() - Extracted XML reader (from animationManager) (EFM - Needs additional changes when I fix LUA bug)
+--
+function private.readXML( fileName, baseXMLDir )
+   dprint( fileName, baseXMLDir )
+   local rawLUAcode, xmltable, preexistingFile, newLuaFile, err, dataToSave, appLUApath, docLUApath;
+   local XMLfilename = fileName;
+   local XMLLUAfilename = string.sub(XMLfilename, 1, string.len(XMLfilename)-3) .."lua";
+   local XMLfilepath = baseXMLDir .. XMLfilename;
+   appLUApath = system.pathForFile( baseXMLDir .. XMLLUAfilename );
+   docLUApath = system.pathForFile( XMLLUAfilename, system.DocumentsDirectory );
+
+   if (appLUApath) then -- or docLUApath) then
+      local path = appLUApath; -- or docLUApath;
+      preexistingFile, err = io.open(path,"r");
+
+      if (preexistingFile and not err) then
+         io.close(preexistingFile);
+         if (appLUApath) then
+            local appLUAFilename = strGSub( strGSub(baseXMLDir .. XMLLUAfilename, "/", "."), ".lua", "");
+            rawLUAcode = require(appLUAFilename);
+            xmltable = rawLUAcode; -- .xmltable;
+         end
+      else
+         --dprint( "EDO 1", XMLfilepath )
+         xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
+         if ( ON_SIMULATOR ) then
+            dataToSave = table.serialize( "xmltable", xmltable, "" );
+            newLuaFile, err = io.open(path,"w");
+            newLuaFile:write( dataToSave );
+            io.close(newLuaFile);
+         end
+      end
+   else
+      --dprint( "EDO 2", XMLfilepath )
+      xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
+
+      if ( ON_SIMULATOR ) then
+         dataToSave = table.serialize( "xmltable", xmltable, "" );
+         --table.dump(dataToSave);
+         newLuaFile, err = io.open(docLUApath,"w");
+         newLuaFile:write( dataToSave );
+         io.close(newLuaFile);
+      end
+   end
+   return xmltable
+end
+--]]
