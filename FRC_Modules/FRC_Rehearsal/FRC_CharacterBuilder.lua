@@ -202,7 +202,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    
    local animalType           = characterData.character
    -- ***************************************** -- EFM - TEMPORARY
-   animalType = ( animalType ~= "Chicken" and animalType ~= "Cat" ) and "Chicken" or animalType
+   --animalType = ( animalType ~= "Chicken" and animalType ~= "Cat" ) and "Chicken" or animalType
    -- *****************************************
    danceNumber                = danceNumber or mRand(1,2)   
    instrumentName             = instrumentName or ("Dance" .. danceNumber) -- Assume all players as dancers
@@ -296,6 +296,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    animationsToBuild = tmp
    tmp = nil
    
+   
    --
    -- Finally, create animation groups (sequences) from our list of animations to build
    --
@@ -319,7 +320,9 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
          animationSequences[i].y = animationSequences[i].y + adjustment.offset[2]
       end
       animGroup:insert(animationSequences[i])
-   end   
+   end  
+   
+   table.print_r(animationsToBuild)
    
    stagePiece:scale(characterScale,characterScale)
    private.attachDragger(stagePiece)
@@ -738,6 +741,9 @@ function private.getAllPartsList( instrumentType )
          { "Headwear", "", dressingRoomImageBase },
          { "Instrument_Sticks_Left", "", animationImageBase },
          { "Instrument_Sticks_Right", "", animationImageBase },
+         { "Instrument_Sticks", "", animationImageBase },
+         --{ "Instrument_Sticks_001_002", "", animationImageBase },
+         --{ "Instrument_Sticks_002_002", "", animationImageBase },
          { "LeftArm", "", animationImageBase },
          { "RightArm", "", animationImageBase },
       }
