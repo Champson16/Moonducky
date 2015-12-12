@@ -152,7 +152,7 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Rehearsal_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Rehearsal_down.png',
 				onRelease = function()
-							 storyboard.gotoScene('Scenes.Rehearsal');
+					storyboard.gotoScene('Scenes.Rehearsal');
 				end
 			},
 			-- COMMENTED OUT UNTIL SHOWTIME IS IMPLEMENTED

@@ -438,7 +438,7 @@ function FRC_Rehearsal_Scene:createScene(event)
   --  end
 
 
-  stopRehearsalMode = function()
+  FRC_Rehearsal_Scene.stopRehearsalMode = function ()
     -- eventually we will transition animate on offscreen and the other onscreen
     categoriesContainer.isVisible = true;
     if itemScrollers then
@@ -455,9 +455,8 @@ function FRC_Rehearsal_Scene:createScene(event)
       songTracksGroup:stop();
     end
   end
-  self.stopRehearsalMode = stopRehearsalMode;
 
-  startRehearsalMode = function()
+  FRC_Rehearsal_Scene.startRehearsalMode = function ()
     print("StartRehearsal");
     categoriesContainer.isVisible = false;
     if itemScrollers then
@@ -473,11 +472,10 @@ function FRC_Rehearsal_Scene:createScene(event)
     print('songTracksGroup:', songTracksGroup);
     if songTracksGroup then
       songTracksGroup:playAll({ onComplete = function()
-        stopRehearsalMode();
+        FRC_Rehearsal_Scene.stopRehearsalMode();
       end } );
     end
   end
-  self.startRehearsalMode = startRehearsalMode;
 
    self.startOver = function()
       --[[
@@ -617,7 +615,7 @@ function FRC_Rehearsal_Scene:createScene(event)
                -- show the focused state for the selected category icon
                local self = e.target
                if (self.id == "StopRehearsal") then
-                 stopRehearsalMode();
+                 FRC_Rehearsal_Scene.stopRehearsalMode();
                elseif self:getFocusState() then
                   -- hide the itemScroller
                   rehearsalItemScrollers[self.id].isVisible = false;
@@ -678,7 +676,7 @@ function FRC_Rehearsal_Scene:createScene(event)
                -- show the focused state for the selected category icon
                local self = e.target --EDO
                if (self.id == "StartRehearsal") then
-                 startRehearsalMode();
+                 FRC_Rehearsal_Scene.startRehearsalMode();
                elseif self:getFocusState() then
                   -- hide the itemScroller
                   itemScrollers[self.id].isVisible = false;
@@ -945,7 +943,7 @@ function FRC_Rehearsal_Scene:exitScene(event)
       FRC_Rehearsal_Scene:preExitScene(event)
    end
 
-   -- self.stopRehearsalMode(); - in case audio was playing just before the user is leaving the scene
+   -- FRC_Rehearsal_Scene.stopRehearsalMode(); - in case audio was playing just before the user is leaving the scene
 
    if (FRC_Rehearsal_Scene.postExitScene) then
       FRC_Rehearsal_Scene:postExitScene(event)
