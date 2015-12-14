@@ -44,8 +44,8 @@ end
 local animationXMLBase = UI('ANIMATION_XML_BASE')
 local animationImageBase = UI('ANIMATION_IMAGE_BASE')
 
-FRC_Rehearsal_Scene.setIndex = 1;
-FRC_Rehearsal_Scene.backdropIndex = 1;
+FRC_Rehearsal_Scene.setIndex = 0;
+FRC_Rehearsal_Scene.backdropIndex = 0;
 
 -- Setup the audio groups for each song
 FRC_AudioManager:newGroup({
@@ -326,17 +326,22 @@ function FRC_Rehearsal_Scene:createScene(event)
       -- We may also want to support random value (-1) for the MysteryBox
       if (index == FRC_Rehearsal_Scene.setIndex) then return; end
       index = index or FRC_Rehearsal_Scene.setIndex;
+      FRC_Rehearsal_Scene.setIndex = index;
+
+      -- clear previous contents
       if (setGroup.numChildren > 0) then
          setGroup[1]:removeSelf();
          setGroup[1] = nil;
       end
+      -- if we are clearing the set, we're done
+      print("set index",index); -- DEBUG
+      if (index == 0) then return; end
 
       local setBackground = display.newImageRect(setGroup, SETDESIGNUI('IMAGES_PATH') .. setData[index].imageFile, setData[index].width, setData[index].height);
       setBackground.x = display.contentCenterX;
       setBackground.y = display.contentCenterY;
       local frameRect = setData[index].frameRect;
       setBackground.frameRect = frameRect;
-      FRC_Rehearsal_Scene.setIndex = index;
 
       -- resize selected backdrop to fit in selected set
       local selectedBackdrop = backdropGroup[1];
@@ -349,16 +354,22 @@ function FRC_Rehearsal_Scene:createScene(event)
       selectedBackdrop.y = frameRect.top - ((setBackground.height - display.contentHeight) * 0.5);
    end
    self.changeSet = changeSet;
-   changeSet();
+   -- changeSet();
 
    local changeBackdrop = function(index)
       if (index == FRC_Rehearsal_Scene.backdropIndex) then return; end
-      if (not backdropData[index]) then index = 1; end -- ArtCenter image set as backdrop, but image was deleted (reset index to 1)
+      -- ArtCenter image set as backdrop, but image was deleted (reset index to 1)
+      if (not backdropData[index]) then index = 0; end 
       index = index or FRC_Rehearsal_Scene.backdropIndex;
+      FRC_Rehearsal_Scene.backdropIndex = index;
+      -- clear previous contents
       if (backdropGroup.numChildren > 0) then
          backdropGroup[1]:removeSelf();
          backdropGroup[1] = nil;
       end
+      -- if we are clearing the set, we're done
+      print("backdrop index",index); -- DEBUG
+      if (index == 0) then return; end
 
       local frameRect = setGroup[1].frameRect;
       local imageFile = SETDESIGNUI('IMAGES_PATH') .. backdropData[index].imageFile;
@@ -374,11 +385,10 @@ function FRC_Rehearsal_Scene:createScene(event)
       backdropBackground.yScale = (frameRect.height / backdropData[index].height);
       backdropBackground.x = frameRect.left - ((setGroup[1].width - display.contentWidth) * 0.5);
       backdropBackground.y = frameRect.top - ((setGroup[1].height - display.contentHeight) * 0.5);
-      FRC_Rehearsal_Scene.backdropIndex = index;
    end
    self.changeBackdrop = changeBackdrop;
-   changeBackdrop();
-   repositionSet();
+   -- changeBackdrop();
+   -- repositionSet();
 
 
    -- Get lua tables from JSON data
@@ -728,7 +738,9 @@ function FRC_Rehearsal_Scene:createScene(event)
    -- create SetDesign scroll container
 	 local setDesignData = {}; -- scene.saveData.savedItems
 
+   -- get previously saved SetDesigns
 	 FRC_SetDesign.getSavedData();
+
 	 if ((FRC_SetDesign.saveData) and (#FRC_SetDesign.saveData.savedItems > 0)) then
 		 for i=#FRC_SetDesign.saveData.savedItems,1,-1 do
 			 local item = FRC_SetDesign.saveData.savedItems[i];
@@ -745,31 +757,18 @@ function FRC_Rehearsal_Scene:createScene(event)
 			  -- print('id:', item.id, 'width:', item.thumbWidth, 'height:', item.thumbHeight);
 		 end
 	 end
-   -- add a none option
-   -- Insert 'None' as first item of all character costume categories
-   --[[ local none = {
+
+   -- setup the "none" option for SetDesigns
+   table.insert(setDesignData, 1, {
      id = 'none',
-     imageFile = UI('SCROLLER_NONE_IMAGE'),
+     imageFile = UI('IMAGES_PATH').. UI('SCROLLER_NONE_IMAGE'),
      width = UI('SCROLLER_NONE_WIDTH'),
      height = UI('SCROLLER_NONE_HEIGHT'),
      xOffset = 0,
      yOffset = 0,
      setIndex = 0,
      backdropIndex = 0
-   };
-   local mysterybox = {
-     id = 'mysterybox',
-     imageFile = UI('MYSTERYBOX_NONE_IMAGE'),
-     width = UI('MYSTERYBOX_NONE_WIDTH'),
-     height = UI('MYSTERYBOX_NONE_HEIGHT'),
-     xOffset = 0,
-     yOffset = 0,
-     setIndex = -1,
-     backdropIndex = -1
-   };
-   table.insert(setDesignData, 1, none);
-   table.insert(setDesignData, 1, mysterybox);
-   --]]
+   });
 
    for i=1,#setDesignData do
 		 -- DEBUG
@@ -793,10 +792,15 @@ function FRC_Rehearsal_Scene:createScene(event)
               -- CODE TO HANDLE SETDESIGN CHANGE GOES HERE
 					  	for i=1,#setDesignData do
 							 	if (setDesignData[i].id == self.id) then
-                  -- ADD CODE TO SPECIAL CASE HANDLE 'none' and 'mysterybox' ids
-	                changeSet(setDesignData[i].setIndex)
-							    changeBackdrop(setDesignData[i].backdropIndex);
-								  repositionSet();
+                  if (self.id == 'none') then
+  	                changeSet(0)
+  							    changeBackdrop(0);
+  								  -- repositionSet();
+	                else
+                    changeSet(setDesignData[i].setIndex)
+  							    changeBackdrop(setDesignData[i].backdropIndex);
+  								  repositionSet();
+                  end
 									return;
 								end
 							end
