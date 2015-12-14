@@ -9,7 +9,10 @@ FRC_GalleryPopup.new = function(options)
 	local group = display.newGroup();
 
 	local cancelTouch = function(e)
-		if (e.phase == 'began') then group:dispose(); end
+		if (e.phase == 'began') then
+			group:dispatchEvent({ name = "cancelled" });
+			group:dispose();
+		end
 		return true;
 	end
 
@@ -28,18 +31,17 @@ FRC_GalleryPopup.new = function(options)
 	group:insert(popup);
 	popup.x, popup.y = 0, 0;
 	group.popup = popup;
-	
-	local pages = {};
-	pages[1] = popup:addPage();
-	pages[2] = popup:addPage();
-	pages[3] = popup:addPage();
 
-	pages[1].thumbGroup = display.newGroup(); pages[1]:insert(pages[1].thumbGroup);
-	pages[1].thumbGroup.anchorChildren = true;
-	pages[2].thumbGroup = display.newGroup(); pages[2]:insert(pages[2].thumbGroup);
-	pages[2].thumbGroup.anchorChildren = true;
-	pages[3].thumbGroup = display.newGroup(); pages[3]:insert(pages[3].thumbGroup);
-	pages[3].thumbGroup.anchorChildren = true;
+	local pages = {};
+
+	-- set pageCount to the number of gallery pages you want to offer
+	-- there are 6 entries per gallery page
+	local pageCount = settings.DEFAULTS.TOTAL_PAGES;
+	for i=1, pageCount do
+		pages[i] = popup:addPage();
+		pages[i].thumbGroup = display.newGroup(); pages[i]:insert(pages[i].thumbGroup);
+		pages[i].thumbGroup.anchorChildren = true;
+	end
 
 	local thumbImage, baseDirectory, thumbWidth, thumbHeight;
 	thumbWidth = settings.DEFAULTS.BLANK_SLOT_WIDTH;
@@ -158,7 +160,7 @@ FRC_GalleryPopup.new = function(options)
 		titleText.x = 0;
 		titleText.y = -(popup.height * 0.5) + (titleText.contentHeight * 0.5) + (settings.DEFAULTS.THUMBNAIL_SPACING);
 	end
-	
+
 	if (options.parent) then options.parent:insert(group); end
 	group.x, group.y = display.contentCenterX, display.contentCenterY;
 	return group;
