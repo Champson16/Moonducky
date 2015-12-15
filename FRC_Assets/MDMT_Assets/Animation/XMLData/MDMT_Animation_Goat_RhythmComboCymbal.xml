@@ -1,5 +1,5 @@
 <Animations>
-  <Animation name="MDMT_Animation_Goat_RythmComboCymbal" frameCount="80">
+  <Animation name="MDMT_Animation_Goat_RhythmComboCymbal" frameCount="80">
     <Part name="MDMT_DressingRoom_Costume_Eyewear_Goat_Bono">
       <Frame x="-4.40" y="-106.50" index="0"/>
       <Frame x="-4.40" y="-106.50" index="1"/>

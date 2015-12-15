@@ -1,5 +1,5 @@
 <Animations>
-  <Animation name="MDMT_Animation_Cat_RythmComboCheeseGrater" frameCount="80">
+  <Animation name="MDMT_Animation_Cat_RhythmComboCheeseGrater" frameCount="80">
     <Part name="MDMT_DressingRoom_Costume_Eyewear_Cat_Bono">
       <Frame x="11.00" y="-158.20" index="0"/>
       <Frame x="11.00" y="-158.20" index="1"/>

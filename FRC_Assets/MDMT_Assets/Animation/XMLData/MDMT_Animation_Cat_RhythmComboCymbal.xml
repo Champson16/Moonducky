@@ -1,5 +1,5 @@
 <Animations>
-  <Animation name="MDMT_Animation_Cat_RythmComboCymbal" frameCount="80">
+  <Animation name="MDMT_Animation_Cat_RhythmComboCymbal" frameCount="80">
     <Part name="MDMT_DressingRoom_Costume_Eyewear_Cat_Bono">
       <Frame x="30.00" y="-146.20" index="0"/>
       <Frame x="30.00" y="-146.20" index="1"/>
