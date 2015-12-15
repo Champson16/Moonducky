@@ -337,8 +337,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    end
    animationsToBuild = tmp
    tmp = nil
-   
-   
+     
    --
    -- Finally, create animation groups (sequences) from our list of animations to build
    --
@@ -379,6 +378,9 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    
    private.highlightSelected()   
    
+   --dprint("Conga in use?", public.getInstrumentInUse( "Conga" ) )
+   --table.dump2( public.getInstrumentsInUse() )
+   
    return stagePiece   
    
    --return animationSequences
@@ -390,6 +392,7 @@ end
 function public.setCurrentCharacterType( characterType )
    currentCharacterType = characterType
 end
+
 
 -- 
 -- rebuildCostumeScroller() - Builds the costume scroller based on the currently selected character type
@@ -482,6 +485,13 @@ function public.getInstrumentsInUse()
       tmp[#tmp+1] = k
    end
    return tmp
+end
+
+--
+-- getInstrumentInUse() - Returns true if 'instrument' is in use
+--
+function public.getInstrumentInUse( instrument )
+   return ( instrumentsInUse[instrument] ~= nil ) 
 end
 
 
