@@ -641,6 +641,56 @@ function private.dragNDrop( self, event )
    if( event.phase == "began" ) then
       display.currentStage:setFocus( self, event.id )
       self.isFocus = true
+      self.x0 = event.x
+      self.y0 = event.y
+      self:toFront()
+      currentStagePiece = self
+      private.highlightSelected()
+   elseif( self.isFocus ) then
+      local bounds = self.stageBounds
+      local x,y = event.x, event.y
+      local isWithinBounds = 
+         bounds.xMin <= x and bounds.xMax >= x and bounds.yMin <= y and bounds.yMax >= y
+         
+      local dx = event.x - self.x0
+      local dy = event.y - self.y0
+      
+      self.x0 = event.x
+      self.y0 = event.y
+      
+      local myLeft = self.x - self.contentWidth/2
+      local myRight = self.x + self.contentWidth/2
+      if( (dx < 0 and myLeft > private.left) or 
+          (dx > 0 and myRight < private.right ) ) then
+         self.x = self.x + dx * (self.dragScale and self.dragScale or 1)
+      end
+      
+      local myTop = self.y - self.contentHeight/2
+      local myBottom = self.y + self.contentHeight/2
+      if( (dy < 0 and myTop > private.top) or 
+          (dy > 0 and myBottom < private.bottom ) ) then
+         self.y = self.y + dy * (self.dragScale and self.dragScale or 1)
+      end
+      
+      if( event.phase == "ended" ) then
+         display.currentStage:setFocus( self, nil )
+         self.isFocus = false
+         if( isWithinBounds ) then
+            private.doDrop( self )
+         end
+         --currentStagePiece = nil
+         --private.highlightSelected()
+         
+      end
+   end
+   return true
+end
+
+--[[
+function private.dragNDrop( self, event ) 
+   if( event.phase == "began" ) then
+      display.currentStage:setFocus( self, event.id )
+      self.isFocus = true
       self.x0 = self.x
       self.y0 = self.y
       self:toFront()
@@ -654,7 +704,13 @@ function private.dragNDrop( self, event )
          
       local dx = event.x - event.xStart
       local dy = event.y - event.yStart
-      self.x = self.x0 + dx * (self.dragScale and self.dragScale or 1)
+      
+      local myLeft = self.x - self.contentWidth/2
+      local myRight = self.x + self.contentWidth/2
+      if( (dx < 0 and myLeft > private.left) or 
+          (dx > 0 and myRight < private.right ) ) then
+         self.x = self.x0 + dx * (self.dragScale and self.dragScale or 1)
+      end
       self.y = self.y0 + dy * (self.dragScale and self.dragScale or 1)
       
       if( event.phase == "ended" ) then
@@ -670,6 +726,7 @@ function private.dragNDrop( self, event )
    end
    return true
 end
+--]]
 
 
 --
@@ -1101,6 +1158,70 @@ function private.easyAlert( title, msg, buttons )
 	local alert = native.showAlert( title, msg, names, onComplete )
 	return alert
 end
+
+-- ==
+--    round(val, n) - Rounds a number to the nearest decimal places. (http://lua-users.org/wiki/FormattingNumbers)
+--    val - The value to round.
+--    n - Number of decimal places to round to.
+-- ==
+function private.round(val, n)
+  if (n) then
+    return math.floor( (val * 10^n) + 0.5) / (10^n)
+  else
+    return math.floor(val+0.5)
+  end
+end
+
+
+function private.calcMeasurementSpacing(debugEn)
+	private.w 				   = display.contentWidth
+	private.h 				   = display.contentHeight
+	private.centerX 			= display.contentCenterX
+	private.centerY 			= display.contentCenterY
+	private.fullw			   = display.actualContentWidth 
+	private.fullh			   = display.actualContentHeight
+	private.unusedWidth		= private.fullw - private.w
+	private.unusedHeight		= private.fullh - private.h
+	private.deviceWidth		= math.floor((private.fullw/display.contentScaleX) + 0.5)
+	private.deviceHeight 	= math.floor((private.fullh/display.contentScaleY) + 0.5)
+	private.left				= 0 - private.unusedWidth/2
+	private.top 				= 0 - private.unusedHeight/2
+	private.right 			   = private.w + private.unusedWidth/2
+	private.bottom 			= private.h + private.unusedHeight/2
+
+
+	private.w 				   = private.round(private.w)
+	private.h 				   = private.round(private.h)
+	private.left			   = private.round(private.left)
+	private.top				   = private.round(private.top)
+	private.right			   = private.round(private.right)
+	private.bottom			   = private.round(private.bottom)
+	private.fullw			   = private.round(private.fullw)
+	private.fullh			   = private.round(private.fullh)
+
+	private.orientation  	= ( private.w > private.h ) and "landscape"  or "portrait"
+	private.isLandscape 		= ( private.w > private.h )
+	private.isPortrait 		= ( private.h > private.w )
+
+	private.left 			   = (private.left >= 0) and math.abs(private.left) or private.left
+	private.top 				= (private.top >= 0) and math.abs(private.top) or private.top
+	
+	if( debugEn ) then
+		dprint("\n---------- calcMeasurementSpacing() @ " .. system.getTimer() )	
+		dprint( "w       = " 	.. private.w )
+		dprint( "h       = " 	.. private.h )
+		dprint( "centerX = " .. private.centerX )
+		dprint( "centerY = " .. private.centerY )
+		dprint( "fullw   = " 	.. private.fullw )
+		dprint( "fullh   = " 	.. private.fullh )
+		dprint( "left    = " 	.. private.left )
+		dprint( "right   = " 	.. private.right )
+		dprint( "top     = " 	.. private.top )
+		dprint( "bottom  = " 	.. private.bottom )
+		dprint("---------------\n\n")
+	end
+end
+private.calcMeasurementSpacing(true)
 
 return public
 
