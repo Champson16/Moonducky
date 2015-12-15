@@ -144,6 +144,48 @@ function public.load(loadTable)
 end
 
 -- 
+-- removeInstrument() - If an instrument is selected, remove it from the stage.
+--
+function public.removeInstrument()
+   if( not currentStagePiece ) then return end
+   if( currentStagePiece.pieceType == "instrument" ) then       
+      instrumentsInUse[currentStagePiece.instrument] = nil
+      display.remove(currentStagePiece)
+      currentStagePiece = nil
+      private.highlightSelected()
+   else
+      if( strMatch( strLower( currentStagePiece.instrument ), "dance" ) ) then
+         return
+      end
+      instrumentsInUse[currentStagePiece.instrument] = nil
+      local tmp = currentStagePiece      
+      public.placeNewCharacter(  currentStagePiece.x, currentStagePiece.y, currentStagePiece.characterID, nil, currentStagePiece.danceNumber  )       
+      display.remove( tmp )
+   end
+end
+
+-- 
+-- removeCharacter() - If an instrument is selected, remove it from the stage.
+--
+function public.removeCharacter()
+   if( not currentStagePiece ) then return end
+   if( currentStagePiece.pieceType == "instrument" ) then       
+      return
+   else
+      local instrumentToLeave = currentStagePiece.instrument
+      local tmp = currentStagePiece
+      
+      if( strMatch( strLower( instrumentToLeave ), "dance" ) ) then
+         instrumentToLeave = nil
+      else
+         instrumentsInUse[instrumentToLeave] = nil
+         public.placeNewInstrument( currentStagePiece.x, currentStagePiece.y, instrumentToLeave )         
+      end
+      display.remove( tmp )
+   end
+end
+
+-- 
 -- placeNewInstrument() - Create an instrument and place it in the center of the stage.
 --
 function public.placeNewInstrument( x, y, instrumentName )
@@ -550,6 +592,7 @@ function private.getCostumeData( animalType )
    end
    return costumeData
 end
+
 
 
 

@@ -14,7 +14,11 @@ FRC_Rehearsal_Settings.UI = {
    THUMBNAIL_WIDTH = 256,
    THUMBNAIL_HEIGHT = 192,
    ANIMATION_XML_BASE = 'FRC_Assets/MDMT_Assets/Animation/XMLData/',
-   ANIMATION_IMAGE_BASE = 'FRC_Assets/MDMT_Assets/Animation/Images/'
+   ANIMATION_IMAGE_BASE = 'FRC_Assets/MDMT_Assets/Animation/Images/',
+   NONE_BUTTON_UP       =  "FRC_Assets/FRC_Rehearsal/Images/FRC_Rehearsal_Scroller_None.png",
+   NONE_BUTTON_DOWN     =  "FRC_Assets/FRC_Rehearsal/Images/FRC_Rehearsal_Scroller_None.png",
+   NONE_BUTTON_FOCUSED  =  "FRC_Assets/FRC_Rehearsal/Images/FRC_Rehearsal_Scroller_None.png",
+   NONE_BUTTON_DISABLED =  "FRC_Assets/FRC_Rehearsal/Images/FRC_Rehearsal_Scroller_None.png",
 }
 
 -- TODO: work on how to point to user data for SetDesign and Costume

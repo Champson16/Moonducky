@@ -832,6 +832,32 @@ function FRC_Rehearsal_Scene:createScene(event)
 
    -- create Instruments scroll container
 	 x = -(screenW * 0.5) + button_spacing
+   
+   --
+   -- 'None' Button
+   --
+   local scroller = itemScrollers['Instrument']
+   local button = ui.button.new({
+         id = "NONE",
+         imageUp = UI('NONE_BUTTON_UP') ,
+         imageDown = UI('NONE_BUTTON_DOWN'),
+         imageFocused = UI('NONE_BUTTON_FOCUSED'),
+         imageDisabled = UI('NONE_BUTTON_DISABLED'),
+         width = 100 * 0.96, -- * button_scale, -- EFM why is 1.0 not same as stage none?
+         height = 63 * 0.96, -- * button_scale, -- EFM why is 1.0 not same as stage none? 
+         parentScrollContainer = scroller,
+         pressAlpha = 0.5,
+         onRelease = function(e)
+            FRC_CharacterBuilder.removeInstrument()
+            return true
+         end
+      })   
+   button.categoryId = 'Instrument'
+   scroller:insert(button)
+   x = x + (button.contentWidth * 0.5)
+   button.x, button.y = x, 0
+   x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)   
+   
    -- for now, just grab the first song's instrument list
    local songInstruments = instrumentData[1].instruments;
    for i=1,#songInstruments do
@@ -850,7 +876,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             pressAlpha = 0.5,
             onRelease = function(e)
                local self = e.target
-               FRC_CharacterBuilder.newInstrument( self.id )
+               FRC_CharacterBuilder.newInstrument( self.id )               
                return true
             end
          })
@@ -864,6 +890,29 @@ function FRC_Rehearsal_Scene:createScene(event)
    -- create Character scroll container
    -- reset x
    x = -(screenW * 0.5) + button_spacing
+   
+   local scroller = itemScrollers['Character']
+   local button = ui.button.new({
+         id = "NONE",
+         imageUp = UI('NONE_BUTTON_UP') ,
+         imageDown = UI('NONE_BUTTON_DOWN'),
+         imageFocused = UI('NONE_BUTTON_FOCUSED'),
+         imageDisabled = UI('NONE_BUTTON_DISABLED'),
+         width = 100 * 0.96, -- * button_scale, -- EFM why is 1.0 not same as stage none?
+         height = 63 * 0.96, -- * button_scale, -- EFM why is 1.0 not same as stage none? 
+         parentScrollContainer = scroller,
+         pressAlpha = 0.5,
+         onRelease = function(e)
+            FRC_CharacterBuilder.removeCharacter()
+            return true
+         end
+      })   
+   button.categoryId = 'Instrument'
+   scroller:insert(button)
+   x = x + (button.contentWidth * 0.5)
+   button.x, button.y = x, 0
+   x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)   
+   
    for i=1,#characterData do
       local scroller = itemScrollers['Character']
       buttonHeight = scroller.contentHeight - button_spacing
