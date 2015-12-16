@@ -136,8 +136,8 @@ end
 
 m.alignToCenter = function(displayObject)
    dprint("EDO alignToCenter")
-   displayObject.x = contentW - (contentW * displayObject.anchorX);
-   displayObject.y = contentH - (contentH * displayObject.anchorY);
+   displayObject.x = contentW - (displayObject.contentW * displayObject.anchorX);
+   displayObject.y = contentH - (displayObject.contentH * displayObject.anchorY);
 end
 
 

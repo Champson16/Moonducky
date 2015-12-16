@@ -208,7 +208,7 @@ FRC_AnimationManager.getAnimationData = function(xmltable, baseImageDir)
       -- TODO:  replace this with a dictionary OR code that can read the width and height of a PNG/JPG image (google:  Corona PNGLib)
       -- TODO:  Put test code in to call assert if an image is missing!
       --table.dump2( partList )
-      --dprint("FRC_AnimationManager.getAnimationData() newImage =>", baseImageDir, pn ) -- EFM EDO
+      dprint("FRC_AnimationManager.getAnimationData() newImage =>", baseImageDir, pn ) -- EFM EDO
       local refImage = display.newImage(baseImageDir .. pn .. ".png", true);
       -- ERRORCHECK:
       assert(refImage, "ERROR: Missing media file: ", baseImageDir .. pn .. ".png");
