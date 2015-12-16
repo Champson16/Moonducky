@@ -36,10 +36,10 @@
 },
 {
 	"id": "StartRehearsal",
-	"imageUp": "FRC_Rehearsal_Icon_Showtime_up.png",
-	"imageDown": "FRC_Rehearsal_Icon_Showtime_down.png",
-	"imageFocused": "FRC_Rehearsal_Icon_Showtime_focused.png",
-	"imageDisabled": "FRC_Rehearsal_Icon_Showtime_disabled.png",
+	"imageUp": "FRC_Rehearsal_Icon_Preview_up.png",
+	"imageDown": "FRC_Rehearsal_Icon_Preview_down.png",
+	"imageFocused": "FRC_Rehearsal_Icon_Preview_focused.png",
+	"imageDisabled": "FRC_Rehearsal_Icon_Preview_disabled.png",
 	"width": 128,
 	"height": 128
 }]

@@ -60,14 +60,14 @@ function scene.postCreateScene(self, event)
 							 storyboard.gotoScene('Scenes.Rehearsal');
 				end
 			},
-			-- COMMENTED OUT UNTIL SHOWTIME IS IMPLEMENTED
-			-- {
-			-- 	imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_up.png',
-			-- 	imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_down.png',
-			-- 	onRelease = function()
-			-- 				 storyboard.gotoScene('Scenes.Showtime');
-			-- 	end
-			-- },
+			{
+				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_up.png',
+				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_down.png',
+				onRelease = function()
+					-- storyboard.gotoScene('Scenes.Showtime', { effect="crossFade", time="250" });
+					native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
+				end
+			},
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_ArtCenter_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_ArtCenter_down.png',
@@ -79,7 +79,7 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_down.png',
 				onRelease = function()
-               storyboard.gotoScene('Scenes.DressingRoom');
+          storyboard.gotoScene('Scenes.DressingRoom');
 				end
 			},
 			{

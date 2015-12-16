@@ -155,14 +155,14 @@ function scene.postCreateScene(self, event)
 					storyboard.gotoScene('Scenes.Rehearsal');
 				end
 			},
-			-- COMMENTED OUT UNTIL SHOWTIME IS IMPLEMENTED
-			-- {
-			-- 	imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_up.png',
-			-- 	imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_down.png',
-			-- 	onRelease = function()
-			-- 				 storyboard.gotoScene('Scenes.Showtime');
-			-- 	end
-			-- },
+			{
+				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_up.png',
+				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_down.png',
+				onRelease = function()
+					-- storyboard.gotoScene('Scenes.Showtime', { effect="crossFade", time="250" });
+					native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
+				end
+			},
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_down.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_up.png',
