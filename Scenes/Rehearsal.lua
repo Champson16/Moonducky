@@ -52,10 +52,10 @@ function scene.postCreateScene(self, event)
 				end
 			},
 			{
-				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Lobby_up.png',
-				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Lobby_down.png',
+				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Publish_up.png',
+				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Publish_down.png',
 				onRelease = function()
-					storyboard.gotoScene('Scenes.Lobby');
+					native.showAlert("Publish Coming Soon!","This feature is coming soon.", { "OK" });
 				end
 			},
 			{
@@ -87,6 +87,7 @@ function scene.postCreateScene(self, event)
 							 storyboard.gotoScene('Scenes.DressingRoom');
 				end
 			},
+			--[[
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_down.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_up.png',
@@ -121,6 +122,7 @@ function scene.postCreateScene(self, event)
 					webView.closeButton = closeButton;
 				end
 			},
+			--]]
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_down.png',
