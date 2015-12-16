@@ -91,7 +91,7 @@ function FRC_AnimationManager.loadAnimationData( fileName, baseXMLDir )
       local retVal = require( luaPath )
       return retVal
    end
-   
+
    --
    -- 2. Failing that, read the XML file, save a lua file to the DocumentsDirectory and return xml table.
    --   
@@ -100,21 +100,21 @@ function FRC_AnimationManager.loadAnimationData( fileName, baseXMLDir )
    xmltable = FRC_AnimationManager.loadXMLData( xmlPath, system.ResourceDirectory );     
    local tmp = table.serialize( "xmltable", xmltable, "" );
    io.writeFile( tmp, fileName  )   
-   
+
    return xmltable
 end
 --EFM This method is being used exclusively for unified XML files because the serialization processing failing for large tables.  Not sure why
 local unifiedCache = {}
 function FRC_AnimationManager.loadAnimationDataUnified( fileName, baseXMLDir )
    --dprint( "-------------------------------------", fileName, baseXMLDir )
-   
+
    --
    -- 0. Speedup code till we figure out serialization (load from 'disk' first time; get from memory next time)
    --
    if( unifiedCache[baseXMLDir..fileName] ) then
       return unifiedCache[baseXMLDir..fileName]
    end
-   
+
    --
    -- 1. Try to find and load an existing lua table version of XML file
    --   
@@ -125,7 +125,7 @@ function FRC_AnimationManager.loadAnimationDataUnified( fileName, baseXMLDir )
       unifiedCache[baseXMLDir..fileName] = xmltable
       return xmltable
    end
-   
+
    --
    -- 2. Failing that, read the XML file, save a lua file to the DocumentsDirectory and return xml table.
    --   
@@ -366,6 +366,10 @@ FRC_AnimationManager.createAnimationClip = function(data)
       -- grab the new frame's data
       local frameData = animData.frameData[tostring(index)];
       -- check if there is frame data for this frame in the sequence
+      
+      --[[
+      
+      -- These changes broke marque and cow
       if (not frameData) then
          if (animationClip.animationParts and animationClip.currentPart) then
             if (animationClip.animationParts[animationClip.currentPart]) then
@@ -373,6 +377,9 @@ FRC_AnimationManager.createAnimationClip = function(data)
             end
          end
       elseif (frameData) then
+      --]]
+      
+      if (frameData) then
          -- get the part
          local p = frameData.part;
          -- if the part is different, then switch the graphic
@@ -958,10 +965,10 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
       -- DEBUG:
       print("FRC_AnimationManager.createAnimationClipGroup CALLED WITHOUT PROPERTIES");
    end
-   
-   
+
+
    -- Original code can be located at bottom of file marked EFM151212_OLD
-   
+
    -- Load (and if need be generate LUA files from) XML animation data from files.
    -- EFM151212_NEW BEGIN
    if (inputFiles) then
@@ -973,7 +980,7 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
          else
             xmltable = FRC_AnimationManager.loadAnimationData( sourceFile, baseXMLDir  )   
          end
-         
+
          -- EXTRA Processing for UNIFIED ANIMATION SOURCES
          --
          if( animationClipGroup.unifiedData ) then -- EFM
@@ -993,7 +1000,7 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
                end               
             end
          end
-         
+
          local animData = FRC_AnimationManager.getAnimationData(xmltable, baseImageDir);
          animationClipGroup:insert(FRC_AnimationManager.createAnimationClip(animData));
       end
@@ -1001,7 +1008,7 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
       print("WARNING:  FRC_AnimationManager.createAnimationClipGroup was called without specifying XML files.");   
    end
    -- EFM151212_NEW END
-   
+
    animationClipGroup.play = function(self, options)
       -- store special functions for the last clip
       local onCompletion = options.onCompletion;
@@ -1159,8 +1166,8 @@ return FRC_AnimationManager;
 -- TEMPORARY SCRATCH PAD -- TEMPORARY SCRATCH PAD -- TEMPORARY SCRATCH PAD
 -- *************************************************************************
 
-   -- EFM151212_OLD BEGIN
-   --[[ EFM - I replaced this with a simpler version.  However, 
+-- EFM151212_OLD BEGIN
+--[[ EFM - I replaced this with a simpler version.  However, 
    -- process XML data for all animations
    if (inputFiles) then
       -- DEBUG:
@@ -1281,4 +1288,4 @@ return FRC_AnimationManager;
       print("WARNING:  FRC_AnimationManager.createAnimationClipGroup was called without specifying XML files.");
    end
    --]]
-   -- EFM151212_OLD BEGIN
+-- EFM151212_OLD BEGIN
