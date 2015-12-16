@@ -16,12 +16,16 @@ if( edmode ) then
          storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time=0 });  -- EFM            
       elseif( event.keyName == "r" ) then
          storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time=0 }); -- EFM
+      elseif( event.keyName == "l" ) then
+         storyboard.gotoScene('Scenes.Lobby', { effect="crossFade", time=0 }); -- EFM
       end
    end
    Runtime:addEventListener( "key", onKey )   
 else
    _G.dprint = function() end --EFM
 end
+
+--timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.Lobby', { effect="crossFade", time=0 }); end )
 --require("mobdebug").start() -- ZeroBrane Users
 -----------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------

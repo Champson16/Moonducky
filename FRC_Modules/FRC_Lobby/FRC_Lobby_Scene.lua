@@ -49,29 +49,19 @@ function FRC_Lobby_Scene:createScene(event)
 		FRC_Lobby_Scene:preCreateScene(event);
 	end
 
-	--[[ local bgGroup = display.newGroup();
-   view:insert(bgGroup)
-	bgGroup.anchorChildren = false;
-	FRC_Layout.scaleToFit(bgGroup);
-
-	local bg = display.newImageRect(bgGroup, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
-	bgGroup:insert(bg);
-	bg.x, bg.y = 0,0;
-   --bg.alpha = 0.2
-	 --]]
-
-	local bgGroup = display.newGroup();
- 	bgGroup.anchorChildren = false;
-	view:insert(bgGroup);
-
- 	local bg = display.newImageRect(view, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
- 	bgGroup:insert(bg);
- 	bg.x, bg.y = 0,0;
-
- 	FRC_Layout.scaleToFit(bgGroup);
- 	bgGroup.x = display.contentCenterX;
- 	bgGroup.y = display.contentCenterY;
-
+   -- EFM 1 BEGIN
+   -- Create and prep standard groups (_underlay, _content, _overlay)
+   FRC_Layout.createLayers( view )
+   --EFM 1 END
+	   
+   --EFM 2 BEGIN
+	local bg = display.newImageRect(view._underlay, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
+   FRC_Layout.scaleToFit( bg ) 
+   bg.x = 0
+   bg.y = 0   
+	--FRC_Layout.alignToCenter( bg )
+   --EFM 2 END
+ 	
 	function videoPlaybackComplete(event)
 		if (FRC_AppSettings.get("ambientSoundOn")) then
 			FRC_AudioManager:findGroup("ambientMusic"):resume();
@@ -94,13 +84,9 @@ function FRC_Lobby_Scene:createScene(event)
 	}
 
 	theatreDoorAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorAnimationFiles, animationXMLBase, animationImageBase);
-	FRC_Layout.scaleToFit(theatreDoorAnimationSequences);
-	-- local xOffset = (screenW - (contentW * bg.xScale)) * 0.5;
-	-- theatreDoorAnimationSequences.x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset;
-	-- local yOffset = (screenH - (contentH * bg.yScale)) * 0.5;
-	-- theatreDoorAnimationSequences.y = ((bg.contentHeight - screenH) * 0.5) + bg.contentBounds.yMin + yOffset;
-
-	view:insert(theatreDoorAnimationSequences);
+   view._content:insert(theatreDoorAnimationSequences);
+   FRC_Layout.placeAnimation( theatreDoorAnimationSequences ) --EFM
+	
 
 	for i=1, theatreDoorAnimationSequences.numChildren do
 		theatreDoorAnimationSequences[i]:play({
@@ -203,7 +189,8 @@ function FRC_Lobby_Scene:createScene(event)
 	});
 	rehearsalButton.anchorX = 0.5;
 	rehearsalButton.anchorY = 0.5;
-	bgGroup:insert(rehearsalButton);
+   FRC_Layout.placeUI(rehearsalButton)
+	view._underlay:insert(rehearsalButton);
 
 	-- query server
 	-- establish online/offline check
@@ -233,83 +220,17 @@ function FRC_Lobby_Scene:createScene(event)
 
 	for i=1,#sceneLayoutData do
 		-- DEBUG
-		print("Pre - setting up scene layout object: ", sceneLayoutData[i].id, sceneLayoutData[i].xCenter, sceneLayoutData[i].yCenter);
+		dprint("Pre - setting up scene layout object: ", sceneLayoutData[i].id, sceneLayoutData[i].xCenter, sceneLayoutData[i].yCenter);
 		if sceneLayoutData[i].imageFile then
-			sceneLayout[i] = display.newImageRect(bgGroup, UI('IMAGES_PATH') .. sceneLayoutData[i].imageFile, sceneLayoutData[i].width, sceneLayoutData[i].height);
-			FRC_Layout.scaleToFit(sceneLayout[i]);
-
-         print("scene layout object before x/y: ", sceneLayoutData[i].id, sceneLayout[i].x .. " / " .. sceneLayout[i].y);
-
-			if (sceneLayoutData[i].left) then
-				sceneLayoutData[i].left = (sceneLayoutData[i].left * bg.xScale);
-				sceneLayout[i].x = sceneLayoutData[i].left - ((screenW - contentW) * 0.5) + (sceneLayout[i].contentWidth * 0.5);
-
-         elseif (sceneLayoutData[i].right) then
-				sceneLayoutData[i].right = (sceneLayoutData[i].right * bg.xScale);
-				sceneLayout[i].x = contentW - sceneLayoutData[i].right + ((screenW - contentW) * 0.5) - (sceneLayout[i].contentWidth * 0.5);
-
-         elseif (sceneLayoutData[i].xCenter) then
-				--sceneLayout[i].x = display.contentCenterX; -- + (sceneLayoutData[i].xCenter * bg.xScale);
-            sceneLayout[i].x = 0;
-
-         else
-				sceneLayoutData[i].x = sceneLayoutData[i].x * bg.xScale;
-				sceneLayout[i].x = sceneLayoutData[i].x - ((screenW - contentW) * 0.5);
-			end
-
-         if (sceneLayoutData[i].top) then
-				sceneLayout[i].y = sceneLayoutData[i].top - ((screenH - contentH) * 0.5) + (sceneLayout[i].contentHeight * 0.5);
-				sceneLayout[i].y = sceneLayout[i].y + bg.contentBounds.yMin;
-
-         elseif (sceneLayoutData[i].bottom) then
-				sceneLayoutData[i].bottom = sceneLayoutData[i].bottom * bg.yScale;
-				sceneLayout[i].y = contentH - sceneLayoutData[i].bottom + ((screenH - contentH) * 0.5) - (sceneLayout[i].contentHeight * 0.5);
-
-         elseif (sceneLayoutData[i].yCenter) then
-				--sceneLayout[i].y = display.contentCenterY; -- + (sceneLayoutData[i].yCenter * bg.yScale);
-            sceneLayout[i].y = 0;
-
-         else
-				sceneLayoutData[i].y = sceneLayoutData[i].y * bg.yScale;
-				sceneLayout[i].y = sceneLayoutData[i].y - ((screenH - contentH) * 0.5);
-			end
-
-			-- DEBUG
-			print("scene layout object final x/y: ", sceneLayoutData[i].id, sceneLayout[i].x .. " / " .. sceneLayout[i].y);
-
+			sceneLayout[i] = display.newImageRect(view._content, UI('IMAGES_PATH') .. sceneLayoutData[i].imageFile, sceneLayoutData[i].width, sceneLayoutData[i].height);
+			FRC_Layout.placeImage(sceneLayout[i],  sceneLayoutData[i], true )  --EFM
+         --FRC_Layout.scaleToFit(sceneLayout[i]);
 		elseif sceneLayoutData[i].animationFiles then
 			-- get the list of animation files and create the animation object
 			-- preload the animation data (XML and images) early
 			sceneLayout[i] = FRC_AnimationManager.createAnimationClipGroup(sceneLayoutData[i].animationFiles, animationXMLBase, animationImageBase);
-			FRC_Layout.scaleToFit(sceneLayout[i]);
-
-			if (sceneLayoutData[i].left) then
-				sceneLayoutData[i].left = (sceneLayoutData[i].left * bg.xScale);
-				sceneLayout[i].x = sceneLayoutData[i].left - ((screenW - contentW) * 0.5) + (sceneLayout[i].contentWidth * 0.5);
-			elseif (sceneLayoutData[i].right) then
-				sceneLayoutData[i].right = (sceneLayoutData[i].right * bg.xScale);
-				sceneLayout[i].x = contentW - sceneLayoutData[i].right + ((screenW - contentW) * 0.5) - (sceneLayout[i].contentWidth * 0.5);
-			elseif (sceneLayoutData[i].x) then
-				sceneLayoutData[i].x = sceneLayoutData[i].x * bg.xScale;
-				sceneLayout[i].x = sceneLayoutData[i].x - ((screenW - contentW) * 0.5);
-			else
-				local xOffset = (screenW - (contentW * bg.xScale)) * 0.5;
-				sceneLayout[i].x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset;
-			end
-
-			if (sceneLayoutData[i].top) then
-				sceneLayout[i].y = sceneLayoutData[i].top - ((screenH - contentH) * 0.5) + (sceneLayout[i].contentHeight * 0.5);
-			elseif (sceneLayoutData[i].bottom) then
-				sceneLayout[i].y = contentH - sceneLayoutData[i].bottom + ((screenH - contentH) * 0.5) - (sceneLayout[i].contentHeight * 0.5);
-			elseif (sceneLayoutData[i].y) then
-				sceneLayoutData[i].y = sceneLayoutData[i].y * bg.yScale;
-				sceneLayout[i].y = sceneLayoutData[i].y - ((screenH - contentH) * 0.5);
-			end
-
-			sceneLayout[i].y = sceneLayout[i].y + bg.contentBounds.yMin;
-
-			-- MUST INSERT ANIMATIONS INTO VIEW NOT BGGROUP
-			view:insert(sceneLayout[i]);
+			view._content:insert(sceneLayout[i]);
+         FRC_Layout.placeAnimation(sceneLayout[i], sceneLayoutData[i], false ) --EFM
 
 			for j=1, sceneLayout[i].numChildren do
 				sceneLayout[i][j]:play({
@@ -346,12 +267,8 @@ function FRC_Lobby_Scene:createScene(event)
 	 };
 		-- preload the animation data (XML and images) early
 	theatreDoorSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorAnimationFiles, animationXMLBase, animationImageBase);
-	FRC_Layout.scaleToFit(theatreDoorSequences);
-	-- local xOffset = (screenW - (contentW * bg.xScale)) * 0.5;
-	-- theatreDoorSequences.x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset;
-	-- local yOffset = (screenH - (contentH * bg.yScale)) * 0.5;
-	-- theatreDoorSequences.y = ((bg.contentHeight - screenH) * 0.5) + bg.contentBounds.yMin + yOffset;
-	view:insert(theatreDoorSequences);
+	view._content:insert(theatreDoorSequences);
+   FRC_Layout.placeAnimation(theatreDoorSequences)  --EFM
 
 	-- insert the main function buttons
 	-- Art center
@@ -402,7 +319,8 @@ function FRC_Lobby_Scene:createScene(event)
 	});
 	learnButton.anchorX = 0.5;
 	learnButton.anchorY = 0.5;
-	bgGroup:insert(learnButton);
+   FRC_Layout.placeUI(learnButton)
+	view._underlay:insert(learnButton);
 
 	discoverButton = ui.button.new({
 		imageUp = imageBase .. 'MDMT_Lobby_DiscoverPoster.png',
@@ -445,15 +363,9 @@ function FRC_Lobby_Scene:createScene(event)
 	});
 	discoverButton.anchorX = 0.5;
 	discoverButton.anchorY = 0.5;
-	bgGroup:insert(discoverButton);
+   FRC_Layout.placeUI(discoverButton)
+	view._underlay:insert(discoverButton);
 
-
-	--[[
-	-- position background group at correct location
-	bgGroup.x = display.contentCenterX;
-	bgGroup.y = display.contentCenterY;
-	view:insert(bgGroup);
-	--]]
 
 	if (FRC_Lobby_Scene.postCreateScene) then
 		FRC_Lobby_Scene:postCreateScene(event);
