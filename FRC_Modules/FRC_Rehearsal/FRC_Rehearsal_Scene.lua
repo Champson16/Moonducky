@@ -49,11 +49,19 @@ FRC_Rehearsal_Scene.backdropIndex = 0;
 
 -- Setup the audio groups for each song
 FRC_AudioManager:newGroup({
-  name = "hamsters",
+  name = "hamsterstracks",
   maxChannels = 8
 });
 FRC_AudioManager:newGroup({
-  name = "mechanicalcow",
+  name = "mechanicalcowtracks",
+  maxChannels = 8
+});
+FRC_AudioManager:newGroup({
+  name = "hamsterssong",
+  maxChannels = 8
+});
+FRC_AudioManager:newGroup({
+  name = "mechanicalcowsong",
   maxChannels = 8
 });
 
@@ -61,79 +69,79 @@ FRC_AudioManager:newGroup({
 FRC_AudioManager:newHandle({
   name = "hamsters_bass",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Bass.mp3",
-  group = "hamsters"
+  group = "hamsterstracks"
 });
 FRC_AudioManager:newHandle({
   name = "hamsters_conga",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Conga.mp3",
-  group = "hamsters"
+  group = "hamsterstracks"
 });
 FRC_AudioManager:newHandle({
   name = "hamsters_guitar",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Guitar.mp3",
-  group = "hamsters"
+  group = "hamsterstracks"
 });
 FRC_AudioManager:newHandle({
   name = "hamsters_harmonica",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Harmonica.mp3",
-  group = "hamsters"
+  group = "hamsterstracks"
 });
 FRC_AudioManager:newHandle({
   name = "hamsters_maracas",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Maracas.mp3",
-  group = "hamsters"
+  group = "hamsterstracks"
 });
 FRC_AudioManager:newHandle({
   name = "hamsters_microphone",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Microphone.mp3",
-  group = "hamsters"
+  group = "hamsterstracks"
 });
 FRC_AudioManager:newHandle({
   name = "hamsters_rhythmcombocheesegrater",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_RhythmComboCheeseGrater.mp3",
-  group = "hamsters"
+  group = "hamsterstracks"
 });
 FRC_AudioManager:newHandle({
   name = "hamsters_sticks",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Sticks.mp3",
-  group = "hamsters"
+  group = "hamsterstracks"
 });
 
 -- load up the audio tracks for Mechanical Cow song
 FRC_AudioManager:newHandle({
   name = "mechanicalcow_bass",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Bass.mp3",
-  group = "mechanicalcow"
+  group = "mechanicalcowtracks"
 });
 FRC_AudioManager:newHandle({
   name = "mechanicalcow_conga",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Conga.mp3",
-  group = "mechanicalcow"
+  group = "mechanicalcowtracks"
 });
 FRC_AudioManager:newHandle({
   name = "mechanicalcow_guitar",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Guitar.mp3",
-  group = "mechanicalcow"
+  group = "mechanicalcowtracks"
 });
 FRC_AudioManager:newHandle({
   name = "mechanicalcow_harmonica",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Harmonica.mp3",
-  group = "mechanicalcow"
+  group = "mechanicalcowtracks"
 });
 FRC_AudioManager:newHandle({
   name = "mechanicalcow_microphone",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Microphone.mp3",
-  group = "mechanicalcow"
+  group = "mechanicalcowtracks"
 });
 FRC_AudioManager:newHandle({
   name = "mechanicalcow_piano",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Piano.mp3",
-  group = "mechanicalcow"
+  group = "mechanicalcowtracks"
 });
 FRC_AudioManager:newHandle({
   name = "mechanicalcow_rhythmcombocymbal",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_RhythmComboCymbal.mp3",
-  group = "mechanicalcow"
+  group = "mechanicalcowtracks"
 });
 
 
@@ -271,7 +279,8 @@ function FRC_Rehearsal_Scene:createScene(event)
    local rehearsalContainer;
    local rehearsalContainerBg;
    local itemScrollers;
-   local songTracksGroup;
+   local tracksGroup;
+   local songGroup;
    local currentSongID = "hamsters"; -- TODO change this to dynamic information based on user selection or loading of a saved show
 
    -- FRC_Rehearsal.getSavedData()
@@ -359,7 +368,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    local changeBackdrop = function(index)
       if (index == FRC_Rehearsal_Scene.backdropIndex) then return; end
       -- ArtCenter image set as backdrop, but image was deleted (reset index to 1)
-      if (not backdropData[index]) then index = 0; end 
+      if (not backdropData[index]) then index = 0; end
       index = index or FRC_Rehearsal_Scene.backdropIndex;
       FRC_Rehearsal_Scene.backdropIndex = index;
       -- clear previous contents
@@ -459,10 +468,10 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
     end
     rehearsalContainer.isVisible = false;
-    -- STOP ALL AUDIO PLAYBACK
-    songTracksGroup = FRC_AudioManager:findGroup(currentSongID);
-    if songTracksGroup then
-      songTracksGroup:stop();
+    -- STOP ALL AUDIO PLAYBACK OF SONG
+    songGroup = FRC_AudioManager:findGroup(currentSongID .. "song");
+    if songGroup then
+      songGroup:stop();
     end
   end
 
@@ -477,11 +486,26 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
     end
     rehearsalContainer.isVisible = true;
-    -- TEST PLAYBACK ALL tracks
-    songTracksGroup = FRC_AudioManager:findGroup(currentSongID);
-    print('songTracksGroup:', songTracksGroup);
-    if songTracksGroup then
-      songTracksGroup:playAll({ onComplete = function()
+    -- get a handle to the song group
+    songGroup = FRC_AudioManager:findGroup(currentSongID .. "song");
+    print('songGroup:', songGroup);
+    -- get a list of the instruments that are active
+    local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
+    table.dump(instrumentList);
+    -- find the song for each instrument
+    tracksGroup = FRC_AudioManager:findGroup(currentSongID .. "tracks");
+    for i, instr in pairs(instrumentList) do
+      print(i, instr);
+      local h = tracksGroup:findHandle(currentSongID .. "_" .. string.lower(instr) )
+      print(h);
+      -- add the song to a playback group if it is legitimate for this song
+      if (h) then
+        songGroup:addHandle(h);
+      end
+    end
+    -- play the entire group
+    if songGroup then
+      songGroup:playAll({ onComplete = function()
         FRC_Rehearsal_Scene.stopRehearsalMode();
       end } );
     end
@@ -832,7 +856,7 @@ function FRC_Rehearsal_Scene:createScene(event)
 
    -- create Instruments scroll container
 	 x = -(screenW * 0.5) + button_spacing
-   
+
    --
    -- 'None' Button
    --
@@ -844,20 +868,20 @@ function FRC_Rehearsal_Scene:createScene(event)
          imageFocused = UI('NONE_BUTTON_FOCUSED'),
          imageDisabled = UI('NONE_BUTTON_DISABLED'),
          width = 100 * 0.96, -- * button_scale, -- EFM why is 1.0 not same as stage none?
-         height = 63 * 0.96, -- * button_scale, -- EFM why is 1.0 not same as stage none? 
+         height = 63 * 0.96, -- * button_scale, -- EFM why is 1.0 not same as stage none?
          parentScrollContainer = scroller,
          pressAlpha = 0.5,
          onRelease = function(e)
             FRC_CharacterBuilder.removeInstrument()
             return true
          end
-      })   
+      })
    button.categoryId = 'Instrument'
    scroller:insert(button)
    x = x + (button.contentWidth * 0.5)
    button.x, button.y = x, 0
-   x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)   
-   
+   x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)
+
    -- for now, just grab the first song's instrument list
    local songInstruments = instrumentData[1].instruments;
    for i=1,#songInstruments do
@@ -876,7 +900,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             pressAlpha = 0.5,
             onRelease = function(e)
                local self = e.target
-               FRC_CharacterBuilder.newInstrument( self.id )               
+               FRC_CharacterBuilder.newInstrument( self.id )
                return true
             end
          })
@@ -890,7 +914,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    -- create Character scroll container
    -- reset x
    x = -(screenW * 0.5) + button_spacing
-   
+
    local scroller = itemScrollers['Character']
    local button = ui.button.new({
          id = "NONE",
@@ -899,20 +923,20 @@ function FRC_Rehearsal_Scene:createScene(event)
          imageFocused = UI('NONE_BUTTON_FOCUSED'),
          imageDisabled = UI('NONE_BUTTON_DISABLED'),
          width = 100 * 0.96, -- * button_scale, -- EFM why is 1.0 not same as stage none?
-         height = 63 * 0.96, -- * button_scale, -- EFM why is 1.0 not same as stage none? 
+         height = 63 * 0.96, -- * button_scale, -- EFM why is 1.0 not same as stage none?
          parentScrollContainer = scroller,
          pressAlpha = 0.5,
          onRelease = function(e)
             FRC_CharacterBuilder.removeCharacter()
             return true
          end
-      })   
+      })
    button.categoryId = 'Instrument'
    scroller:insert(button)
    x = x + (button.contentWidth * 0.5)
    button.x, button.y = x, 0
-   x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)   
-   
+   x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)
+
    for i=1,#characterData do
       local scroller = itemScrollers['Character']
       buttonHeight = scroller.contentHeight - button_spacing
