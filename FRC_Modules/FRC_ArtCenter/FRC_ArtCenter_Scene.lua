@@ -13,6 +13,7 @@ local FRC_ArtCenter_Tool_BackgroundImage = require('FRC_Modules.FRC_ArtCenter.FR
 local FRC_Store;
 local FRC_AnimationManager = require('FRC_Modules.FRC_AnimationManager.FRC_AnimationManager');
 local FRC_AudioManager = require('FRC_Modules.FRC_AudioManager.FRC_AudioManager');
+local FRC_Layout = require('FRC_Modules.FRC_Layout.FRC_Layout');
 
 
 if (not FRC_ArtCenter_Settings.DISABLE_STORE) then
@@ -250,9 +251,9 @@ function FRC_ArtCenter_Scene.createScene(self, event)
 	FRC_ArtCenter_Scene.canvasWidth = canvas_width;
 	FRC_ArtCenter_Scene.canvasHeight = canvas_height;
 
-	local bgImage = FRC_ArtCenter_Settings.UI.SCENE_BACKGROUND_IMAGE;
-	local bgWidth = FRC_ArtCenter_Settings.UI.SCENE_BACKGROUND_WIDTH;
-	local bgHeight = FRC_ArtCenter_Settings.UI.SCENE_BACKGROUND_HEIGHT;
+	local bgImage = UI('SCENE_BACKGROUND_IMAGE');
+	local bgWidth = UI('SCENE_BACKGROUND_WIDTH');
+	local bgHeight = UI('SCENE_BACKGROUND_HEIGHT');
 
 	if (FRC_ArtCenter_Settings.CONFIG.frame) then
 		bgImage = FRC_ArtCenter_Settings.CONFIG.frame.background or bgImage;
@@ -263,6 +264,7 @@ function FRC_ArtCenter_Scene.createScene(self, event)
 	local background = display.newImageRect(bgImage, bgWidth, bgHeight);
 	background.anchorX = 0.5;
 	background.anchorY = 0.5;
+	FRC_Layout.scaleToFit(background);
 	background.x = display.contentCenterX; -- display.contentWidth * 0.5;
   background.y = display.contentCenterY; -- background.contentHeight * 0.5;
 	view:insert(background);
