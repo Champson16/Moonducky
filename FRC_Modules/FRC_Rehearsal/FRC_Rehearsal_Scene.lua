@@ -52,6 +52,10 @@ FRC_AudioManager:newGroup({
   name = "songTracks",
   maxChannels = 18
 });
+FRC_AudioManager:newGroup({
+  name = "songPlayback",
+  maxChannels = 9
+});
 
 -- load up the audio tracks for Hamsters song
 FRC_AudioManager:newHandle({
@@ -469,19 +473,21 @@ function FRC_Rehearsal_Scene:createScene(event)
     --]]
     local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
     tracksGroup = FRC_AudioManager:findGroup("songTracks");
-    if (tracksGroup and instrumentList) then
+    songGroup = FRC_AudioManager:findGroup("songPlayback");
+    if (songGroup and tracksGroup and instrumentList) then
       for i, instr in pairs(instrumentList) do
-        local h = tracksGroup:findHandle(currentSongID .. "_" .. string.lower(instr) )
-        print('stopping ', h.name);
+        local h = songGroup:findHandle(currentSongID .. "_" .. string.lower(instr) )
         -- stop the track
         if (h) then
+          print('stopping ', h.name);
           h:stop();
+          audio.rewind(h.handle);
           -- h:rewindAudio();
+          -- this removes h from the songGroup
+          tracksGroup:addHandle(h);
         end
       end
     end
-    -- rewind all audio for the next timer
-    audio.rewind();
   end
 
   FRC_Rehearsal_Scene.startRehearsalMode = function ()
@@ -505,20 +511,23 @@ function FRC_Rehearsal_Scene:createScene(event)
     table.dump(instrumentList);
     -- find the song for each instrument
     tracksGroup = FRC_AudioManager:findGroup("songTracks");
+    songGroup = FRC_AudioManager:findGroup("songPlayback");
     print(tracksGroup); -- DEBUG
-    if tracksGroup and instrumentList then
+    if (songGroup and tracksGroup and instrumentList) then
       for i, instr in pairs(instrumentList) do
         print(i, instr);
         local h = tracksGroup:findHandle(currentSongID .. "_" .. string.lower(instr) )
-        print('playing ', h.name);
         -- add the song to a playback group if it is legitimate for this song
         if (h) then
-          h:play();
+          print('playing ', h.name);
+          songGroup:addHandle(h);
+          -- h:play();
           -- h:play({ onComplete = function()
           --   FRC_Rehearsal_Scene.stopRehearsalMode();
           -- end });
         end
       end
+      songGroup:playAll();
     end
     -- play the entire group
     --[[
