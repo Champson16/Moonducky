@@ -1,4 +1,13 @@
 [{
+	"id": "RewindPreview",
+	"imageUp": "FRC_Rehearsal_Icon_PreviewRewind_up.png",
+	"imageDown": "FRC_Rehearsal_Icon_PreviewRewind_down.png",
+	"imageFocused": "FRC_Rehearsal_Icon_PreviewRewind_focused.png",
+	"imageDisabled": "FRC_Rehearsal_Icon_PreviewRewind_disabled.png",
+	"width": 128,
+	"height": 128
+},
+{
 	"id": "StopRehearsal",
 	"imageUp": "FRC_Rehearsal_Icon_Stop_up.png",
 	"imageDown": "FRC_Rehearsal_Icon_Stop_down.png",

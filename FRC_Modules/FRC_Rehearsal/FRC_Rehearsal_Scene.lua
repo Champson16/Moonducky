@@ -448,6 +448,25 @@ function FRC_Rehearsal_Scene:createScene(event)
   --     end
   --  end
 
+  FRC_Rehearsal_Scene.rewindPreview = function ()
+    print("rewindPreview");
+    songGroup = FRC_AudioManager:findGroup("songPlayback");
+    if (songGroup) then
+      if (#songGroup.handles) then
+        for i=1,#songGroup.handles do
+      		audio.rewind(songGroup.handles[i]);
+      	end
+      end
+      -- for i, instr in pairs(instrumentList) do
+      --   local h = songGroup:findHandle(currentSongID .. "_" .. string.lower(instr) )
+      --   -- stop the track
+      --   if (h) then
+      --     print('rewinding ', h.name);
+      --     audio.rewind(h.handle);
+      --   end
+      -- end
+    end
+  end
 
   FRC_Rehearsal_Scene.stopRehearsalMode = function ()
     print("StopRehearsal");
@@ -461,16 +480,9 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
     end
     rehearsalContainer.isVisible = false;
+    -- TODO turn back on the appropriate scroller's visibility (last one that was active)
+
     -- STOP ALL AUDIO PLAYBACK OF SONG
-    --[[
-    songGroup = FRC_AudioManager:findGroup("songGroup");
-    if songGroup then
-      -- stop the audio playback
-      songGroup:stop();
-      -- clear all of the handles from the group
-      songGroup:dispose();
-    end
-    --]]
     local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
     tracksGroup = FRC_AudioManager:findGroup("songTracks");
     songGroup = FRC_AudioManager:findGroup("songPlayback");
@@ -481,8 +493,9 @@ function FRC_Rehearsal_Scene:createScene(event)
         if (h) then
           print('stopping ', h.name);
           h:stop();
-          audio.rewind(h.handle);
-          -- h:rewindAudio();
+          -- DISABLED BECAUSE THERE IS A SEPARATE REWIND FUNCTION
+          -- audio.rewind(h.handle);
+          -- h:rewindAudio(); THIS SHOULD WORK BUT DOESN'T
           -- this removes h from the songGroup
           tracksGroup:addHandle(h);
         end
@@ -678,6 +691,8 @@ function FRC_Rehearsal_Scene:createScene(event)
                local self = e.target
                if (self.id == "StopRehearsal") then
                  FRC_Rehearsal_Scene.stopRehearsalMode();
+               elseif (self.id == "RewindPreview") then
+                 FRC_Rehearsal_Scene.rewindPreview();
                elseif self:getFocusState() then
                   -- hide the itemScroller
                   rehearsalItemScrollers[self.id].isVisible = false;

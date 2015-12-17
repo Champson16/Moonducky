@@ -95,12 +95,11 @@ end
 
 function public:rewindAudio()
 	if (self.channel) then
-		pcall(function() audio.rewind( {channel = self.channel} ); end);
-		-- if (self.loadMethod == "loadSound") then
-		--   pcall(function() audio.rewind({channel = self.channel}); end);
-		-- else
-		-- 	pcall(function() audio.rewind(self.handle); end);
-		-- end
+		if (self.loadMethod == "loadSound") then
+		  pcall(function() audio.rewind({channel = self.channel}); end);
+		else
+			pcall(function() audio.rewind(self.handle); end);
+		end
 	end
 	return self;
 end
