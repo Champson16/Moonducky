@@ -49,99 +49,87 @@ FRC_Rehearsal_Scene.backdropIndex = 0;
 
 -- Setup the audio groups for each song
 FRC_AudioManager:newGroup({
-  name = "hamsterstracks",
-  maxChannels = 8
-});
-FRC_AudioManager:newGroup({
-  name = "mechanicalcowtracks",
-  maxChannels = 8
-});
-FRC_AudioManager:newGroup({
-  name = "hamsterssong",
-  maxChannels = 8
-});
-FRC_AudioManager:newGroup({
-  name = "mechanicalcowsong",
-  maxChannels = 8
+  name = "songTracks",
+  maxChannels = 18
 });
 
 -- load up the audio tracks for Hamsters song
 FRC_AudioManager:newHandle({
   name = "hamsters_bass",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Bass.mp3",
-  group = "hamsterstracks"
+  group = "songTracks"
 });
 FRC_AudioManager:newHandle({
   name = "hamsters_conga",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Conga.mp3",
-  group = "hamsterstracks"
+  group = "songTracks"
 });
 FRC_AudioManager:newHandle({
   name = "hamsters_guitar",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Guitar.mp3",
-  group = "hamsterstracks"
+  group = "songTracks"
 });
 FRC_AudioManager:newHandle({
   name = "hamsters_harmonica",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Harmonica.mp3",
-  group = "hamsterstracks"
+  group = "songTracks"
 });
 FRC_AudioManager:newHandle({
   name = "hamsters_maracas",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Maracas.mp3",
-  group = "hamsterstracks"
+  group = "songTracks"
 });
 FRC_AudioManager:newHandle({
   name = "hamsters_microphone",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Microphone.mp3",
-  group = "hamsterstracks"
+  group = "songTracks"
 });
 FRC_AudioManager:newHandle({
   name = "hamsters_rhythmcombocheesegrater",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_RhythmComboCheeseGrater.mp3",
-  group = "hamsterstracks"
+  group = "songTracks"
 });
 FRC_AudioManager:newHandle({
   name = "hamsters_sticks",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Sticks.mp3",
-  group = "hamsterstracks"
+  group = "songTracks"
 });
 
 -- load up the audio tracks for Mechanical Cow song
 FRC_AudioManager:newHandle({
   name = "mechanicalcow_bass",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Bass.mp3",
-  group = "mechanicalcowtracks"
+  group = "songTracks"
 });
 FRC_AudioManager:newHandle({
   name = "mechanicalcow_conga",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Conga.mp3",
-  group = "mechanicalcowtracks"
+  group = "songTracks"
 });
 FRC_AudioManager:newHandle({
   name = "mechanicalcow_guitar",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Guitar.mp3",
-  group = "mechanicalcowtracks"
+  group = "songTracks"
 });
 FRC_AudioManager:newHandle({
   name = "mechanicalcow_harmonica",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Harmonica.mp3",
-  group = "mechanicalcowtracks"
+  group = "songTracks"
 });
 FRC_AudioManager:newHandle({
   name = "mechanicalcow_microphone",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Microphone.mp3",
-  group = "mechanicalcowtracks"
+  group = "songTracks"
 });
 FRC_AudioManager:newHandle({
   name = "mechanicalcow_piano",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Piano.mp3",
-  group = "mechanicalcowtracks"
+  group = "songTracks"
 });
 FRC_AudioManager:newHandle({
   name = "mechanicalcow_rhythmcombocymbal",
   path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_RhythmComboCymbal.mp3",
-  group = "mechanicalcowtracks"
+  group = "songTracks"
 });
 
 
@@ -458,6 +446,7 @@ function FRC_Rehearsal_Scene:createScene(event)
 
 
   FRC_Rehearsal_Scene.stopRehearsalMode = function ()
+    print("StopRehearsal");
     -- eventually we will transition animate on offscreen and the other onscreen
     categoriesContainer.isVisible = true;
     if itemScrollers then
@@ -469,10 +458,30 @@ function FRC_Rehearsal_Scene:createScene(event)
     end
     rehearsalContainer.isVisible = false;
     -- STOP ALL AUDIO PLAYBACK OF SONG
-    songGroup = FRC_AudioManager:findGroup(currentSongID .. "song");
+    --[[
+    songGroup = FRC_AudioManager:findGroup("songGroup");
     if songGroup then
+      -- stop the audio playback
       songGroup:stop();
+      -- clear all of the handles from the group
+      songGroup:dispose();
     end
+    --]]
+    local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
+    tracksGroup = FRC_AudioManager:findGroup("songTracks");
+    if (tracksGroup and instrumentList) then
+      for i, instr in pairs(instrumentList) do
+        local h = tracksGroup:findHandle(currentSongID .. "_" .. string.lower(instr) )
+        print('stopping ', h.name);
+        -- stop the track
+        if (h) then
+          h:stop();
+          -- h:rewindAudio();
+        end
+      end
+    end
+    -- rewind all audio for the next timer
+    audio.rewind();
   end
 
   FRC_Rehearsal_Scene.startRehearsalMode = function ()
@@ -487,28 +496,38 @@ function FRC_Rehearsal_Scene:createScene(event)
     end
     rehearsalContainer.isVisible = true;
     -- get a handle to the song group
-    songGroup = FRC_AudioManager:findGroup(currentSongID .. "song");
-    print('songGroup:', songGroup);
+    -- songGroup = FRC_AudioManager:newGroup({
+    --   name = "songGroup",
+    --   maxChannels = 8
+    -- });
     -- get a list of the instruments that are active
     local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
     table.dump(instrumentList);
     -- find the song for each instrument
-    tracksGroup = FRC_AudioManager:findGroup(currentSongID .. "tracks");
-    for i, instr in pairs(instrumentList) do
-      print(i, instr);
-      local h = tracksGroup:findHandle(currentSongID .. "_" .. string.lower(instr) )
-      print(h);
-      -- add the song to a playback group if it is legitimate for this song
-      if (h) then
-        songGroup:addHandle(h);
+    tracksGroup = FRC_AudioManager:findGroup("songTracks");
+    print(tracksGroup); -- DEBUG
+    if tracksGroup and instrumentList then
+      for i, instr in pairs(instrumentList) do
+        print(i, instr);
+        local h = tracksGroup:findHandle(currentSongID .. "_" .. string.lower(instr) )
+        print('playing ', h.name);
+        -- add the song to a playback group if it is legitimate for this song
+        if (h) then
+          h:play();
+          -- h:play({ onComplete = function()
+          --   FRC_Rehearsal_Scene.stopRehearsalMode();
+          -- end });
+        end
       end
     end
     -- play the entire group
+    --[[
     if songGroup then
       songGroup:playAll({ onComplete = function()
         FRC_Rehearsal_Scene.stopRehearsalMode();
       end } );
     end
+    --]]
   end
 
    self.startOver = function()

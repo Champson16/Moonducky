@@ -93,6 +93,18 @@ function public:pause()
 	return self;
 end
 
+function public:rewindAudio()
+	if (self.channel) then
+		pcall(function() audio.rewind( {channel = self.channel} ); end);
+		-- if (self.loadMethod == "loadSound") then
+		--   pcall(function() audio.rewind({channel = self.channel}); end);
+		-- else
+		-- 	pcall(function() audio.rewind(self.handle); end);
+		-- end
+	end
+	return self;
+end
+
 function public:resume()
 	if (self.channel) then
 		pcall(function() audio.resume(self.channel); end);
@@ -130,8 +142,10 @@ function AudioHandle.new(options)
 	local audioHandle = {};
 	if (options.useLoadSound) then
 		audioHandle.handle = audio.loadSound(options.path);
+		audioHandle.loadMethod = "loadSound";
 	else
 		audioHandle.handle = audio.loadStream(options.path);
+		audioHandle.loadMethod = "loadStream";
 	end
 	audioHandle.name = options.name or AudioManager:getUniqueHandleName();
 	audioHandle.path = options.path;
