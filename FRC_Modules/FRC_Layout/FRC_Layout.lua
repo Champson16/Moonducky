@@ -294,6 +294,10 @@ m.placeImage = function( displayObject, layoutData, debugEn )
       if( debugEn) then dprint( "scaleAndPlace by Y" )  end -- EFM IS THIS RIGHT? 
       displayObject.y = centerY + layoutData.y * scale
    end
+   local scale = scaleFactor
+   displayObject.xScale = scale
+   displayObject.yScale = scale
+   
    -- DEBUG
    dprint("scene layout object final x/y: ", layoutData.id, displayObject.x .. " / " .. displayObject.y)
 end   
@@ -312,19 +316,29 @@ m.placeAnimation = function( displayObject, layoutData, debugEn )
    local scale = scaleFactor
 
    if (layoutData.left) then
-      displayObject.x = layoutData.left
+      displayObject.x = layoutData.left  -- EFM NOT WORKING RIGHT NOW?
+   
    elseif (layoutData.right) then
-      displayObject.x = layoutData.right
+      displayObject.x = layoutData.right -- EFM NOT WORKING RIGHT NOW?
+      --m.alignToRight( displayObject, layoutData.right + contentW  )
+      --local x = m.right( -contentW/2 - displayObject.contentWidth/2 ) - layoutData.right
+      --dprint("*****************************", x, displayObject.contentWidth)
+      --displayObject.x = x
+   
    elseif (layoutData.x) then
-      displayObject.x = layoutData.x * scale
+      displayObject.x = layoutData.x-- * scale -- EFM DOES NOT ALIGN WITH IMAGES and VICE VERSA
+   
    end
 
    if (layoutData.top) then
-      displayObject.y = layoutData.top
+      displayObject.y = layoutData.top  -- EFM NOT WORKING RIGHT NOW?
+   
    elseif (layoutData.bottom) then
-      displayObject.y = layoutData.bottom
+      displayObject.y = layoutData.bottom  -- EFM NOT WORKING RIGHT NOW?
+   
    elseif (layoutData.y) then
-      layoutData.y = layoutData.y * scale
+      dprint("*****************************", layoutData.y)
+      displayObject.y = layoutData.y --* scale -- EFM DOES NOT ALIGN WITH IMAGES and VICE VERSA
    end
          
    local scale = scaleFactor

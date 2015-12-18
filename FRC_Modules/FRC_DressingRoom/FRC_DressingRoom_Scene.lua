@@ -11,6 +11,7 @@ local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
 local character_x = 0;
 local character_y = -16;
 local eyeTimer;
+
 --
 -- Localize some common screen dimmensions
 --
@@ -411,15 +412,20 @@ function FRC_DressingRoom_Scene:createScene(event)
 					delay = 0,
 					intervalTime = 30,
 					maxIterations = 1
+                  
 				});
 			end
 		end
 
+      
 		if (sceneLayoutData[i].onTouch) then
 			sceneLayout[i].onTouch = sceneLayoutMethods[sceneLayoutData[i].onTouch];
 			if (sceneLayout[i].onTouch) then
+            local sxs, sys = sceneLayout[i].xScale, sceneLayout[i].yScale -- EFM TRS hiding box during anim
 				sceneLayout[i]:addEventListener('touch', function(e)
-					if (e.phase == "began") then
+					if (e.phase == "began") then                  
+                  transition.to( e.target, { alpha = 0, xScale = 0.8, yScale = 0.8, delay = 200, time = 0 } ) -- EFM TRS hiding box during anim
+                  transition.to( e.target, { alpha = 1, xScale = sxs, yScale = sys, delay = 1100, time = 0 } ) -- EFM TRS hiding box during anim
 						e.target.onTouch();
 					end
 					return true;
@@ -498,12 +504,14 @@ function FRC_DressingRoom_Scene:createScene(event)
 		"SPMTM_DressingRoom_MysteryBox_v05_01.xml"
 	};
 
+   --EFM BOX
+
 	for i=1,#mysteryBoxAnimationFiles do
 		-- preload the animation data (XML and images) early
 
 		mysteryBoxAnimationSequences[i] = FRC_AnimationManager.createAnimationClipGroup(mysteryBoxAnimationFiles[i], animationXMLBase, animationImageBase);
 		view._content:insert(mysteryBoxAnimationSequences[i]);
-      FRC_Layout.placeAnimation( mysteryBoxAnimationSequences[i], { x = 0, y = 0 } , false ) -- TRS EFM
+      FRC_Layout.placeAnimation( mysteryBoxAnimationSequences[i], { x = 0, y = 45 } , false ) -- TRS EFM
       --mysteryBoxAnimationSequences[i].alpha = 0.25
 	end
 

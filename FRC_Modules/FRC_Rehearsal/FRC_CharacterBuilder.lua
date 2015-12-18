@@ -342,8 +342,8 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    -- Finally, create animation groups (sequences) from our list of animations to build
    --
    local animGroup = display.newGroup()
-   local xOffset = -(display.actualContentWidth/2)
-   local yOffset = -(display.actualContentHeight/2)
+   local xOffset = -(display.contentWidth/2)
+   local yOffset = -(display.contentHeight/2)
    stagePiece:insert(animGroup)
    for i = 1, #animationsToBuild do
       local adjustment = adjustments[animationsToBuild[i][1]]

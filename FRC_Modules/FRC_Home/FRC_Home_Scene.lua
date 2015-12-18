@@ -9,7 +9,7 @@ local FRC_Home_Scene = storyboard.newScene();
 local FRC_AnimationManager = require('FRC_Modules.FRC_AnimationManager.FRC_AnimationManager');
 local FRC_AudioManager = require('FRC_Modules.FRC_AudioManager.FRC_AudioManager');
 local FRC_Video = require('FRC_Modules.FRC_Video.FRC_Video');
-local FRC_AppSettings = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
+local FRC_AppSettings   = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
 local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
 
 local analytics = import("analytics");
@@ -195,7 +195,7 @@ function FRC_Home_Scene:createScene(event)
 	-- query server
 	-- establish online/offline check
 	function scene.networkListener(event)
-		print( "address", event.address );
+	 print( "address", event.address );
     print( "isReachable", event.isReachable );
     print( "isConnectionRequired", event.isConnectionRequired );
     print( "isConnectionOnDemand", event.isConnectionOnDemand );
@@ -245,23 +245,22 @@ function FRC_Home_Scene:createScene(event)
 			end
        
 		end
---[[      
+      
 		if (sceneLayoutData[i].onTouch) then
 			-- DEBUG
-			-- print("sceneLayout onTouch", sceneLayoutData[i].onTouch);
+			--dprint("sceneLayout onTouch", sceneLayoutData[i].onTouch);
 			sceneLayout[i].onTouch = sceneLayoutMethods[sceneLayoutData[i].onTouch];
 			if (sceneLayout[i].onTouch) then
 				sceneLayout[i]:addEventListener('touch', function(e)
 					if (e.phase == "began") then
-						-- print("sceneLayout onTouch EVENT", e.target.onTouch); -- DEBUG
+						dprint("sceneLayout onTouch EVENT", e.target.onTouch); -- DEBUG
 						e.target.onTouch();
 					end
 					return true;
 				end);
 			end
 		end
---]]      
-	end
+   end
 
 	local theatreDoorAnimationFiles = {
 		"MDMT_LandingPage_UsherDoorStatic_c.xml",

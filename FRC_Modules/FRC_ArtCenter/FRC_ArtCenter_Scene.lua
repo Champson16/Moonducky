@@ -1,6 +1,5 @@
 local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
 local storyboard = require('storyboard');
-local layout = require('FRC_Modules.FRC_Layout.FRC_Layout');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_ArtCenter_Scene = storyboard.newScene();
 local ui = require('ui');
@@ -20,7 +19,12 @@ if (not FRC_ArtCenter_Settings.DISABLE_STORE) then
 	FRC_Store = require('FRC_Modules.FRC_Store.FRC_Store');
 end
 
-local screenW, screenH = layout.getScreenDimensions();
+--
+-- Localize some common screen dimmensions
+--
+local	screenW, screenH, contentW, contentH, centerX, centerY = FRC_Layout.getScreenDimensions() -- TRS EFM
+
+
 local canvas_width = screenW - ((FRC_ArtCenter_Settings.UI.SELECTOR_WIDTH * 2) + (FRC_ArtCenter_Settings.UI.ELEMENT_PADDING * 2));
 local canvas_height = (screenH - ((FRC_ArtCenter_Settings.UI.SELECTOR_WIDTH * 0.8) + 0)); -- * 0.5;
 local math_floor = math.floor;
