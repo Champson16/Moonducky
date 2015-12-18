@@ -1,0 +1,912 @@
+<Animations>
+  <Animation name="MDMT_Animation_Sheep_Sticks" frameCount="80">
+    <Part name="MDMT_DressingRoom_Costume_Eyewear_Sheep_Bono">
+      <Frame x="5.00" y="-99.00" index="0"/>
+      <Frame x="5.00" y="-99.00" index="1"/>
+      <Frame x="5.00" y="-99.00" index="2"/>
+      <Frame x="5.00" y="-99.00" index="3"/>
+      <Frame x="5.00" y="-99.00" index="4"/>
+      <Frame x="5.00" y="-99.00" index="5"/>
+      <Frame x="5.00" y="-99.00" index="6"/>
+      <Frame x="5.00" y="-99.00" index="7"/>
+      <Frame x="5.00" y="-99.00" index="8"/>
+      <Frame x="5.00" y="-99.00" index="9"/>
+      <Frame x="5.00" y="-99.00" index="10"/>
+      <Frame x="5.00" y="-99.00" index="11"/>
+      <Frame x="5.00" y="-99.00" index="12"/>
+      <Frame x="5.00" y="-99.00" index="13"/>
+      <Frame x="5.00" y="-99.00" index="14"/>
+      <Frame x="5.00" y="-99.00" index="15"/>
+      <Frame x="5.00" y="-99.00" index="16"/>
+      <Frame x="5.00" y="-99.00" index="17"/>
+      <Frame x="5.00" y="-99.00" index="18"/>
+      <Frame x="5.00" y="-99.00" index="19"/>
+      <Frame x="5.00" y="-99.00" index="20"/>
+      <Frame x="5.00" y="-99.00" index="21"/>
+      <Frame x="5.00" y="-99.00" index="22"/>
+      <Frame x="5.00" y="-99.00" index="23"/>
+      <Frame x="5.00" y="-99.00" index="24"/>
+      <Frame x="5.00" y="-99.00" index="25"/>
+      <Frame x="5.00" y="-99.00" index="26"/>
+      <Frame x="5.00" y="-99.00" index="27"/>
+      <Frame x="5.00" y="-99.00" index="28"/>
+      <Frame x="5.00" y="-99.00" index="29"/>
+      <Frame x="5.00" y="-99.00" index="30"/>
+      <Frame x="5.00" y="-99.00" index="31"/>
+      <Frame x="5.00" y="-99.00" index="32"/>
+      <Frame x="5.00" y="-99.00" index="33"/>
+      <Frame x="5.00" y="-99.00" index="34"/>
+      <Frame x="5.00" y="-99.00" index="35"/>
+      <Frame x="5.00" y="-99.00" index="36"/>
+      <Frame x="5.00" y="-99.00" index="37"/>
+      <Frame x="5.00" y="-99.00" index="38"/>
+      <Frame x="5.00" y="-99.00" index="39"/>
+      <Frame x="5.00" y="-99.00" index="40"/>
+      <Frame x="5.00" y="-99.00" index="41"/>
+      <Frame x="5.00" y="-99.00" index="42"/>
+      <Frame x="5.00" y="-99.00" index="43"/>
+      <Frame x="5.00" y="-99.00" index="44"/>
+      <Frame x="5.00" y="-99.00" index="45"/>
+      <Frame x="5.00" y="-99.00" index="46"/>
+      <Frame x="5.00" y="-99.00" index="47"/>
+      <Frame x="5.00" y="-99.00" index="48"/>
+      <Frame x="5.00" y="-99.00" index="49"/>
+      <Frame x="5.00" y="-99.00" index="50"/>
+      <Frame x="5.00" y="-99.00" index="51"/>
+      <Frame x="5.00" y="-99.00" index="52"/>
+      <Frame x="5.00" y="-99.00" index="53"/>
+      <Frame x="5.00" y="-99.00" index="54"/>
+      <Frame x="5.00" y="-99.00" index="55"/>
+      <Frame x="5.00" y="-99.00" index="56"/>
+      <Frame x="5.00" y="-99.00" index="57"/>
+      <Frame x="5.00" y="-99.00" index="58"/>
+      <Frame x="5.00" y="-99.00" index="59"/>
+      <Frame x="5.00" y="-99.00" index="60"/>
+      <Frame x="5.00" y="-99.00" index="61"/>
+      <Frame x="5.00" y="-99.00" index="62"/>
+      <Frame x="5.00" y="-99.00" index="63"/>
+      <Frame x="5.00" y="-99.00" index="64"/>
+      <Frame x="5.00" y="-99.00" index="65"/>
+      <Frame x="5.00" y="-99.00" index="66"/>
+      <Frame x="5.00" y="-99.00" index="67"/>
+      <Frame x="5.00" y="-99.00" index="68"/>
+      <Frame x="5.00" y="-99.00" index="69"/>
+      <Frame x="5.00" y="-99.00" index="70"/>
+      <Frame x="5.00" y="-99.00" index="71"/>
+      <Frame x="5.00" y="-99.00" index="72"/>
+      <Frame x="5.00" y="-99.00" index="73"/>
+      <Frame x="5.00" y="-99.00" index="74"/>
+      <Frame x="5.00" y="-99.00" index="75"/>
+      <Frame x="5.00" y="-99.00" index="76"/>
+      <Frame x="5.00" y="-99.00" index="77"/>
+      <Frame x="5.00" y="-99.00" index="78"/>
+      <Frame x="5.00" y="-99.00" index="79"/>
+    </Part>
+    <Part name="MDMT_DressingRoom_Costume_Headwear_Sheep_Bandana">
+      <Frame x="3.00" y="-163.00" index="0"/>
+      <Frame x="3.00" y="-163.00" index="1"/>
+      <Frame x="3.00" y="-163.00" index="2"/>
+      <Frame x="3.00" y="-163.00" index="3"/>
+      <Frame x="3.00" y="-163.00" index="4"/>
+      <Frame x="3.00" y="-163.00" index="5"/>
+      <Frame x="3.00" y="-163.00" index="6"/>
+      <Frame x="3.00" y="-163.00" index="7"/>
+      <Frame x="3.00" y="-163.00" index="8"/>
+      <Frame x="3.00" y="-163.00" index="9"/>
+      <Frame x="3.00" y="-163.00" index="10"/>
+      <Frame x="3.00" y="-163.00" index="11"/>
+      <Frame x="3.00" y="-163.00" index="12"/>
+      <Frame x="3.00" y="-163.00" index="13"/>
+      <Frame x="3.00" y="-163.00" index="14"/>
+      <Frame x="3.00" y="-163.00" index="15"/>
+      <Frame x="3.00" y="-163.00" index="16"/>
+      <Frame x="3.00" y="-163.00" index="17"/>
+      <Frame x="3.00" y="-163.00" index="18"/>
+      <Frame x="3.00" y="-163.00" index="19"/>
+      <Frame x="3.00" y="-163.00" index="20"/>
+      <Frame x="3.00" y="-163.00" index="21"/>
+      <Frame x="3.00" y="-163.00" index="22"/>
+      <Frame x="3.00" y="-163.00" index="23"/>
+      <Frame x="3.00" y="-163.00" index="24"/>
+      <Frame x="3.00" y="-163.00" index="25"/>
+      <Frame x="3.00" y="-163.00" index="26"/>
+      <Frame x="3.00" y="-163.00" index="27"/>
+      <Frame x="3.00" y="-163.00" index="28"/>
+      <Frame x="3.00" y="-163.00" index="29"/>
+      <Frame x="3.00" y="-163.00" index="30"/>
+      <Frame x="3.00" y="-163.00" index="31"/>
+      <Frame x="3.00" y="-163.00" index="32"/>
+      <Frame x="3.00" y="-163.00" index="33"/>
+      <Frame x="3.00" y="-163.00" index="34"/>
+      <Frame x="3.00" y="-163.00" index="35"/>
+      <Frame x="3.00" y="-163.00" index="36"/>
+      <Frame x="3.00" y="-163.00" index="37"/>
+      <Frame x="3.00" y="-163.00" index="38"/>
+      <Frame x="3.00" y="-163.00" index="39"/>
+      <Frame x="3.00" y="-163.00" index="40"/>
+      <Frame x="3.00" y="-163.00" index="41"/>
+      <Frame x="3.00" y="-163.00" index="42"/>
+      <Frame x="3.00" y="-163.00" index="43"/>
+      <Frame x="3.00" y="-163.00" index="44"/>
+      <Frame x="3.00" y="-163.00" index="45"/>
+      <Frame x="3.00" y="-163.00" index="46"/>
+      <Frame x="3.00" y="-163.00" index="47"/>
+      <Frame x="3.00" y="-163.00" index="48"/>
+      <Frame x="3.00" y="-163.00" index="49"/>
+      <Frame x="3.00" y="-163.00" index="50"/>
+      <Frame x="3.00" y="-163.00" index="51"/>
+      <Frame x="3.00" y="-163.00" index="52"/>
+      <Frame x="3.00" y="-163.00" index="53"/>
+      <Frame x="3.00" y="-163.00" index="54"/>
+      <Frame x="3.00" y="-163.00" index="55"/>
+      <Frame x="3.00" y="-163.00" index="56"/>
+      <Frame x="3.00" y="-163.00" index="57"/>
+      <Frame x="3.00" y="-163.00" index="58"/>
+      <Frame x="3.00" y="-163.00" index="59"/>
+      <Frame x="3.00" y="-163.00" index="60"/>
+      <Frame x="3.00" y="-163.00" index="61"/>
+      <Frame x="3.00" y="-163.00" index="62"/>
+      <Frame x="3.00" y="-163.00" index="63"/>
+      <Frame x="3.00" y="-163.00" index="64"/>
+      <Frame x="3.00" y="-163.00" index="65"/>
+      <Frame x="3.00" y="-163.00" index="66"/>
+      <Frame x="3.00" y="-163.00" index="67"/>
+      <Frame x="3.00" y="-163.00" index="68"/>
+      <Frame x="3.00" y="-163.00" index="69"/>
+      <Frame x="3.00" y="-163.00" index="70"/>
+      <Frame x="3.00" y="-163.00" index="71"/>
+      <Frame x="3.00" y="-163.00" index="72"/>
+      <Frame x="3.00" y="-163.00" index="73"/>
+      <Frame x="3.00" y="-163.00" index="74"/>
+      <Frame x="3.00" y="-163.00" index="75"/>
+      <Frame x="3.00" y="-163.00" index="76"/>
+      <Frame x="3.00" y="-163.00" index="77"/>
+      <Frame x="3.00" y="-163.00" index="78"/>
+      <Frame x="3.00" y="-163.00" index="79"/>
+    </Part>
+    <Part name="MDMT_DressingRoom_Costume_LowerTorso_Sheep_Goat">
+      <Frame x="9.95" y="127.00" index="0"/>
+      <Frame x="9.95" y="127.00" index="1"/>
+      <Frame x="9.95" y="127.00" index="2"/>
+      <Frame x="9.95" y="127.00" index="3"/>
+      <Frame x="9.95" y="127.00" index="4"/>
+      <Frame x="9.95" y="127.00" index="5"/>
+      <Frame x="9.95" y="127.00" index="6"/>
+      <Frame x="9.95" y="127.00" index="7"/>
+      <Frame x="9.95" y="127.00" index="8"/>
+      <Frame x="9.95" y="127.00" index="9"/>
+      <Frame x="9.95" y="127.00" index="10"/>
+      <Frame x="9.95" y="127.00" index="11"/>
+      <Frame x="9.95" y="127.00" index="12"/>
+      <Frame x="9.95" y="127.00" index="13"/>
+      <Frame x="9.95" y="127.00" index="14"/>
+      <Frame x="9.95" y="127.00" index="15"/>
+      <Frame x="9.95" y="127.00" index="16"/>
+      <Frame x="9.95" y="127.00" index="17"/>
+      <Frame x="9.95" y="127.00" index="18"/>
+      <Frame x="9.95" y="127.00" index="19"/>
+      <Frame x="9.95" y="127.00" index="20"/>
+      <Frame x="9.95" y="127.00" index="21"/>
+      <Frame x="9.95" y="127.00" index="22"/>
+      <Frame x="9.95" y="127.00" index="23"/>
+      <Frame x="9.95" y="127.00" index="24"/>
+      <Frame x="9.95" y="127.00" index="25"/>
+      <Frame x="9.95" y="127.00" index="26"/>
+      <Frame x="9.95" y="127.00" index="27"/>
+      <Frame x="9.95" y="127.00" index="28"/>
+      <Frame x="9.95" y="127.00" index="29"/>
+      <Frame x="9.95" y="127.00" index="30"/>
+      <Frame x="9.95" y="127.00" index="31"/>
+      <Frame x="9.95" y="127.00" index="32"/>
+      <Frame x="9.95" y="127.00" index="33"/>
+      <Frame x="9.95" y="127.00" index="34"/>
+      <Frame x="9.95" y="127.00" index="35"/>
+      <Frame x="9.95" y="127.00" index="36"/>
+      <Frame x="9.95" y="127.00" index="37"/>
+      <Frame x="9.95" y="127.00" index="38"/>
+      <Frame x="9.95" y="127.00" index="39"/>
+      <Frame x="9.95" y="127.00" index="40"/>
+      <Frame x="9.95" y="127.00" index="41"/>
+      <Frame x="9.95" y="127.00" index="42"/>
+      <Frame x="9.95" y="127.00" index="43"/>
+      <Frame x="9.95" y="127.00" index="44"/>
+      <Frame x="9.95" y="127.00" index="45"/>
+      <Frame x="9.95" y="127.00" index="46"/>
+      <Frame x="9.95" y="127.00" index="47"/>
+      <Frame x="9.95" y="127.00" index="48"/>
+      <Frame x="9.95" y="127.00" index="49"/>
+      <Frame x="9.95" y="127.00" index="50"/>
+      <Frame x="9.95" y="127.00" index="51"/>
+      <Frame x="9.95" y="127.00" index="52"/>
+      <Frame x="9.95" y="127.00" index="53"/>
+      <Frame x="9.95" y="127.00" index="54"/>
+      <Frame x="9.95" y="127.00" index="55"/>
+      <Frame x="9.95" y="127.00" index="56"/>
+      <Frame x="9.95" y="127.00" index="57"/>
+      <Frame x="9.95" y="127.00" index="58"/>
+      <Frame x="9.95" y="127.00" index="59"/>
+      <Frame x="9.95" y="127.00" index="60"/>
+      <Frame x="9.95" y="127.00" index="61"/>
+      <Frame x="9.95" y="127.00" index="62"/>
+      <Frame x="9.95" y="127.00" index="63"/>
+      <Frame x="9.95" y="127.00" index="64"/>
+      <Frame x="9.95" y="127.00" index="65"/>
+      <Frame x="9.95" y="127.00" index="66"/>
+      <Frame x="9.95" y="127.00" index="67"/>
+      <Frame x="9.95" y="127.00" index="68"/>
+      <Frame x="9.95" y="127.00" index="69"/>
+      <Frame x="9.95" y="127.00" index="70"/>
+      <Frame x="9.95" y="127.00" index="71"/>
+      <Frame x="9.95" y="127.00" index="72"/>
+      <Frame x="9.95" y="127.00" index="73"/>
+      <Frame x="9.95" y="127.00" index="74"/>
+      <Frame x="9.95" y="127.00" index="75"/>
+      <Frame x="9.95" y="127.00" index="76"/>
+      <Frame x="9.95" y="127.00" index="77"/>
+      <Frame x="9.95" y="127.00" index="78"/>
+      <Frame x="9.95" y="127.00" index="79"/>
+    </Part>
+    <Part name="MDMT_DressingRoom_Costume_Neckwear_Sheep_Blue">
+      <Frame x="3.00" y="25.00" index="0"/>
+      <Frame x="3.00" y="25.00" index="1"/>
+      <Frame x="3.00" y="25.00" index="2"/>
+      <Frame x="3.00" y="25.00" index="3"/>
+      <Frame x="3.00" y="25.00" index="4"/>
+      <Frame x="3.00" y="25.00" index="5"/>
+      <Frame x="3.00" y="25.00" index="6"/>
+      <Frame x="3.00" y="25.00" index="7"/>
+      <Frame x="3.00" y="25.00" index="8"/>
+      <Frame x="3.00" y="25.00" index="9"/>
+      <Frame x="3.00" y="25.00" index="10"/>
+      <Frame x="3.00" y="25.00" index="11"/>
+      <Frame x="3.00" y="25.00" index="12"/>
+      <Frame x="3.00" y="25.00" index="13"/>
+      <Frame x="3.00" y="25.00" index="14"/>
+      <Frame x="3.00" y="25.00" index="15"/>
+      <Frame x="3.00" y="25.00" index="16"/>
+      <Frame x="3.00" y="25.00" index="17"/>
+      <Frame x="3.00" y="25.00" index="18"/>
+      <Frame x="3.00" y="25.00" index="19"/>
+      <Frame x="3.00" y="25.00" index="20"/>
+      <Frame x="3.00" y="25.00" index="21"/>
+      <Frame x="3.00" y="25.00" index="22"/>
+      <Frame x="3.00" y="25.00" index="23"/>
+      <Frame x="3.00" y="25.00" index="24"/>
+      <Frame x="3.00" y="25.00" index="25"/>
+      <Frame x="3.00" y="25.00" index="26"/>
+      <Frame x="3.00" y="25.00" index="27"/>
+      <Frame x="3.00" y="25.00" index="28"/>
+      <Frame x="3.00" y="25.00" index="29"/>
+      <Frame x="3.00" y="25.00" index="30"/>
+      <Frame x="3.00" y="25.00" index="31"/>
+      <Frame x="3.00" y="25.00" index="32"/>
+      <Frame x="3.00" y="25.00" index="33"/>
+      <Frame x="3.00" y="25.00" index="34"/>
+      <Frame x="3.00" y="25.00" index="35"/>
+      <Frame x="3.00" y="25.00" index="36"/>
+      <Frame x="3.00" y="25.00" index="37"/>
+      <Frame x="3.00" y="25.00" index="38"/>
+      <Frame x="3.00" y="25.00" index="39"/>
+      <Frame x="3.00" y="25.00" index="40"/>
+      <Frame x="3.00" y="25.00" index="41"/>
+      <Frame x="3.00" y="25.00" index="42"/>
+      <Frame x="3.00" y="25.00" index="43"/>
+      <Frame x="3.00" y="25.00" index="44"/>
+      <Frame x="3.00" y="25.00" index="45"/>
+      <Frame x="3.00" y="25.00" index="46"/>
+      <Frame x="3.00" y="25.00" index="47"/>
+      <Frame x="3.00" y="25.00" index="48"/>
+      <Frame x="3.00" y="25.00" index="49"/>
+      <Frame x="3.00" y="25.00" index="50"/>
+      <Frame x="3.00" y="25.00" index="51"/>
+      <Frame x="3.00" y="25.00" index="52"/>
+      <Frame x="3.00" y="25.00" index="53"/>
+      <Frame x="3.00" y="25.00" index="54"/>
+      <Frame x="3.00" y="25.00" index="55"/>
+      <Frame x="3.00" y="25.00" index="56"/>
+      <Frame x="3.00" y="25.00" index="57"/>
+      <Frame x="3.00" y="25.00" index="58"/>
+      <Frame x="3.00" y="25.00" index="59"/>
+      <Frame x="3.00" y="25.00" index="60"/>
+      <Frame x="3.00" y="25.00" index="61"/>
+      <Frame x="3.00" y="25.00" index="62"/>
+      <Frame x="3.00" y="25.00" index="63"/>
+      <Frame x="3.00" y="25.00" index="64"/>
+      <Frame x="3.00" y="25.00" index="65"/>
+      <Frame x="3.00" y="25.00" index="66"/>
+      <Frame x="3.00" y="25.00" index="67"/>
+      <Frame x="3.00" y="25.00" index="68"/>
+      <Frame x="3.00" y="25.00" index="69"/>
+      <Frame x="3.00" y="25.00" index="70"/>
+      <Frame x="3.00" y="25.00" index="71"/>
+      <Frame x="3.00" y="25.00" index="72"/>
+      <Frame x="3.00" y="25.00" index="73"/>
+      <Frame x="3.00" y="25.00" index="74"/>
+      <Frame x="3.00" y="25.00" index="75"/>
+      <Frame x="3.00" y="25.00" index="76"/>
+      <Frame x="3.00" y="25.00" index="77"/>
+      <Frame x="3.00" y="25.00" index="78"/>
+      <Frame x="3.00" y="25.00" index="79"/>
+    </Part>
+    <Part name="MDMT_DressingRoom_Costume_UpperTorso_Sheep_70s">
+      <Frame x="5.00" y="7.00" index="0"/>
+      <Frame x="5.00" y="7.00" index="1"/>
+      <Frame x="5.00" y="7.00" index="2"/>
+      <Frame x="5.00" y="7.00" index="3"/>
+      <Frame x="5.00" y="7.00" index="4"/>
+      <Frame x="5.00" y="7.00" index="5"/>
+      <Frame x="5.00" y="7.00" index="6"/>
+      <Frame x="5.00" y="7.00" index="7"/>
+      <Frame x="5.00" y="7.00" index="8"/>
+      <Frame x="5.00" y="7.00" index="9"/>
+      <Frame x="5.00" y="7.00" index="10"/>
+      <Frame x="5.00" y="7.00" index="11"/>
+      <Frame x="5.00" y="7.00" index="12"/>
+      <Frame x="5.00" y="7.00" index="13"/>
+      <Frame x="5.00" y="7.00" index="14"/>
+      <Frame x="5.00" y="7.00" index="15"/>
+      <Frame x="5.00" y="7.00" index="16"/>
+      <Frame x="5.00" y="7.00" index="17"/>
+      <Frame x="5.00" y="7.00" index="18"/>
+      <Frame x="5.00" y="7.00" index="19"/>
+      <Frame x="5.00" y="7.00" index="20"/>
+      <Frame x="5.00" y="7.00" index="21"/>
+      <Frame x="5.00" y="7.00" index="22"/>
+      <Frame x="5.00" y="7.00" index="23"/>
+      <Frame x="5.00" y="7.00" index="24"/>
+      <Frame x="5.00" y="7.00" index="25"/>
+      <Frame x="5.00" y="7.00" index="26"/>
+      <Frame x="5.00" y="7.00" index="27"/>
+      <Frame x="5.00" y="7.00" index="28"/>
+      <Frame x="5.00" y="7.00" index="29"/>
+      <Frame x="5.00" y="7.00" index="30"/>
+      <Frame x="5.00" y="7.00" index="31"/>
+      <Frame x="5.00" y="7.00" index="32"/>
+      <Frame x="5.00" y="7.00" index="33"/>
+      <Frame x="5.00" y="7.00" index="34"/>
+      <Frame x="5.00" y="7.00" index="35"/>
+      <Frame x="5.00" y="7.00" index="36"/>
+      <Frame x="5.00" y="7.00" index="37"/>
+      <Frame x="5.00" y="7.00" index="38"/>
+      <Frame x="5.00" y="7.00" index="39"/>
+      <Frame x="5.00" y="7.00" index="40"/>
+      <Frame x="5.00" y="7.00" index="41"/>
+      <Frame x="5.00" y="7.00" index="42"/>
+      <Frame x="5.00" y="7.00" index="43"/>
+      <Frame x="5.00" y="7.00" index="44"/>
+      <Frame x="5.00" y="7.00" index="45"/>
+      <Frame x="5.00" y="7.00" index="46"/>
+      <Frame x="5.00" y="7.00" index="47"/>
+      <Frame x="5.00" y="7.00" index="48"/>
+      <Frame x="5.00" y="7.00" index="49"/>
+      <Frame x="5.00" y="7.00" index="50"/>
+      <Frame x="5.00" y="7.00" index="51"/>
+      <Frame x="5.00" y="7.00" index="52"/>
+      <Frame x="5.00" y="7.00" index="53"/>
+      <Frame x="5.00" y="7.00" index="54"/>
+      <Frame x="5.00" y="7.00" index="55"/>
+      <Frame x="5.00" y="7.00" index="56"/>
+      <Frame x="5.00" y="7.00" index="57"/>
+      <Frame x="5.00" y="7.00" index="58"/>
+      <Frame x="5.00" y="7.00" index="59"/>
+      <Frame x="5.00" y="7.00" index="60"/>
+      <Frame x="5.00" y="7.00" index="61"/>
+      <Frame x="5.00" y="7.00" index="62"/>
+      <Frame x="5.00" y="7.00" index="63"/>
+      <Frame x="5.00" y="7.00" index="64"/>
+      <Frame x="5.00" y="7.00" index="65"/>
+      <Frame x="5.00" y="7.00" index="66"/>
+      <Frame x="5.00" y="7.00" index="67"/>
+      <Frame x="5.00" y="7.00" index="68"/>
+      <Frame x="5.00" y="7.00" index="69"/>
+      <Frame x="5.00" y="7.00" index="70"/>
+      <Frame x="5.00" y="7.00" index="71"/>
+      <Frame x="5.00" y="7.00" index="72"/>
+      <Frame x="5.00" y="7.00" index="73"/>
+      <Frame x="5.00" y="7.00" index="74"/>
+      <Frame x="5.00" y="7.00" index="75"/>
+      <Frame x="5.00" y="7.00" index="76"/>
+      <Frame x="5.00" y="7.00" index="77"/>
+      <Frame x="5.00" y="7.00" index="78"/>
+      <Frame x="5.00" y="7.00" index="79"/>
+    </Part>
+    <Part name="MDMT_MusicTheatre_Sheep_Body_Sticks_001_002">
+      <Frame x="-1.95" y="53.00" index="0"/>
+      <Frame x="-1.95" y="53.00" index="1"/>
+      <Frame x="-1.95" y="53.00" index="2"/>
+      <Frame x="-1.95" y="53.00" index="3"/>
+      <Frame x="-1.95" y="53.00" index="4"/>
+      <Frame x="-1.95" y="53.00" index="5"/>
+      <Frame x="-1.95" y="53.00" index="6"/>
+      <Frame x="-1.95" y="53.00" index="7"/>
+      <Frame x="-1.95" y="53.00" index="8"/>
+      <Frame x="-1.95" y="53.00" index="9"/>
+      <Frame x="-1.95" y="53.00" index="20"/>
+      <Frame x="-1.95" y="53.00" index="21"/>
+      <Frame x="-1.95" y="53.00" index="22"/>
+      <Frame x="-1.95" y="53.00" index="23"/>
+      <Frame x="-1.95" y="53.00" index="24"/>
+      <Frame x="-1.95" y="53.00" index="25"/>
+      <Frame x="-1.95" y="53.00" index="26"/>
+      <Frame x="-1.95" y="53.00" index="27"/>
+      <Frame x="-1.95" y="53.00" index="28"/>
+      <Frame x="-1.95" y="53.00" index="29"/>
+      <Frame x="-1.95" y="53.00" index="40"/>
+      <Frame x="-1.95" y="53.00" index="41"/>
+      <Frame x="-1.95" y="53.00" index="42"/>
+      <Frame x="-1.95" y="53.00" index="43"/>
+      <Frame x="-1.95" y="53.00" index="44"/>
+      <Frame x="-1.95" y="53.00" index="45"/>
+      <Frame x="-1.95" y="53.00" index="46"/>
+      <Frame x="-1.95" y="53.00" index="47"/>
+      <Frame x="-1.95" y="53.00" index="48"/>
+      <Frame x="-1.95" y="53.00" index="49"/>
+      <Frame x="-1.95" y="53.00" index="60"/>
+      <Frame x="-1.95" y="53.00" index="61"/>
+      <Frame x="-1.95" y="53.00" index="62"/>
+      <Frame x="-1.95" y="53.00" index="63"/>
+      <Frame x="-1.95" y="53.00" index="64"/>
+      <Frame x="-1.95" y="53.00" index="65"/>
+      <Frame x="-1.95" y="53.00" index="66"/>
+      <Frame x="-1.95" y="53.00" index="67"/>
+      <Frame x="-1.95" y="53.00" index="68"/>
+      <Frame x="-1.95" y="53.00" index="69"/>
+    </Part>
+    <Part name="MDMT_MusicTheatre_Sheep_Body_Sticks_002_002">
+      <Frame x="-1.95" y="53.00" index="10"/>
+      <Frame x="-1.95" y="53.00" index="11"/>
+      <Frame x="-1.95" y="53.00" index="12"/>
+      <Frame x="-1.95" y="53.00" index="13"/>
+      <Frame x="-1.95" y="53.00" index="14"/>
+      <Frame x="-1.95" y="53.00" index="15"/>
+      <Frame x="-1.95" y="53.00" index="16"/>
+      <Frame x="-1.95" y="53.00" index="17"/>
+      <Frame x="-1.95" y="53.00" index="18"/>
+      <Frame x="-1.95" y="53.00" index="19"/>
+      <Frame x="-1.95" y="53.00" index="30"/>
+      <Frame x="-1.95" y="53.00" index="31"/>
+      <Frame x="-1.95" y="53.00" index="32"/>
+      <Frame x="-1.95" y="53.00" index="33"/>
+      <Frame x="-1.95" y="53.00" index="34"/>
+      <Frame x="-1.95" y="53.00" index="35"/>
+      <Frame x="-1.95" y="53.00" index="36"/>
+      <Frame x="-1.95" y="53.00" index="37"/>
+      <Frame x="-1.95" y="53.00" index="38"/>
+      <Frame x="-1.95" y="53.00" index="39"/>
+      <Frame x="-1.95" y="53.00" index="50"/>
+      <Frame x="-1.95" y="53.00" index="51"/>
+      <Frame x="-1.95" y="53.00" index="52"/>
+      <Frame x="-1.95" y="53.00" index="53"/>
+      <Frame x="-1.95" y="53.00" index="54"/>
+      <Frame x="-1.95" y="53.00" index="55"/>
+      <Frame x="-1.95" y="53.00" index="56"/>
+      <Frame x="-1.95" y="53.00" index="57"/>
+      <Frame x="-1.95" y="53.00" index="58"/>
+      <Frame x="-1.95" y="53.00" index="59"/>
+      <Frame x="-1.95" y="53.00" index="70"/>
+      <Frame x="-1.95" y="53.00" index="71"/>
+      <Frame x="-1.95" y="53.00" index="72"/>
+      <Frame x="-1.95" y="53.00" index="73"/>
+      <Frame x="-1.95" y="53.00" index="74"/>
+      <Frame x="-1.95" y="53.00" index="75"/>
+      <Frame x="-1.95" y="53.00" index="76"/>
+      <Frame x="-1.95" y="53.00" index="77"/>
+      <Frame x="-1.95" y="53.00" index="78"/>
+      <Frame x="-1.95" y="53.00" index="79"/>
+    </Part>
+    <Part name="MDMT_DressingRoom_Sheep_Eyes_Open">
+      <Frame x="3.00" y="-105.00" index="0"/>
+      <Frame x="3.00" y="-105.00" index="1"/>
+      <Frame x="3.00" y="-105.00" index="2"/>
+      <Frame x="3.00" y="-105.00" index="3"/>
+      <Frame x="3.00" y="-105.00" index="4"/>
+      <Frame x="3.00" y="-105.00" index="5"/>
+      <Frame x="3.00" y="-105.00" index="6"/>
+      <Frame x="3.00" y="-105.00" index="7"/>
+      <Frame x="3.00" y="-105.00" index="8"/>
+      <Frame x="3.00" y="-105.00" index="9"/>
+      <Frame x="3.00" y="-105.00" index="10"/>
+      <Frame x="3.00" y="-105.00" index="11"/>
+      <Frame x="3.00" y="-105.00" index="12"/>
+      <Frame x="3.00" y="-105.00" index="13"/>
+      <Frame x="3.00" y="-105.00" index="14"/>
+      <Frame x="3.00" y="-105.00" index="15"/>
+      <Frame x="3.00" y="-105.00" index="16"/>
+      <Frame x="3.00" y="-105.00" index="17"/>
+      <Frame x="3.00" y="-105.00" index="18"/>
+      <Frame x="3.00" y="-105.00" index="19"/>
+      <Frame x="3.00" y="-105.00" index="20"/>
+      <Frame x="3.00" y="-105.00" index="21"/>
+      <Frame x="3.00" y="-105.00" index="22"/>
+      <Frame x="3.00" y="-105.00" index="23"/>
+      <Frame x="3.00" y="-105.00" index="24"/>
+      <Frame x="3.00" y="-105.00" index="25"/>
+      <Frame x="3.00" y="-105.00" index="26"/>
+      <Frame x="3.00" y="-105.00" index="27"/>
+      <Frame x="3.00" y="-105.00" index="28"/>
+      <Frame x="3.00" y="-105.00" index="29"/>
+      <Frame x="3.00" y="-105.00" index="30"/>
+      <Frame x="3.00" y="-105.00" index="31"/>
+      <Frame x="3.00" y="-105.00" index="32"/>
+      <Frame x="3.00" y="-105.00" index="33"/>
+      <Frame x="3.00" y="-105.00" index="34"/>
+      <Frame x="3.00" y="-105.00" index="35"/>
+      <Frame x="3.00" y="-105.00" index="36"/>
+      <Frame x="3.00" y="-105.00" index="37"/>
+      <Frame x="3.00" y="-105.00" index="38"/>
+      <Frame x="3.00" y="-105.00" index="39"/>
+      <Frame x="3.00" y="-105.00" index="40"/>
+      <Frame x="3.00" y="-105.00" index="41"/>
+      <Frame x="3.00" y="-105.00" index="42"/>
+      <Frame x="3.00" y="-105.00" index="43"/>
+      <Frame x="3.00" y="-105.00" index="44"/>
+      <Frame x="3.00" y="-105.00" index="45"/>
+      <Frame x="3.00" y="-105.00" index="46"/>
+      <Frame x="3.00" y="-105.00" index="47"/>
+      <Frame x="3.00" y="-105.00" index="48"/>
+      <Frame x="3.00" y="-105.00" index="49"/>
+      <Frame x="3.00" y="-105.00" index="50"/>
+      <Frame x="3.00" y="-105.00" index="51"/>
+      <Frame x="3.00" y="-105.00" index="52"/>
+      <Frame x="3.00" y="-105.00" index="53"/>
+      <Frame x="3.00" y="-105.00" index="54"/>
+      <Frame x="3.00" y="-105.00" index="55"/>
+      <Frame x="3.00" y="-105.00" index="56"/>
+      <Frame x="3.00" y="-105.00" index="57"/>
+      <Frame x="3.00" y="-105.00" index="58"/>
+      <Frame x="3.00" y="-105.00" index="59"/>
+      <Frame x="3.00" y="-105.00" index="60"/>
+      <Frame x="3.00" y="-105.00" index="61"/>
+      <Frame x="3.00" y="-105.00" index="62"/>
+      <Frame x="3.00" y="-105.00" index="63"/>
+      <Frame x="3.00" y="-105.00" index="64"/>
+      <Frame x="3.00" y="-105.00" index="65"/>
+      <Frame x="3.00" y="-105.00" index="66"/>
+      <Frame x="3.00" y="-105.00" index="67"/>
+      <Frame x="3.00" y="-105.00" index="68"/>
+      <Frame x="3.00" y="-105.00" index="69"/>
+      <Frame x="3.00" y="-105.00" index="70"/>
+      <Frame x="3.00" y="-105.00" index="71"/>
+      <Frame x="3.00" y="-105.00" index="72"/>
+      <Frame x="3.00" y="-105.00" index="73"/>
+      <Frame x="3.00" y="-105.00" index="74"/>
+      <Frame x="3.00" y="-105.00" index="75"/>
+      <Frame x="3.00" y="-105.00" index="76"/>
+      <Frame x="3.00" y="-105.00" index="77"/>
+      <Frame x="3.00" y="-105.00" index="78"/>
+      <Frame x="3.00" y="-105.00" index="79"/>
+    </Part>
+    <Part name="MDMT_MusicTheatre_Sheep_Instrument_Sticks_Left">
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="0"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="1"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="2"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="3"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="4"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="5"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="6"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="7"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="8"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="9"/>
+      <Frame x="-61.00" y="-37.00" index="10"/>
+      <Frame x="-61.00" y="-37.00" index="11"/>
+      <Frame x="-61.00" y="-37.00" index="12"/>
+      <Frame x="-61.00" y="-37.00" index="13"/>
+      <Frame x="-61.00" y="-37.00" index="14"/>
+      <Frame x="-61.00" y="-37.00" index="15"/>
+      <Frame x="-61.00" y="-37.00" index="16"/>
+      <Frame x="-61.00" y="-37.00" index="17"/>
+      <Frame x="-61.00" y="-37.00" index="18"/>
+      <Frame x="-61.00" y="-37.00" index="19"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="20"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="21"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="22"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="23"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="24"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="25"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="26"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="27"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="28"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="29"/>
+      <Frame x="-61.00" y="-37.00" index="30"/>
+      <Frame x="-61.00" y="-37.00" index="31"/>
+      <Frame x="-61.00" y="-37.00" index="32"/>
+      <Frame x="-61.00" y="-37.00" index="33"/>
+      <Frame x="-61.00" y="-37.00" index="34"/>
+      <Frame x="-61.00" y="-37.00" index="35"/>
+      <Frame x="-61.00" y="-37.00" index="36"/>
+      <Frame x="-61.00" y="-37.00" index="37"/>
+      <Frame x="-61.00" y="-37.00" index="38"/>
+      <Frame x="-61.00" y="-37.00" index="39"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="40"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="41"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="42"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="43"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="44"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="45"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="46"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="47"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="48"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="49"/>
+      <Frame x="-61.00" y="-37.00" index="50"/>
+      <Frame x="-61.00" y="-37.00" index="51"/>
+      <Frame x="-61.00" y="-37.00" index="52"/>
+      <Frame x="-61.00" y="-37.00" index="53"/>
+      <Frame x="-61.00" y="-37.00" index="54"/>
+      <Frame x="-61.00" y="-37.00" index="55"/>
+      <Frame x="-61.00" y="-37.00" index="56"/>
+      <Frame x="-61.00" y="-37.00" index="57"/>
+      <Frame x="-61.00" y="-37.00" index="58"/>
+      <Frame x="-61.00" y="-37.00" index="59"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="60"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="61"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="62"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="63"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="64"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="65"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="66"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="67"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="68"/>
+      <Frame x="-36.00" y="0.25" rotation="31.000" index="69"/>
+      <Frame x="-61.00" y="-37.00" index="70"/>
+      <Frame x="-61.00" y="-37.00" index="71"/>
+      <Frame x="-61.00" y="-37.00" index="72"/>
+      <Frame x="-61.00" y="-37.00" index="73"/>
+      <Frame x="-61.00" y="-37.00" index="74"/>
+      <Frame x="-61.00" y="-37.00" index="75"/>
+      <Frame x="-61.00" y="-37.00" index="76"/>
+      <Frame x="-61.00" y="-37.00" index="77"/>
+      <Frame x="-61.00" y="-37.00" index="78"/>
+      <Frame x="-61.00" y="-37.00" index="79"/>
+    </Part>
+    <Part name="MDMT_MusicTheatre_Sheep_Instrument_Sticks_Right">
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="0"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="1"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="2"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="3"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="4"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="5"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="6"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="7"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="8"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="9"/>
+      <Frame x="62.50" y="-30.00" index="10"/>
+      <Frame x="62.50" y="-30.00" index="11"/>
+      <Frame x="62.50" y="-30.00" index="12"/>
+      <Frame x="62.50" y="-30.00" index="13"/>
+      <Frame x="62.50" y="-30.00" index="14"/>
+      <Frame x="62.50" y="-30.00" index="15"/>
+      <Frame x="62.50" y="-30.00" index="16"/>
+      <Frame x="62.50" y="-30.00" index="17"/>
+      <Frame x="62.50" y="-30.00" index="18"/>
+      <Frame x="62.50" y="-30.00" index="19"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="20"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="21"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="22"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="23"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="24"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="25"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="26"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="27"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="28"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="29"/>
+      <Frame x="62.50" y="-30.00" index="30"/>
+      <Frame x="62.50" y="-30.00" index="31"/>
+      <Frame x="62.50" y="-30.00" index="32"/>
+      <Frame x="62.50" y="-30.00" index="33"/>
+      <Frame x="62.50" y="-30.00" index="34"/>
+      <Frame x="62.50" y="-30.00" index="35"/>
+      <Frame x="62.50" y="-30.00" index="36"/>
+      <Frame x="62.50" y="-30.00" index="37"/>
+      <Frame x="62.50" y="-30.00" index="38"/>
+      <Frame x="62.50" y="-30.00" index="39"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="40"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="41"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="42"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="43"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="44"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="45"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="46"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="47"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="48"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="49"/>
+      <Frame x="62.50" y="-30.00" index="50"/>
+      <Frame x="62.50" y="-30.00" index="51"/>
+      <Frame x="62.50" y="-30.00" index="52"/>
+      <Frame x="62.50" y="-30.00" index="53"/>
+      <Frame x="62.50" y="-30.00" index="54"/>
+      <Frame x="62.50" y="-30.00" index="55"/>
+      <Frame x="62.50" y="-30.00" index="56"/>
+      <Frame x="62.50" y="-30.00" index="57"/>
+      <Frame x="62.50" y="-30.00" index="58"/>
+      <Frame x="62.50" y="-30.00" index="59"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="60"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="61"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="62"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="63"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="64"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="65"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="66"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="67"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="68"/>
+      <Frame x="37.50" y="4.00" rotation="-31.000" index="69"/>
+      <Frame x="62.50" y="-30.00" index="70"/>
+      <Frame x="62.50" y="-30.00" index="71"/>
+      <Frame x="62.50" y="-30.00" index="72"/>
+      <Frame x="62.50" y="-30.00" index="73"/>
+      <Frame x="62.50" y="-30.00" index="74"/>
+      <Frame x="62.50" y="-30.00" index="75"/>
+      <Frame x="62.50" y="-30.00" index="76"/>
+      <Frame x="62.50" y="-30.00" index="77"/>
+      <Frame x="62.50" y="-30.00" index="78"/>
+      <Frame x="62.50" y="-30.00" index="79"/>
+    </Part>
+    <Part name="MDMT_MusicTheatre_Sheep_LeftArm_Sticks_001_002">
+      <Frame x="-56.00" y="39.00" index="0"/>
+      <Frame x="-56.00" y="39.00" index="1"/>
+      <Frame x="-56.00" y="39.00" index="2"/>
+      <Frame x="-56.00" y="39.00" index="3"/>
+      <Frame x="-56.00" y="39.00" index="4"/>
+      <Frame x="-56.00" y="39.00" index="5"/>
+      <Frame x="-56.00" y="39.00" index="6"/>
+      <Frame x="-56.00" y="39.00" index="7"/>
+      <Frame x="-56.00" y="39.00" index="8"/>
+      <Frame x="-56.00" y="39.00" index="9"/>
+      <Frame x="-56.00" y="39.00" index="20"/>
+      <Frame x="-56.00" y="39.00" index="21"/>
+      <Frame x="-56.00" y="39.00" index="22"/>
+      <Frame x="-56.00" y="39.00" index="23"/>
+      <Frame x="-56.00" y="39.00" index="24"/>
+      <Frame x="-56.00" y="39.00" index="25"/>
+      <Frame x="-56.00" y="39.00" index="26"/>
+      <Frame x="-56.00" y="39.00" index="27"/>
+      <Frame x="-56.00" y="39.00" index="28"/>
+      <Frame x="-56.00" y="39.00" index="29"/>
+      <Frame x="-56.00" y="39.00" index="40"/>
+      <Frame x="-56.00" y="39.00" index="41"/>
+      <Frame x="-56.00" y="39.00" index="42"/>
+      <Frame x="-56.00" y="39.00" index="43"/>
+      <Frame x="-56.00" y="39.00" index="44"/>
+      <Frame x="-56.00" y="39.00" index="45"/>
+      <Frame x="-56.00" y="39.00" index="46"/>
+      <Frame x="-56.00" y="39.00" index="47"/>
+      <Frame x="-56.00" y="39.00" index="48"/>
+      <Frame x="-56.00" y="39.00" index="49"/>
+      <Frame x="-56.00" y="39.00" index="60"/>
+      <Frame x="-56.00" y="39.00" index="61"/>
+      <Frame x="-56.00" y="39.00" index="62"/>
+      <Frame x="-56.00" y="39.00" index="63"/>
+      <Frame x="-56.00" y="39.00" index="64"/>
+      <Frame x="-56.00" y="39.00" index="65"/>
+      <Frame x="-56.00" y="39.00" index="66"/>
+      <Frame x="-56.00" y="39.00" index="67"/>
+      <Frame x="-56.00" y="39.00" index="68"/>
+      <Frame x="-56.00" y="39.00" index="69"/>
+    </Part>
+    <Part name="MDMT_MusicTheatre_Sheep_LeftArm_Sticks_002_002">
+      <Frame x="-45.00" y="28.00" index="10"/>
+      <Frame x="-45.00" y="28.00" index="11"/>
+      <Frame x="-45.00" y="28.00" index="12"/>
+      <Frame x="-45.00" y="28.00" index="13"/>
+      <Frame x="-45.00" y="28.00" index="14"/>
+      <Frame x="-45.00" y="28.00" index="15"/>
+      <Frame x="-45.00" y="28.00" index="16"/>
+      <Frame x="-45.00" y="28.00" index="17"/>
+      <Frame x="-45.00" y="28.00" index="18"/>
+      <Frame x="-45.00" y="28.00" index="19"/>
+      <Frame x="-45.00" y="28.00" index="30"/>
+      <Frame x="-45.00" y="28.00" index="31"/>
+      <Frame x="-45.00" y="28.00" index="32"/>
+      <Frame x="-45.00" y="28.00" index="33"/>
+      <Frame x="-45.00" y="28.00" index="34"/>
+      <Frame x="-45.00" y="28.00" index="35"/>
+      <Frame x="-45.00" y="28.00" index="36"/>
+      <Frame x="-45.00" y="28.00" index="37"/>
+      <Frame x="-45.00" y="28.00" index="38"/>
+      <Frame x="-45.00" y="28.00" index="39"/>
+      <Frame x="-45.00" y="28.00" index="50"/>
+      <Frame x="-45.00" y="28.00" index="51"/>
+      <Frame x="-45.00" y="28.00" index="52"/>
+      <Frame x="-45.00" y="28.00" index="53"/>
+      <Frame x="-45.00" y="28.00" index="54"/>
+      <Frame x="-45.00" y="28.00" index="55"/>
+      <Frame x="-45.00" y="28.00" index="56"/>
+      <Frame x="-45.00" y="28.00" index="57"/>
+      <Frame x="-45.00" y="28.00" index="58"/>
+      <Frame x="-45.00" y="28.00" index="59"/>
+      <Frame x="-45.00" y="28.00" index="70"/>
+      <Frame x="-45.00" y="28.00" index="71"/>
+      <Frame x="-45.00" y="28.00" index="72"/>
+      <Frame x="-45.00" y="28.00" index="73"/>
+      <Frame x="-45.00" y="28.00" index="74"/>
+      <Frame x="-45.00" y="28.00" index="75"/>
+      <Frame x="-45.00" y="28.00" index="76"/>
+      <Frame x="-45.00" y="28.00" index="77"/>
+      <Frame x="-45.00" y="28.00" index="78"/>
+      <Frame x="-45.00" y="28.00" index="79"/>
+    </Part>
+    <Part name="MDMT_MusicTheatre_Sheep_RightArm_Sticks_001_002">
+      <Frame x="70.00" y="43.00" index="0"/>
+      <Frame x="70.00" y="43.00" index="1"/>
+      <Frame x="70.00" y="43.00" index="2"/>
+      <Frame x="70.00" y="43.00" index="3"/>
+      <Frame x="70.00" y="43.00" index="4"/>
+      <Frame x="70.00" y="43.00" index="5"/>
+      <Frame x="70.00" y="43.00" index="6"/>
+      <Frame x="70.00" y="43.00" index="7"/>
+      <Frame x="70.00" y="43.00" index="8"/>
+      <Frame x="70.00" y="43.00" index="9"/>
+      <Frame x="70.00" y="43.00" index="20"/>
+      <Frame x="70.00" y="43.00" index="21"/>
+      <Frame x="70.00" y="43.00" index="22"/>
+      <Frame x="70.00" y="43.00" index="23"/>
+      <Frame x="70.00" y="43.00" index="24"/>
+      <Frame x="70.00" y="43.00" index="25"/>
+      <Frame x="70.00" y="43.00" index="26"/>
+      <Frame x="70.00" y="43.00" index="27"/>
+      <Frame x="70.00" y="43.00" index="28"/>
+      <Frame x="70.00" y="43.00" index="29"/>
+      <Frame x="70.00" y="43.00" index="40"/>
+      <Frame x="70.00" y="43.00" index="41"/>
+      <Frame x="70.00" y="43.00" index="42"/>
+      <Frame x="70.00" y="43.00" index="43"/>
+      <Frame x="70.00" y="43.00" index="44"/>
+      <Frame x="70.00" y="43.00" index="45"/>
+      <Frame x="70.00" y="43.00" index="46"/>
+      <Frame x="70.00" y="43.00" index="47"/>
+      <Frame x="70.00" y="43.00" index="48"/>
+      <Frame x="70.00" y="43.00" index="49"/>
+      <Frame x="70.00" y="43.00" index="60"/>
+      <Frame x="70.00" y="43.00" index="61"/>
+      <Frame x="70.00" y="43.00" index="62"/>
+      <Frame x="70.00" y="43.00" index="63"/>
+      <Frame x="70.00" y="43.00" index="64"/>
+      <Frame x="70.00" y="43.00" index="65"/>
+      <Frame x="70.00" y="43.00" index="66"/>
+      <Frame x="70.00" y="43.00" index="67"/>
+      <Frame x="70.00" y="43.00" index="68"/>
+      <Frame x="70.00" y="43.00" index="69"/>
+    </Part>
+    <Part name="MDMT_MusicTheatre_Sheep_RightArm_Sticks_002_002">
+      <Frame x="60.00" y="29.00" index="10"/>
+      <Frame x="60.00" y="29.00" index="11"/>
+      <Frame x="60.00" y="29.00" index="12"/>
+      <Frame x="60.00" y="29.00" index="13"/>
+      <Frame x="60.00" y="29.00" index="14"/>
+      <Frame x="60.00" y="29.00" index="15"/>
+      <Frame x="60.00" y="29.00" index="16"/>
+      <Frame x="60.00" y="29.00" index="17"/>
+      <Frame x="60.00" y="29.00" index="18"/>
+      <Frame x="60.00" y="29.00" index="19"/>
+      <Frame x="60.00" y="29.00" index="30"/>
+      <Frame x="60.00" y="29.00" index="31"/>
+      <Frame x="60.00" y="29.00" index="32"/>
+      <Frame x="60.00" y="29.00" index="33"/>
+      <Frame x="60.00" y="29.00" index="34"/>
+      <Frame x="60.00" y="29.00" index="35"/>
+      <Frame x="60.00" y="29.00" index="36"/>
+      <Frame x="60.00" y="29.00" index="37"/>
+      <Frame x="60.00" y="29.00" index="38"/>
+      <Frame x="60.00" y="29.00" index="39"/>
+      <Frame x="60.00" y="29.00" index="50"/>
+      <Frame x="60.00" y="29.00" index="51"/>
+      <Frame x="60.00" y="29.00" index="52"/>
+      <Frame x="60.00" y="29.00" index="53"/>
+      <Frame x="60.00" y="29.00" index="54"/>
+      <Frame x="60.00" y="29.00" index="55"/>
+      <Frame x="60.00" y="29.00" index="56"/>
+      <Frame x="60.00" y="29.00" index="57"/>
+      <Frame x="60.00" y="29.00" index="58"/>
+      <Frame x="60.00" y="29.00" index="59"/>
+      <Frame x="60.00" y="29.00" index="70"/>
+      <Frame x="60.00" y="29.00" index="71"/>
+      <Frame x="60.00" y="29.00" index="72"/>
+      <Frame x="60.00" y="29.00" index="73"/>
+      <Frame x="60.00" y="29.00" index="74"/>
+      <Frame x="60.00" y="29.00" index="75"/>
+      <Frame x="60.00" y="29.00" index="76"/>
+      <Frame x="60.00" y="29.00" index="77"/>
+      <Frame x="60.00" y="29.00" index="78"/>
+      <Frame x="60.00" y="29.00" index="79"/>
+    </Part>
+  </Animation>
+</Animations>
