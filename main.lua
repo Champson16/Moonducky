@@ -54,8 +54,15 @@ local FRC_DataLib          = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_Util             = require('FRC_Modules.FRC_Util.FRC_Util');
 local FRC_AppSettings      = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
 
--- push notification support
 
+--
+-- Push Notifications
+--
+local FRC_Notifications = require "FRC_Modules.FRC_Notifications.FRC_Notifications"
+FRC_Notifications.init( { enableLogger = false, autoShow = false } )
+
+
+--[[
 -- This function gets called when the user opens a notification or one is received when the app is open and active.
 -- Change the code below to fit your app's needs.
 local function DidReceiveRemoteNotification(message, additionalData, isActive)
@@ -78,7 +85,7 @@ local OneSignal = require("plugin.OneSignal");
 -- Uncomment SetLogLevel to debug issues.
 -- OneSignal.SetLogLevel(4, 4)
 OneSignal.Init("7474c044-8712-11e5-abed-a0369f2d9328", "709462375959", DidReceiveRemoteNotification)
-
+--]]
 
 --== APP SETTINGS BEGIN ==--
 FRC_AppSettings.init();
@@ -281,3 +288,14 @@ display.setDefault('background', 0, 0, 0, 1.0);
 display.setDefault( "textureWrapX", "clampToEdge" );
 display.setDefault( "textureWrapY", "clampToEdge" );
 storyboard.gotoScene('Scenes.Splash');
+
+
+
+--
+-- Handle case where user clicks local notification while app is not running
+--
+local launchArgs = ...
+if ( launchArgs and launchArgs.notification ) then
+    FRC_Notifications.localListener( launchArgs.localListener )
+end
+timer.performWithDelay( 500, function() system.cancelNotification() end )
