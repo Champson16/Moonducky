@@ -4,7 +4,7 @@
 	"width": 304,
 	"height": 602,
 	"left": 20,
-	"y": 268
+	"y": -50
 },
 {
 	"id": "Ottoman",
@@ -12,7 +12,7 @@
 	"width": 215,
 	"height": 195,
 	"right": 91,
-	"y": 452
+	"y": 100
 },
 {
 	"id": "MysteryBox",
@@ -20,6 +20,6 @@
 	"width": 130,
 	"height": 96,
 	"right": 135,
-	"y": 362,
+	"y": 10,
 	"onTouch": "randomCostume"
 }]

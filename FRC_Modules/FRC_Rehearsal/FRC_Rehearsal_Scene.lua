@@ -22,6 +22,8 @@ local artCenterLoaded = pcall(function()
 -- ====================================================================
 -- Locals
 -- ====================================================================
+local	screenW, screenH, contentW, contentH, centerX, centerY = FRC_Layout.getScreenDimensions() -- TRS EFM
+
 local character_x = 0
 local character_y = -16
 local eyeTimer
@@ -200,7 +202,7 @@ function FRC_Rehearsal_Scene:save(e)
    display.save(maskContainer, { filename=id .. '_thumbnail.png', baseDir=system.DocumentsDirectory })
    maskContainer:removeSelf() maskContainer = nil
 
-   local screenW, screenH = FRC_Layout.getScreenDimensions()
+
    local saveDataFilename = FRC_Rehearsal_Settings.DATA.DATA_FILENAME
    local newSave = {
       id = id,
@@ -252,8 +254,7 @@ end
 -- ====================================================================
 
 function FRC_Rehearsal_Scene:createScene(event)
-   local view = self.view
-   local screenW, screenH = FRC_Layout.getScreenDimensions()
+   local view = self.view   
    if ((not self.id) or (self.id == '')) then self.id = FRC_Util.generateUniqueIdentifier(20) end
 
    -- DEBUG:
@@ -279,9 +280,29 @@ function FRC_Rehearsal_Scene:createScene(event)
    self.saveData = DATA('DATA_FILENAME', system.DocumentsDirectory)
    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal').saveData = FRC_DataLib.readJSON(saveDataFilename, system.DocumentsDirectory)
 
-   local bg = display.newImageRect(view, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'))
-   FRC_Layout.scaleToFit(bg)
-   bg.x, bg.y = display.contentCenterX, display.contentCenterY
+
+   -- TRS EFM - Please, see changes/notes below.
+
+   -- 1. Create a set of standard rendering layers
+   FRC_Layout.createLayers( view ) 
+   	
+   -- 2. (Optionally) configure the reference width/height for this scene
+   --
+   -- Reference dimensions must be speficied before scaling anything.  
+   -- You can do this once in the 'FRC_Layout' module and never change it, or change it per scene.
+   -- 
+   --FRC_Layout.setRefDimensions( UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT') )
+   
+   -- 3. Create a background
+   local bg = display.newImageRect(view._underlay, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
+      
+   -- 4. Scale first
+   FRC_Layout.scaleToFit( bg )  
+   
+   -- 5. Then position it.
+   bg.x = centerX 
+   bg.y = centerY 
+	
 
    -- Get lua tables from JSON data
    local setData = SETDESIGNDATA('SETS');
@@ -306,7 +327,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    end
 
    local setScale = 1;
-   local setDesignGroup = display.newGroup(); view:insert(setDesignGroup);
+   local setDesignGroup = display.newGroup(); view._content:insert(setDesignGroup);
    view.setDesignGroup = setDesignGroup;
    local backdropGroup = display.newGroup(); view.setDesignGroup:insert(backdropGroup);
    local setGroup = display.newGroup(); view.setDesignGroup:insert(setGroup);
@@ -316,7 +337,7 @@ function FRC_Rehearsal_Scene:createScene(event)
       -- view.setDesignGroup.yScale = setScale;
       -- view.setDesignGroup.x = (display.contentWidth - (display.contentWidth * setScale)) * 0.5;
       -- view.setDesignGroup.y = (display.contentHeight - (display.contentHeight * setScale)) * 0.5;
-      FRC_Layout.scaleToFit(setDesignGroup);
+      --FRC_Layout.scaleToFit(setDesignGroup);
       -- view.setDesignGroup.y = view.setDesignGroup.y - 80;
    end
 
@@ -339,6 +360,7 @@ function FRC_Rehearsal_Scene:createScene(event)
       if (index == 0) then return; end
 
       local setBackground = display.newImageRect(setGroup, SETDESIGNUI('IMAGES_PATH') .. setData[index].imageFile, setData[index].width, setData[index].height);
+      --FRC_Layout.placeImage(setBackground, nil, false )  --EFM      
       setBackground.x = display.contentCenterX;
       setBackground.y = display.contentCenterY;
       local frameRect = setData[index].frameRect;
@@ -347,12 +369,16 @@ function FRC_Rehearsal_Scene:createScene(event)
       -- resize selected backdrop to fit in selected set
       local selectedBackdrop = backdropGroup[1];
       if (not selectedBackdrop) then return; end
+      
+      --EFM
+      ----[[
       local currentWidth = backdropData[FRC_Rehearsal_Scene.backdropIndex].width;
       local currentHeight = backdropData[FRC_Rehearsal_Scene.backdropIndex].height;
       selectedBackdrop.xScale = (frameRect.width / currentWidth);
       selectedBackdrop.yScale = (frameRect.height / currentHeight);
       selectedBackdrop.x = frameRect.left - ((setBackground.width - display.contentWidth) * 0.5);
       selectedBackdrop.y = frameRect.top - ((setBackground.height - display.contentHeight) * 0.5);
+      --]]
    end
    self.changeSet = changeSet;
    -- changeSet();
@@ -360,7 +386,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    local changeBackdrop = function(index)
       if (index == FRC_Rehearsal_Scene.backdropIndex) then return; end
       -- ArtCenter image set as backdrop, but image was deleted (reset index to 1)
-      if (not backdropData[index]) then index = 0; end
+      if (not backdropData[index]) then index = 0; end 
       index = index or FRC_Rehearsal_Scene.backdropIndex;
       FRC_Rehearsal_Scene.backdropIndex = index;
       -- clear previous contents
@@ -380,12 +406,20 @@ function FRC_Rehearsal_Scene:createScene(event)
          baseDir = system[backdropData[index].baseDir];
       end
       local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, backdropData[index].width, backdropData[index].height);
+      --backdropBackground.alpha = 0.15
+      --backdropBackground.x = centerX
+      --backdropBackground.y = centerY
+      --local scale = screenW/backdropBackground.contentWidth
+      --FRC_Layout.placeUI(backdropBackground)
+      --FRC_Layout.placeImage(backdropBackground, nil, false )  --EFM      
+      ----[[
       backdropBackground.anchorX = 0;
       backdropBackground.anchorY = 0;
       backdropBackground.xScale = (frameRect.width / backdropData[index].width);
       backdropBackground.yScale = (frameRect.height / backdropData[index].height);
       backdropBackground.x = frameRect.left - ((setGroup[1].width - display.contentWidth) * 0.5);
       backdropBackground.y = frameRect.top - ((setGroup[1].height - display.contentHeight) * 0.5);
+      ----]]
    end
    self.changeBackdrop = changeBackdrop;
    -- changeBackdrop();
@@ -568,65 +602,17 @@ function FRC_Rehearsal_Scene:createScene(event)
 
    for i=1,#sceneLayoutData do
       if sceneLayoutData[i].imageFile then
-         sceneLayout[i] = display.newImageRect(view, UI('IMAGES_PATH') .. sceneLayoutData[i].imageFile, sceneLayoutData[i].width, sceneLayoutData[i].height)
-         FRC_Layout.scaleToFit(sceneLayout[i])
-
-         if (sceneLayoutData[i].left) then
-            sceneLayoutData[i].left = (sceneLayoutData[i].left * bg.xScale)
-            sceneLayout[i].x = sceneLayoutData[i].left - ((screenW - display.contentWidth) * 0.5) + (sceneLayout[i].contentWidth * 0.5)
-
-         elseif (sceneLayoutData[i].right) then
-            sceneLayoutData[i].right = (sceneLayoutData[i].right * bg.xScale)
-            sceneLayout[i].x = display.contentWidth - sceneLayoutData[i].right + ((screenW - display.contentWidth) * 0.5) - (sceneLayout[i].contentWidth * 0.5)
-         else
-            sceneLayoutData[i].x = sceneLayoutData[i].x * bg.xScale
-            sceneLayout[i].x = sceneLayoutData[i].x - ((screenW - display.contentWidth) * 0.5)
-         end
-         if (sceneLayoutData[i].top) then
-            sceneLayout[i].y = sceneLayoutData[i].top - ((screenH - display.contentHeight) * 0.5) + (sceneLayout[i].contentHeight * 0.5)
-         elseif (sceneLayoutData[i].bottom) then
-            sceneLayout[i].y = display.contentHeight - sceneLayoutData[i].bottom + ((screenH - display.contentHeight) * 0.5) - (sceneLayout[i].contentHeight * 0.5)
-         else
-            sceneLayoutData[i].y = sceneLayoutData[i].y * bg.yScale
-            sceneLayout[i].y = sceneLayoutData[i].y - ((screenH - display.contentHeight) * 0.5)
-         end
-
-         sceneLayout[i].y = sceneLayout[i].y + bg.contentBounds.yMin
+         sceneLayout[i] = display.newImageRect(view._content, UI('IMAGES_PATH') .. sceneLayoutData[i].imageFile, sceneLayoutData[i].width, sceneLayoutData[i].height)
+         FRC_Layout.placeImage(sceneLayout[i],  sceneLayoutData[i], false )  --EFM
 
 
       elseif sceneLayoutData[i].animationFiles then
          -- get the list of animation files and create the animation object
          -- preload the animation data (XML and images) early
          sceneLayout[i] = FRC_AnimationManager.createAnimationClipGroup(sceneLayoutData[i].animationFiles, animationXMLBase, animationImageBase)
-         FRC_Layout.scaleToFit(sceneLayout[i])
+			view._content:insert(sceneLayout[i]);
+         FRC_Layout.placeAnimation(sceneLayout[i], sceneLayoutData[i], true ) --EFM
 
-         if (sceneLayoutData[i].left) then
-            sceneLayoutData[i].left = (sceneLayoutData[i].left * bg.xScale)
-            sceneLayout[i].x = sceneLayoutData[i].left - ((screenW - display.contentWidth) * 0.5) + (sceneLayout[i].contentWidth * 0.5)
-
-         elseif (sceneLayoutData[i].right) then
-            sceneLayoutData[i].right = (sceneLayoutData[i].right * bg.xScale)
-            sceneLayout[i].x = display.contentWidth - sceneLayoutData[i].right + ((screenW - display.contentWidth) * 0.5) - (sceneLayout[i].contentWidth * 0.5)
-         elseif (sceneLayoutData[i].x) then
-            sceneLayoutData[i].x = sceneLayoutData[i].x * bg.xScale
-            sceneLayout[i].x = sceneLayoutData[i].x - ((screenW - display.contentWidth) * 0.5)
-         else
-            local xOffset = (screenW - (display.contentWidth * bg.xScale)) * 0.5
-            sceneLayout[i].x = ((bg.contentWidth - screenW) * 0.5) + bg.contentBounds.xMin + xOffset
-         end
-
-         if (sceneLayoutData[i].top) then
-            sceneLayout[i].y = sceneLayoutData[i].top - ((screenH - display.contentHeight) * 0.5) + (sceneLayout[i].contentHeight * 0.5)
-         elseif (sceneLayoutData[i].bottom) then
-            sceneLayout[i].y = display.contentHeight - sceneLayoutData[i].bottom + ((screenH - display.contentHeight) * 0.5) - (sceneLayout[i].contentHeight * 0.5)
-         elseif (sceneLayoutData[i].y) then
-            sceneLayoutData[i].y = sceneLayoutData[i].y * bg.yScale
-            sceneLayout[i].y = sceneLayoutData[i].y - ((screenH - display.contentHeight) * 0.5)
-         end
-
-         sceneLayout[i].y = sceneLayout[i].y + bg.contentBounds.yMin
-
-         view:insert(sceneLayout[i])
          for j=1, sceneLayout[i].numChildren do
             sceneLayout[i][j]:play({
                   showLastFrame = false,
@@ -786,7 +772,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             bgColor = {0.27, 0.27, 0.27, 0.35} -- { 1.0, 1.0, 1.0, 1.0 }
          })
       scroller.bg.alpha = 0.65
-      view:insert(scroller)
+      view._overlay:insert(scroller)
       scroller.x = display.contentCenterX
       scroller.y = categoriesContainer.contentBounds.yMin - (scroller.contentHeight * 0.5)
       scroller.isVisible = false
@@ -1024,7 +1010,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    -- EFM costume scroller is filled on demand in FRC_CharacterBuilder.lua as a side-effect of selecting the current'animal' category
    --
 
-   view:insert(categoriesContainer)
+   view._overlay:insert(categoriesContainer)
 
    FRC_CharacterBuilder.init( { view                  = view,
                                 animationXMLBase      = animationXMLBase,

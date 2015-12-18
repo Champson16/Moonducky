@@ -23,6 +23,11 @@ local videoBase = 'FRC_Assets/MDMT_Assets/Videos/';
 
 local videoPlayer;
 
+--
+-- Localize some common screen dimmensions
+--
+local	screenW, screenH, contentW, contentH, centerX, centerY = FRC_Layout.getScreenDimensions() -- TRS EFM
+
 
 local function UI(key)
 	return FRC_Lobby_Settings.UI[key];
@@ -36,8 +41,6 @@ end
 function FRC_Lobby_Scene:createScene(event)
 	local scene = self;
 	local view = self.view;
-	local screenW, screenH = FRC_Layout.getScreenDimensions();
-	local contentW, contentH = display.contentWidth, display.contentHeight;
 
 	-- create sceneLayout items
 	local sceneLayoutMethods = {};
@@ -49,18 +52,29 @@ function FRC_Lobby_Scene:createScene(event)
 		FRC_Lobby_Scene:preCreateScene(event);
 	end
 
-   -- EFM 1 BEGIN
-   -- Create and prep standard groups (_underlay, _content, _overlay)
-   FRC_Layout.createLayers( view )
-   --EFM 1 END
-	   
-   --EFM 2 BEGIN
-	local bg = display.newImageRect(view._underlay, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
-   FRC_Layout.scaleToFit( bg ) 
-   bg.x = 0
-   bg.y = 0   
-	--FRC_Layout.alignToCenter( bg )
-   --EFM 2 END
+
+   -- TRS EFM - Please, see changes/notes below.
+
+   -- 1. Create a set of standard rendering layers
+   FRC_Layout.createLayers( view ) 
+   	
+   -- 2. (Optionally) configure the reference width/height for this scene
+   --
+   -- Reference dimensions must be speficied before scaling anything.  
+   -- You can do this once in the 'FRC_Layout' module and never change it, or change it per scene.
+   -- 
+   --FRC_Layout.setRefDimensions( UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT') )
+   
+   -- 3. Create a background
+   local bg = display.newImageRect(view._underlay, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
+      
+   -- 4. Scale first
+   FRC_Layout.scaleToFit( bg )  
+   
+   -- 5. Then position it.
+   bg.x = centerX 
+   bg.y = centerY 
+	
  	
 	function videoPlaybackComplete(event)
 		if (FRC_AppSettings.get("ambientSoundOn")) then
@@ -83,9 +97,10 @@ function FRC_Lobby_Scene:createScene(event)
 			"MDMT_Lobby_UsherDoorStatic_a.xml"
 	}
 
+   dprint("Placing theatreDoorAnimationSequences")
 	theatreDoorAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorAnimationFiles, animationXMLBase, animationImageBase);
-   view._content:insert(theatreDoorAnimationSequences);
-   FRC_Layout.placeAnimation( theatreDoorAnimationSequences ) --EFM
+   view._content:insert(theatreDoorAnimationSequences);  -- TRS EFM
+   FRC_Layout.placeAnimation( theatreDoorAnimationSequences, nil, false ) -- TRS EFM
 	
 
 	for i=1, theatreDoorAnimationSequences.numChildren do
@@ -175,22 +190,18 @@ function FRC_Lobby_Scene:createScene(event)
 		imageDown = imageBase .. 'MDMT_Lobby_RehearsalDoor_down.png',
 		width = 133,
 		height = 327,
-		x = 222 - 576,
-		y = 360 - 368,
+		x = 158, -- TRS EFM --222 - 576,
+		y = 376, -- TRS EFM --360 - 368,
 		onRelease = function()
 			analytics.logEvent("MDMT.Lobby.Rehearsal");
-				 --if( _G.edmode ) then
-						storyboard.gotoScene('Scenes.Rehearsal'); --EFM
-						-- storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time="250" });
-				 --else
-						--native.showAlert("Rehearsal Coming Soon!","Ed Maurina is working on this feature.  Flip  edmode to 'true' in main.lua to see current state of scene.", { "OK" });
-				 --end
+         storyboard.gotoScene('Scenes.Rehearsal');
 		end
 	});
 	rehearsalButton.anchorX = 0.5;
 	rehearsalButton.anchorY = 0.5;
+   view._underlay:insert(rehearsalButton);
    FRC_Layout.placeUI(rehearsalButton)
-	view._underlay:insert(rehearsalButton);
+	
 
 	-- query server
 	-- establish online/offline check
@@ -220,7 +231,7 @@ function FRC_Lobby_Scene:createScene(event)
 
 	for i=1,#sceneLayoutData do
 		-- DEBUG
-		dprint("Pre - setting up scene layout object: ", sceneLayoutData[i].id, sceneLayoutData[i].xCenter, sceneLayoutData[i].yCenter);
+		dprint("Setting up scene layout object: ", sceneLayoutData[i].id, sceneLayoutData[i].xCenter, sceneLayoutData[i].yCenter);
 		if sceneLayoutData[i].imageFile then
 			sceneLayout[i] = display.newImageRect(view._content, UI('IMAGES_PATH') .. sceneLayoutData[i].imageFile, sceneLayoutData[i].width, sceneLayoutData[i].height);
 			FRC_Layout.placeImage(sceneLayout[i],  sceneLayoutData[i], true )  --EFM
@@ -230,7 +241,7 @@ function FRC_Lobby_Scene:createScene(event)
 			-- preload the animation data (XML and images) early
 			sceneLayout[i] = FRC_AnimationManager.createAnimationClipGroup(sceneLayoutData[i].animationFiles, animationXMLBase, animationImageBase);
 			view._content:insert(sceneLayout[i]);
-         FRC_Layout.placeAnimation(sceneLayout[i], sceneLayoutData[i], false ) --EFM
+         FRC_Layout.placeAnimation(sceneLayout[i], sceneLayoutData[i], true ) --EFM
 
 			for j=1, sceneLayout[i].numChildren do
 				sceneLayout[i][j]:play({
@@ -265,10 +276,11 @@ function FRC_Lobby_Scene:createScene(event)
 	"MDMT_Lobby_UsherDoorAnim_b.xml",
 	"MDMT_Lobby_UsherDoorAnim_a.xml"
 	 };
-		-- preload the animation data (XML and images) early
+   -- preload the animation data (XML and images) early
+   dprint("Placing theatreDoor")
 	theatreDoorSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorAnimationFiles, animationXMLBase, animationImageBase);
 	view._content:insert(theatreDoorSequences);
-   FRC_Layout.placeAnimation(theatreDoorSequences)  --EFM
+   FRC_Layout.placeAnimation(theatreDoorSequences, nil, true) -- TRS EFM
 
 	-- insert the main function buttons
 	-- Art center
@@ -319,8 +331,9 @@ function FRC_Lobby_Scene:createScene(event)
 	});
 	learnButton.anchorX = 0.5;
 	learnButton.anchorY = 0.5;
-   FRC_Layout.placeUI(learnButton)
-	view._underlay:insert(learnButton);
+   view._underlay:insert(learnButton); -- TRS EFM
+   FRC_Layout.placeUI(learnButton) -- TRS EFM
+	
 
 	discoverButton = ui.button.new({
 		imageUp = imageBase .. 'MDMT_Lobby_DiscoverPoster.png',
@@ -363,8 +376,8 @@ function FRC_Lobby_Scene:createScene(event)
 	});
 	discoverButton.anchorX = 0.5;
 	discoverButton.anchorY = 0.5;
-   FRC_Layout.placeUI(discoverButton)
-	view._underlay:insert(discoverButton);
+	view._underlay:insert(discoverButton);  -- TRS EFM
+   FRC_Layout.placeUI(discoverButton)  -- TRS EFM
 
 
 	if (FRC_Lobby_Scene.postCreateScene) then

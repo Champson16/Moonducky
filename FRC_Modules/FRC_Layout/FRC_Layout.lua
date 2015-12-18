@@ -1,8 +1,9 @@
 
 -- FRC_Layout.lua
 -- screen layout utility functions for Corona Graphics 2.0 engine (not compatible with 1.x engine)
-local m = {};
-local refWidth, refHeight  = 1152, 768;
+local m = {}
+local refWidth, refHeight  = 1152, 768
+local scaleFactor          = 1
 local debugEn              = true
 
 -- ==
@@ -63,9 +64,68 @@ if( debugEn ) then
    dprint("---------------\n\n")
 end
 
+--
+-- General method to get useful screen dimensions
+--
 m.getScreenDimensions = function()
    -- Note: No longer possible to build with 2109 or before any more, so removed checks - EFM
-   return screenW, screenH;
+   return screenW, screenH, contentW, contentH, centerX, centerY
+end
+
+--
+-- Utility function to re-calculate scale factor based on current refWidth/Height.
+-- NOTE: Only used internally.
+--
+local function calculateScaleFactor()   
+   local refScale = refHeight / refWidth
+   local scale = screenH / refHeight
+
+   if ( (refWidth * scale) < screenW ) then
+      scale = screenW / refWidth
+   end
+   scaleFactor = scale
+end
+calculateScaleFactor() -- Calculate on first load of module.
+
+--
+-- Utility function that allows you to change your scale factor (basis for all other scaling)
+--
+-- Initially Normally set at top of file
+--
+m.setRefDimensions = function( refW, refH )
+   refWidth, refHeight = refW, refH
+   m.calculateScaleFactor()
+end
+
+--
+-- Access function to get current scale factor.
+--
+m.getScaleFactor = function()      
+   return scaleFactor
+end
+
+--
+-- Scale an object using the current scaleFactor and add and additional (auto-scaled) x/y offset
+--
+m.scaleToFit = function(displayObject, xOffset, yOffset) 
+   
+   xOffset = xOffset or 0
+   yOffset = yOffset or 0
+   
+   local scale = scaleFactor
+      
+   displayObject.xScale = scale 
+   displayObject.yScale = scale
+   
+   local bx, by   = displayObject.x, displayObject.y
+   
+   displayObject.x = (displayObject.x + xOffset) * scale
+   displayObject.y = (displayObject.y + yOffset) * scale
+   
+   local ax,ay    = displayObject.x, displayObject.y
+   local dx, dy   = ax-bx, ay-by 
+
+   --dprint("scaleToFit( ", displayObject, xOffset, yOffset, " ) ==> ", scale, ((refWidth * scale) < screenW), bx,by, ax,ay, dx,dy )
 end
 
 -- Returns pixel position of left SCREEN edge PLUS pixelsFromEdge
@@ -96,117 +156,111 @@ m.bottom = function(pixelsFromEdge)
    return bottom + (pixelsFromEdge or 0)
 end
 
--- Aligns this object to the screen left (accounts for offset of parent group(s))
-m.alignToLeft = function(displayObject, pixelsFromEdge)
-   --dprint("EDO alignToLeft")
+-- Aligns this object/pixeloffset to the SCREEN left + pixelsFromEdge Offset
+-- Accounts for current scaling
+m.alignToLeft = function(displayObject, pixelsFromEdge )
+
+
    if (((displayObject) and (type(displayObject) ~= 'number'))) then
-      displayObject.x = m.left(pixelsFromEdge) + (displayObject.contentWidth * displayObject.anchorX);
+      displayObject.x = m.left(pixelsFromEdge) + (displayObject.contentWidth * displayObject.anchorX)
    else
-      return m.left(displayObject);
+      return m.left(displayObject)
    end
 end
 
+-- Aligns this object to the SCREEN right - pixelsFromEdge Offset
+-- Accounts for current scaling
 m.alignToRight = function(displayObject, pixelsFromEdge)
    --dprint("EDO alignToRight")
    if (((displayObject) and (type(displayObject) ~= 'number'))) then
-      displayObject.x = m.right(pixelsFromEdge) - (displayObject.contentWidth - (displayObject.contentWidth * displayObject.anchorX));
+      displayObject.x = m.right(-pixelsFromEdge) - (displayObject.contentWidth - (displayObject.contentWidth * displayObject.anchorX))
+      dprint("BILLY", pixelsFromEdge, m.right(pixelsFromEdge), m.right(0) )
    else
-      return m.right(displayObject);
+      return m.right(displayObject)
    end
 end
 
+-- Aligns this object to the SCREEN top + pixelsFromEdge Offset
+-- Accounts for current scaling
 m.alignToTop = function(displayObject, pixelsFromEdge)
    dprint("EDO alignToTop")
    if (((displayObject) and (type(displayObject) ~= 'number'))) then
-      displayObject.y = m.top(pixelsFromEdge) + (displayObject.contentHeight * displayObject.anchorY);
+      displayObject.y = m.top(pixelsFromEdge) + (displayObject.contentHeight * displayObject.anchorY)
    else
-      local pixelsFromEdge = displayObject or 0;
-      return m.top(pixelsFromEdge);
+      local pixelsFromEdge = displayObject or 0
+      return m.top(pixelsFromEdge)
    end
 end
 
+-- Aligns this object to the SCREEN bottom - pixelsFromEdge Offset
+-- Accounts for current scaling
 m.alignToBottom = function(displayObject, pixelsFromEdge)
    dprint("EDO alignToBottom")
    if (((displayObject) and (type(displayObject) ~= 'number'))) then
-      displayObject.y = m.bottom(pixelsFromEdge) - (displayObject.contentHeight - (displayObject.contentHeight * displayObject.anchorY));
+      displayObject.y = m.bottom(pixelsFromEdge) - (displayObject.contentHeight - (displayObject.contentHeight * displayObject.anchorY))
    else
-      return m.bottom(displayObject);
+      return m.bottom(displayObject)
    end
 end
 
+-- Align to SCREEN CENTER
+-- WARNING: IGNORANT OF GROUP/PARENT POSITION
 m.alignToCenter = function(displayObject)
-   dprint("EDO alignToCenter")
-   displayObject.x = contentW - (displayObject.contentW * displayObject.anchorX);
-   displayObject.y = contentH - (displayObject.contentH * displayObject.anchorY);
+   displayObject.x = centerX
+   displayObject.y = centerY
 end
 
-
+--
+-- createLayers() - Creates a standard set of layers for use by all scenes.
+--
 m.createLayers = function( view )
-   local layers = { "all", "underlay", "content", "content2", "overlay" }
+   local layers = { "underlay", "content", "content2", "overlay" } -- ordered bottom-to-top
    for i = 1, # layers do
       local group = display.newGroup()
       view["_" .. layers[i]] = group
-      if( i > 1) then
-        view._all:insert( group )         
-      end
-      --view:insert( group )      
-      --m.scaleToFit( group )      
-   end
-   view:insert( view._all )
-   view._all.x = centerX
-   view._all.y = centerY
-   local scale = m.getScaleFactor()
-   
-   view._all:scale( scale, scale )
-
-   --view._content2.isVisible = false
-   --view._content.isVisible = false
-   --table.dump2( view )
+      view:insert( group )         
+   end   
 end
 
-
-m.scaleToFit = function(displayObject, xOffset, yOffset)   
-   local bx,by = displayObject.x, displayObject.y
-   local scale = m.getScaleFactor()
-   displayObject.xScale, displayObject.yScale = scale, scale;
-   --displayObject.x, displayObject.y = x + (xOffset * scale), y + (yOffset * scale);
-
-   local ax,ay = displayObject.x, displayObject.y
-   local dx = ax-bx 
-   local dy = ay-by 
-   
-
-   dprint("EDO scaleToFit( ", displayObject, xOffset, yOffset, " ) ==> ", scale, ((refWidth * scale) < screenW), bx,by, ax,ay, dx,dy )
-end
-
-
-m.getScaleFactor = function()   
-   local refScale = refHeight / refWidth
-   local scale = screenH / refHeight;
-
-   if ((refWidth * scale) < screenW) then
-      scale = screenW / refWidth;
-   end
-   return scale
-end
-
+-- Adjusts position of object relative to the center
+-- 
+-- WARNING DOES NOT ACCOUNT FOR ANCHORS (anchorX/Y must be 0.5)
+--
 m.placeUI = function( uiObj )
-   local scale = m.getScaleFactor()
-   uiObj.x = uiObj.x * scale
-   uiObj.y = uiObj.y * scale
-   uiObj:scale( scale, scale )
-end
+   local scale = scaleFactor
+   local dx = uiObj.x - centerX
+   local dy = uiObj.y - centerY
    
+   dx = dx * scale
+   dy = dy * scale
+   
+   uiObj.x = dx + centerX
+   uiObj.y = dy + centerY
+   
+   uiObj.xScale = scale
+   uiObj.yScale = scale
+end
+
+-- Adjusts position of object relative to the center
+-- 
+-- WARNING DOES NOT ACCOUNT FOR ANCHORS (anchorX/Y must be 0.5)
+--
+m.placeUIDebuger = function( uiObj )
+   uiObj.x = uiObj.x + centerX
+   uiObj.y = uiObj.y + centerY   
+   dprint( "placeUIDebuger", uiObj.x, uiObj.y )
+end
+
 
 m.placeImage = function( displayObject, layoutData, debugEn )
-   
+
    layoutData = layoutData or {}
-   local scale = m.getScaleFactor()
+   
+   local scale = scaleFactor
    if( debugEn) then 
-      --table.dump2( displayObject )
       table.dump2( layoutData )
    end
-     
+
    if (layoutData.left) then
       if( debugEn) then dprint( "scaleAndPlace left" ) end
       m.alignToLeft( displayObject, layoutData.left )
@@ -217,17 +271,16 @@ m.placeImage = function( displayObject, layoutData, debugEn )
 
    elseif (layoutData.xCenter) then
       if( debugEn) then dprint( "scaleAndPlace xCenter" ) end
-      displayObject.x = centerX;
+      displayObject.x = centerX
 
    elseif( layoutData.x ) then
       if( debugEn) then dprint( "scaleAndPlace by X" )  end-- EFM IS THIS RIGHT?      
-      --displayObject.x = (layoutData.x + contentW/2) * scale
-      displayObject.x = layoutData.x * scale + contentW/2
+      displayObject.x = centerX + layoutData.x * scale
    end
 
    if (layoutData.top) then
       if( debugEn) then dprint( "scaleAndPlace top" ) end
-      --??? displayObject.y = displayObject.y + contentBounds.yMin;
+      --??? displayObject.y = displayObject.y + contentBounds.yMin
 
    elseif (layoutData.bottom) then
       if( debugEn) then dprint( "scaleAndPlace bottom" ) end
@@ -235,32 +288,29 @@ m.placeImage = function( displayObject, layoutData, debugEn )
 
    elseif (layoutData.yCenter) then
       if( debugEn) then dprint( "scaleAndPlace yCenter" ) end
-      displayObject.y = centerY;
+      displayObject.y = centerY
 
    elseif (layoutData.y) then
       if( debugEn) then dprint( "scaleAndPlace by Y" )  end -- EFM IS THIS RIGHT? 
-      --displayObject.y = (layoutData.y + contentH/2) * scale
-      displayObject.y = layoutData.y * scale + contentH/2
+      displayObject.y = centerY + layoutData.y * scale
    end
-   
-   displayObject.x = displayObject.x - contentW/2  
-   displayObject.y = (displayObject.y - contentH/2)
-
    -- DEBUG
-   dprint("scene layout object final x/y: ", layoutData.id, displayObject.x .. " / " .. displayObject.y);
+   dprint("scene layout object final x/y: ", layoutData.id, displayObject.x .. " / " .. displayObject.y)
 end   
 
 m.placeAnimation = function( displayObject, layoutData, debugEn )
    
+   --dprint("Before - scene layout object final x/y: ", displayObject.x .. " / " .. displayObject.y)
+
    layoutData = layoutData or {}
-   
+
    if( debugEn) then 
       table.dump2( displayObject )
       table.dump2( layoutData )
    end
-   
-   local scale = m.getScaleFactor()   
-   
+
+   local scale = scaleFactor
+
    if (layoutData.left) then
       displayObject.x = layoutData.left
    elseif (layoutData.right) then
@@ -268,7 +318,7 @@ m.placeAnimation = function( displayObject, layoutData, debugEn )
    elseif (layoutData.x) then
       displayObject.x = layoutData.x * scale
    end
-   
+
    if (layoutData.top) then
       displayObject.y = layoutData.top
    elseif (layoutData.bottom) then
@@ -276,64 +326,22 @@ m.placeAnimation = function( displayObject, layoutData, debugEn )
    elseif (layoutData.y) then
       layoutData.y = layoutData.y * scale
    end
+         
+   local scale = scaleFactor
+   local dx = displayObject.x - centerX
+   local dy = displayObject.y - centerY
    
-   displayObject.x = (displayObject.x - contentW/2) * scale
-   displayObject.y = (displayObject.y - contentH/2) * scale
-   displayObject:scale(scale, scale)
+   dx = dx * scale
+   dy = dy * scale
    
+   displayObject.x = dx + centerX
+   displayObject.y = dy + centerY
+   
+   displayObject.xScale = scale
+   displayObject.yScale = scale
+
    -- DEBUG
-   dprint("scene layout object final x/y: ", layoutData, layoutData.id, displayObject.x .. " / " .. displayObject.y);
+   --dprint("After - scene layout object final x/y: ", displayObject.x .. " / " .. displayObject.y, displayObject.numChildren)
 end
 
-
-return m;
-
-
----
----
----
---[[
-
-m.scaleToFit = function(displayObject, xOffset, yOffset)   
-   local bx,by = displayObject.x, displayObject.y
-
-   --if (true) then return end
-
-   if (not xOffset) then xOffset = 0; end
-   if (not yOffset) then yOffset = 0; end
-
-   local refScale = refHeight / refWidth
-   local scale = screenH / refHeight;
-   local scaledSize, diffScaled, diff;
-   local x, y = 0, 0;
-
-
-   if ((refWidth * scale) < screenW) then
-      --
-      -- Don't Scale so much that we get black edges on the sides
-      --
-      scale = screenW / refWidth;
-      scaledSize = contentW * scale;
-      diffScaled = ((refWidth * scale) - scaledSize) * 0.5;
-      diff = ((refWidth * scale) - contentW) * 0.5;
-      x = -(diff - diffScaled);
-
-   else   
-      scaledSize = contentH * scale;
-      diffScaled = ((refHeight * scale) - scaledSize) * 0.5;
-      diff = ((refHeight * scale) - contentH) * 0.5;
-      y = -(diff - diffScaled);
-
-   end
-
-   displayObject.xScale, displayObject.yScale = scale, scale;
-   displayObject.x, displayObject.y = x + (xOffset * scale), y + (yOffset * scale);
-
-   local ax,ay = displayObject.x, displayObject.y
-   local dx = ax-bx 
-   local dy = ay-by 
-
-   dprint("EDO scaleToFit( ", displayObject, xOffset, yOffset, " ) ==> ", scale, ((refWidth * scale) < screenW), bx,by, ax,ay, dx,dy )
-end
-
---]]
+return m
