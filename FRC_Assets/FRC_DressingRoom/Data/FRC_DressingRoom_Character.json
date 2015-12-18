@@ -1,6 +1,6 @@
 [{
 	"id": "Hamster",
-	"bodyImage": "MDMT_DressingRoom_Hamster.png",
+	"bodyImage": "MDMT_DressingRoom_HamsterWithEyes.png",
 	"bodyThumb": "MDMT_DressingRoom_global_BaseCharacter_Hamster_thumbnail.png",
 	"bodyWidth": 261,
 	"bodyHeight": 431,
@@ -378,7 +378,7 @@
 },
 {
 	"id": "Chicken",
-	"bodyImage": "MDMT_DressingRoom_Chicken.png",
+	"bodyImage": "MDMT_DressingRoom_ChickenWithEyes.png",
 	"bodyThumb": "MDMT_DressingRoom_global_BaseCharacter_Chicken_thumbnail.png",
 	"bodyWidth": 430,
 	"bodyHeight": 469,
@@ -756,7 +756,7 @@
 },
 {
 	"id": "Sheep",
-	"bodyImage": "MDMT_DressingRoom_Sheep.png",
+	"bodyImage": "MDMT_DressingRoom_Sheep_WithEyes.png",
   "bodyThumb": "MDMT_DressingRoom_global_BaseCharacter_Sheep_thumbnail.png",
 	"bodyWidth": 329,
 	"bodyHeight": 454,
@@ -1512,7 +1512,7 @@
 },
 {
 	"id": "Goat",
-	"bodyImage": "MDMT_DressingRoom_Goat.png",
+	"bodyImage": "MDMT_DressingRoom_GoatWithEyes.png",
 	"bodyThumb": "MDMT_DressingRoom_global_BaseCharacter_Goat_thumbnail.png",
 	"bodyWidth": 245,
 	"bodyHeight": 497,
@@ -1890,7 +1890,7 @@
 },
 {
 	"id": "Cat",
-	"bodyImage": "MDMT_DressingRoom_Cat.png",
+	"bodyImage": "MDMT_DressingRoom_Costume_CatWithEyes.png",
 	"bodyThumb": "MDMT_DressingRoom_global_BaseCharacter_Cat_thumbnail.png",
 	"bodyWidth": 291,
 	"bodyHeight": 447,
@@ -2268,7 +2268,7 @@
 },
 {
 	"id": "Dog",
-	"bodyImage": "MDMT_DressingRoom_Dog.png",
+	"bodyImage": "MDMT_DressingRoom_Costume_DogWithEyes.png",
 	"bodyThumb": "MDMT_DressingRoom_global_BaseCharacter_Dog_thumbnail.png",
 	"bodyWidth": 257,
 	"bodyHeight": 470,
