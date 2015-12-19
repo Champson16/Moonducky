@@ -24,6 +24,8 @@ local artCenterLoaded = pcall(function()
 -- ====================================================================
 local	screenW, screenH, contentW, contentH, centerX, centerY = FRC_Layout.getScreenDimensions() -- TRS EFM
 
+local currentSongID = "hamsters";  
+
 local character_x = 0
 local character_y = -16
 local eyeTimer
@@ -139,12 +141,9 @@ FRC_AudioManager:newHandle({
    });
 
 
-function FRC_Rehearsal_Scene:save(e) -- EDOCHI
+function FRC_Rehearsal_Scene:save(e)
    local id = e.id
    if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)) end
-
-   --
-
 
    local function completeSave( songTitle, showTitle )
       dprint( "completeSave() ",  songTitle, showTitle )
@@ -172,7 +171,6 @@ function FRC_Rehearsal_Scene:save(e) -- EDOCHI
 
       local showTitleLabel = display.newText( labelsGroup, showTitle, showTitleBack.x, showTitleBack.y, native.systemFontBold, fontSize )
       --showTitleLabel:setFillColor(0)
-
 
 
       -- create mask
@@ -236,6 +234,7 @@ function FRC_Rehearsal_Scene:save(e) -- EDOCHI
       local saveDataFilename = FRC_Rehearsal_Settings.DATA.DATA_FILENAME
       local newSave = {
          id = id,
+         currentSongID = currentSongID, -- EFM Load/Create New Show Logic ++
          setIndex = FRC_Rehearsal_Scene.setIndex,
          thumbWidth = thumbWidth,
          thumbHeight = thumbHeight,
@@ -259,20 +258,17 @@ function FRC_Rehearsal_Scene:save(e) -- EDOCHI
       FRC_DataLib.saveJSON(saveDataFilename, self.saveData)
       self.id = id
 
-
       -- EFM Add temporary label for save
       display.remove(labelsGroup)
 
    end
 
    --completeSave( "Hamsters Want To Be Free", "Test Save Title" )
-
    FRC_CharacterBuilder.getShowTitle( completeSave, nil )
-
 end
 
 function FRC_Rehearsal_Scene:load(e)
-   table.print_r(e)
+   --table.print_r(e)
    --[[
    local id = e.id
    if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)) end
@@ -285,6 +281,18 @@ function FRC_Rehearsal_Scene:load(e)
    if( e.data.setIndex ) then
       FRC_Rehearsal_Scene.changeSet(e.data.setIndex)
    end
+   table.dump2(e.data)
+   table.dump2(FRC_Rehearsal_Scene)   
+   currentSongID = e.data.currentSongID
+   
+   
+   FRC_CharacterBuilder.init( { view                  = FRC_Rehearsal_Scene.view,
+         currentSongID         = currentSongID,
+         animationXMLBase      = animationXMLBase,
+         animationImageBase    = animationImageBase,
+         itemScrollers         = itemScrollers,
+         categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
+   FRC_CharacterBuilder.rebuildInstrumenScroller( )                        
    FRC_CharacterBuilder.load(e.data)
 end
 
@@ -304,7 +312,7 @@ function FRC_Rehearsal_Scene:createScene(event)
       self.preCreateScene(self, event);
    end
 
-   -- FORWARD declarations
+   -- FORWARD declarations   
    local startRehearsalMode;
    local stopRehearsalMode;
    local categoriesContainer;
@@ -314,7 +322,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    local itemScrollers;
    local tracksGroup;
    local songGroup;
-   local currentSongID = "hamsters"; -- TODO change this to dynamic information based on user selection or loading of a saved show -- EDOCHI
+   --local currentSongID = "hamsters";  -- EFM MOVED TO TOP OF FILE
 
    -- FRC_Rehearsal.getSavedData()
    self.saveData = DATA('DATA_FILENAME', system.DocumentsDirectory)
@@ -1033,9 +1041,6 @@ function FRC_Rehearsal_Scene:createScene(event)
                costumesButton:press()
                costumesButton:release()
                table.dump2( costumesButton )
-
-
-
             end
          })
       button.categoryId = 'Character'
@@ -1045,25 +1050,22 @@ function FRC_Rehearsal_Scene:createScene(event)
       x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)
    end
 
-
    --
    -- EFM costume scroller is filled on demand in FRC_CharacterBuilder.lua as a side-effect of selecting the current'animal' category
    --
    view._overlay:insert(categoriesContainer)
 
-   local allowedInstruments   = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" } 
    FRC_CharacterBuilder.init( { view                  = view,
          currentSongID         = currentSongID,
          animationXMLBase      = animationXMLBase,
          animationImageBase    = animationImageBase,
-         itemScrollers         = itemScrollers,
-         allowedInstruments    = allowedInstruments,
-         categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
-   FRC_CharacterBuilder.rebuildInstrumenScroller( )
-   FRC_CharacterBuilder.rebuildCostumeScroller( )
+         itemScrollers         = itemScrollers,         
+         categoriesContainer   = categoriesContainer } )
+   FRC_CharacterBuilder.rebuildInstrumenScroller( ) -- EFM Load/Create New Show Logic ++
+   FRC_CharacterBuilder.rebuildCostumeScroller( ) -- EFM Load/Create New Show Logic ++
 
    local canLoad = not ((FRC_Rehearsal_Scene.saveData.savedItems == nil) or (#FRC_Rehearsal_Scene.saveData.savedItems < 1))
-   local function onLoad() -- EDOCHI
+   local function onLoad() 
       local function showLoadPopup()
          local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
          local galleryPopup;
@@ -1075,59 +1077,41 @@ function FRC_Rehearsal_Scene:createScene(event)
                height = screenH * 0.75,
                data = FRC_Rehearsal_Scene.saveData.savedItems,
                callback = function(e)
-                  table.dump2(e)
                   galleryPopup:dispose();
-                  galleryPopup = nil;
+                  galleryPopup = nil;   
                   FRC_Rehearsal_Scene:load(e);
-
-                  -- EFM Need to extract current song and select instruments by that, but give all for now EDOCHI
-                  --
-                  local hamsterInstruments   = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Sticks", "RhythmComboCheeseGrater" } 
-                  local cowInstruments   = { "Bass", "Conga", "Guitar", "Harmonica", "Microphone", "Piano", "RhythmComboCymbal" } 
-                  local allowedInstruments   = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", 
-                                                 "RhythmComboCheeseGrater", "RhythmComboCymbal" } 
-                  FRC_CharacterBuilder.init( { view                  = view,
-                        currentSongID         = currentSongID,
-                        animationXMLBase      = animationXMLBase,
-                        animationImageBase    = animationImageBase,
-                        itemScrollers         = itemScrollers,
-                        allowedInstruments    = allowedInstruments,
-                        categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
-                  FRC_CharacterBuilder.rebuildInstrumenScroller( )
                end
             });
       end
       showLoadPopup(); -- TEMP DISABLED UNTIL WE ARCHITECT DATA FORMAT FOR SHOWS
    end
-
-   local function onCreateHamster()
-      local currentSongID = "hamsters";
-      local hamsterInstruments   = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Sticks", "RhythmComboCheeseGrater" } 
-      FRC_CharacterBuilder.init( { view                  = view,
+   
+   -- EFM Load/Create New Show Logic
+   local function onCreateHamster()      
+      currentSongID = "hamsters";      
+      FRC_CharacterBuilder.init( { 
+            view                  = view,
             currentSongID         = currentSongID,
             animationXMLBase      = animationXMLBase,
             animationImageBase    = animationImageBase,
-            itemScrollers         = itemScrollers,
-            allowedInstruments    = allowedInstruments,
+            itemScrollers         = itemScrollers,            
             categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
       FRC_CharacterBuilder.rebuildInstrumenScroller( )
    end
 
    local function onCreateCow()
-      local currentSongID = "mechanicalcow";
-      local cowInstruments   = { "Bass", "Conga", "Guitar", "Harmonica", "Microphone", "Piano", "RhythmComboCymbal" } 
-      FRC_CharacterBuilder.init( { view                  = view,
+      currentSongID = "mechanicalcow";      
+      FRC_CharacterBuilder.init( { 
+            view                  = view,
             currentSongID         = currentSongID,
             animationXMLBase      = animationXMLBase,
             animationImageBase    = animationImageBase,
-            itemScrollers         = itemScrollers,
-            allowedInstruments    = allowedInstruments,
+            itemScrollers         = itemScrollers,            
             categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
       FRC_CharacterBuilder.rebuildInstrumenScroller( )
    end
-
-   -- EDOCHI
-   --FRC_CharacterBuilder.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad )
+   FRC_CharacterBuilder.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad )
+   
 
    if (FRC_Rehearsal_Scene.postCreateScene) then
       FRC_Rehearsal_Scene:postCreateScene(event)

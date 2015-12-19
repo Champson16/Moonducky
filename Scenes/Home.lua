@@ -152,7 +152,8 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Rehearsal_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Rehearsal_down.png',
 				onRelease = function()
-					storyboard.gotoScene('Scenes.Rehearsal');
+               storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "rehearsal" }  } );
+					--storyboard.gotoScene('Scenes.Rehearsal');
 				end
 			},
 			{
@@ -160,7 +161,8 @@ function scene.postCreateScene(self, event)
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_down.png',
 				onRelease = function()
 					-- storyboard.gotoScene('Scenes.Showtime', { effect="crossFade", time="250" });
-					native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
+               storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "showtime" }  } );
+					--native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
 				end
 			},
 			{

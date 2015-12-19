@@ -7,8 +7,19 @@ local private  = {} -- Private inteface
 -- ======================================================================
 -- Requires
 -- ======================================================================
+local ui                      = require('ui')
+local FRC_DataLib             = require('FRC_Modules.FRC_DataLib.FRC_DataLib')
 local FRC_Layout              = require('FRC_Modules.FRC_Layout.FRC_Layout')
 local FRC_AnimationManager    = require('FRC_Modules.FRC_AnimationManager.FRC_AnimationManager')
+local FRC_Rehearsal_Settings  = require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Settings')
+
+local function UI(key)
+   return FRC_Rehearsal_Settings.UI[key]
+end   
+local function DATA(key, baseDir)
+   baseDir = baseDir or system.ResourceDirectory
+   return FRC_DataLib.readJSON(FRC_Rehearsal_Settings.DATA[key], baseDir)
+end
 
 -- ======================================================================
 -- Forward Declarations
@@ -43,7 +54,12 @@ local animalsNames         = { "Chicken", "Cat", "Dog", "Hamster", "Pig", "Sheep
 local instrumentNames      = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" }
 local songTitles        = {}
 songTitles.hamsters = "Hamsters Want To Be Free"
-songTitles.mechanicalcow = "Mechanica lCow"
+songTitles.mechanicalcow = "Mechanical Cow"
+
+local hamsterInstruments   = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Sticks", "RhythmComboCheeseGrater" } 
+local cowInstruments       = { "Bass", "Conga", "Guitar", "Harmonica", "Microphone", "Piano", "RhythmComboCymbal" } 
+local allInstruments       = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" } 
+
 -- ********************************  
 
 
@@ -75,8 +91,9 @@ function public.destroy()
    currentStagePiece    = nil
    instrumentsInUse     = nil
    instrumentNames      = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" } 
+   
+   display.remove(stagePieces)
 end
-
 
 -- 
 -- init() - Store local references to key rehearsal values and groups.
@@ -90,7 +107,13 @@ function public.init( params )
    itemScrollers        = params.itemScrollers
    categoriesContainer  = params.categoriesContainer
    
-   instrumentNames      = params.allowedInstruments
+   if( currentSongID == "hamsters" ) then
+      instrumentNames = hamsterInstruments
+   elseif( currentSongID == "mechanicalcow" ) then
+      instrumentNames = cowInstruments
+   else
+      instrumentNames = allInstruments
+   end
    
    stagePieces          = display.newGroup()
    instrumentsInUse     = {}
@@ -690,71 +713,87 @@ end
 function public.rebuildInstrumenScroller( )
    local ui = require('ui')
    
+   --if(true) then return end
+   
+   local instrumentData = DATA('INSTRUMENT')
+   local songID = strGSub(songTitles[currentSongID], " ", "")
+   
+   local songInstruments = instrumentData[1]
+   for i = 1, #instrumentData do
+      if( instrumentData[i].id == songID ) then
+         dprint("Selected instrument data for ", i, songID )
+         songInstruments = instrumentData[i]
+      end
+   end
+   
    local scroller = itemScrollers.Instrument
    
-   -- EDOCHI COMPLETE THIS
-   --[[ 
    -- Destroy OLD scroller CONTENT ONLY
    while( scroller.content.numChildren > 0 ) do
       display.remove( scroller.content[1] )
    end
    
-   -- Get current characters
-   local characters = private.getDressingRoomDataByAnimalType( currentCharacterType, 0 ) --EFM
-   
-   -- Insert costumes for current animal type into scroller    
-   --
-   -- 'None' Button
-   --
-   local button_spacing = 80
+   --local button_spacing = 80
+   local category_button_spacing = 48
+   local button_spacing = 24
+   local button_scale = 0.75
+   local categoriesWidth = button_spacing
+   local categoriesHeight = 0
    local x = -(screenW * 0.5) + button_spacing   
-   local tmp = display.newImage( "FRC_Assets/FRC_Rehearsal/Images/FRC_Rehearsal_Scroller_None.png"  )
-   tmp.x = x
-   tmp.data = { id = "none" }
-   scroller:insert( tmp )
-   tmp.touch = private.scrollerCostumeTouch
-   tmp:addEventListener( "touch" ) 
 
-   --
-   -- 'Mystery Box' Button
-   --
-   if( #characters > 1 ) then
-      x = x + button_spacing
-      local tmp = display.newImage( "FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_Scroller_MysteryBox.png"  )
-      tmp:scale(0.20, 0.20)
-      tmp.x = x
-      tmp.data = { id = "mysterybox", character = currentCharacterType, characters = characters }
-      scroller:insert( tmp )
-      tmp.touch = private.scrollerCostumeTouch
-      tmp:addEventListener( "touch" ) 
-   end
-      
-   --
-   -- 'No Costume' Button
-   --
-   x = x + button_spacing
-   local tmp = display.newImage( "FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_global_BaseCharacter_" .. currentCharacterType .. "_thumbnail.png"  )
-   tmp:scale(0.32, 0.32)
-   tmp.x = x
-   tmp.data = { id = "nocostume", character = currentCharacterType, categories = { Headwear = 1,  LowerTorso = 1, Neckwear = 1, UpperTorso = 1, Eyewear = 1 } }
-   scroller:insert( tmp )
-   tmp.touch = private.scrollerCostumeTouch
-   tmp:addEventListener( "touch" ) 
-      
-      
-   for i = 1, #characters do      
-      x = x + button_spacing
-      local curChar = characters[i]
-      --local tmp = display.newCircle( x, 0, 20 )
-      local tmp = display.newImage( curChar.id .. curChar.thumbSuffix, system.DocumentsDirectory )
-      tmp:scale(0.5,0.5)
-      tmp.x = x 
-      tmp.data = curChar
-      tmp.touch = private.scrollerCostumeTouch
-      tmp:addEventListener( "touch" ) 
-      scroller:insert( tmp )
-   end
-   --]]
+
+   local button = ui.button.new({
+         id = "NONE",
+         imageUp = UI('NONE_BUTTON_UP') ,
+         imageDown = UI('NONE_BUTTON_DOWN'),
+         imageFocused = UI('NONE_BUTTON_FOCUSED'),
+         imageDisabled = UI('NONE_BUTTON_DISABLED'),
+         width = 100 * 0.96, -- * button_scale, -- EFM why is 1.0 not same as stage none?
+         height = 63 * 0.96, -- * button_scale, -- EFM why is 1.0 not same as stage none?
+         parentScrollContainer = scroller,
+         pressAlpha = 0.5,
+         onRelease = function(e)
+            public.removeInstrument()
+            return true
+         end
+      })
+   button.categoryId = 'Instrument'
+   scroller:insert(button)
+   x = x + (button.contentWidth * 0.5)
+   button.x, button.y = x, 0
+   
+   x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)      
+   
+   --table.print_r(songInstruments)
+   
+   -- for now, just grab the first song's instrument list
+   songInstruments = songInstruments.instruments
+   for i=1,#songInstruments do
+      dprint("EDOCHI", songInstruments[i].id)
+      buttonHeight = scroller.contentHeight - button_spacing
+      --table.dump2(songInstruments[i]) --EFM
+      local button = ui.button.new({
+            id = songInstruments[i].id,
+            imageUp = UI('IMAGES_PATH') .. songInstruments[i].imageUp,
+            imageDown = UI('IMAGES_PATH') .. songInstruments[i].imageDown,
+            imageFocused = UI('IMAGES_PATH') .. songInstruments[i].imageFocused,
+            imageDisabled = UI('IMAGES_PATH') .. songInstruments[i].imageDisabled,
+            width = songInstruments[i].width * button_scale,
+            height = songInstruments[i].height * button_scale,
+            parentScrollContainer = scroller,
+            pressAlpha = 0.5,
+            onRelease = function(e)
+               local self = e.target
+               public.newInstrument( self.id )
+               return true
+            end
+         })
+      button.categoryId = 'Instrument'
+      scroller:insert(button)
+      x = x + (button.contentWidth * 0.5)
+      button.x, button.y = x, 0
+      x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)
+   end      
 end
 
 

@@ -168,16 +168,16 @@ function FRC_Lobby_Scene:createScene(event)
 	end
 
 	-- this is a hokey way to move to the next module at roughly the time that the animation is completed
-	-- ideally this would be triggered by an onComplete function attached to the outboundToTheatreAnimationSequences[i]:play({ call above
+	-- ideally this would be triggered by an onComplete function attached to the outboundToTheatreAnimationSequences[i]:play({ call above   
 	scene.outboundTimer = timer.performWithDelay(1600, function()
 		scene.outboundTimer = nil;
 		if (theatreDoorSequences) then
 			for i=1, theatreDoorSequences.numChildren do
 				theatreDoorSequences[i]:stop();
-			end
+			end         
 		end
-		-- storyboard.gotoScene('Scenes.Showtime', { effect="crossFade", time="250" });
-		native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
+      storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "showtime" }  } );		
+		--native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
 		end, 1);
 	end
 
@@ -194,7 +194,8 @@ function FRC_Lobby_Scene:createScene(event)
 		y = 376, -- TRS EFM --360 - 368,
 		onRelease = function()
 			analytics.logEvent("MDMT.Lobby.Rehearsal");
-         storyboard.gotoScene('Scenes.Rehearsal');
+         --storyboard.gotoScene('Scenes.Rehearsal');
+         storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "rehearsal" }  } );
 		end
 	});
 	rehearsalButton.anchorX = 0.5;
