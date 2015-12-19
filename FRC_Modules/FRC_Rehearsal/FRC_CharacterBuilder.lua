@@ -39,8 +39,8 @@ local	screenW, screenH, contentW, contentH, centerX, centerY = FRC_Layout.getScr
 -- ********************************  
 -- EFM Following may be temporary (revist these locals):
 -- ********************************  
-local animalsNames      = { "Chicken", "Cat", "Dog", "Hamster", "Pig", "Sheep", "Goat" }
-local instrumentNames   = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" }
+local animalsNames         = { "Chicken", "Cat", "Dog", "Hamster", "Pig", "Sheep", "Goat" }
+local instrumentNames      = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" }
 local songTitles        = {}
 songTitles.hamsters = "Hamsters Want To Be Free"
 songTitles.mechanicalcow = "Mechanica lCow"
@@ -74,6 +74,7 @@ function public.destroy()
    currentCharacterType = "Chicken"
    currentStagePiece    = nil
    instrumentsInUse     = nil
+   instrumentNames      = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" } 
 end
 
 
@@ -88,6 +89,9 @@ function public.init( params )
    animationImageBase   = params.animationImageBase
    itemScrollers        = params.itemScrollers
    categoriesContainer  = params.categoriesContainer
+   
+   instrumentNames      = params.allowedInstruments
+   
    stagePieces          = display.newGroup()
    instrumentsInUse     = {}
          
@@ -99,6 +103,155 @@ function public.init( params )
    
    --timer.performWithDelay( 1000, public.getShowTitle )   
 end
+
+
+--
+-- createOrLoadShow() - Pop up dialog to select between loading a show or creating a new show.
+--
+function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad )
+   local group = display.newGroup()
+   local group2 = display.newGroup()
+   group:insert( group2 )
+   group.enterFrame = function( self ) 
+      if( self.removeSelf == nil ) then
+         Runtime:removeEventListener( "enterFrame", self )
+         return
+      end
+      self:toFront()
+      group2:toFront()
+   end
+   Runtime:addEventListener( "enterFrame", group ) -- EDOCHI
+   
+   --local back = display.newRect( centerX, centerY, 10000, 10000 )
+   --back:setFillColor(0)
+   --back.alpha = 0
+   --transition.to( back, { alpha = 0.2, time = 500 } )
+   
+   local blur = private.easyBlur( group, 500, { 0, 0.4, 0.4, 0.8 } ) --  time, color )
+   blur.touch = function( self, event )
+      return true
+   end
+   blur:addEventListener( "touch" )
+   
+   -- EFM Add temporary label for save
+   local backH       = screenH - 50
+   local fontSize    = 60
+   local fontSize2   = 44
+   local fromButton = 100
+   local titleLengthLimit = 20
+   local selColor1    = { 0, 1, 0, 0.2 }
+   local selColor2    = { 0, 0, 1, 0.2 }
+   local unSelColor   = { 1, 1, 1 }
+   
+   local titleQueryBack = display.newRoundedRect( group, centerX, centerY, screenW - 50, backH, 8 )
+   titleQueryBack.strokeWidth = 8
+   titleQueryBack:setStrokeColor(0)
+
+   local titleQueryLabel = display.newText( group2, "or", centerX, centerY - 100, native.systemFontBold, fontSize )
+   titleQueryLabel:setFillColor(0)
+   local titleQueryLabel2 = display.newText( group2, "Arrange A New One?", centerX, centerY - 20, native.systemFontBold, fontSize )
+   titleQueryLabel2:setFillColor(0)
+      
+   --
+   -- Load Existing Show
+   --      
+   local loadButton = display.newRoundedRect( group2, centerX, titleQueryLabel.y - fromButton , screenW - 100, 80, 8 )
+   loadButton.strokeWidth = 4
+   loadButton:setStrokeColor(0)
+   loadButton.selColor = selColor1
+   loadButton.cb = function()
+      Runtime:removeEventListener( "enterFrame", group )
+      display.remove( group )
+      if( onLoad ) then
+         onLoad( )          
+      end
+   end   
+   local loadButtonLabel = display.newText( group2, "Load An Old Show", loadButton.x, loadButton.y, native.systemFontBold, fontSize2 )
+   loadButtonLabel:setFillColor(0)
+
+   --
+   -- Create New Show With: 'Hamsters Want To Be Free'
+   --
+   local hamsterButton = display.newRoundedRect( group2, loadButton.x, titleQueryLabel2.y + fromButton, screenW - 100, 80, 4 )
+   hamsterButton.strokeWidth = 4
+   hamsterButton:setStrokeColor(0)
+   hamsterButton.selColor = selColor2
+   hamsterButton.cb = function()
+      Runtime:removeEventListener( "enterFrame", group )
+      display.remove( group )
+      if( onCreateHamster ) then
+         onCreateHamster( )          
+      end
+   end         
+   local hamsterButtonTitle = display.newText( group2, "'Hamsters Want To Be Free'", hamsterButton.x, hamsterButton.y, native.systemFontBold, fontSize2 )
+   hamsterButtonTitle:setFillColor(0)
+      
+   --
+   -- Create New Show With: 'Mechanical Cow'
+   --
+   local cowButton = display.newRoundedRect( group2, hamsterButton.x, hamsterButton.y + 120, screenW - 100, 80, 4 )
+   cowButton.strokeWidth = 4
+   cowButton:setStrokeColor(0)
+   cowButton.selColor = selColor2
+   cowButton.cb = function()
+      Runtime:removeEventListener( "enterFrame", group )
+      display.remove( group )
+      if( onCreateCow ) then
+         onCreateCow( )          
+      end
+   end   
+   local cowButtonTitle = display.newText( group2, "'Mechanical Cow'", cowButton.x, cowButton.y, native.systemFontBold, fontSize2 )
+   cowButtonTitle:setFillColor(0)
+   
+
+   
+   local function onTouch( self, event ) 
+      if( event.phase == "began" ) then
+         display.currentStage:setFocus( self, event.id )
+         self.isFocus = true
+         self:setFillColor( unpack( self.selColor ) )
+      elseif( self.isFocus ) then
+         local bounds = self.stageBounds
+         local x,y = event.x, event.y
+         local isWithinBounds = 
+            bounds.xMin <= x and bounds.xMax >= x and bounds.yMin <= y and bounds.yMax >= y
+         
+         if( isWithinBounds ) then
+            self:setFillColor( unpack( self.selColor ) )
+         else
+            self:setFillColor( unpack( unSelColor ) )
+         end
+         
+         if( event.phase == "ended" ) then
+            display.currentStage:setFocus( self, nil )
+            self.isFocus = false
+            --table.print_r(self)
+            if( isWithinBounds ) then     
+               if( self.cb ) then self.cb() end 
+            end
+         end
+      end
+      return true
+   end
+   
+   loadButton.touch = onTouch
+   hamsterButton.touch = onTouch
+   cowButton.touch = onTouch
+   loadButton:addEventListener("touch")
+   hamsterButton:addEventListener("touch")
+   cowButton:addEventListener("touch")
+   
+   if( not canLoad ) then
+      loadButton.isVisible = false
+      loadButtonLabel.isVisible = false
+      titleQueryLabel.isVisible = false
+      titleQueryLabel2.text = "Choose a Song"
+      group2.y = group2.y - 150     
+   end
+   
+end
+
+
 
 
 --
@@ -122,10 +275,6 @@ function public.getShowTitle( onSuccess, onCancel )
    
    local blur = private.easyBlur( group, 500, { 0, 0.4, 0.4, 0.8 } ) --  time, color )
    blur.touch = function( self, event )
-      if(event.phase == "ended" ) then
-         Runtime:removeEventListener( "enterFrame", group )
-         display.remove( group )
-      end
       return true
    end
    blur:addEventListener( "touch" )
@@ -533,6 +682,79 @@ end
 --
 function public.setCurrentCharacterType( characterType )
    currentCharacterType = characterType
+end
+
+-- 
+-- rebuildInstrumenScroller() - Builds the costume scroller based on the currently selected character type
+--
+function public.rebuildInstrumenScroller( )
+   local ui = require('ui')
+   
+   local scroller = itemScrollers.Instrument
+   
+   -- EDOCHI COMPLETE THIS
+   --[[ 
+   -- Destroy OLD scroller CONTENT ONLY
+   while( scroller.content.numChildren > 0 ) do
+      display.remove( scroller.content[1] )
+   end
+   
+   -- Get current characters
+   local characters = private.getDressingRoomDataByAnimalType( currentCharacterType, 0 ) --EFM
+   
+   -- Insert costumes for current animal type into scroller    
+   --
+   -- 'None' Button
+   --
+   local button_spacing = 80
+   local x = -(screenW * 0.5) + button_spacing   
+   local tmp = display.newImage( "FRC_Assets/FRC_Rehearsal/Images/FRC_Rehearsal_Scroller_None.png"  )
+   tmp.x = x
+   tmp.data = { id = "none" }
+   scroller:insert( tmp )
+   tmp.touch = private.scrollerCostumeTouch
+   tmp:addEventListener( "touch" ) 
+
+   --
+   -- 'Mystery Box' Button
+   --
+   if( #characters > 1 ) then
+      x = x + button_spacing
+      local tmp = display.newImage( "FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_Scroller_MysteryBox.png"  )
+      tmp:scale(0.20, 0.20)
+      tmp.x = x
+      tmp.data = { id = "mysterybox", character = currentCharacterType, characters = characters }
+      scroller:insert( tmp )
+      tmp.touch = private.scrollerCostumeTouch
+      tmp:addEventListener( "touch" ) 
+   end
+      
+   --
+   -- 'No Costume' Button
+   --
+   x = x + button_spacing
+   local tmp = display.newImage( "FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_global_BaseCharacter_" .. currentCharacterType .. "_thumbnail.png"  )
+   tmp:scale(0.32, 0.32)
+   tmp.x = x
+   tmp.data = { id = "nocostume", character = currentCharacterType, categories = { Headwear = 1,  LowerTorso = 1, Neckwear = 1, UpperTorso = 1, Eyewear = 1 } }
+   scroller:insert( tmp )
+   tmp.touch = private.scrollerCostumeTouch
+   tmp:addEventListener( "touch" ) 
+      
+      
+   for i = 1, #characters do      
+      x = x + button_spacing
+      local curChar = characters[i]
+      --local tmp = display.newCircle( x, 0, 20 )
+      local tmp = display.newImage( curChar.id .. curChar.thumbSuffix, system.DocumentsDirectory )
+      tmp:scale(0.5,0.5)
+      tmp.x = x 
+      tmp.data = curChar
+      tmp.touch = private.scrollerCostumeTouch
+      tmp:addEventListener( "touch" ) 
+      scroller:insert( tmp )
+   end
+   --]]
 end
 
 

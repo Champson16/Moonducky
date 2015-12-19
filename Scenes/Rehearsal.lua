@@ -198,6 +198,7 @@ function scene.postCreateScene(self, event)
 							height = screenH * 0.75,
 							data = scene.saveData.savedItems,
 							callback = function(e)
+                        table.dump2(e)
 								galleryPopup:dispose();
 								galleryPopup = nil;
 								scene:load(e);
