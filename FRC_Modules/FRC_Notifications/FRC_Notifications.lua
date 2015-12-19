@@ -88,11 +88,13 @@ function public.init( params )
 
    -- Initialize One Signal
    --OneSignal.SetLogLevel(4, 4)
-   OneSignal.Init("80402a60-8719-11e5-9570-a0369f2d9328", "1005226369199", private.oneSignalListener)
+   --oneSignalID = "7474c044-8712-11e5-abed-a0369f2d9328", projectNumber = "709462375959" } )
+   OneSignal.Init( params.oneSignalID, params.projectNumber, private.oneSignalListener)
 
    -- Tag This User In 'Push Dev Group'
    --OneSignal.SendTags({["group"] = "PushDev",["user"] = "RoamingGamer"})   
-   OneSignal.SendTags({["group"] = "PushDev"})   
+   --OneSignal.SendTags({["group"] = "PushDev"})   
+   --OneSignal.SendTags({["user"] = "RGMoonDucky"})   
 
    if( params.discoverIdToken == true) then
       print("Discover ID & Token")
