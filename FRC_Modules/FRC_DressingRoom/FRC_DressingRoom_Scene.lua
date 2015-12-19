@@ -204,6 +204,8 @@ function FRC_DressingRoom_Scene:createScene(event)
 	-- at the bottom of the layer stack
 	layers['Character'] = display.newGroup();
 	chartainer:insert(layers['Character']);
+	layers['Eyes'] = display.newGroup();
+	chartainer:insert(layers['Eyes']);
 	for i=#categoryData,2,-1 do
 		layers[categoryData[i].id] = display.newGroup();
 		chartainer:insert(layers[categoryData[i].id]);
@@ -279,13 +281,15 @@ function FRC_DressingRoom_Scene:createScene(event)
 			print(UI('IMAGES_PATH') .. charData.eyesOpenImage);
 			print(charData.eyesShutImage);
 			print(UI('IMAGES_PATH') .. charData.eyesShutImage);
+         
+         clearLayer('Eyes')
 			if (charData.eyesOpenImage and charData.eyesShutImage) then
-				local charEyesOpen = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.eyesOpenImage, charData.eyesOpenWidth, charData.eyesOpenHeight);
+				local charEyesOpen = display.newImageRect(layers['Eyes'], UI('IMAGES_PATH') .. charData.eyesOpenImage, charData.eyesOpenWidth, charData.eyesOpenHeight);
 				charEyesOpen.x, charEyesOpen.y = charBody.x + charData.eyesX, charBody.y + charData.eyesY;
-				charEyesOpen.isVisible = true;
+            
 				print(charEyesOpen.x, charEyesOpen.y); -- DEBUG
 
-				local charEyesShut = display.newImageRect(layers['Character'], UI('IMAGES_PATH') .. charData.eyesShutImage, charData.eyesShutWidth, charData.eyesShutHeight);
+				local charEyesShut = display.newImageRect(layers['Eyes'], UI('IMAGES_PATH') .. charData.eyesShutImage, charData.eyesShutWidth, charData.eyesShutHeight);
 				charEyesShut.x, charEyesShut.y = charBody.x + charData.eyesX, charBody.y + charData.eyesY;
 				charEyesShut.isVisible = false;
 				print(charEyesShut.x, charEyesShut.y); -- DEBUG
@@ -402,8 +406,9 @@ function FRC_DressingRoom_Scene:createScene(event)
 			sceneLayout[i] = FRC_AnimationManager.createAnimationClipGroup(sceneLayoutData[i].animationFiles, animationXMLBase, animationImageBase);
 			view._content:insert(sceneLayout[i]);
          FRC_Layout.placeAnimation(sceneLayout[i], sceneLayoutData[i], true ) --EFM         
-
-			for j=1, sceneLayout[i].numChildren do
+         
+         for j=1, sceneLayout[i].numChildren do
+            sceneLayout[i].alpha = 0.2
 				sceneLayout[i][j]:play({
 					showLastFrame = false,
 					playBackward = false,
