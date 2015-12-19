@@ -11,6 +11,9 @@ FRC_GalleryPopup.new = function(options)
 	local cancelTouch = function(e)
 		if (e.phase == 'began') then
 			group:dispatchEvent({ name = "cancelled" });
+         if( options and options.onCancel ) then
+            options.onCancel()
+         end         
 			group:dispose();
 		end
 		return true;

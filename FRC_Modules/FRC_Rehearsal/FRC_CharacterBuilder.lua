@@ -508,7 +508,7 @@ function public.placeNewInstrument( x, y, instrumentName )
    dprint( "public.placeNewInstrument( " .. tostring(instrumentName) .. " )" )
    
    if( instrumentsInUse[instrumentName] ) then
-      private.easyAlert( "Duplicate instrument", 
+      public.easyAlert( "Duplicate instrument", 
                 "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage.", 
                 { {"OK", nil} } )
       dprint("Duplicate instrument", "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage." )
@@ -913,7 +913,7 @@ function private.getDressingRoomDataByAnimalType( characterType, debugLevel )
    if( not allSaved.savedItems ) then 
       if( debugLevel and debugLevel > 0 ) then
          dprint("No charactes/costumes saved, can't search for this animal type: ", characterType )
-         private.easyAlert( "No saved costumes", 
+         public.easyAlert( "No saved costumes", 
                             "No charactes/costumes saved, can't search for this animal type: " .. 
                             tostring(characterType) .. "\n\n Please go save some constumes first.", 
                             { {"OK", nil} } )
@@ -929,7 +929,7 @@ function private.getDressingRoomDataByAnimalType( characterType, debugLevel )
    end  
    if( debugLevel and debugLevel > 0 ) then
       if( #characters == 0 ) then
-         private.easyAlert( "No saved costumes", 
+         public.easyAlert( "No saved costumes", 
                             "No charactes/costumes saved for this animal type: " .. 
                             tostring(characterType) .. "\n\n Please go save some constumes first.", 
                             { {"OK", nil} } )                        
@@ -951,7 +951,7 @@ function private.getDressingRoomDataByID( id, debugLevel )
    local allSaved = table.load( dressingRoomDataPath ) or {}   
    if( not allSaved.savedItems ) then 
       if( debugLevel and debugLevel > 0 ) then
-         private.easyAlert( "No saved costumes", 
+         public.easyAlert( "No saved costumes", 
                             "No charactes/costumes saved, can't search for this id: " .. 
                             tostring(id) .. "\n\n Please go save some constumes first.", 
                             { {"OK", nil} } )
@@ -970,7 +970,7 @@ function private.getDressingRoomDataByID( id, debugLevel )
    end     
    
    if( debugLevel and debugLevel > 0 ) then  
-      private.easyAlert( "Unknown Dressing Room ID", 
+      public.easyAlert( "Unknown Dressing Room ID", 
                       "No charactes/costumes found matching this ID: " .. tostring(characterType), 
                       { {"OK", nil} } )
    end
@@ -999,7 +999,7 @@ function private.getCostumeData( animalType )
       end
    end
    if (not costumeData) then
-      private.easyAlert( "No character data found", 
+      public.easyAlert( "No character data found", 
                          tostring( animalType ) .. " had no data?", 
                          { {"OK", nil} } )
    end
@@ -1608,7 +1608,7 @@ end
 -- buttons - table of tables like this:
 -- { { "button 1", opt_func1 }, { "button 2", opt_func2 }, ...}
 --
-function private.easyAlert( title, msg, buttons )
+function public.easyAlert( title, msg, buttons )
 
 	local function onComplete( event )
 		local action = event.action

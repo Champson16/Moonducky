@@ -26,6 +26,8 @@ local	screenW, screenH, contentW, contentH, centerX, centerY = FRC_Layout.getScr
 
 local currentSongID = "hamsters";  
 
+local sceneMode = "rehearsal" -- or "showtime"
+
 local character_x = 0
 local character_y = -16
 local eyeTimer
@@ -172,7 +174,6 @@ function FRC_Rehearsal_Scene:save(e)
       local showTitleLabel = display.newText( labelsGroup, showTitle, showTitleBack.x, showTitleBack.y, native.systemFontBold, fontSize )
       --showTitleLabel:setFillColor(0)
 
-
       -- create mask
       -- mask must have a minimum of 3px padding on all sides, and be a multiple of 4
       local capture = display.capture(saveGroup)
@@ -284,8 +285,7 @@ function FRC_Rehearsal_Scene:load(e)
    table.dump2(e.data)
    table.dump2(FRC_Rehearsal_Scene)   
    currentSongID = e.data.currentSongID
-   
-   
+      
    FRC_CharacterBuilder.init( { view                  = FRC_Rehearsal_Scene.view,
          currentSongID         = currentSongID,
          animationXMLBase      = animationXMLBase,
@@ -302,6 +302,9 @@ end
 -- ====================================================================
 
 function FRC_Rehearsal_Scene:createScene(event)
+   event.params = event.params or {}
+   sceneMode = event.params.mode or sceneMode
+   
    local view = self.view   
    if ((not self.id) or (self.id == '')) then self.id = FRC_Util.generateUniqueIdentifier(20) end
 
@@ -1065,25 +1068,36 @@ function FRC_Rehearsal_Scene:createScene(event)
    FRC_CharacterBuilder.rebuildCostumeScroller( ) -- EFM Load/Create New Show Logic ++
 
    local canLoad = not ((FRC_Rehearsal_Scene.saveData.savedItems == nil) or (#FRC_Rehearsal_Scene.saveData.savedItems < 1))
-   local function onLoad() 
-      local function showLoadPopup()
-         local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
-         local galleryPopup;
-         galleryPopup = FRC_GalleryPopup.new({
-               title = FRC_Rehearsal_Settings.DATA.LOAD_PROMPT,
-               isLoadPopup = true,
-               hideBlank = true,
-               width = screenW * 0.75,
-               height = screenH * 0.75,
-               data = FRC_Rehearsal_Scene.saveData.savedItems,
-               callback = function(e)
-                  galleryPopup:dispose();
-                  galleryPopup = nil;   
-                  FRC_Rehearsal_Scene:load(e);
-               end
-            });
+   
+   local function showLoadPopup( goHomeOnCancel )
+      local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
+      
+      local onCancel
+      if( goHomeOnCancel ) then
+         onCancel = function()
+            storyboard.gotoScene('Scenes.Home')
+         end
       end
-      showLoadPopup(); -- TEMP DISABLED UNTIL WE ARCHITECT DATA FORMAT FOR SHOWS
+      
+      local galleryPopup
+      
+      galleryPopup = FRC_GalleryPopup.new({
+            title = FRC_Rehearsal_Settings.DATA.LOAD_PROMPT,
+            isLoadPopup = true,
+            hideBlank = true,
+            width = screenW * 0.75,
+            height = screenH * 0.75,
+            data = FRC_Rehearsal_Scene.saveData.savedItems,
+            onCancel = onCancel,
+            callback = function(e)
+               galleryPopup:dispose();
+               galleryPopup = nil;   
+               FRC_Rehearsal_Scene:load(e);
+            end
+         });
+   end
+   local function onLoad() 
+      showLoadPopup( false ); -- TEMP DISABLED UNTIL WE ARCHITECT DATA FORMAT FOR SHOWS
    end
    
    -- EFM Load/Create New Show Logic
@@ -1110,14 +1124,27 @@ function FRC_Rehearsal_Scene:createScene(event)
             categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
       FRC_CharacterBuilder.rebuildInstrumenScroller( )
    end
-   FRC_CharacterBuilder.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad )
+      
+   if( sceneMode == "rehearsal" ) then
+      FRC_CharacterBuilder.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad )      
+   else
+      if( canLoad ) then
+         showLoadPopup( true )
+      else
+         FRC_CharacterBuilder.easyAlert( "No Saved Shows", 
+                            "You didn't save any shows yet.\n\nWould you like to go to rehearsal to make a show?", 
+                            { 
+                               {"Yes", function() FRC_CharacterBuilder.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad ) end }, 
+                               {"No", function() storyboard.gotoScene('Scenes.Home') end }, 
+                            } )
+      end
+   end
    
-
    if (FRC_Rehearsal_Scene.postCreateScene) then
       FRC_Rehearsal_Scene:postCreateScene(event)
    end
-
 end
+
 
 
 function FRC_Rehearsal_Scene:enterScene(event)
