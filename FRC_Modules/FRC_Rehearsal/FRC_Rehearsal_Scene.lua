@@ -139,95 +139,135 @@ FRC_AudioManager:newHandle({
 });
 
 
-function FRC_Rehearsal_Scene:save(e)
+function FRC_Rehearsal_Scene:save(e) -- EDOCHI
    local id = e.id
    if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)) end
-   --local saveGroup = self.view.saveGroup
-   local saveGroup = self.view.setDesignGroup
+   
+   --
+   
+   
+   local function completeSave( songTitle, showTitle )
+      dprint( "completeSave() ",  songTitle, showTitle )
+      --local saveGroup = self.view.setDesignGroup --EFM
+      local saveGroup = self.view._content --EFM
+      
+      -- EFM Add temporary label for save
+      local backH    = 160
+      local fontSize = 60
+      local labelsGroup = display.newGroup()
+      saveGroup:insert( labelsGroup )
+      
+      local songTitleBack = display.newRect( labelsGroup, centerX, centerY - screenH/2 + backH/2, screenW - 10, backH - 10 )
+      songTitleBack.strokeWidth = 8
+      songTitleBack:setStrokeColor(0)
+      songTitleBack:setFillColor( 0,0,0,0.6 )
+      
+      local showTitleBack = display.newRect( labelsGroup, centerX, centerY + screenH/2 - backH/2, screenW - 10, backH - 10 )
+      showTitleBack.strokeWidth = 8
+      showTitleBack:setStrokeColor(0)
+      showTitleBack:setFillColor( 0,0,0,0.6 )
+      
+      local songTitleLabel = display.newText( labelsGroup, songTitle, songTitleBack.x, songTitleBack.y, native.systemFontBold, fontSize )
+      --songTitleLabel:setFillColor(0)
 
-   -- create mask
-   -- mask must have a minimum of 3px padding on all sides, and be a multiple of 4
-   local capture = display.capture(saveGroup)
-   local cw = ((capture.contentWidth + 12) * display.contentScaleX)
-   local ch = ((capture.contentHeight + 12) * display.contentScaleY)
-   local sx = display.contentScaleX
-   local sy = display.contentScaleY
-   if (display.contentScaleX < 1.0) then
-      cw = cw * 2
-      capture.xScale = display.contentScaleX
-      sx = 1.0
-   end
-   if (display.contentScaleY < 1.0) then
-      ch = ch * 2
-      capture.yScale = display.contentScaleY
-      sy = 1.0
-   end
-   local maskWidth = math.round(((cw) - ((cw) % 4)) * sx)
-   local maskHeight = math.round(((ch) - ((ch) % 4)) * sy)
-   local maskContainer = display.newContainer(maskWidth, maskHeight)
-   local blackRect = display.newRect(maskContainer, 0, 0, maskWidth, maskHeight)
-   blackRect:setFillColor(0, 0, 0, 1.0)
-   blackRect.x, blackRect.y = 0, 0
-   maskContainer:insert(capture)
-   capture.fill.effect = 'filter.colorMatrix'
-   capture.fill.effect.coefficients =
-   {
-      0, 0, 0, 1,  --red coefficients
-      0, 0, 0, 1,  --green coefficients
-      0, 0, 0, 1,  --blue coefficients
-      0, 0, 0, 0   --alpha coefficients
-   }
-   capture.fill.effect.bias = { 0, 0, 0, 1 }
-   maskContainer.x = display.contentCenterX
-   maskContainer.y = display.contentCenterY
-   --display.save(maskContainer, id .. '_mask.png', system.DocumentsDirectory)
-   display.save(maskContainer, {
-         filename = id .. '_mask.png',
-         baseDir = system.DocumentsDirectory,
-         isFullResolution = false
-      })
-   capture.fill.effect = nil
-
-   -- save full-size image (to be used as Stamp in ArtCenter)
-   blackRect:removeSelf() blackRect = nil
-   display.save(maskContainer, { filename=id .. '_full.jpg', baseDir=system.DocumentsDirectory })
-   local fullWidth = maskContainer.contentWidth
-   local fullHeight = maskContainer.contentHeight
-
-   -- save thumbnail
-   maskContainer.yScale = UI('THUMBNAIL_HEIGHT') / maskContainer.contentHeight
-   maskContainer.xScale = maskContainer.yScale
-   local thumbWidth = maskContainer.contentWidth
-   local thumbHeight = maskContainer.contentHeight
-   display.save(maskContainer, { filename=id .. '_thumbnail.png', baseDir=system.DocumentsDirectory })
-   maskContainer:removeSelf() maskContainer = nil
-
-
-   local saveDataFilename = FRC_Rehearsal_Settings.DATA.DATA_FILENAME
-   local newSave = {
-      id = id,
-      setIndex = FRC_Rehearsal_Scene.setIndex,
-      thumbWidth = thumbWidth,
-      thumbHeight = thumbHeight,
-      thumbSuffix = '_thumbnail.png',
-      maskSuffix = '_mask.png',
-      fullSuffix = '_full.jpg',
-      fullWidth = fullWidth,
-      fullHeight = fullHeight
-   }
-   local exists = false
-   for i=1,#self.saveData.savedItems do
-      if (self.saveData.savedItems[i].id == id) then
-         self.saveData.savedItems[i] = newSave
-         exists = true
+      local showTitleLabel = display.newText( labelsGroup, showTitle, showTitleBack.x, showTitleBack.y, native.systemFontBold, fontSize )
+      --showTitleLabel:setFillColor(0)
+      
+      
+      
+      -- create mask
+      -- mask must have a minimum of 3px padding on all sides, and be a multiple of 4
+      local capture = display.capture(saveGroup)
+      local cw = ((capture.contentWidth + 12) * display.contentScaleX)
+      local ch = ((capture.contentHeight + 12) * display.contentScaleY)
+      local sx = display.contentScaleX
+      local sy = display.contentScaleY
+      if (display.contentScaleX < 1.0) then
+         cw = cw * 2
+         capture.xScale = display.contentScaleX
+         sx = 1.0
       end
+      if (display.contentScaleY < 1.0) then
+         ch = ch * 2
+         capture.yScale = display.contentScaleY
+         sy = 1.0
+      end
+      local maskWidth = math.round(((cw) - ((cw) % 4)) * sx)
+      local maskHeight = math.round(((ch) - ((ch) % 4)) * sy)
+      local maskContainer = display.newContainer(maskWidth, maskHeight)
+      local blackRect = display.newRect(maskContainer, 0, 0, maskWidth, maskHeight)
+      blackRect:setFillColor(0, 0, 0, 1.0)
+      blackRect.x, blackRect.y = 0, 0
+      maskContainer:insert(capture)
+      capture.fill.effect = 'filter.colorMatrix'
+      capture.fill.effect.coefficients =
+      {
+         0, 0, 0, 1,  --red coefficients
+         0, 0, 0, 1,  --green coefficients
+         0, 0, 0, 1,  --blue coefficients
+         0, 0, 0, 0   --alpha coefficients
+      }
+      capture.fill.effect.bias = { 0, 0, 0, 1 }
+      maskContainer.x = display.contentCenterX
+      maskContainer.y = display.contentCenterY
+      --display.save(maskContainer, id .. '_mask.png', system.DocumentsDirectory)
+      display.save(maskContainer, {
+            filename = id .. '_mask.png',
+            baseDir = system.DocumentsDirectory,
+            isFullResolution = false
+         })
+      capture.fill.effect = nil
+
+      -- save full-size image (to be used as Stamp in ArtCenter)
+      blackRect:removeSelf() blackRect = nil
+      display.save(maskContainer, { filename=id .. '_full.jpg', baseDir=system.DocumentsDirectory })
+      local fullWidth = maskContainer.contentWidth
+      local fullHeight = maskContainer.contentHeight
+
+      -- save thumbnail
+      maskContainer.yScale = UI('THUMBNAIL_HEIGHT') / maskContainer.contentHeight
+      maskContainer.xScale = maskContainer.yScale
+      local thumbWidth = maskContainer.contentWidth
+      local thumbHeight = maskContainer.contentHeight
+      display.save(maskContainer, { filename=id .. '_thumbnail.png', baseDir=system.DocumentsDirectory })
+      maskContainer:removeSelf() maskContainer = nil
+
+
+      local saveDataFilename = FRC_Rehearsal_Settings.DATA.DATA_FILENAME
+      local newSave = {
+         id = id,
+         setIndex = FRC_Rehearsal_Scene.setIndex,
+         thumbWidth = thumbWidth,
+         thumbHeight = thumbHeight,
+         thumbSuffix = '_thumbnail.png',
+         maskSuffix = '_mask.png',
+         fullSuffix = '_full.jpg',
+         fullWidth = fullWidth,
+         fullHeight = fullHeight
+      }
+      local exists = false
+      for i=1,#self.saveData.savedItems do
+         if (self.saveData.savedItems[i].id == id) then
+            self.saveData.savedItems[i] = newSave
+            exists = true
+         end
+      end
+      if (not exists) then
+         table.insert(self.saveData.savedItems, newSave)
+      end
+      FRC_CharacterBuilder.save(newSave)
+      FRC_DataLib.saveJSON(saveDataFilename, self.saveData)
+      self.id = id
+      
+      
+      -- EFM Add temporary label for save
+      display.remove(labelsGroup)
+
    end
-   if (not exists) then
-      table.insert(self.saveData.savedItems, newSave)
-   end
-   FRC_CharacterBuilder.save(newSave)
-   FRC_DataLib.saveJSON(saveDataFilename, self.saveData)
-   self.id = id
+   
+   --completeSave( "Hamsters Want To Be Free", "Test Save Title" )
+   
+   FRC_CharacterBuilder.getShowTitle( completeSave, nil )
 
 end
 
@@ -274,7 +314,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    local itemScrollers;
    local tracksGroup;
    local songGroup;
-   local currentSongID = "hamsters"; -- TODO change this to dynamic information based on user selection or loading of a saved show
+   local currentSongID = "hamsters"; -- TODO change this to dynamic information based on user selection or loading of a saved show -- EDOCHI
 
    -- FRC_Rehearsal.getSavedData()
    self.saveData = DATA('DATA_FILENAME', system.DocumentsDirectory)
@@ -294,7 +334,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    --FRC_Layout.setRefDimensions( UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT') )
    
    -- 3. Create a background
-   local bg = display.newImageRect(view._underlay, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
+   local bg = display.newImageRect(view._content, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT')); --EDOCHI
       
    -- 4. Scale first
    FRC_Layout.scaleToFit( bg )  
@@ -327,7 +367,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    end
 
    local setScale = 1;
-   local setDesignGroup = display.newGroup(); view._content:insert(setDesignGroup);
+   local setDesignGroup = display.newGroup(); view._content:insert(setDesignGroup); --EDOCHI
    view.setDesignGroup = setDesignGroup;
    local backdropGroup = display.newGroup(); view.setDesignGroup:insert(backdropGroup);
    local setGroup = display.newGroup(); view.setDesignGroup:insert(setGroup);
@@ -1013,10 +1053,11 @@ function FRC_Rehearsal_Scene:createScene(event)
    view._overlay:insert(categoriesContainer)
 
    FRC_CharacterBuilder.init( { view                  = view,
+                                currentSongID         = currentSongID,
                                 animationXMLBase      = animationXMLBase,
                                 animationImageBase    = animationImageBase,
                                 itemScrollers         = itemScrollers,
-                                categoriesContainer   = categoriesContainer } ) -- EFM
+                                categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
 
    FRC_CharacterBuilder.rebuildCostumeScroller( )
 

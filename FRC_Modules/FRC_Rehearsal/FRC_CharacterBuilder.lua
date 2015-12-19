@@ -29,16 +29,21 @@ local snapDist       = 100 ^ 2
 local characterScale = 0.5 -- Scale all placed characters and instruments by this much
 local instrumentScale = 0.35
 local stagePieces 
-local view, animationXMLBase, animationImageBase, itemsScroller, categoriesContainer
+local view, currentSongID, animationXMLBase, animationImageBase, itemsScroller, categoriesContainer
 local screenW, screenH = FRC_Layout.getScreenDimensions()
 local currentStagePiece
 local instrumentsInUse
+
+local	screenW, screenH, contentW, contentH, centerX, centerY = FRC_Layout.getScreenDimensions() 
 
 -- ********************************  
 -- EFM Following may be temporary (revist these locals):
 -- ********************************  
 local animalsNames      = { "Chicken", "Cat", "Dog", "Hamster", "Pig", "Sheep", "Goat" }
 local instrumentNames   = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" }
+local songTitles        = {}
+songTitles.hamsters = "Hamsters Want To Be Free"
+songTitles.mechanicalcow = "Mechanica lCow"
 -- ********************************  
 
 
@@ -61,6 +66,7 @@ end
 --
 function public.destroy()
    view                 = nil
+   currentSongID        = nil
    animationXMLBase     = nil
    animationImageBase   = nil
    itemScrollers        = nil
@@ -77,6 +83,7 @@ end
 function public.init( params )    
    public.destroy()
    view                 = params.view
+   currentSongID        = params.currentSongID
    animationXMLBase     = params.animationXMLBase
    animationImageBase   = params.animationImageBase
    itemScrollers        = params.itemScrollers
@@ -87,7 +94,141 @@ function public.init( params )
    params.view.setDesignGroup:insert( stagePieces )
    
    private.attachTouchClear()
+   
+   dprint(">>>>>>>>>>>>>>>>>>>>>>>>>", songTitles[currentSongID] )
+   
+   --timer.performWithDelay( 1000, public.getShowTitle )   
 end
+
+
+--
+-- getShowTitle() - Pop up input field to get show title
+--
+function public.getShowTitle( onSuccess, onCancel )
+   local group = display.newGroup()
+   group.enterFrame = function( self ) 
+      if( self.removeSelf == nil ) then
+         Runtime:removeEventListener( "enterFrame", self )
+         return
+      end
+      self:toFront()
+   end
+   Runtime:addEventListener( "enterFrame", group ) -- EDOCHI
+   
+   --local back = display.newRect( centerX, centerY, 10000, 10000 )
+   --back:setFillColor(0)
+   --back.alpha = 0
+   --transition.to( back, { alpha = 0.2, time = 500 } )
+   
+   local blur = private.easyBlur( group, 500, { 0, 0.4, 0.4, 0.8 } ) --  time, color )
+   blur.touch = function( self, event )
+      if(event.phase == "ended" ) then
+         Runtime:removeEventListener( "enterFrame", group )
+         display.remove( group )
+      end
+      return true
+   end
+   blur:addEventListener( "touch" )
+   
+   -- EFM Add temporary label for save
+   local backH       = screenH/2 - 50
+   local fontSize    = 60
+   local fontSize2   = 20
+   local titleLengthLimit = 20
+   local selColor1    = { 0, 1, 0, 0.2 }
+   local selColor2    = { 1, 0, 0, 0.2 }
+   local unSelColor   = { 1, 1, 1 }
+   
+   local titleQueryBack = display.newRoundedRect( group, centerX, centerY - screenH/2 + backH/2 + 20, screenW - 10, backH, 8 )
+   titleQueryBack.strokeWidth = 8
+   titleQueryBack:setStrokeColor(0)
+   
+   local titleQueryLabel = display.newText( group, "What Should We Call This Show?", titleQueryBack.x, titleQueryBack.y - backH/2 + 60, native.systemFontBold, fontSize )
+   titleQueryLabel:setFillColor(0)
+
+   local function inputListener( self, event )
+      table.dump(event.phase)
+      if( event.text and string.len( event.text ) > titleLengthLimit ) then
+         self.text = string.sub( event.text, 1, titleLengthLimit )
+      end
+   end
+
+   local textBox = native.newTextField( centerX, titleQueryBack.y, screenW - 80, fontSize + 20 )
+   textBox.font = native.newFont( native.systemFontBold, fontSize )
+   textBox.text = "A Hard Act To Follow"
+   textBox.isEditable = true
+   textBox.userInput = inputListener
+   textBox:addEventListener( "userInput"  )
+   group:insert( textBox ) 
+
+
+   local okButton = display.newRoundedRect( group, centerX + 150, titleQueryBack.y + 100, 160, 40, 8 )
+   okButton.strokeWidth = 2
+   okButton:setStrokeColor(0)
+   okButton.selColor = selColor1
+   okButton.cb = function()
+      Runtime:removeEventListener( "enterFrame", group )
+      display.remove( group )
+      if( onSuccess ) then
+         onSuccess( songTitles[currentSongID], textBox.text )          
+      end
+   end
+   
+   local okButtonLabel = display.newText( group, "OK", okButton.x, okButton.y, native.systemFontBold, fontSize2 )
+   okButtonLabel:setFillColor(0)
+
+   local cancelButton = display.newRoundedRect( group, centerX - 150, titleQueryBack.y + 100, 180, 40, 4 )
+   cancelButton.strokeWidth = 2
+   cancelButton:setStrokeColor(0)
+   cancelButton.selColor = selColor2
+   cancelButton.cb = function()
+      Runtime:removeEventListener( "enterFrame", group )
+      display.remove( group )
+      if( onCancel ) then         
+         onCancel( )
+      end
+   end
+   
+   local cancelButtonLabel = display.newText( group, "CANCEL", cancelButton.x, cancelButton.y, native.systemFontBold, fontSize2 )
+   cancelButtonLabel:setFillColor(0)
+   
+   local function onTouch( self, event ) 
+      if( event.phase == "began" ) then
+         display.currentStage:setFocus( self, event.id )
+         self.isFocus = true
+         self:setFillColor( unpack( self.selColor ) )
+      elseif( self.isFocus ) then
+         local bounds = self.stageBounds
+         local x,y = event.x, event.y
+         local isWithinBounds = 
+            bounds.xMin <= x and bounds.xMax >= x and bounds.yMin <= y and bounds.yMax >= y
+         
+         if( isWithinBounds ) then
+            self:setFillColor( unpack( self.selColor ) )
+         else
+            self:setFillColor( unpack( unSelColor ) )
+         end
+         
+         if( event.phase == "ended" ) then
+            display.currentStage:setFocus( self, nil )
+            self.isFocus = false
+            --table.print_r(self)
+            if( isWithinBounds ) then     
+               if( self.cb ) then self.cb() end 
+            end
+         end
+      end
+      return true
+   end
+   
+   okButton.touch = onTouch
+   cancelButton.touch = onTouch
+   cancelButton:addEventListener("touch")
+   okButton:addEventListener("touch")
+
+
+end
+
 
 
 -- 
@@ -115,6 +256,7 @@ function public.save(saveTable)
    end
    --table.print_r( savePieces ) 
 end
+
 
 -- 
 -- load() - Load and restore all stage elements (excluding stage backdrop which is handled in FRC_Rehearsal_Scene.)
@@ -1182,7 +1324,21 @@ function private.attachTouchClear()
 end
 
 
-
+-- Easy Blur
+--
+private.easyBlur = function( group, time, color )
+	group = group or display.getCurrentStage()
+	time = time or 0
+	color = color or {0.5,0.5,0.5}
+	local blur = display.captureScreen()
+	blur.x, blur.y = centerX, centerY
+	blur:setFillColor(unpack(color))
+	blur.fill.effect = "filter.blur"
+	blur.alpha = 0
+	group:insert( blur )
+	transition.to( blur, { alpha = 1, time = time } )
+	return blur
+end
 
 -- Easy alert popup
 --
@@ -1224,7 +1380,6 @@ function private.round(val, n)
     return math.floor(val+0.5)
   end
 end
-
 
 function private.calcMeasurementSpacing(debugEn)
 	private.w 				   = display.contentWidth
