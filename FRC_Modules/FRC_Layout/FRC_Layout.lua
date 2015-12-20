@@ -174,7 +174,7 @@ m.alignToRight = function(displayObject, pixelsFromEdge)
    --dprint("EDO alignToRight")
    if (((displayObject) and (type(displayObject) ~= 'number'))) then
       displayObject.x = m.right(-pixelsFromEdge) - (displayObject.contentWidth - (displayObject.contentWidth * displayObject.anchorX))
-      dprint("BILLY", pixelsFromEdge, m.right(pixelsFromEdge), m.right(0) )
+      --dprint("BILLY", pixelsFromEdge, m.right(pixelsFromEdge), m.right(0) )
    else
       return m.right(displayObject)
    end
@@ -183,7 +183,7 @@ end
 -- Aligns this object to the SCREEN top + pixelsFromEdge Offset
 -- Accounts for current scaling
 m.alignToTop = function(displayObject, pixelsFromEdge)
-   dprint("EDO alignToTop")
+   --dprint("EDO alignToTop")
    if (((displayObject) and (type(displayObject) ~= 'number'))) then
       displayObject.y = m.top(pixelsFromEdge) + (displayObject.contentHeight * displayObject.anchorY)
    else
@@ -195,7 +195,7 @@ end
 -- Aligns this object to the SCREEN bottom - pixelsFromEdge Offset
 -- Accounts for current scaling
 m.alignToBottom = function(displayObject, pixelsFromEdge)
-   dprint("EDO alignToBottom")
+   --dprint("EDO alignToBottom")
    if (((displayObject) and (type(displayObject) ~= 'number'))) then
       displayObject.y = m.bottom(pixelsFromEdge) - (displayObject.contentHeight - (displayObject.contentHeight * displayObject.anchorY))
    else
@@ -248,7 +248,7 @@ end
 m.placeUIDebuger = function( uiObj )
    uiObj.x = uiObj.x + centerX
    uiObj.y = uiObj.y + centerY   
-   dprint( "placeUIDebuger", uiObj.x, uiObj.y )
+   --dprint( "placeUIDebuger", uiObj.x, uiObj.y )
 end
 
 
@@ -299,7 +299,7 @@ m.placeImage = function( displayObject, layoutData, debugEn )
    displayObject.yScale = scale
    
    -- DEBUG
-   dprint("scene layout object final x/y: ", layoutData.id, displayObject.x .. " / " .. displayObject.y)
+   --dprint("scene layout object final x/y: ", layoutData.id, displayObject.x .. " / " .. displayObject.y)
 end   
 
 m.placeAnimation = function( displayObject, layoutData, debugEn )
@@ -337,7 +337,7 @@ m.placeAnimation = function( displayObject, layoutData, debugEn )
       displayObject.y = layoutData.bottom  -- EFM NOT WORKING RIGHT NOW?
    
    elseif (layoutData.y) then
-      dprint("*****************************", layoutData.y)
+      --dprint("*****************************", layoutData.y)
       displayObject.y = layoutData.y --* scale -- EFM DOES NOT ALIGN WITH IMAGES and VICE VERSA
    end
          

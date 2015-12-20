@@ -28,6 +28,7 @@ local currentSongID = "hamsters";
 
 local sceneMode = "rehearsal" -- or "showtime"
 
+
 local character_x = 0
 local character_y = -16
 local eyeTimer
@@ -291,9 +292,42 @@ function FRC_Rehearsal_Scene:load(e)
          animationXMLBase      = animationXMLBase,
          animationImageBase    = animationImageBase,
          itemScrollers         = itemScrollers,
+         showTimeMode          = true,
          categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
    FRC_CharacterBuilder.rebuildInstrumenScroller( )                        
    FRC_CharacterBuilder.load(e.data)
+   
+   -- Showtime Work EFM EDOCHI
+   if( sceneMode == "showtime") then
+      FRC_CharacterBuilder:stopStageCharacters()
+      
+      local curtain = display.newImageRect( FRC_Rehearsal_Scene.view._content, "FRC_Assets/FRC_Rehearsal/Images/curtain.jpg", screenW, screenH )
+      curtain.x = centerX
+      curtain.y = centerY
+      
+      local function onComplete()
+         timer.performWithDelay( 1000,
+            function()
+               if( FRC_Rehearsal_Scene.view.removeSelf ~= nil ) then
+                  FRC_Rehearsal_Scene.startRehearsalMode()
+               end               
+            end  )       
+      end
+      
+      transition.to( curtain, { y = curtain.y - screenH, delay = 1000, time = 1500, transition = easing.inCirc, onComplete = onComplete } )
+      --[[
+      local leftCurtain = display.newRect( view._content, "FRC_Assets\FRC_Rehearsal\Images\leftCurtain.png", screenW, screenH )
+      local rightCurtain = display.newRect( view._content, "FRC_Assets\FRC_Rehearsal\Images\rightCurtain.png", screenW, screenH )
+      leftCurtain.x = centerX
+      leftCurtain.y = centerY
+      rightCurtain.x = centerX
+      rightCurtain.y = centerY
+      --]]
+      
+      
+   end
+   
+   
 end
 
 
@@ -309,7 +343,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    if ((not self.id) or (self.id == '')) then self.id = FRC_Util.generateUniqueIdentifier(20) end
 
    -- DEBUG:
-   dprint("FRC_Rehearsal_Scene - createScene")
+   dprint("FRC_Rehearsal_Scene - createScene() sceneMode == ", sceneMode)
 
    if ((self.preCreateScene) and (type(self.preCreateScene) == 'function')) then
       self.preCreateScene(self, event);
@@ -566,6 +600,8 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
       rehearsalContainer.isVisible = false;
       -- TODO turn back on the appropriate scroller's visibility (last one that was active)
+      
+      FRC_CharacterBuilder:stopStageCharacters()
 
       -- STOP ALL AUDIO PLAYBACK OF SONG
       local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
@@ -626,6 +662,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             end
          end
          songGroup:playAll();
+         FRC_CharacterBuilder:playStageCharacters()
       end
       -- play the entire group
       --[[
@@ -662,7 +699,7 @@ function FRC_Rehearsal_Scene:createScene(event)
          -- preload the animation data (XML and images) early
          sceneLayout[i] = FRC_AnimationManager.createAnimationClipGroup(sceneLayoutData[i].animationFiles, animationXMLBase, animationImageBase)
          view._content:insert(sceneLayout[i]);
-         FRC_Layout.placeAnimation(sceneLayout[i], sceneLayoutData[i], true ) --EFM
+         FRC_Layout.placeAnimation(sceneLayout[i], sceneLayoutData[i], false ) --EFM
 
          for j=1, sceneLayout[i].numChildren do
             sceneLayout[i][j]:play({
@@ -752,7 +789,6 @@ function FRC_Rehearsal_Scene:createScene(event)
       button.y = -category_button_spacing * 0.75
       -- hide this by default
       rehearsalContainer.isVisible = false;
-
    end
 
    itemScrollers = {}
@@ -876,8 +912,8 @@ function FRC_Rehearsal_Scene:createScene(event)
 
    for i=1,#setDesignData do
       -- DEBUG
-      print('width', setDesignData[i].width * button_scale);
-      dprint('id:', setDesignData[i].id, 'width:', setDesignData[i].width, 'height:', setDesignData[i].height);
+      --print('width', setDesignData[i].width * button_scale);
+      --dprint('id:', setDesignData[i].id, 'width:', setDesignData[i].width, 'height:', setDesignData[i].height);
 
       local scroller = itemScrollers['SetDesign']
       buttonHeight = scroller.contentHeight - button_spacing;
@@ -1124,9 +1160,12 @@ function FRC_Rehearsal_Scene:createScene(event)
             categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
       FRC_CharacterBuilder.rebuildInstrumenScroller( )
    end
+   
       
    if( sceneMode == "rehearsal" ) then
-      FRC_CharacterBuilder.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad )      
+      if( not event.params.skipCreateLoad ) then
+         FRC_CharacterBuilder.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad )      
+      end      
    else
       if( canLoad ) then
          showLoadPopup( true )
@@ -1140,10 +1179,17 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
    end
    
+   -- Showtime Work EFM EDOCHI
+   if( sceneMode == "showtime") then
+      view._overlay.isVisible = false
+   end
+   
    if (FRC_Rehearsal_Scene.postCreateScene) then
       FRC_Rehearsal_Scene:postCreateScene(event)
    end
 end
+
+
 
 
 

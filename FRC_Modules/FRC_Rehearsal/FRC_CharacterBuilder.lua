@@ -80,7 +80,7 @@ end
 -- 
 -- cleanup() - Purge local references to key rehearsal values and groups.
 --
-function public.destroy()
+function public.destroy()   
    view                 = nil
    currentSongID        = nil
    animationXMLBase     = nil
@@ -90,6 +90,7 @@ function public.destroy()
    currentCharacterType = "Chicken"
    currentStagePiece    = nil
    instrumentsInUse     = nil
+   showTimeMode         = false
    instrumentNames      = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" } 
    
    display.remove(stagePieces)
@@ -107,6 +108,10 @@ function public.init( params )
    itemScrollers        = params.itemScrollers
    categoriesContainer  = params.categoriesContainer
    
+   if(params.showTimeMode ~= nil) then
+      showTimeMode = params.showTimeMode
+   end
+   
    if( currentSongID == "hamsters" ) then
       instrumentNames = hamsterInstruments
    elseif( currentSongID == "mechanicalcow" ) then
@@ -122,7 +127,7 @@ function public.init( params )
    
    private.attachTouchClear()
    
-   dprint(">>>>>>>>>>>>>>>>>>>>>>>>>", songTitles[currentSongID] )
+   --dprint(">>>>>>>>>>>>>>>>>>>>>>>>>", songTitles[currentSongID] )
    
    --timer.performWithDelay( 1000, public.getShowTitle )   
 end
@@ -417,7 +422,7 @@ function public.save(saveTable)
    
    for i = 1, stagePieces.numChildren do
       local record = {}
-      local stagePiece = stagePieces[i]
+      local stagePiece        = stagePieces[i]
       record.x                = stagePiece.x
       record.y                = stagePiece.y
       record.pieceType        = stagePiece.pieceType
@@ -508,7 +513,7 @@ function public.placeNewInstrument( x, y, instrumentName )
    dprint( "public.placeNewInstrument( " .. tostring(instrumentName) .. " )" )
    
    if( instrumentsInUse[instrumentName] ) then
-      public.easyAlert( "Duplicate instrument", 
+      private.easyAlert( "Duplicate instrument", 
                 "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage.", 
                 { {"OK", nil} } )
       dprint("Duplicate instrument", "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage." )
@@ -682,8 +687,10 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    stagePiece:scale(characterScale,characterScale)
    private.attachDragger(stagePiece)
 
+   -- EFM start stopped or play one cycle?
    for i = 1, #animationSequences do
       private.playAllAnimations( animationSequences, i )
+      --private.stopAllAnimations( animationSequences, i )
    end
    
    currentStagePiece = stagePiece
@@ -769,7 +776,7 @@ function public.rebuildInstrumenScroller( )
    -- for now, just grab the first song's instrument list
    songInstruments = songInstruments.instruments
    for i=1,#songInstruments do
-      dprint("EDOCHI", songInstruments[i].id)
+      --dprint("EDOCHI", songInstruments[i].id)
       buttonHeight = scroller.contentHeight - button_spacing
       --table.dump2(songInstruments[i]) --EFM
       local button = ui.button.new({
@@ -898,6 +905,73 @@ function public.getInstrumentInUse( instrument )
 end
 
 
+--
+-- getCharactersOnStage() - Return list of all characters on stage.
+--
+function public.getCharactersOnStage()
+   local tmp = {}
+   dprint("getCharactersOnStage()", stagePieces.numChildren )
+   for i = 1, stagePieces.numChildren do
+      local curPiece = stagePieces[i]
+      if( curPiece and  curPiece.pieceType == "character" ) then
+         tmp[#tmp+1] = curPiece
+      end
+   end
+   return tmp
+end
+
+
+--
+-- playStageCharacters() - Make all characters on stage play.
+--
+function public.playStageCharacters() 
+   local charactersOnStage = public.getCharactersOnStage() 
+   --table.print_r( charactersOnStage )
+   
+   for i = 1, #charactersOnStage do
+      local animationSequences = charactersOnStage[i].animationSequences
+      for j = 1, #animationSequences do
+         private.playAllAnimations( animationSequences, j, true )
+      end
+   end
+end
+
+--
+-- stopStageCharacters() - Make all characters on stage stop playing.
+--
+
+function public.stopStageCharacters() 
+   local charactersOnStage = public.getCharactersOnStage() 
+   --table.print_r( charactersOnStage )
+   
+   for i = 1, #charactersOnStage do
+      local animationSequences = charactersOnStage[i].animationSequences
+      for j = 1, #animationSequences do
+         private.stopAllAnimations( animationSequences, j )
+      end
+   end
+end
+
+if( edmode ) then
+   local function onKey( event )
+      local storyboard = require("storyboard");
+      if( event.phase ~= "up" ) then return false end
+      
+      if( event.keyName == "p" ) then
+         public.playStageCharacters() 
+      
+      elseif( event.keyName == "s" ) then
+         public.stopStageCharacters() 
+      
+      elseif( event.keyName == "g" ) then
+         public.getCharactersOnStage() 
+      end
+   
+   end
+   Runtime:addEventListener( "key", onKey )   
+end
+
+
 -- ======================================================================
 -- Private Method Definitions
 -- ======================================================================
@@ -913,7 +987,7 @@ function private.getDressingRoomDataByAnimalType( characterType, debugLevel )
    if( not allSaved.savedItems ) then 
       if( debugLevel and debugLevel > 0 ) then
          dprint("No charactes/costumes saved, can't search for this animal type: ", characterType )
-         public.easyAlert( "No saved costumes", 
+         private.easyAlert( "No saved costumes", 
                             "No charactes/costumes saved, can't search for this animal type: " .. 
                             tostring(characterType) .. "\n\n Please go save some constumes first.", 
                             { {"OK", nil} } )
@@ -929,7 +1003,7 @@ function private.getDressingRoomDataByAnimalType( characterType, debugLevel )
    end  
    if( debugLevel and debugLevel > 0 ) then
       if( #characters == 0 ) then
-         public.easyAlert( "No saved costumes", 
+         private.easyAlert( "No saved costumes", 
                             "No charactes/costumes saved for this animal type: " .. 
                             tostring(characterType) .. "\n\n Please go save some constumes first.", 
                             { {"OK", nil} } )                        
@@ -951,7 +1025,7 @@ function private.getDressingRoomDataByID( id, debugLevel )
    local allSaved = table.load( dressingRoomDataPath ) or {}   
    if( not allSaved.savedItems ) then 
       if( debugLevel and debugLevel > 0 ) then
-         public.easyAlert( "No saved costumes", 
+         private.easyAlert( "No saved costumes", 
                             "No charactes/costumes saved, can't search for this id: " .. 
                             tostring(id) .. "\n\n Please go save some constumes first.", 
                             { {"OK", nil} } )
@@ -970,7 +1044,7 @@ function private.getDressingRoomDataByID( id, debugLevel )
    end     
    
    if( debugLevel and debugLevel > 0 ) then  
-      public.easyAlert( "Unknown Dressing Room ID", 
+      private.easyAlert( "Unknown Dressing Room ID", 
                       "No charactes/costumes found matching this ID: " .. tostring(characterType), 
                       { {"OK", nil} } )
    end
@@ -999,7 +1073,7 @@ function private.getCostumeData( animalType )
       end
    end
    if (not costumeData) then
-      public.easyAlert( "No character data found", 
+      private.easyAlert( "No character data found", 
                          tostring( animalType ) .. " had no data?", 
                          { {"OK", nil} } )
    end
@@ -1089,6 +1163,7 @@ end
 -- Common Drag & Drop Handler
 --
 function private.attachDragger( obj )
+   if( showTimeMode ) then return end
    --obj.isHitTestMasked = true
    obj.touch = private.dragNDrop
    obj:addEventListener( "touch" )
@@ -1422,22 +1497,19 @@ function private.createUnifiedAnimationClipGroup( sourceFile, unifiedData, anima
 end
 
 --
--- playAllAnimations() - Plays al of the character's animations (EFM needs work) 
+-- playAllAnimations() - Plays all of the character's animations (EFM needs work) 
 --
-function private.playAllAnimations( animationSequences, num )
+function private.playAllAnimations( animationSequences, num, autoLoop )
    num = num or mRand(1,#animationSequences)
-   -- pick a random animation sequence
    local sequence = animationSequences[num]
-
-   --print("BILLY ",  sequence.numChildren )
    for i=1, sequence.numChildren do
 
       sequence[i]:play({
-            showLastFrame = true,
+            showLastFrame = not(autoLoop),
             playBackward = false,
-            autoLoop = false,
+            autoLoop = autoLoop,
             palindromicLoop = false,
-            delay = 0,
+            delay = 30,
             intervalTime = 30,
             maxIterations = 1,
             --onCompletion = onCompletion,
@@ -1446,6 +1518,24 @@ function private.playAllAnimations( animationSequences, num )
       --timer.performWithDelay(33, function() sequence[i]:pause() end )
    end
 end
+
+--
+-- stopAllAnimations() - Stops all of the character's animations (EFM needs work) 
+--
+function private.stopAllAnimations( animationSequences, num )
+   num = num or mRand(1,#animationSequences)
+   local sequence = animationSequences[num]
+   for i=1, sequence.numChildren do
+      sequence[i]:stop()
+      sequence[i]:play({
+            showLastFrame = true,
+            delay = 0,
+            intervalTime = 0,
+            maxIterations = 1,
+         })
+   end
+end
+
 
 --
 -- getPartName() - Extract replacment part (art) name from this character type's JSON/Lua data.
@@ -1477,12 +1567,12 @@ end
 function private.addSelectionIndicator( stagePiece )
    if( stagePiece.pieceType == "instrument" ) then
       stagePiece.indicator = stagePiece
-      stagePiece.strokeWidth = 6
+      stagePiece.strokeWidth = (showTimeMode) and 0 or 6
       return 
    end
    local indicator = display.newRect( stagePiece, 0, 0, stagePiece.contentWidth * 1/characterScale + 40, stagePiece.contentHeight * 1/characterScale + 60 )
    indicator:setFillColor(0,0,0,0)
-   indicator.strokeWidth = 6
+   indicator.strokeWidth = (showTimeMode) and 0 or 6
    indicator:toBack()
    stagePiece.indicator = indicator
 end
@@ -1594,7 +1684,7 @@ private.easyBlur = function( group, time, color )
 	local blur = display.captureScreen()
 	blur.x, blur.y = centerX, centerY
 	blur:setFillColor(unpack(color))
-	blur.fill.effect = "filter.blur"
+	--blur.fill.effect = "filter.blur"
 	blur.alpha = 0
 	group:insert( blur )
 	transition.to( blur, { alpha = 1, time = time } )
@@ -1608,7 +1698,7 @@ end
 -- buttons - table of tables like this:
 -- { { "button 1", opt_func1 }, { "button 2", opt_func2 }, ...}
 --
-function public.easyAlert( title, msg, buttons )
+function private.easyAlert( title, msg, buttons )
 
 	local function onComplete( event )
 		local action = event.action
@@ -1628,6 +1718,8 @@ function public.easyAlert( title, msg, buttons )
 	local alert = native.showAlert( title, msg, names, onComplete )
 	return alert
 end
+-- EFM temporarily exposed for use in FRC_Reheasal_Scene.lua till we come up with a better plan.
+public.easyAlert = private.easyAlert
 
 -- ==
 --    round(val, n) - Rounds a number to the nearest decimal places. (http://lua-users.org/wiki/FormattingNumbers)
@@ -1690,7 +1782,7 @@ function private.calcMeasurementSpacing(debugEn)
 		dprint("---------------\n\n")
 	end
 end
-private.calcMeasurementSpacing(true)
+private.calcMeasurementSpacing(false)
 
 return public
 

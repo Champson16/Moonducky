@@ -1,9 +1,14 @@
+--[[
+local meter = require "meter"
+meter.create_fps()
+meter.create_mem()
+--]]
 -----------------------------------------------------------------------------------------
 --
 -- main.lua
 --
 -----------------------------------------------------------------------------------------
-local edmode = false --EFM
+_G.edmode = false --EFM
 if( edmode ) then
    _G.dprint  = _G.print --EFM
    require ("FRC_Modules.FRC_Extensions.FRC_Extensions") 
@@ -26,7 +31,7 @@ else
 end
 
 --timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time=0 }); end )
---timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "rehearsal" } }); end )
+--timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.Rehearsal', { time = 100, params = { mode = "rehearsal", skipCreateLoad = true } }); end )
 --timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "showtime" } }); end )
 --timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.Lobby', { effect="crossFade", time=0 }); end )
 --require("mobdebug").start() -- ZeroBrane Users
