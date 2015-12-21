@@ -41,6 +41,7 @@ local characterScale = 0.5 -- Scale all placed characters and instruments by thi
 local instrumentScale = 0.35
 local stagePieces 
 local view, currentSongID, animationXMLBase, animationImageBase, itemsScroller, categoriesContainer
+local editingEnabled = true
 local screenW, screenH = FRC_Layout.getScreenDimensions()
 local currentStagePiece
 local instrumentsInUse
@@ -91,6 +92,7 @@ function public.destroy()
    currentStagePiece    = nil
    instrumentsInUse     = nil
    showTimeMode         = false
+   editingEnabled       = true
    instrumentNames      = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" } 
    
    display.remove(stagePieces)
@@ -107,6 +109,8 @@ function public.init( params )
    animationImageBase   = params.animationImageBase
    itemScrollers        = params.itemScrollers
    categoriesContainer  = params.categoriesContainer
+   
+   editingEnabled       = true
    
    if(params.showTimeMode ~= nil) then
       showTimeMode = params.showTimeMode
@@ -898,6 +902,19 @@ function public.getInstrumentsInUse()
 end
 
 --
+-- setEditEnable( enable ) - Allows us to enable and disable editing temporarily.
+--
+function public.setEditEnable( enable )
+   if (enable == nil) then enable = false end
+   editingEnabled = (enable)
+   if( not editingEnabled ) then 
+      currentStagePiece = nil
+      private.highlightSelected()
+   end
+end
+
+
+--
 -- getInstrumentInUse() - Returns true if 'instrument' is in use
 --
 function public.getInstrumentInUse( instrument )
@@ -1163,12 +1180,18 @@ end
 -- Common Drag & Drop Handler
 --
 function private.attachDragger( obj )
-   if( showTimeMode ) then return end
+   if( showTimeMode ) then       
+      return 
+   end   
    --obj.isHitTestMasked = true
    obj.touch = private.dragNDrop
    obj:addEventListener( "touch" )
 end
-function private.dragNDrop( self, event ) 
+function private.dragNDrop( self, event )
+   if( not editingEnabled ) then 
+      dprint("Editing disabled", editingEnabled)
+      return 
+   end
    if( event.phase == "began" ) then
       display.currentStage:setFocus( self, event.id )
       self.isFocus = true

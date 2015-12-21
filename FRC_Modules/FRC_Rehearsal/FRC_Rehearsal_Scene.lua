@@ -287,12 +287,13 @@ function FRC_Rehearsal_Scene:load(e)
    table.dump2(FRC_Rehearsal_Scene)   
    currentSongID = e.data.currentSongID
       
-   FRC_CharacterBuilder.init( { view                  = FRC_Rehearsal_Scene.view,
+   FRC_CharacterBuilder.init( { 
+         view                  = FRC_Rehearsal_Scene.view,
          currentSongID         = currentSongID,
          animationXMLBase      = animationXMLBase,
          animationImageBase    = animationImageBase,
          itemScrollers         = itemScrollers,
-         showTimeMode          = true,
+         showTimeMode          = ( sceneMode == "showtime"),
          categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
    FRC_CharacterBuilder.rebuildInstrumenScroller( )                        
    FRC_CharacterBuilder.load(e.data)
@@ -300,6 +301,7 @@ function FRC_Rehearsal_Scene:load(e)
    -- Showtime Work EFM EDOCHI
    if( sceneMode == "showtime") then
       FRC_CharacterBuilder:stopStageCharacters()
+      FRC_CharacterBuilder.setEditEnable( true )
       
       local curtain = display.newImageRect( FRC_Rehearsal_Scene.view._content, "FRC_Assets/FRC_Rehearsal/Images/curtain.jpg", screenW, screenH )
       curtain.x = centerX
@@ -601,7 +603,8 @@ function FRC_Rehearsal_Scene:createScene(event)
       rehearsalContainer.isVisible = false;
       -- TODO turn back on the appropriate scroller's visibility (last one that was active)
       
-      FRC_CharacterBuilder:stopStageCharacters()
+      FRC_CharacterBuilder.stopStageCharacters()
+      FRC_CharacterBuilder.setEditEnable( true )
 
       -- STOP ALL AUDIO PLAYBACK OF SONG
       local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
@@ -662,7 +665,8 @@ function FRC_Rehearsal_Scene:createScene(event)
             end
          end
          songGroup:playAll();
-         FRC_CharacterBuilder:playStageCharacters()
+         FRC_CharacterBuilder.setEditEnable( false )
+         FRC_CharacterBuilder.playStageCharacters()
       end
       -- play the entire group
       --[[

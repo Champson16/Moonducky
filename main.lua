@@ -31,7 +31,7 @@ else
 end
 
 --timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time=0 }); end )
---timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.Rehearsal', { time = 100, params = { mode = "rehearsal", skipCreateLoad = true } }); end )
+--timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.Rehearsal', { time = 100, params = { mode = "rehearsal", skipCreateLoad = false } }); end )
 --timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "showtime" } }); end )
 --timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.Lobby', { effect="crossFade", time=0 }); end )
 --require("mobdebug").start() -- ZeroBrane Users
