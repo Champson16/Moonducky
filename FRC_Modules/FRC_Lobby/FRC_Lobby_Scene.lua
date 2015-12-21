@@ -56,26 +56,26 @@ function FRC_Lobby_Scene:createScene(event)
    -- TRS EFM - Please, see changes/notes below.
 
    -- 1. Create a set of standard rendering layers
-   FRC_Layout.createLayers( view ) 
-   	
+   FRC_Layout.createLayers( view )
+
    -- 2. (Optionally) configure the reference width/height for this scene
    --
-   -- Reference dimensions must be speficied before scaling anything.  
+   -- Reference dimensions must be speficied before scaling anything.
    -- You can do this once in the 'FRC_Layout' module and never change it, or change it per scene.
-   -- 
+   --
    --FRC_Layout.setRefDimensions( UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT') )
-   
+
    -- 3. Create a background
    local bg = display.newImageRect(view._underlay, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
-      
+
    -- 4. Scale first
-   FRC_Layout.scaleToFit( bg )  
-   
+   FRC_Layout.scaleToFit( bg )
+
    -- 5. Then position it.
-   bg.x = centerX 
-   bg.y = centerY 
-	
- 	
+   bg.x = centerX
+   bg.y = centerY
+
+
 	function videoPlaybackComplete(event)
 		if (FRC_AppSettings.get("ambientSoundOn")) then
 			FRC_AudioManager:findGroup("ambientMusic"):resume();
@@ -101,7 +101,7 @@ function FRC_Lobby_Scene:createScene(event)
 	theatreDoorAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorAnimationFiles, animationXMLBase, animationImageBase);
    view._content:insert(theatreDoorAnimationSequences);  -- TRS EFM
    FRC_Layout.placeAnimation( theatreDoorAnimationSequences, nil, false ) -- TRS EFM
-	
+
 
 	for i=1, theatreDoorAnimationSequences.numChildren do
 		theatreDoorAnimationSequences[i]:play({
@@ -168,15 +168,15 @@ function FRC_Lobby_Scene:createScene(event)
 	end
 
 	-- this is a hokey way to move to the next module at roughly the time that the animation is completed
-	-- ideally this would be triggered by an onComplete function attached to the outboundToTheatreAnimationSequences[i]:play({ call above   
+	-- ideally this would be triggered by an onComplete function attached to the outboundToTheatreAnimationSequences[i]:play({ call above
 	scene.outboundTimer = timer.performWithDelay(1600, function()
 		scene.outboundTimer = nil;
 		if (theatreDoorSequences) then
 			for i=1, theatreDoorSequences.numChildren do
 				theatreDoorSequences[i]:stop();
-			end         
+			end
 		end
-      storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "showtime" }  } );		
+      storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "showtime" }  } );
 		--native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
 		end, 1);
 	end
@@ -202,7 +202,7 @@ function FRC_Lobby_Scene:createScene(event)
 	rehearsalButton.anchorY = 0.5;
    view._underlay:insert(rehearsalButton);
    FRC_Layout.placeUI(rehearsalButton)
-	
+
 
 	-- query server
 	-- establish online/offline check
@@ -297,8 +297,8 @@ function FRC_Lobby_Scene:createScene(event)
 		imageDown = imageBase .. 'MDMT_Lobby_LearnPoster_down.png',
 		width = 141,
 		height = 116,
-		x = 929 - 576,
-		y = 171 - 368,
+		x = 859,
+		y = 171,
 		onRelease = function(e)
 			analytics.logEvent("MDMT.Lobby.Learn");
 			local screenRect = display.newRect(view, 0, 0, screenW, screenH);
@@ -334,15 +334,15 @@ function FRC_Lobby_Scene:createScene(event)
 	learnButton.anchorY = 0.5;
    view._underlay:insert(learnButton); -- TRS EFM
    FRC_Layout.placeUI(learnButton) -- TRS EFM
-	
+
 
 	discoverButton = ui.button.new({
 		imageUp = imageBase .. 'MDMT_Lobby_DiscoverPoster.png',
 		imageDown = imageBase .. 'MDMT_Lobby_DiscoverPoster_down.png',
 		width = 158,
 		height = 102,
-		x = 1004 - 576,
-		y = 256 - 368,
+		x = 934,
+		y = 256,
 		onRelease = function(e)
 			analytics.logEvent("MDMT.Lobby.Discover");
 			local screenRect = display.newRect(view, 0, 0, screenW, screenH);

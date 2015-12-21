@@ -53,29 +53,29 @@ function FRC_Home_Scene:createScene(event)
 	if (FRC_Home_Scene.preCreateScene) then
 		FRC_Home_Scene:preCreateScene(event);
 	end
-   
+
    -- TRS EFM - Please, see changes/notes below.
 
    -- 1. Create a set of standard rendering layers
-   FRC_Layout.createLayers( view ) 
-   	
+   FRC_Layout.createLayers( view )
+
    -- 2. (Optionally) configure the reference width/height for this scene
    --
-   -- Reference dimensions must be speficied before scaling anything.  
+   -- Reference dimensions must be speficied before scaling anything.
    -- You can do this once in the 'FRC_Layout' module and never change it, or change it per scene.
-   -- 
+   --
    --FRC_Layout.setRefDimensions( UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT') )
-   
+
    -- 3. Create a background
    local bg = display.newImageRect(view._underlay, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
-      
+
    -- 4. Scale first
-   FRC_Layout.scaleToFit( bg )  
-   
+   FRC_Layout.scaleToFit( bg )
+
    -- 5. Then position it.
-   bg.x = centerX 
-   bg.y = centerY 
-	
+   bg.x = centerX
+   bg.y = centerY
+
 
 	function videoPlaybackComplete(event)
 		if (FRC_AppSettings.get("ambientSoundOn")) then
@@ -219,7 +219,7 @@ function FRC_Home_Scene:createScene(event)
 
 	for i=1,#sceneLayoutData do
 		-- DEBUG
-		
+
 		if sceneLayoutData[i].imageFile then
          dprint("Pre - setting up scene layout object: ", sceneLayoutData[i].id, sceneLayoutData[i].xCenter, sceneLayoutData[i].yCenter);
 			sceneLayout[i] = display.newImageRect(view._content, UI('IMAGES_PATH') .. sceneLayoutData[i].imageFile, sceneLayoutData[i].width, sceneLayoutData[i].height);
@@ -231,7 +231,7 @@ function FRC_Home_Scene:createScene(event)
 			sceneLayout[i] = FRC_AnimationManager.createAnimationClipGroup(sceneLayoutData[i].animationFiles, animationXMLBase, animationImageBase);
          view._content:insert( sceneLayout[i] ) -- TRS EFM
          FRC_Layout.placeAnimation( sceneLayout[i],  sceneLayoutData[i], false  )  --TRS EFM
-      
+
 			for j=1, sceneLayout[i].numChildren do
 				sceneLayout[i][j]:play({
 					showLastFrame = false,
@@ -243,9 +243,9 @@ function FRC_Home_Scene:createScene(event)
 					maxIterations = 1
 				});
 			end
-       
+
 		end
-      
+
 		if (sceneLayoutData[i].onTouch) then
 			-- DEBUG
 			--dprint("sceneLayout onTouch", sceneLayoutData[i].onTouch);
@@ -309,7 +309,7 @@ function FRC_Home_Scene:createScene(event)
 	 };
 		-- preload the animation data (XML and images) early
 	enteringLobbyAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(enteringLobbyAnimationFiles, animationXMLBase, animationImageBase);
-   view._content:insert( enteringLobbyAnimationSequences ) --TRS EFM 
+   view._content:insert( enteringLobbyAnimationSequences ) --TRS EFM
    FRC_Layout.placeAnimation( enteringLobbyAnimationSequences, nil, false ) --TRS EFM
 
 	-- insert the main function buttons
@@ -327,7 +327,7 @@ function FRC_Home_Scene:createScene(event)
 		width = 117,
 		height = 307,
 		x = 74, --TRS EFM --138 - 576,
-		y = 493, --TRS EFM -- --477 - 368,
+		y = 477, --TRS EFM -- --477 - 368,
 		onRelease = function()
 			analytics.logEvent("MDMT.Home.ArtCenter");
 			if (not _G.ANDROID_DEVICE) then
@@ -339,10 +339,10 @@ function FRC_Home_Scene:createScene(event)
 		end
 	});
 	artCenterButton.anchorX = 0.5;
-	artCenterButton.anchorY = 0.5;   
+	artCenterButton.anchorY = 0.5;
 	view._underlay:insert(artCenterButton);
    FRC_Layout.placeUI(artCenterButton,bg)  --TRS EFM
-   
+
 
 	setDesignButton = ui.button.new({
 		imageUp = imageBase .. 'MDMT_LandingPage_Door_SetDesign_up.png',
@@ -350,14 +350,14 @@ function FRC_Home_Scene:createScene(event)
 		width = 117,
 		height = 307,
 		x = 187, --TRS EFM --251 - 576,
-		y = 493, --TRS EFM --477 - 368,
+		y = 477, --TRS EFM --477 - 368,
 		onRelease = function()
 			analytics.logEvent("MDMT.Home.SetDesign");
 			storyboard.gotoScene('Scenes.SetDesign', { effect="crossFade", time=250 });
 		end
 	});
 	setDesignButton.anchorX = 0.5;
-	setDesignButton.anchorY = 0.5;   
+	setDesignButton.anchorY = 0.5;
 	view._underlay:insert(setDesignButton);  --TRS EFM
    FRC_Layout.placeUI(setDesignButton,bg)  --TRS EFM
 
@@ -367,14 +367,14 @@ function FRC_Home_Scene:createScene(event)
 		width = 117,
 		height = 307,
 		x = 952, --TRS EFM --1016 - 576,
-		y = 493, --TRS EFM --477 - 368,
+		y = 477, --TRS EFM --477 - 368,
 		onRelease = function()
 			analytics.logEvent("MDMT.Home.DressingRoom");
-         storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time=250 }); 
+         storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time=250 });
 		end
 	});
 	dressingRoomButton.anchorX = 0.5;
-	dressingRoomButton.anchorY = 0.5;   
+	dressingRoomButton.anchorY = 0.5;
 	view._underlay:insert(dressingRoomButton);  --TRS EFM
    FRC_Layout.placeUI(dressingRoomButton,bg)  --TRS EFM
 
