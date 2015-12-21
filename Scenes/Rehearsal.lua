@@ -277,8 +277,8 @@ function scene.postDidExitScene(self, event)
 	local scene = self;
 	scene.actionBarMenu:dispose();
 	scene.actionBarMenu = nil;
-	scene.settingsBarMenu:dispose();
-	scene.settingsBarMenu = nil;
+	-- scene.settingsBarMenu:dispose();
+	-- scene.settingsBarMenu = nil;
 end
 
 return scene;
