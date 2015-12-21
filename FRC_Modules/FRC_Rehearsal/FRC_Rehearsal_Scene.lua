@@ -187,7 +187,7 @@ function FRC_Rehearsal_Scene:save(e)
       local songTitleLabel = display.newText( labelsGroup, songTitle, songTitleBack.x, songTitleBack.y, "MoonDucky", fontSize )
       --songTitleLabel:setFillColor(0)
 
-      local showTitleLabel = display.newText( labelsGroup, showTitle, showTitleBack.x, showTitleBack.y, native.systemFontBold, fontSize )
+      local showTitleLabel = display.newText( labelsGroup, showTitle, showTitleBack.x, showTitleBack.y, "OpenSans-Semibold", fontSize )
       --showTitleLabel:setFillColor(0)
 
       -- create mask
