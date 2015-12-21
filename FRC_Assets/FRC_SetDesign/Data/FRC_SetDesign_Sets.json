@@ -2,6 +2,7 @@
 	"id": "Barn",
 	"imageFile": "MDMT_SetDesign_Set_Barn.png",
 	"thumbFile": "MDMT_SetDesign_Set_Barn_thumbnail.png",
+	"curtainFile" : "MDMT_SetDesign_Curtain_BarnStage.png",
 	"width": 1152,
 	"height": 768,
 	"frameRect": {
@@ -15,6 +16,7 @@
 	"id": "Circus",
 	"imageFile": "MDMT_SetDesign_Set_Circus.png",
 	"thumbFile": "MDMT_SetDesign_Set_Circus_thumbnail.png",
+	"curtainFile" : "MDMT_SetDesign_Curtain_CircusStage.png",
 	"width": 1152,
 	"height": 768,
 	"frameRect": {
@@ -28,7 +30,8 @@
 	"id": "NightClub",
 	"imageFile": "MDMT_SetDesign_Set_NightClub.png",
 	"thumbFile": "MDMT_SetDesign_Set_NightClub_thumbnail.png",
-	"width": 1152,
+	"curtainFile" : "MDMT_SetDesign_Curtain_NightClub.png",
+  "width": 1152,
 	"height": 768,
 	"frameRect": {
 		"left": 187,
@@ -41,6 +44,7 @@
 	"id": "Opera",
 	"imageFile": "MDMT_SetDesign_Set_Opera.png",
 	"thumbFile": "MDMT_SetDesign_Set_Opera_thumbnail.png",
+	"curtainFile" : "MDMT_SetDesign_Curtain_OperaStage.png",
 	"width": 1152,
 	"height": 768,
 	"frameRect": {
@@ -54,6 +58,7 @@
 	"id": "Restaurant",
 	"imageFile": "MDMT_SetDesign_Set_Restaurant.png",
 	"thumbFile": "MDMT_SetDesign_Set_Restaurant_thumbnail.png",
+	"curtainFile" : "MDMT_SetDesign_Curtain_RestaurantStage.png",
 	"width": 1152,
 	"height": 768,
 	"frameRect": {
@@ -67,6 +72,7 @@
 	"id": "Wood",
 	"imageFile": "MDMT_SetDesign_Set_Wood.png",
 	"thumbFile": "MDMT_SetDesign_Set_Wood_thumbnail.png",
+	"curtainFile" : "MDMT_SetDesign_Curtain_WoodStage.png",
 	"width": 1152,
 	"height": 768,
 	"frameRect": {
