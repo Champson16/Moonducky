@@ -109,7 +109,7 @@ settings = {
         "en"
 			},
 			UIAppFonts = {
-				"FeltTipRoman.ttf", "Freshman.ttf", "Graphite-Std.ttf", "LasVegas-Medium.ttf", "OpenSans-Semibold.ttf"
+				"MoonDucky.ttf", "OpenSans-Semibold.ttf"
 			},
 			CFBundleIconFiles = {
 				"Icon.png",
