@@ -68,79 +68,94 @@ FRC_AudioManager:newGroup({
 FRC_AudioManager:newHandle({
       name = "hamsters_bass",
       path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Bass.mp3",
-      group = "songTracks"
+      group = "songTracks",
+      loadMethod = "loadStream"
    });
 FRC_AudioManager:newHandle({
       name = "hamsters_conga",
       path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Conga.mp3",
-      group = "songTracks"
+      group = "songTracks",
+      loadMethod = "loadStream"
    });
 FRC_AudioManager:newHandle({
       name = "hamsters_guitar",
       path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Guitar.mp3",
-      group = "songTracks"
+      group = "songTracks",
+      loadMethod = "loadStream"
    });
 FRC_AudioManager:newHandle({
       name = "hamsters_harmonica",
       path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Harmonica.mp3",
-      group = "songTracks"
+      group = "songTracks",
+      loadMethod = "loadStream"
    });
 FRC_AudioManager:newHandle({
       name = "hamsters_maracas",
       path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Maracas.mp3",
-      group = "songTracks"
+      group = "songTracks",
+      loadMethod = "loadStream"
    });
 FRC_AudioManager:newHandle({
       name = "hamsters_microphone",
       path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Microphone.mp3",
-      group = "songTracks"
+      group = "songTracks",
+      loadMethod = "loadStream"
    });
 FRC_AudioManager:newHandle({
       name = "hamsters_rhythmcombocheesegrater",
       path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_RhythmComboCheeseGrater.mp3",
-      group = "songTracks"
+      group = "songTracks",
+      loadMethod = "loadStream"
    });
 FRC_AudioManager:newHandle({
       name = "hamsters_sticks",
       path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_HamsterWantToBeFree_Sticks.mp3",
-      group = "songTracks"
+      group = "songTracks",
+      loadMethod = "loadStream"
    });
 
 -- load up the audio tracks for Mechanical Cow song
 FRC_AudioManager:newHandle({
       name = "mechanicalcow_bass",
       path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Bass.mp3",
-      group = "songTracks"
+      group = "songTracks",
+      loadMethod = "loadStream"
    });
 FRC_AudioManager:newHandle({
       name = "mechanicalcow_conga",
       path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Conga.mp3",
-      group = "songTracks"
+      group = "songTracks",
+      loadMethod = "loadStream"
    });
 FRC_AudioManager:newHandle({
       name = "mechanicalcow_guitar",
       path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Guitar.mp3",
-      group = "songTracks"
+      group = "songTracks",
+      loadMethod = "loadStream"
    });
 FRC_AudioManager:newHandle({
       name = "mechanicalcow_harmonica",
       path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Harmonica.mp3",
-      group = "songTracks"
+      group = "songTracks",
+      loadMethod = "loadStream"
    });
 FRC_AudioManager:newHandle({
       name = "mechanicalcow_microphone",
       path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Microphone.mp3",
-      group = "songTracks"
+      group = "songTracks",
+      loadMethod = "loadStream"
    });
 FRC_AudioManager:newHandle({
       name = "mechanicalcow_piano",
       path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_Piano.mp3",
-      group = "songTracks"
+      group = "songTracks",
+      loadMethod = "loadStream"
    });
 FRC_AudioManager:newHandle({
       name = "mechanicalcow_rhythmcombocymbal",
       path = "FRC_Assets/MDMT_Assets/Audio/MDMT_MusicTheatre_MechanicalCow_RhythmComboCymbal.mp3",
-      group = "songTracks"
+      group = "songTracks",
+      loadMethod = "loadStream"
    });
 
 
@@ -645,7 +660,7 @@ function FRC_Rehearsal_Scene:createScene(event)
       -- });
       -- get a list of the instruments that are active
       local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
-      table.dump(instrumentList);
+      table.dump(instrumentList); -- DEBUG
       -- find the song for each instrument
       tracksGroup = FRC_AudioManager:findGroup("songTracks");
       songGroup = FRC_AudioManager:findGroup("songPlayback");

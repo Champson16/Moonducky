@@ -126,7 +126,8 @@ function public:dispose()
 	self.handle = nil;
 end
 
-function AudioHandle.new(options)
+function AudioHandle.new(options, streamOptions)
+	streamOptions = streamOptions or { bufferSize=8192, maxQueueBuffers=12, startupBuffers=1, buffersQueuedPerUpdate=2 };
 	options = options or {};
 	-- valid options are: name (string), path (string), useLoadSound (boolean), group (group object or string)
 	if (options.name) then
@@ -143,7 +144,7 @@ function AudioHandle.new(options)
 		audioHandle.handle = audio.loadSound(options.path);
 		audioHandle.loadMethod = "loadSound";
 	else
-		audioHandle.handle = audio.loadStream(options.path);
+		audioHandle.handle = audio.loadStream(options.path, streamOptions);
 		audioHandle.loadMethod = "loadStream";
 	end
 	audioHandle.name = options.name or AudioManager:getUniqueHandleName();
