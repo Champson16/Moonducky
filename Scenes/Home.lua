@@ -138,7 +138,7 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_down.png',
 				onRelease = function()
-							 storyboard.gotoScene('Scenes.DressingRoom');
+					storyboard.gotoScene('Scenes.DressingRoom');
 				end
 			},
 			{
@@ -152,17 +152,49 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Rehearsal_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Rehearsal_down.png',
 				onRelease = function()
-               storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "rehearsal" }  } );
-					--storyboard.gotoScene('Scenes.Rehearsal');
+          storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "rehearsal" }  } );
 				end
 			},
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_down.png',
 				onRelease = function()
-					-- storyboard.gotoScene('Scenes.Showtime', { effect="crossFade", time="250" });
-               storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "showtime" }  } );
-					--native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
+          storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "showtime" }  } );
+				end
+			},
+			{
+				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_up.png',
+				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_down.png',
+				onRelease = function()
+					analytics.logEvent("MDMTActionBarHomeHelp");
+					local screenRect = display.newRect(view, 0, 0, screenW, screenH);
+					screenRect.x = display.contentCenterX;
+					screenRect.y = display.contentCenterY;
+					screenRect:setFillColor(0, 0, 0, 0.75);
+					screenRect:addEventListener('touch', function() return true; end);
+					screenRect:addEventListener('tap', function() return true; end);
+
+					local webView = native.newWebView(0, 0, screenW - 100, screenH - 55);
+					webView.x = display.contentCenterX;
+					webView.y = display.contentCenterY + 20;
+					webView:request("Help/MDMT_FRC_WebOverlay_Help_Main_Overview.html", system.CachesDirectory);
+
+					local closeButton = ui.button.new({
+						imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
+						imageDown = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
+						width = 50,
+						height = 50,
+						onRelease = function(event)
+							local self = event.target;
+							webView:removeSelf(); webView = nil;
+							self:removeSelf(); closeButton = nil;
+							screenRect:removeSelf(); screenRect = nil;
+						end
+					});
+					--view:insert(closeButton);
+					closeButton.x = 5 + (closeButton.contentWidth * 0.5) - ((screenW - display.contentWidth) * 0.5);
+					closeButton.y = 5 + (closeButton.contentHeight * 0.5) - ((screenH - display.contentHeight) * 0.5);
+					webView.closeButton = closeButton;
 				end
 			},
 			{
@@ -184,41 +216,6 @@ function scene.postCreateScene(self, event)
 					-- DEBUG:
 					print('platform: ', platformName);
 					webView:request("https://fatredcouch.com/page.php?t=products&p=" .. platformName );
-
-					local closeButton = ui.button.new({
-						imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
-						imageDown = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
-						width = 50,
-						height = 50,
-						onRelease = function(event)
-							local self = event.target;
-							webView:removeSelf(); webView = nil;
-							self:removeSelf(); closeButton = nil;
-							screenRect:removeSelf(); screenRect = nil;
-						end
-					});
-					--view:insert(closeButton);
-					closeButton.x = 5 + (closeButton.contentWidth * 0.5) - ((screenW - display.contentWidth) * 0.5);
-					closeButton.y = 5 + (closeButton.contentHeight * 0.5) - ((screenH - display.contentHeight) * 0.5);
-					webView.closeButton = closeButton;
-				end
-			},
-			{
-				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_up.png',
-				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_down.png',
-				onRelease = function()
-					analytics.logEvent("MDMTActionBarHomeHelp");
-					local screenRect = display.newRect(view, 0, 0, screenW, screenH);
-					screenRect.x = display.contentCenterX;
-					screenRect.y = display.contentCenterY;
-					screenRect:setFillColor(0, 0, 0, 0.75);
-					screenRect:addEventListener('touch', function() return true; end);
-					screenRect:addEventListener('tap', function() return true; end);
-
-					local webView = native.newWebView(0, 0, screenW - 100, screenH - 55);
-					webView.x = display.contentCenterX;
-					webView.y = display.contentCenterY + 20;
-					webView:request("Help/MDMT_FRC_WebOverlay_Help_Main_Overview.html", system.CachesDirectory);
 
 					local closeButton = ui.button.new({
 						imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',

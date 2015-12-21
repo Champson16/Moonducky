@@ -204,7 +204,7 @@ function FRC_SetDesign_Scene:createScene(event)
 	-- create button panel for categories (aligned to the bottom of the screen)
 	local categoriesContainer = display.newContainer(categoriesWidth, categoriesHeight);
 	local categoriesBg = display.newRoundedRect(categoriesContainer, 0, 0, categoriesWidth, categoriesHeight, 11);
-	categoriesBg:setFillColor(1.0, 1.0, 1.0, 0.35);
+	categoriesBg:setFillColor(1.0, 1.0, 1.0, 0.85);
 	categoriesBg.x, categoriesBg.y = 0, 0;
 	categoriesContainer.x = display.contentCenterX;
 	categoriesContainer.y = display.contentHeight - (categoriesHeight * 0.5) + (category_button_spacing * 1.65);
@@ -251,9 +251,9 @@ function FRC_SetDesign_Scene:createScene(event)
 			yScroll = false,
 			leftPadding = button_spacing,
 			rightPadding = button_spacing,
-			bgColor = { 1.0, 1.0, 1.0, 1.0 }
+			bgColor = { 1.0, 1.0, 1.0, 0.65 }
 		});
-		scroller.bg.alpha = 0.65;
+		-- scroller.bg.alpha = 0.65;
 		view:insert(scroller);
 		scroller.x = display.contentCenterX;
 		scroller.y = categoriesContainer.contentBounds.yMin - (scroller.contentHeight * 0.5);

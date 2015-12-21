@@ -297,6 +297,22 @@ FRC_ActionBar.new = function(args)
 			end,
 			onRelease = options.buttons[i].onRelease
 		});
+
+		--[[ CODE FROM CHARLIE TO REVIEW FOR INTEGRATION
+
+		-- also requires addition of isLoadButton = true, to loadButton setup in ArtCenter.lua
+		if( options.buttons[i].isLoadButton == true ) then
+			function button.onArtSave(self)
+				 if( not self.setDisabledState ) then
+						Runtime:removeEventListener("onArtSave", self)
+						return
+				 end
+				 self:setDisabledState(false)
+			end
+			Runtime:addEventListener("onArtSave", button)
+		end
+		--]]
+
 		button.onPress = options.buttons[i].onPress;
 		if (options.buttons[i].isFocused) then
 			button:setFocusState(true);

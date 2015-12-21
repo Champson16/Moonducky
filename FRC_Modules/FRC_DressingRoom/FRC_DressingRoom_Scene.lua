@@ -148,25 +148,25 @@ function FRC_DressingRoom_Scene:createScene(event)
    -- TRS EFM - Please, see changes/notes below.
 
    -- 1. Create a set of standard rendering layers
-   FRC_Layout.createLayers( view ) 
-   	
+   FRC_Layout.createLayers( view )
+
    -- 2. (Optionally) configure the reference width/height for this scene
    --
-   -- Reference dimensions must be speficied before scaling anything.  
+   -- Reference dimensions must be speficied before scaling anything.
    -- You can do this once in the 'FRC_Layout' module and never change it, or change it per scene.
-   -- 
+   --
    --FRC_Layout.setRefDimensions( UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT') )
-   
+
    -- 3. Create a background
    local bg = display.newImageRect(view._underlay, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
-      
+
    -- 4. Scale first
-   FRC_Layout.scaleToFit( bg )  
-   
+   FRC_Layout.scaleToFit( bg )
+
    -- 5. Then position it.
-   bg.x = centerX 
-   bg.y = centerY 
-   
+   bg.x = centerX
+   bg.y = centerY
+
 	-- setup a container that will hold character and all layers of clothing
 	--local chartainer = display.newContainer(display.contentWidth, display.contentHeight);
 	local chartainer = display.newGroup();
@@ -281,12 +281,12 @@ function FRC_DressingRoom_Scene:createScene(event)
 			print(UI('IMAGES_PATH') .. charData.eyesOpenImage);
 			print(charData.eyesShutImage);
 			print(UI('IMAGES_PATH') .. charData.eyesShutImage);
-         
+
          clearLayer('Eyes')
 			if (charData.eyesOpenImage and charData.eyesShutImage) then
 				local charEyesOpen = display.newImageRect(layers['Eyes'], UI('IMAGES_PATH') .. charData.eyesOpenImage, charData.eyesOpenWidth, charData.eyesOpenHeight);
 				charEyesOpen.x, charEyesOpen.y = charBody.x + charData.eyesX, charBody.y + charData.eyesY;
-            
+
 				print(charEyesOpen.x, charEyesOpen.y); -- DEBUG
 
 				local charEyesShut = display.newImageRect(layers['Eyes'], UI('IMAGES_PATH') .. charData.eyesShutImage, charData.eyesShutWidth, charData.eyesShutHeight);
@@ -405,8 +405,8 @@ function FRC_DressingRoom_Scene:createScene(event)
 			-- preload the animation data (XML and images) early
 			sceneLayout[i] = FRC_AnimationManager.createAnimationClipGroup(sceneLayoutData[i].animationFiles, animationXMLBase, animationImageBase);
 			view._content:insert(sceneLayout[i]);
-         FRC_Layout.placeAnimation(sceneLayout[i], sceneLayoutData[i], true ) --EFM         
-         
+         FRC_Layout.placeAnimation(sceneLayout[i], sceneLayoutData[i], true ) --EFM
+
          for j=1, sceneLayout[i].numChildren do
             sceneLayout[i].alpha = 0.2
 				sceneLayout[i][j]:play({
@@ -417,18 +417,18 @@ function FRC_DressingRoom_Scene:createScene(event)
 					delay = 0,
 					intervalTime = 30,
 					maxIterations = 1
-                  
+
 				});
 			end
 		end
 
-      
+
 		if (sceneLayoutData[i].onTouch) then
 			sceneLayout[i].onTouch = sceneLayoutMethods[sceneLayoutData[i].onTouch];
 			if (sceneLayout[i].onTouch) then
             local sxs, sys = sceneLayout[i].xScale, sceneLayout[i].yScale -- EFM TRS hiding box during anim
 				sceneLayout[i]:addEventListener('touch', function(e)
-					if (e.phase == "began") then                  
+					if (e.phase == "began") then
                   transition.to( e.target, { alpha = 0, xScale = 0.8, yScale = 0.8, delay = 200, time = 0 } ) -- EFM TRS hiding box during anim
                   transition.to( e.target, { alpha = 1, xScale = sxs, yScale = sys, delay = 1100, time = 0 } ) -- EFM TRS hiding box during anim
 						e.target.onTouch();
@@ -543,7 +543,7 @@ function FRC_DressingRoom_Scene:createScene(event)
 	-- create button panel for categories (aligned to the bottom of the screen)
 	local categoriesContainer = display.newContainer(categoriesWidth, categoriesHeight);
 	local categoriesBg = display.newRoundedRect(categoriesContainer, 0, 0, categoriesWidth, categoriesHeight, 11);
-	categoriesBg:setFillColor(0, 0, 0, 0.75); -- 1.0, 1.0, 1.0, 0.35);
+	categoriesBg:setFillColor(1.0, 1.0, 1.0, 0.85); -- 1.0, 1.0, 1.0, 0.35);
 	categoriesBg.x, categoriesBg.y = 0, 0;
 	categoriesContainer.x = display.contentCenterX;
 	categoriesContainer.y = display.contentHeight - (categoriesHeight * 0.5) + (category_button_spacing * 1.65);
@@ -589,9 +589,9 @@ function FRC_DressingRoom_Scene:createScene(event)
 			yScroll = false,
 			leftPadding = button_spacing,
 			rightPadding = button_spacing,
-			bgColor = { 1.0, 1.0, 1.0, 1.0 }
+			bgColor = { 1.0, 1.0, 1.0, 0.65 }
 		});
-		scroller.bg.alpha = 0.65;
+		-- scroller.bg.alpha = 0.65;
 		view._overlay:insert(scroller);
 		scroller.x = display.contentCenterX;
 		scroller.y = categoriesContainer.contentBounds.yMin - (scroller.contentHeight * 0.5);
