@@ -225,6 +225,7 @@ function scene.postCreateScene(self, event)
 		}
 	});
 
+	--[[
 	-- create settings bar menu at top left corner of screen
 	local musicButtonFocused = false;
 	if (FRC_AppSettings.get("soundOn")) then musicButtonFocused = true; end
@@ -265,6 +266,7 @@ function scene.postCreateScene(self, event)
 			}
 		}
 	});
+	--]]
 end
 
 function scene.postExitScene(self, event)
