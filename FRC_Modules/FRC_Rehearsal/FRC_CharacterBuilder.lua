@@ -1,5 +1,5 @@
 -- ======================================================================
--- FRC Character Builder - 
+-- FRC Character Builder -
 -- ======================================================================
 local public   = {} -- Public interface
 local private  = {} -- Private inteface
@@ -15,7 +15,7 @@ local FRC_Rehearsal_Settings  = require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal
 
 local function UI(key)
    return FRC_Rehearsal_Settings.UI[key]
-end   
+end
 local function DATA(key, baseDir)
    baseDir = baseDir or system.ResourceDirectory
    return FRC_DataLib.readJSON(FRC_Rehearsal_Settings.DATA[key], baseDir)
@@ -39,36 +39,36 @@ local strGSub     = string.gsub
 local snapDist       = 100 ^ 2
 local characterScale = 0.5 -- Scale all placed characters and instruments by this much
 local instrumentScale = 0.35
-local stagePieces 
+local stagePieces
 local view, currentSongID, animationXMLBase, animationImageBase, itemsScroller, categoriesContainer
 local editingEnabled = true
 local screenW, screenH = FRC_Layout.getScreenDimensions()
 local currentStagePiece
 local instrumentsInUse
 
-local	screenW, screenH, contentW, contentH, centerX, centerY = FRC_Layout.getScreenDimensions() 
+local	screenW, screenH, contentW, contentH, centerX, centerY = FRC_Layout.getScreenDimensions()
 
--- ********************************  
+-- ********************************
 -- EFM Following may be temporary (revist these locals):
--- ********************************  
+-- ********************************
 local animalsNames         = { "Chicken", "Cat", "Dog", "Hamster", "Pig", "Sheep", "Goat" }
 local instrumentNames      = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" }
 local songTitles        = {}
 songTitles.hamsters = "Hamsters Want To Be Free"
 songTitles.mechanicalcow = "Mechanical Cow"
 
-local hamsterInstruments   = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Sticks", "RhythmComboCheeseGrater" } 
-local cowInstruments       = { "Bass", "Conga", "Guitar", "Harmonica", "Microphone", "Piano", "RhythmComboCymbal" } 
-local allInstruments       = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" } 
+local hamsterInstruments   = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Sticks", "RhythmComboCheeseGrater" }
+local cowInstruments       = { "Bass", "Conga", "Guitar", "Harmonica", "Microphone", "Piano", "RhythmComboCymbal" }
+local allInstruments       = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" }
 
--- ********************************  
+-- ********************************
 
 
 -- ======================================================================
 -- Public Method Definitions
 -- ======================================================================
 
--- 
+--
 -- cleanup() - Purge local references to key rehearsal values and groups.
 --
 function public.cleanup()
@@ -78,10 +78,10 @@ function public.cleanup()
    view.setDesignGroup:insert( stagePieces )
 end
 
--- 
+--
 -- cleanup() - Purge local references to key rehearsal values and groups.
 --
-function public.destroy()   
+function public.destroy()
    view                 = nil
    currentSongID        = nil
    animationXMLBase     = nil
@@ -93,15 +93,15 @@ function public.destroy()
    instrumentsInUse     = nil
    showTimeMode         = false
    editingEnabled       = true
-   instrumentNames      = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" } 
-   
+   instrumentNames      = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" }
+
    display.remove(stagePieces)
 end
 
--- 
+--
 -- init() - Store local references to key rehearsal values and groups.
 --
-function public.init( params )    
+function public.init( params )
    public.destroy()
    view                 = params.view
    currentSongID        = params.currentSongID
@@ -109,13 +109,13 @@ function public.init( params )
    animationImageBase   = params.animationImageBase
    itemScrollers        = params.itemScrollers
    categoriesContainer  = params.categoriesContainer
-   
+
    editingEnabled       = true
-   
+
    if(params.showTimeMode ~= nil) then
       showTimeMode = params.showTimeMode
    end
-   
+
    if( currentSongID == "hamsters" ) then
       instrumentNames = hamsterInstruments
    elseif( currentSongID == "mechanicalcow" ) then
@@ -123,17 +123,17 @@ function public.init( params )
    else
       instrumentNames = allInstruments
    end
-   
+
    stagePieces          = display.newGroup()
    instrumentsInUse     = {}
-         
+
    params.view.setDesignGroup:insert( stagePieces )
-   
+
    private.attachTouchClear()
-   
+
    --dprint(">>>>>>>>>>>>>>>>>>>>>>>>>", songTitles[currentSongID] )
-   
-   --timer.performWithDelay( 1000, public.getShowTitle )   
+
+   --timer.performWithDelay( 1000, public.getShowTitle )
 end
 
 
@@ -144,7 +144,7 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
    local group = display.newGroup()
    local group2 = display.newGroup()
    group:insert( group2 )
-   group.enterFrame = function( self ) 
+   group.enterFrame = function( self )
       if( self.removeSelf == nil ) then
          Runtime:removeEventListener( "enterFrame", self )
          return
@@ -153,18 +153,18 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
       group2:toFront()
    end
    Runtime:addEventListener( "enterFrame", group ) -- EDOCHI
-   
+
    --local back = display.newRect( centerX, centerY, 10000, 10000 )
    --back:setFillColor(0)
    --back.alpha = 0
    --transition.to( back, { alpha = 0.2, time = 500 } )
-   
+
    local blur = private.easyBlur( group, 500, { 0, 0.4, 0.4, 0.8 } ) --  time, color )
    blur.touch = function( self, event )
       return true
    end
    blur:addEventListener( "touch" )
-   
+
    -- EFM Add temporary label for save
    local backH       = screenH - 50
    local fontSize    = 60
@@ -174,19 +174,19 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
    local selColor1    = { 0, 1, 0, 0.2 }
    local selColor2    = { 0, 0, 1, 0.2 }
    local unSelColor   = { 1, 1, 1 }
-   
+
    local titleQueryBack = display.newRoundedRect( group, centerX, centerY, screenW - 50, backH, 8 )
    titleQueryBack.strokeWidth = 8
    titleQueryBack:setStrokeColor(0)
 
    local titleQueryLabel = display.newText( group2, "or", centerX, centerY - 100, native.systemFontBold, fontSize )
    titleQueryLabel:setFillColor(0)
-   local titleQueryLabel2 = display.newText( group2, "Arrange A New One?", centerX, centerY - 20, native.systemFontBold, fontSize )
+   local titleQueryLabel2 = display.newText( group2, "Rehearse A New One?", centerX, centerY - 20, native.systemFontBold, fontSize )
    titleQueryLabel2:setFillColor(0)
-      
+
    --
    -- Load Existing Show
-   --      
+   --
    local loadButton = display.newRoundedRect( group2, centerX, titleQueryLabel.y - fromButton , screenW - 100, 80, 8 )
    loadButton.strokeWidth = 4
    loadButton:setStrokeColor(0)
@@ -195,10 +195,10 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
       Runtime:removeEventListener( "enterFrame", group )
       display.remove( group )
       if( onLoad ) then
-         onLoad( )          
+         onLoad( )
       end
-   end   
-   local loadButtonLabel = display.newText( group2, "Load An Old Show", loadButton.x, loadButton.y, native.systemFontBold, fontSize2 )
+   end
+   local loadButtonLabel = display.newText( group2, "Load An Existing Show", loadButton.x, loadButton.y, native.systemFontBold, fontSize2 )
    loadButtonLabel:setFillColor(0)
 
    --
@@ -212,12 +212,12 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
       Runtime:removeEventListener( "enterFrame", group )
       display.remove( group )
       if( onCreateHamster ) then
-         onCreateHamster( )          
+         onCreateHamster( )
       end
-   end         
-   local hamsterButtonTitle = display.newText( group2, "'Hamsters Want To Be Free'", hamsterButton.x, hamsterButton.y, native.systemFontBold, fontSize2 )
+   end
+   local hamsterButtonTitle = display.newText( group2, '"Hamsters Want To Be Free"', hamsterButton.x, hamsterButton.y, "MoonDucky", fontSize2 )
    hamsterButtonTitle:setFillColor(0)
-      
+
    --
    -- Create New Show With: 'Mechanical Cow'
    --
@@ -229,15 +229,15 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
       Runtime:removeEventListener( "enterFrame", group )
       display.remove( group )
       if( onCreateCow ) then
-         onCreateCow( )          
+         onCreateCow( )
       end
-   end   
-   local cowButtonTitle = display.newText( group2, "'Mechanical Cow'", cowButton.x, cowButton.y, native.systemFontBold, fontSize2 )
+   end
+   local cowButtonTitle = display.newText( group2, '"Mechanical Cow"', cowButton.x, cowButton.y,  "MoonDucky", fontSize2 )
    cowButtonTitle:setFillColor(0)
-   
 
-   
-   local function onTouch( self, event ) 
+
+
+   local function onTouch( self, event )
       if( event.phase == "began" ) then
          display.currentStage:setFocus( self, event.id )
          self.isFocus = true
@@ -245,42 +245,42 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
       elseif( self.isFocus ) then
          local bounds = self.stageBounds
          local x,y = event.x, event.y
-         local isWithinBounds = 
+         local isWithinBounds =
             bounds.xMin <= x and bounds.xMax >= x and bounds.yMin <= y and bounds.yMax >= y
-         
+
          if( isWithinBounds ) then
             self:setFillColor( unpack( self.selColor ) )
          else
             self:setFillColor( unpack( unSelColor ) )
          end
-         
+
          if( event.phase == "ended" ) then
             display.currentStage:setFocus( self, nil )
             self.isFocus = false
             --table.print_r(self)
-            if( isWithinBounds ) then     
-               if( self.cb ) then self.cb() end 
+            if( isWithinBounds ) then
+               if( self.cb ) then self.cb() end
             end
          end
       end
       return true
    end
-   
+
    loadButton.touch = onTouch
    hamsterButton.touch = onTouch
    cowButton.touch = onTouch
    loadButton:addEventListener("touch")
    hamsterButton:addEventListener("touch")
    cowButton:addEventListener("touch")
-   
+
    if( not canLoad ) then
       loadButton.isVisible = false
       loadButtonLabel.isVisible = false
       titleQueryLabel.isVisible = false
       titleQueryLabel2.text = "Choose a Song"
-      group2.y = group2.y - 150     
+      group2.y = group2.y - 150
    end
-   
+
 end
 
 
@@ -291,7 +291,7 @@ end
 --
 function public.getShowTitle( onSuccess, onCancel )
    local group = display.newGroup()
-   group.enterFrame = function( self ) 
+   group.enterFrame = function( self )
       if( self.removeSelf == nil ) then
          Runtime:removeEventListener( "enterFrame", self )
          return
@@ -299,18 +299,18 @@ function public.getShowTitle( onSuccess, onCancel )
       self:toFront()
    end
    Runtime:addEventListener( "enterFrame", group ) -- EDOCHI
-   
+
    --local back = display.newRect( centerX, centerY, 10000, 10000 )
    --back:setFillColor(0)
    --back.alpha = 0
    --transition.to( back, { alpha = 0.2, time = 500 } )
-   
+
    local blur = private.easyBlur( group, 500, { 0, 0.4, 0.4, 0.8 } ) --  time, color )
    blur.touch = function( self, event )
       return true
    end
    blur:addEventListener( "touch" )
-   
+
    -- EFM Add temporary label for save
    local backH       = screenH/2 - 50
    local fontSize    = 60
@@ -319,11 +319,11 @@ function public.getShowTitle( onSuccess, onCancel )
    local selColor1    = { 0, 1, 0, 0.2 }
    local selColor2    = { 1, 0, 0, 0.2 }
    local unSelColor   = { 1, 1, 1 }
-   
+
    local titleQueryBack = display.newRoundedRect( group, centerX, centerY - screenH/2 + backH/2 + 20, screenW - 10, backH, 8 )
    titleQueryBack.strokeWidth = 8
    titleQueryBack:setStrokeColor(0)
-   
+
    local titleQueryLabel = display.newText( group, "What Should We Call This Show?", titleQueryBack.x, titleQueryBack.y - backH/2 + 60, native.systemFontBold, fontSize )
    titleQueryLabel:setFillColor(0)
 
@@ -340,7 +340,7 @@ function public.getShowTitle( onSuccess, onCancel )
    textBox.isEditable = true
    textBox.userInput = inputListener
    textBox:addEventListener( "userInput"  )
-   group:insert( textBox ) 
+   group:insert( textBox )
 
 
    local okButton = display.newRoundedRect( group, centerX + 150, titleQueryBack.y + 100, 160, 40, 8 )
@@ -351,10 +351,10 @@ function public.getShowTitle( onSuccess, onCancel )
       Runtime:removeEventListener( "enterFrame", group )
       display.remove( group )
       if( onSuccess ) then
-         onSuccess( songTitles[currentSongID], textBox.text )          
+         onSuccess( songTitles[currentSongID], textBox.text )
       end
    end
-   
+
    local okButtonLabel = display.newText( group, "OK", okButton.x, okButton.y, native.systemFontBold, fontSize2 )
    okButtonLabel:setFillColor(0)
 
@@ -365,15 +365,15 @@ function public.getShowTitle( onSuccess, onCancel )
    cancelButton.cb = function()
       Runtime:removeEventListener( "enterFrame", group )
       display.remove( group )
-      if( onCancel ) then         
+      if( onCancel ) then
          onCancel( )
       end
    end
-   
+
    local cancelButtonLabel = display.newText( group, "CANCEL", cancelButton.x, cancelButton.y, native.systemFontBold, fontSize2 )
    cancelButtonLabel:setFillColor(0)
-   
-   local function onTouch( self, event ) 
+
+   local function onTouch( self, event )
       if( event.phase == "began" ) then
          display.currentStage:setFocus( self, event.id )
          self.isFocus = true
@@ -381,27 +381,27 @@ function public.getShowTitle( onSuccess, onCancel )
       elseif( self.isFocus ) then
          local bounds = self.stageBounds
          local x,y = event.x, event.y
-         local isWithinBounds = 
+         local isWithinBounds =
             bounds.xMin <= x and bounds.xMax >= x and bounds.yMin <= y and bounds.yMax >= y
-         
+
          if( isWithinBounds ) then
             self:setFillColor( unpack( self.selColor ) )
          else
             self:setFillColor( unpack( unSelColor ) )
          end
-         
+
          if( event.phase == "ended" ) then
             display.currentStage:setFocus( self, nil )
             self.isFocus = false
             --table.print_r(self)
-            if( isWithinBounds ) then     
-               if( self.cb ) then self.cb() end 
+            if( isWithinBounds ) then
+               if( self.cb ) then self.cb() end
             end
          end
       end
       return true
    end
-   
+
    okButton.touch = onTouch
    cancelButton.touch = onTouch
    cancelButton:addEventListener("touch")
@@ -412,18 +412,18 @@ end
 
 
 
--- 
+--
 -- save() - Save all stage elements (excluding stage backdrop which is handled in FRC_Rehearsal_Scene.)
 --
 function public.save(saveTable)
    --table.print_r(saveTable)
-   
+
    currentStagePiece = nil
-   private.highlightSelected() 
-   
+   private.highlightSelected()
+
    local savePieces = {}
    saveTable.stagePieces = savePieces
-   
+
    for i = 1, stagePieces.numChildren do
       local record = {}
       local stagePiece        = stagePieces[i]
@@ -431,47 +431,47 @@ function public.save(saveTable)
       record.y                = stagePiece.y
       record.pieceType        = stagePiece.pieceType
       record.instrument       = stagePiece.instrument
-      record.danceNumber      = stagePiece.danceNumber 
+      record.danceNumber      = stagePiece.danceNumber
       record.characterID      = stagePiece.characterID
       savePieces[#savePieces+1] = record
    end
-   --table.print_r( savePieces ) 
+   --table.print_r( savePieces )
 end
 
 
--- 
+--
 -- load() - Load and restore all stage elements (excluding stage backdrop which is handled in FRC_Rehearsal_Scene.)
 --
 function public.load(loadTable)
    --dprint("LOADING>>>>")
    --table.print_r(loadTable)
-   
+
    public.cleanup()
-   
+
    local restorePieces = loadTable.stagePieces or {}
-   for i = 1, #restorePieces do      
+   for i = 1, #restorePieces do
       local curPiece = restorePieces[i]
       --table.dump2( curPiece,nil, "LOADING " .. tostring(i) .. " " .. tostring(curPiece.pieceType))
 
       if( curPiece.pieceType == "instrument" ) then
-         public.placeNewInstrument( curPiece.x, curPiece.y, curPiece.instrument ) 
-      
+         public.placeNewInstrument( curPiece.x, curPiece.y, curPiece.instrument )
+
       elseif( curPiece.pieceType == "character" ) then
-         public.placeNewCharacter(  curPiece.x, curPiece.y, curPiece.characterID, curPiece.instrument, curPiece.danceNumber  ) 
+         public.placeNewCharacter(  curPiece.x, curPiece.y, curPiece.characterID, curPiece.instrument, curPiece.danceNumber  )
       end
    end
-   
+
    currentStagePiece = nil
-   private.highlightSelected() 
+   private.highlightSelected()
 
 end
 
--- 
+--
 -- removeInstrument() - If an instrument is selected, remove it from the stage.
 --
 function public.removeInstrument()
    if( not currentStagePiece ) then return end
-   if( currentStagePiece.pieceType == "instrument" ) then       
+   if( currentStagePiece.pieceType == "instrument" ) then
       instrumentsInUse[currentStagePiece.instrument] = nil
       display.remove(currentStagePiece)
       currentStagePiece = nil
@@ -481,117 +481,117 @@ function public.removeInstrument()
          return
       end
       instrumentsInUse[currentStagePiece.instrument] = nil
-      local tmp = currentStagePiece      
-      public.placeNewCharacter(  currentStagePiece.x, currentStagePiece.y, currentStagePiece.characterID, nil, currentStagePiece.danceNumber  )       
+      local tmp = currentStagePiece
+      public.placeNewCharacter(  currentStagePiece.x, currentStagePiece.y, currentStagePiece.characterID, nil, currentStagePiece.danceNumber  )
       display.remove( tmp )
    end
 end
 
--- 
+--
 -- removeCharacter() - If an instrument is selected, remove it from the stage.
 --
 function public.removeCharacter()
    if( not currentStagePiece ) then return end
-   if( currentStagePiece.pieceType == "instrument" ) then       
+   if( currentStagePiece.pieceType == "instrument" ) then
       return
    else
       local instrumentToLeave = currentStagePiece.instrument
       local tmp = currentStagePiece
-      
+
       if( strMatch( strLower( instrumentToLeave ), "dance" ) ) then
          instrumentToLeave = nil
       else
          instrumentsInUse[instrumentToLeave] = nil
-         public.placeNewInstrument( currentStagePiece.x, currentStagePiece.y, instrumentToLeave )         
+         public.placeNewInstrument( currentStagePiece.x, currentStagePiece.y, instrumentToLeave )
       end
       display.remove( tmp )
    end
 end
 
--- 
+--
 -- placeNewInstrument() - Create an instrument and place it in the center of the stage.
 --
 function public.placeNewInstrument( x, y, instrumentName )
    x = x or display.contentCenterX
    y = y or display.contentCenterY
    dprint( "public.placeNewInstrument( " .. tostring(instrumentName) .. " )" )
-   
+
    if( instrumentsInUse[instrumentName] ) then
-      private.easyAlert( "Duplicate instrument", 
-                "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage.", 
+      private.easyAlert( "Duplicate instrument",
+                "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage.",
                 { {"OK", nil} } )
       dprint("Duplicate instrument", "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage." )
       return
    end
-   
-   
+
+
    local stagePiece = display.newImage( stagePieces, "FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_Stage_Instrument_" .. instrumentName .. ".png"  ) --EFM: hardcoded
    stagePiece.x = x
    stagePiece.y = y
    stagePiece.pieceType = "instrument"
-   stagePiece.instrument = instrumentName 
-   
+   stagePiece.instrument = instrumentName
+
    private.attachDragger(stagePiece)
-   
-   stagePiece:scale(instrumentScale,instrumentScale)   
-   
+
+   stagePiece:scale(instrumentScale,instrumentScale)
+
    instrumentsInUse[instrumentName] = instrumentName
    function stagePiece.destroy( self )
       instrumentsInUse[self.instrument] = nil
-   end 
-   
+   end
+
    currentStagePiece = stagePiece
-   
+
    private.addSelectionIndicator( stagePiece )
-   
-   private.highlightSelected()   
-   
+
+   private.highlightSelected()
+
    return stagePiece
 end
 
--- 
--- placeNewCharacter() - 
 --
-function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumber  ) 
+-- placeNewCharacter() -
+--
+function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumber  )
    x = x or display.contentCenterX
    y = y or display.contentCenterY
 
-   local characterData 
+   local characterData
    if( type( characterID ) == "table" ) then
       characterData = characterID
    else
       characterData = private.getDressingRoomDataByID( characterID, 0 )
    end
-   
+
    --table.print_r(characterData)
-   
+
    local animalType           = characterData.character
    -- ***************************************** -- EFM - TEMPORARY
    --animalType = ( animalType ~= "Chicken" and animalType ~= "Cat" ) and "Chicken" or animalType
    -- *****************************************
-   danceNumber                = danceNumber or mRand(1,2)   
+   danceNumber                = danceNumber or mRand(1,2)
    instrumentName             = instrumentName or ("Dance" .. danceNumber) -- Assume all players as dancers
    local instrumentType       = private.instrumentNameMap(instrumentName)
-   local costumeData          = private.getCostumeData( animalType )   
+   local costumeData          = private.getCostumeData( animalType )
    local xmlFiles             = private.getXMLFileNames( animalType )
-   local animationSequences   = {} 
+   local animationSequences   = {}
 
    --
    -- Get costume adjustment data for this character
-   --   
+   --
    local adjustments = {}
    for k,v in pairs( characterData.categories ) do
-      adjustments[k] = 
-      { 
+      adjustments[k] =
+      {
          fromPart = private.getPartName( costumeData, k, 2 ),
          toPart = private.getPartName( costumeData, k, v ),
          offset = private.getPartOffset( costumeData, k, v )
       }
-   end            
-      
+   end
+
    local stagePiece = display.newGroup()
    stagePieces:insert( stagePiece )
-   
+
    stagePiece.x                  = x
    stagePiece.y                  = y
    stagePiece.pieceType          = "character"
@@ -599,16 +599,16 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    stagePiece.danceNumber        = danceNumber
    stagePiece.characterID        = characterID
    stagePiece.animationSequences = animationSequences
-   
+
    -- Only preclude re-use of instruments (not dancers)
    if( not strMatch( strLower( instrumentName ), "dance" ) ) then
       instrumentsInUse[instrumentName] = instrumentName
-   end   
-   
-   
+   end
+
+
    function stagePiece.destroy( self )
       instrumentsInUse[self.instrument] = nil
-      
+
       -- ****************************************
       -- EFM SOMETHING WRONG HERE!  CRASHES IF STILL PLAYING ANIMATION
       -- ****************************************
@@ -616,21 +616,21 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
          local sequence = animationSequences[i]
          for j = 1, sequence.numChildren do
             --sequence[j]:dispose()
-            sequence[j]:stop() 
+            sequence[j]:stop()
          end
       end
       -- ****************************************
    end
-   
+
    -- Get all known parts for the selected instrument type within the previously selected character (animal) type
    local partsList = private.getPartsList( xmlFiles[instrumentType], animationXMLBase, false )
-   
-   -- 
+
+   --
    -- Generate a list of the animation parts we need for this particular character
    --
    -- Note: Later, this info will be used by the animation manager to create ONLY these pieces from the unified set.
    --
-   local animationsToBuild = {}   
+   local animationsToBuild = {}
    local allParts = private.getAllPartsList( instrumentType )
    for i = 1, #allParts do
       local partName = allParts[i][1]
@@ -641,9 +641,9 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
          end
       end
    end
-   
+
    --
-   -- Adjust parts (costume names and offsets).  
+   -- Adjust parts (costume names and offsets).
    --
    -- Note 1: Costume names are not applied till the moment animation manager prepares to build this animation.
    -- Note 2: Offet is used in this file after animation manager returns the new animation clip group.
@@ -660,7 +660,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    end
    animationsToBuild = tmp
    tmp = nil
-     
+
    --
    -- Finally, create animation groups (sequences) from our list of animations to build
    --
@@ -671,7 +671,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    for i = 1, #animationsToBuild do
       local adjustment = adjustments[animationsToBuild[i][1]]
       local animationGroupProperties = {}
-      animationSequences[i] = private.createUnifiedAnimationClipGroup( 
+      animationSequences[i] = private.createUnifiedAnimationClipGroup(
          xmlFiles[instrumentType],
          animationsToBuild[i],
          animationXMLBase,
@@ -684,10 +684,10 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
          animationSequences[i].y = animationSequences[i].y + adjustment.offset[2]
       end
       animGroup:insert(animationSequences[i])
-   end  
-   
+   end
+
    --table.print_r(animationsToBuild)
-   
+
    stagePiece:scale(characterScale,characterScale)
    private.attachDragger(stagePiece)
 
@@ -696,39 +696,39 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
       private.playAllAnimations( animationSequences, i )
       --private.stopAllAnimations( animationSequences, i )
    end
-   
+
    currentStagePiece = stagePiece
-   
+
    private.addSelectionIndicator( stagePiece )
-   
-   private.highlightSelected()   
-   
+
+   private.highlightSelected()
+
    --dprint("Conga in use?", public.getInstrumentInUse( "Conga" ) )
    --table.dump2( public.getInstrumentsInUse() )
-   
-   return stagePiece   
-   
+
+   return stagePiece
+
    --return animationSequences
 end
 
--- 
+--
 -- setCurrentCharacterType() - Builds the costume scroller based on the currently selected character type
 --
 function public.setCurrentCharacterType( characterType )
    currentCharacterType = characterType
 end
 
--- 
+--
 -- rebuildInstrumenScroller() - Builds the costume scroller based on the currently selected character type
 --
 function public.rebuildInstrumenScroller( )
    local ui = require('ui')
-   
+
    --if(true) then return end
-   
+
    local instrumentData = DATA('INSTRUMENT')
    local songID = strGSub(songTitles[currentSongID], " ", "")
-   
+
    local songInstruments = instrumentData[1]
    for i = 1, #instrumentData do
       if( instrumentData[i].id == songID ) then
@@ -736,21 +736,21 @@ function public.rebuildInstrumenScroller( )
          songInstruments = instrumentData[i]
       end
    end
-   
+
    local scroller = itemScrollers.Instrument
-   
+
    -- Destroy OLD scroller CONTENT ONLY
    while( scroller.content.numChildren > 0 ) do
       display.remove( scroller.content[1] )
    end
-   
+
    --local button_spacing = 80
    local category_button_spacing = 48
    local button_spacing = 24
    local button_scale = 0.75
    local categoriesWidth = button_spacing
    local categoriesHeight = 0
-   local x = -(screenW * 0.5) + button_spacing   
+   local x = -(screenW * 0.5) + button_spacing
 
 
    local button = ui.button.new({
@@ -772,11 +772,11 @@ function public.rebuildInstrumenScroller( )
    scroller:insert(button)
    x = x + (button.contentWidth * 0.5)
    button.x, button.y = x, 0
-   
-   x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)      
-   
+
+   x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)
+
    --table.print_r(songInstruments)
-   
+
    -- for now, just grab the first song's instrument list
    songInstruments = songInstruments.instruments
    for i=1,#songInstruments do
@@ -804,38 +804,38 @@ function public.rebuildInstrumenScroller( )
       x = x + (button.contentWidth * 0.5)
       button.x, button.y = x, 0
       x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)
-   end      
+   end
 end
 
 
--- 
+--
 -- rebuildCostumeScroller() - Builds the costume scroller based on the currently selected character type
 --
 function public.rebuildCostumeScroller( )
    local ui = require('ui')
-   
+
    local scroller = itemScrollers.Costume
-   
+
    -- Destroy OLD scroller CONTENT ONLY
    while( scroller.content.numChildren > 0 ) do
       display.remove( scroller.content[1] )
    end
-   
+
    -- Get current characters
    local characters = private.getDressingRoomDataByAnimalType( currentCharacterType, 0 ) --EFM
-   
-   -- Insert costumes for current animal type into scroller    
+
+   -- Insert costumes for current animal type into scroller
    --
    -- 'None' Button
    --
    local button_spacing = 80
-   local x = -(screenW * 0.5) + button_spacing   
+   local x = -(screenW * 0.5) + button_spacing
    local tmp = display.newImage( "FRC_Assets/FRC_Rehearsal/Images/FRC_Rehearsal_Scroller_None.png"  )
    tmp.x = x
    tmp.data = { id = "none" }
    scroller:insert( tmp )
    tmp.touch = private.scrollerCostumeTouch
-   tmp:addEventListener( "touch" ) 
+   tmp:addEventListener( "touch" )
 
    --
    -- 'Mystery Box' Button
@@ -848,9 +848,9 @@ function public.rebuildCostumeScroller( )
       tmp.data = { id = "mysterybox", character = currentCharacterType, characters = characters }
       scroller:insert( tmp )
       tmp.touch = private.scrollerCostumeTouch
-      tmp:addEventListener( "touch" ) 
+      tmp:addEventListener( "touch" )
    end
-      
+
    --
    -- 'No Costume' Button
    --
@@ -861,19 +861,19 @@ function public.rebuildCostumeScroller( )
    tmp.data = { id = "nocostume", character = currentCharacterType, categories = { Headwear = 1,  LowerTorso = 1, Neckwear = 1, UpperTorso = 1, Eyewear = 1 } }
    scroller:insert( tmp )
    tmp.touch = private.scrollerCostumeTouch
-   tmp:addEventListener( "touch" ) 
-      
-      
-   for i = 1, #characters do      
+   tmp:addEventListener( "touch" )
+
+
+   for i = 1, #characters do
       x = x + button_spacing
       local curChar = characters[i]
       --local tmp = display.newCircle( x, 0, 20 )
       local tmp = display.newImage( curChar.id .. curChar.thumbSuffix, system.DocumentsDirectory )
       tmp:scale(0.5,0.5)
-      tmp.x = x 
+      tmp.x = x
       tmp.data = curChar
       tmp.touch = private.scrollerCostumeTouch
-      tmp:addEventListener( "touch" ) 
+      tmp:addEventListener( "touch" )
       scroller:insert( tmp )
    end
 end
@@ -882,7 +882,7 @@ end
 --
 -- Scroller Instrument Touch Handler
 --
-function public.newInstrument( instrument ) 
+function public.newInstrument( instrument )
    if( currentStagePiece ) then
       private.replaceInstrument( currentStagePiece, instrument )
    else
@@ -907,7 +907,7 @@ end
 function public.setEditEnable( enable )
    if (enable == nil) then enable = false end
    editingEnabled = (enable)
-   if( not editingEnabled ) then 
+   if( not editingEnabled ) then
       currentStagePiece = nil
       private.highlightSelected()
    end
@@ -918,7 +918,7 @@ end
 -- getInstrumentInUse() - Returns true if 'instrument' is in use
 --
 function public.getInstrumentInUse( instrument )
-   return ( instrumentsInUse[instrument] ~= nil ) 
+   return ( instrumentsInUse[instrument] ~= nil )
 end
 
 
@@ -941,10 +941,10 @@ end
 --
 -- playStageCharacters() - Make all characters on stage play.
 --
-function public.playStageCharacters() 
-   local charactersOnStage = public.getCharactersOnStage() 
+function public.playStageCharacters()
+   local charactersOnStage = public.getCharactersOnStage()
    --table.print_r( charactersOnStage )
-   
+
    for i = 1, #charactersOnStage do
       local animationSequences = charactersOnStage[i].animationSequences
       for j = 1, #animationSequences do
@@ -957,10 +957,10 @@ end
 -- stopStageCharacters() - Make all characters on stage stop playing.
 --
 
-function public.stopStageCharacters() 
-   local charactersOnStage = public.getCharactersOnStage() 
+function public.stopStageCharacters()
+   local charactersOnStage = public.getCharactersOnStage()
    --table.print_r( charactersOnStage )
-   
+
    for i = 1, #charactersOnStage do
       local animationSequences = charactersOnStage[i].animationSequences
       for j = 1, #animationSequences do
@@ -973,19 +973,19 @@ if( edmode ) then
    local function onKey( event )
       local storyboard = require("storyboard");
       if( event.phase ~= "up" ) then return false end
-      
+
       if( event.keyName == "p" ) then
-         public.playStageCharacters() 
-      
+         public.playStageCharacters()
+
       elseif( event.keyName == "s" ) then
-         public.stopStageCharacters() 
-      
+         public.stopStageCharacters()
+
       elseif( event.keyName == "g" ) then
-         public.getCharactersOnStage() 
+         public.getCharactersOnStage()
       end
-   
+
    end
-   Runtime:addEventListener( "key", onKey )   
+   Runtime:addEventListener( "key", onKey )
 end
 
 
@@ -993,95 +993,95 @@ end
 -- Private Method Definitions
 -- ======================================================================
 
--- 
+--
 -- getDressingRoomDataByAnimalType( characterType ) - Extract just 'characterType' characters from saved list of (dressing room) characters
 --
 function private.getDressingRoomDataByAnimalType( characterType, debugLevel )
-   
+
    local characters = {}
    local dressingRoomDataPath = "FRC_DressingRoom_SaveData.json"
-   local allSaved = table.load( dressingRoomDataPath ) or {}   
-   if( not allSaved.savedItems ) then 
+   local allSaved = table.load( dressingRoomDataPath ) or {}
+   if( not allSaved.savedItems ) then
       if( debugLevel and debugLevel > 0 ) then
          dprint("No charactes/costumes saved, can't search for this animal type: ", characterType )
-         private.easyAlert( "No saved costumes", 
-                            "No charactes/costumes saved, can't search for this animal type: " .. 
-                            tostring(characterType) .. "\n\n Please go save some constumes first.", 
+         private.easyAlert( "No saved costumes",
+                            "No charactes/costumes saved, can't search for this animal type: " ..
+                            tostring(characterType) .. "\n\n Please go save some constumes first.",
                             { {"OK", nil} } )
       end
-      return characters 
-   end   
-   local savedItems = allSaved.savedItems      
+      return characters
+   end
+   local savedItems = allSaved.savedItems
    for i = 1, #savedItems do
-      local current = savedItems[i]      
+      local current = savedItems[i]
       if( current.character == characterType ) then
          characters[#characters+1] = current
       end
-   end  
+   end
    if( debugLevel and debugLevel > 0 ) then
       if( #characters == 0 ) then
-         private.easyAlert( "No saved costumes", 
-                            "No charactes/costumes saved for this animal type: " .. 
-                            tostring(characterType) .. "\n\n Please go save some constumes first.", 
-                            { {"OK", nil} } )                        
-      end         
+         private.easyAlert( "No saved costumes",
+                            "No charactes/costumes saved for this animal type: " ..
+                            tostring(characterType) .. "\n\n Please go save some constumes first.",
+                            { {"OK", nil} } )
+      end
       dprint("Found ", tostring(#characters), " of charactes/costumes of this type: ", characterType )
    end
    if( debugLevel and debugLevel > 1 ) then
       table.print_r(characters)
       dprint("getDressingRoomDataByAnimalType()")
    end
-   
+
    return characters
 end
--- 
+--
 -- getDressingRoomDataByID( characterType ) - Extract just 'characterType' characters from saved list of (dressing room) characters
 --
 function private.getDressingRoomDataByID( id, debugLevel )
    local dressingRoomDataPath = "FRC_DressingRoom_SaveData.json"
-   local allSaved = table.load( dressingRoomDataPath ) or {}   
-   if( not allSaved.savedItems ) then 
+   local allSaved = table.load( dressingRoomDataPath ) or {}
+   if( not allSaved.savedItems ) then
       if( debugLevel and debugLevel > 0 ) then
-         private.easyAlert( "No saved costumes", 
-                            "No charactes/costumes saved, can't search for this id: " .. 
-                            tostring(id) .. "\n\n Please go save some constumes first.", 
+         private.easyAlert( "No saved costumes",
+                            "No charactes/costumes saved, can't search for this id: " ..
+                            tostring(id) .. "\n\n Please go save some constumes first.",
                             { {"OK", nil} } )
-         
+
          dprint("No charactes/costumes saved, can't search for this id: ", id )
       end
-      return nil 
-   end   
-   local savedItems = allSaved.savedItems      
+      return nil
+   end
+   local savedItems = allSaved.savedItems
    for i = 1, #savedItems do
-      local current = savedItems[i]      
+      local current = savedItems[i]
       if( current.id == id ) then
          dprint("Found character by ID: ", id )
          return current
       end
-   end     
-   
-   if( debugLevel and debugLevel > 0 ) then  
-      private.easyAlert( "Unknown Dressing Room ID", 
-                      "No charactes/costumes found matching this ID: " .. tostring(characterType), 
+   end
+
+   if( debugLevel and debugLevel > 0 ) then
+      private.easyAlert( "Unknown Dressing Room ID",
+                      "No charactes/costumes found matching this ID: " .. tostring(characterType),
                       { {"OK", nil} } )
    end
-   
+
    return nil
 end
 
 --
 -- EFM() - EFM
 --
-function private.getCostumeData( animalType )   
-   local FRC_DressingRoom_Settings = require('FRC_Modules.FRC_DressingRoom.FRC_DressingRoom_Settings');      
-   local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');   
+function private.getCostumeData( animalType )
+   local FRC_DressingRoom_Settings = require('FRC_Modules.FRC_DressingRoom.FRC_DressingRoom_Settings');
+   local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
    local function DATA(key, baseDir)
       baseDir = baseDir or system.ResourceDirectory;
       return FRC_DataLib.readJSON(FRC_DressingRoom_Settings.DATA[key], baseDir);
    end
    local characterData = DATA('CHARACTER');
-   
-   
+
+
    local costumeData;
    for i=1,#characterData do
       if( characterData[i].id == animalType ) then
@@ -1090,8 +1090,8 @@ function private.getCostumeData( animalType )
       end
    end
    if (not costumeData) then
-      private.easyAlert( "No character data found", 
-                         tostring( animalType ) .. " had no data?", 
+      private.easyAlert( "No character data found",
+                         tostring( animalType ) .. " had no data?",
                          { {"OK", nil} } )
    end
    return costumeData
@@ -1103,72 +1103,72 @@ end
 --
 -- Scroller Costume Touch Handler
 --
-function private.scrollerCostumeTouch( self, event ) 
+function private.scrollerCostumeTouch( self, event )
    if( event.phase == "began" ) then
       display.currentStage:setFocus( self, event.id )
       self.isFocus = true
    elseif( self.isFocus ) then
       local bounds = self.stageBounds
       local x,y = event.x, event.y
-      local isWithinBounds = 
+      local isWithinBounds =
          bounds.xMin <= x and bounds.xMax >= x and bounds.yMin <= y and bounds.yMax >= y
-      
+
       if( event.phase == "ended" ) then
          display.currentStage:setFocus( self, nil )
          self.isFocus = false
          --table.print_r(self)
          if( isWithinBounds ) then
-            
+
             if( currentStagePiece ) then
                if( currentStagePiece.pieceType == "instrument" ) then -- MODIFYING INSTRUMENT
-                  if( self.data.id == "none" ) then 
+                  if( self.data.id == "none" ) then
                      -- Do nothing
-                  elseif( self.data.id == "nocostume" ) then 
+                  elseif( self.data.id == "nocostume" ) then
                      private.replaceWithCharacter( currentStagePiece, self.data )
-                     
-                  elseif( self.data.id == "mysterybox" ) then 
+
+                  elseif( self.data.id == "mysterybox" ) then
                      local character = self.data.characters[mRand(1,#self.data.characters)]
                      private.replaceWithCharacter( currentStagePiece, character.id )
-                     
-                  else 
+
+                  else
                      private.replaceWithCharacter( currentStagePiece, self.data.id )
-                  end  
+                  end
 
                else -- MODIFYING CHARACTER
-                  if( self.data.id == "none" ) then 
+                  if( self.data.id == "none" ) then
                      -- Remove character
                      instrumentsInUse[currentStagePiece.instrument] = nil
                      display.remove(currentStagePiece)
                      currentStagePiece = nil
                      private.highlightSelected()
 
-                  elseif( self.data.id == "nocostume" ) then 
+                  elseif( self.data.id == "nocostume" ) then
                      private.replaceWithCharacter( currentStagePiece, self.data )
-                  
+
                   elseif( self.data.id == "mysterybox" ) then
                      local character = self.data.characters[mRand(1,#self.data.characters)]
                      private.replaceWithCharacter( currentStagePiece, character.id )
-                     
-                  else                      
+
+                  else
                      private.replaceWithCharacter( currentStagePiece, self.data.id)
                   end
                end
 
             else -- CREATING CHARACTER
-               if( self.data.id == "none" ) then 
+               if( self.data.id == "none" ) then
                   -- Do nothing
-               elseif( self.data.id == "nocostume" ) then 
+               elseif( self.data.id == "nocostume" ) then
                   public.placeNewCharacter( nil, nil, self.data )
-               
-               elseif( self.data.id == "mysterybox" ) then 
+
+               elseif( self.data.id == "mysterybox" ) then
                   local character = self.data.characters[mRand(1,#self.data.characters)]
                   public.placeNewCharacter( nil, nil, character.id)
                   dprint( "Mystery Box" )
-               else 
+               else
                   --table.print_r(self.data)
                   public.placeNewCharacter( nil, nil, self.data.id)
                end
-            end            
+            end
 
          end
       end
@@ -1180,17 +1180,17 @@ end
 -- Common Drag & Drop Handler
 --
 function private.attachDragger( obj )
-   if( showTimeMode ) then       
-      return 
-   end   
+   if( showTimeMode ) then
+      return
+   end
    --obj.isHitTestMasked = true
    obj.touch = private.dragNDrop
    obj:addEventListener( "touch" )
 end
 function private.dragNDrop( self, event )
-   if( not editingEnabled ) then 
+   if( not editingEnabled ) then
       dprint("Editing disabled", editingEnabled)
-      return 
+      return
    end
    if( event.phase == "began" ) then
       display.currentStage:setFocus( self, event.id )
@@ -1203,29 +1203,29 @@ function private.dragNDrop( self, event )
    elseif( self.isFocus ) then
       local bounds = self.stageBounds
       local x,y = event.x, event.y
-      local isWithinBounds = 
+      local isWithinBounds =
          bounds.xMin <= x and bounds.xMax >= x and bounds.yMin <= y and bounds.yMax >= y
-         
+
       local dx = event.x - self.x0
       local dy = event.y - self.y0
-      
+
       self.x0 = event.x
       self.y0 = event.y
-      
+
       local myLeft = self.x - self.contentWidth/2
       local myRight = self.x + self.contentWidth/2
-      if( (dx < 0 and myLeft > private.left) or 
+      if( (dx < 0 and myLeft > private.left) or
           (dx > 0 and myRight < private.right ) ) then
          self.x = self.x + dx * (self.dragScale and self.dragScale or 1)
       end
-      
+
       local myTop = self.y - self.contentHeight/2
       local myBottom = self.y + self.contentHeight/2
-      if( (dy < 0 and myTop > private.top) or 
+      if( (dy < 0 and myTop > private.top) or
           (dy > 0 and myBottom < private.bottom ) ) then
          self.y = self.y + dy * (self.dragScale and self.dragScale or 1)
       end
-      
+
       if( event.phase == "ended" ) then
          display.currentStage:setFocus( self, nil )
          self.isFocus = false
@@ -1234,14 +1234,14 @@ function private.dragNDrop( self, event )
          end
          --currentStagePiece = nil
          --private.highlightSelected()
-         
+
       end
    end
    return true
 end
 
 --[[
-function private.dragNDrop( self, event ) 
+function private.dragNDrop( self, event )
    if( event.phase == "began" ) then
       display.currentStage:setFocus( self, event.id )
       self.isFocus = true
@@ -1253,20 +1253,20 @@ function private.dragNDrop( self, event )
    elseif( self.isFocus ) then
       local bounds = self.stageBounds
       local x,y = event.x, event.y
-      local isWithinBounds = 
+      local isWithinBounds =
          bounds.xMin <= x and bounds.xMax >= x and bounds.yMin <= y and bounds.yMax >= y
-         
+
       local dx = event.x - event.xStart
       local dy = event.y - event.yStart
-      
+
       local myLeft = self.x - self.contentWidth/2
       local myRight = self.x + self.contentWidth/2
-      if( (dx < 0 and myLeft > private.left) or 
+      if( (dx < 0 and myLeft > private.left) or
           (dx > 0 and myRight < private.right ) ) then
          self.x = self.x0 + dx * (self.dragScale and self.dragScale or 1)
       end
       self.y = self.y0 + dy * (self.dragScale and self.dragScale or 1)
-      
+
       if( event.phase == "ended" ) then
          display.currentStage:setFocus( self, nil )
          self.isFocus = false
@@ -1275,7 +1275,7 @@ function private.dragNDrop( self, event )
          end
          --currentStagePiece = nil
          --private.highlightSelected()
-         
+
       end
    end
    return true
@@ -1406,7 +1406,7 @@ function private.instrumentNameMap( toMap )
    map.Piano                     = 9
    map.RhythmComboCheeseGrater   = 10
    map.RhythmComboCymbal         = 11
-   map.Sticks                    = 12   
+   map.Sticks                    = 12
    map[1]                        = "Bass"
    map[2]                        = "Conga"
    map[3]                        = "Dance1"
@@ -1452,22 +1452,22 @@ function private.readXML( fileName, baseXMLDir )
    dprint( "-------------------------------------", fileName, baseXMLDir )
    --
    -- 1. Try to find and load an existing lua table version of XML file
-   --   
+   --
    fileName = strGSub( fileName, "%.xml", "" )
    local luaPath = strGSub( baseXMLDir .. fileName, "%/", "." )
    local luaFileExists = pcall( require, luaPath )
-   if( luaFileExists ) then      
+   if( luaFileExists ) then
       return require( luaPath )
    end
-   
+
    --
    -- 2. Failing that, read the XML file, save a lua file to the DocumentsDirectory and return xml table.
-   --   
+   --
    local xmlPath  = baseXMLDir .. fileName .. ".xml"
-   local xmltable = FRC_AnimationManager.loadXMLData( xmlPath, system.ResourceDirectory );   
+   local xmltable = FRC_AnimationManager.loadXMLData( xmlPath, system.ResourceDirectory );
    --local xmltable = FRC_AnimationManager.loadXMLData( fileName .. ".xml", baseXMLDir );
-   table.save( xmltable, fileName ) 
-   
+   table.save( xmltable, fileName )
+
    return xmltable
 end
 --]]
@@ -1481,7 +1481,7 @@ function private.getPartsList( sourceFile, animationXMLBase, debugEn )
    local partsList = xmltable.Animation.Part
    if( debugEn == true ) then
       for i = 1, #partsList do
-         dprint( "partsList[" .. i .. "] ", partsList[i].name, animationImageBase )      
+         dprint( "partsList[" .. i .. "] ", partsList[i].name, animationImageBase )
       end
    end
    return partsList
@@ -1498,7 +1498,7 @@ function private.findAnimationParts( parts, partSubName, partExcludeName, toTabl
             strMatch( parts[i].name, partExcludeName ) == nil ) then
             subParts[#subParts+1] = i
          end
-      else            
+      else
          if( strMatch( parts[i].name, partSubName ) ) then
             subParts[#subParts+1] = i
          end
@@ -1520,7 +1520,7 @@ function private.createUnifiedAnimationClipGroup( sourceFile, unifiedData, anima
 end
 
 --
--- playAllAnimations() - Plays all of the character's animations (EFM needs work) 
+-- playAllAnimations() - Plays all of the character's animations (EFM needs work)
 --
 function private.playAllAnimations( animationSequences, num, autoLoop )
    num = num or mRand(1,#animationSequences)
@@ -1543,7 +1543,7 @@ function private.playAllAnimations( animationSequences, num, autoLoop )
 end
 
 --
--- stopAllAnimations() - Stops all of the character's animations (EFM needs work) 
+-- stopAllAnimations() - Stops all of the character's animations (EFM needs work)
 --
 function private.stopAllAnimations( animationSequences, num )
    num = num or mRand(1,#animationSequences)
@@ -1574,7 +1574,7 @@ end
 -- getPartOffset() - Calculates part offsets based on replacement costume/part.
 --
 function private.getPartOffset( costumeData, category, index )
-   if( index == 1 ) then 
+   if( index == 1 ) then
       return { 0, 0 }
    end
    index = index - 1
@@ -1591,7 +1591,7 @@ function private.addSelectionIndicator( stagePiece )
    if( stagePiece.pieceType == "instrument" ) then
       stagePiece.indicator = stagePiece
       stagePiece.strokeWidth = (showTimeMode) and 0 or 6
-      return 
+      return
    end
    local indicator = display.newRect( stagePiece, 0, 0, stagePiece.contentWidth * 1/characterScale + 40, stagePiece.contentHeight * 1/characterScale + 60 )
    indicator:setFillColor(0,0,0,0)
@@ -1617,68 +1617,68 @@ end
 --
 -- doDrop() - Test for correct drop and combine pieces if rules are met.
 --
-function private.doDrop( dropPiece )   
+function private.doDrop( dropPiece )
    for i = 1, stagePieces.numChildren do
       local stagePiece = stagePieces[i]
       if( stagePiece ~= dropPiece ) then
          local dx = dropPiece.x - stagePiece.x
          local dy = dropPiece.y - stagePiece.y
          local dist2 = dx * dx + dy * dy
-         if( dist2 <= snapDist and 
+         if( dist2 <= snapDist and
              dropPiece.pieceType ~= stagePiece.pieceType ) then
-            
+
             instrumentsInUse[dropPiece.instrument] = nil
             instrumentsInUse[stagePiece.instrument] = nil
-            
-            if( dropPiece.pieceType == "instrument" ) then               
-               public.placeNewCharacter(  stagePiece.x, stagePiece.y, stagePiece.characterID, dropPiece.instrument, stagePiece.danceNumber  ) 
-               display.remove( dropPiece ) 
-               display.remove( stagePiece ) 
-         
+
+            if( dropPiece.pieceType == "instrument" ) then
+               public.placeNewCharacter(  stagePiece.x, stagePiece.y, stagePiece.characterID, dropPiece.instrument, stagePiece.danceNumber  )
+               display.remove( dropPiece )
+               display.remove( stagePiece )
+
             elseif( dropPiece.pieceType == "character" ) then
-               public.placeNewCharacter(  stagePiece.x, stagePiece.y, dropPiece.characterID, stagePiece.instrument, dropPiece.danceNumber  ) 
-               display.remove( dropPiece ) 
-               display.remove( stagePiece ) 
-            end  
+               public.placeNewCharacter(  stagePiece.x, stagePiece.y, dropPiece.characterID, stagePiece.instrument, dropPiece.danceNumber  )
+               display.remove( dropPiece )
+               display.remove( stagePiece )
+            end
             return
          end
-      end         
-   end   
+      end
+   end
 end
 
 --
--- replaceInstrument() - 
+-- replaceInstrument() -
 --
 function private.replaceInstrument( target, instrument )
    if( instrumentsInUse[instrument] ) then return end
-   
-   if( target.pieceType == "instrument" ) then               
-      instrumentsInUse[target.instrument] = nil      
-      public.placeNewInstrument(  target.x, target.y, instrument  ) 
-      display.remove( target )       
+
+   if( target.pieceType == "instrument" ) then
+      instrumentsInUse[target.instrument] = nil
+      public.placeNewInstrument(  target.x, target.y, instrument  )
+      display.remove( target )
 
    elseif( target.pieceType == "character" ) then
       instrumentsInUse[target.instrument] = nil
-      public.placeNewCharacter(  target.x, target.y, target.characterID, instrument, target.danceNumber  ) 
-      display.remove( target ) 
-   end  
+      public.placeNewCharacter(  target.x, target.y, target.characterID, instrument, target.danceNumber  )
+      display.remove( target )
+   end
 end
 
 --
--- replaceWithCharacter() - 
+-- replaceWithCharacter() -
 --
 function private.replaceWithCharacter( target, characterID )
-   
-   if( target.pieceType == "instrument" ) then               
+
+   if( target.pieceType == "instrument" ) then
       instrumentsInUse[target.instrument] = nil
-      public.placeNewCharacter(  target.x, target.y, characterID, target.instrument, target.danceNumber  ) 
-      display.remove( target ) 
+      public.placeNewCharacter(  target.x, target.y, characterID, target.instrument, target.danceNumber  )
+      display.remove( target )
 
    elseif( target.pieceType == "character" ) then
       instrumentsInUse[target.instrument] = nil
-      public.placeNewCharacter(  target.x, target.y, characterID, target.instrument, target.danceNumber  ) 
-      display.remove( target ) 
-   end  
+      public.placeNewCharacter(  target.x, target.y, characterID, target.instrument, target.danceNumber  )
+      display.remove( target )
+   end
 end
 
 
@@ -1690,7 +1690,7 @@ function private.attachTouchClear()
          --table.dump2(event)
          if( event.phase == "ended" ) then
             currentStagePiece = nil
-            private.highlightSelected() 
+            private.highlightSelected()
          end
          return false
    end
@@ -1728,7 +1728,7 @@ function private.easyAlert( title, msg, buttons )
 		local index = event.index
 		if( action == "clicked" ) then
 			local func = buttons[index][2]
-			if( func ) then func() end 
+			if( func ) then func() end
 	    end
 	    --native.cancelAlert()
 	end
@@ -1762,7 +1762,7 @@ function private.calcMeasurementSpacing(debugEn)
 	private.h 				   = display.contentHeight
 	private.centerX 			= display.contentCenterX
 	private.centerY 			= display.contentCenterY
-	private.fullw			   = display.actualContentWidth 
+	private.fullw			   = display.actualContentWidth
 	private.fullh			   = display.actualContentHeight
 	private.unusedWidth		= private.fullw - private.w
 	private.unusedHeight		= private.fullh - private.h
@@ -1789,9 +1789,9 @@ function private.calcMeasurementSpacing(debugEn)
 
 	private.left 			   = (private.left >= 0) and math.abs(private.left) or private.left
 	private.top 				= (private.top >= 0) and math.abs(private.top) or private.top
-	
+
 	if( debugEn ) then
-		dprint("\n---------- calcMeasurementSpacing() @ " .. system.getTimer() )	
+		dprint("\n---------- calcMeasurementSpacing() @ " .. system.getTimer() )
 		dprint( "w       = " 	.. private.w )
 		dprint( "h       = " 	.. private.h )
 		dprint( "centerX = " .. private.centerX )

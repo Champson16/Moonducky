@@ -184,7 +184,7 @@ function FRC_Rehearsal_Scene:save(e)
       showTitleBack:setStrokeColor(0)
       showTitleBack:setFillColor( 0,0,0,0.6 )
 
-      local songTitleLabel = display.newText( labelsGroup, songTitle, songTitleBack.x, songTitleBack.y, native.systemFontBold, fontSize )
+      local songTitleLabel = display.newText( labelsGroup, songTitle, songTitleBack.x, songTitleBack.y, "MoonDucky", fontSize )
       --songTitleLabel:setFillColor(0)
 
       local showTitleLabel = display.newText( labelsGroup, showTitle, showTitleBack.x, showTitleBack.y, native.systemFontBold, fontSize )
