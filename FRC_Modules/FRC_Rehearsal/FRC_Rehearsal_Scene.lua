@@ -620,6 +620,7 @@ function FRC_Rehearsal_Scene:createScene(event)
 
       FRC_CharacterBuilder.stopStageCharacters()
       FRC_CharacterBuilder.setEditEnable( true )
+      FRC_Rehearsal_Scene.rewindPreview();
 
       -- STOP ALL AUDIO PLAYBACK OF SONG
       local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
@@ -636,7 +637,10 @@ function FRC_Rehearsal_Scene:createScene(event)
                -- audio.rewind(h.handle);
                -- h:rewindAudio(); THIS SHOULD WORK BUT DOESN'T
                -- this removes h from the songGroup
+               songGroup:removeHandle(h);
+               -- add the handle back to the tracksGroup
                tracksGroup:addHandle(h);
+
             end
          end
       end
