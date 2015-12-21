@@ -169,25 +169,26 @@ function FRC_Rehearsal_Scene:save(e)
       local saveGroup = self.view._content --EFM
 
       -- EFM Add temporary label for save
-      local backH    = 160
-      local fontSize = 60
+      local backH    = 130
+      local songTitleFontSize = 70
+      local showTitleFontSize = 50
       local labelsGroup = display.newGroup()
       saveGroup:insert( labelsGroup )
 
       local songTitleBack = display.newRect( labelsGroup, centerX, centerY - screenH/2 + backH/2, screenW - 10, backH - 10 )
       songTitleBack.strokeWidth = 8
       songTitleBack:setStrokeColor(0)
-      songTitleBack:setFillColor( 0,0,0,0.6 )
+      songTitleBack:setFillColor( 0,0,0,1.0 )
 
       local showTitleBack = display.newRect( labelsGroup, centerX, centerY + screenH/2 - backH/2, screenW - 10, backH - 10 )
       showTitleBack.strokeWidth = 8
       showTitleBack:setStrokeColor(0)
-      showTitleBack:setFillColor( 0,0,0,0.6 )
+      showTitleBack:setFillColor( 0,0,0,1.0 )
 
-      local songTitleLabel = display.newText( labelsGroup, songTitle, songTitleBack.x, songTitleBack.y, "MoonDucky", fontSize )
+      local songTitleLabel = display.newText( labelsGroup, songTitle, songTitleBack.x, songTitleBack.y, "MoonDucky", songTitleFontSize )
       --songTitleLabel:setFillColor(0)
 
-      local showTitleLabel = display.newText( labelsGroup, showTitle, showTitleBack.x, showTitleBack.y, "OpenSans-Semibold", fontSize )
+      local showTitleLabel = display.newText( labelsGroup, showTitle, showTitleBack.x, showTitleBack.y, "OpenSans-Semibold", showTitleFontSize )
       --showTitleLabel:setFillColor(0)
 
       -- create mask

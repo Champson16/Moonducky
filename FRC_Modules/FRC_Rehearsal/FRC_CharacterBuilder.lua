@@ -315,7 +315,7 @@ function public.getShowTitle( onSuccess, onCancel )
    local backH       = screenH/2 - 50
    local fontSize    = 60
    local fontSize2   = 20
-   local titleLengthLimit = 20
+   local titleLengthLimit = 35
    local selColor1    = { 0, 1, 0, 0.2 }
    local selColor2    = { 1, 0, 0, 0.2 }
    local unSelColor   = { 1, 1, 1 }
