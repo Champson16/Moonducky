@@ -1,0 +1,21 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_CloseI" frameCount="26">
+    <Part name="MDMT_DressingRoom_Instrument_Piano">
+      <Frame x="-272.05" y="5.60" index="0"/>
+      <Frame x="-272.05" y="5.60" index="1"/>
+      <Frame x="-272.05" y="5.60" index="2"/>
+      <Frame x="-272.05" y="5.60" index="3"/>
+      <Frame x="-272.05" y="5.60" index="4"/>
+      <Frame x="-268.95" y="5.60" index="5"/>
+      <Frame x="-265.85" y="5.60" index="6"/>
+      <Frame x="-262.75" y="5.60" index="7"/>
+      <Frame x="-259.65" y="5.60" index="8"/>
+      <Frame x="-256.55" y="5.60" index="9"/>
+      <Frame x="-253.45" y="5.60" index="10"/>
+      <Frame x="-303.05" y="5.60" scaleX="0.830" index="11"/>
+      <Frame x="-352.65" y="5.60" scaleX="0.659" index="12"/>
+      <Frame x="-402.25" y="5.60" scaleX="0.489" index="13"/>
+      <Frame x="-451.90" y="5.60" scaleX="0.319" index="14"/>
+    </Part>
+  </Animation>
+</Animations>

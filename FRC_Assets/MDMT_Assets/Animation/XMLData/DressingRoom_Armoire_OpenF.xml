@@ -1,0 +1,17 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_OpenF" frameCount="26">
+    <Part name="MDMT_DressingRoom_Instrument_Guitar">
+      <Frame x="-451.35" y="-124.65" scaleX="0.999" scaleY="0.999" rotation="-69.466" index="15"/>
+      <Frame x="-349.20" y="-124.65" scaleX="0.999" scaleY="0.999" rotation="-69.467" index="16"/>
+      <Frame x="-276.40" y="-124.65" scaleX="0.999" scaleY="0.999" rotation="-69.467" index="17"/>
+      <Frame x="-225.25" y="-124.65" scaleX="0.999" scaleY="0.999" rotation="-69.467" index="18"/>
+      <Frame x="-191.10" y="-124.65" scaleX="0.999" scaleY="0.999" rotation="-69.467" index="19"/>
+      <Frame x="-171.15" y="-124.65" scaleX="0.999" scaleY="0.999" rotation="-69.467" index="20"/>
+      <Frame x="-163.60" y="-124.65" scaleX="0.999" scaleY="0.999" rotation="-69.467" index="21"/>
+      <Frame x="-167.60" y="-124.65" scaleX="0.999" scaleY="0.999" rotation="-69.467" index="22"/>
+      <Frame x="-184.35" y="-124.65" scaleX="0.999" scaleY="0.999" rotation="-69.467" index="23"/>
+      <Frame x="-184.35" y="-124.65" scaleX="0.999" scaleY="0.999" rotation="-69.467" index="24"/>
+      <Frame x="-184.35" y="-124.65" scaleX="0.999" scaleY="0.999" rotation="-69.467" index="25"/>
+    </Part>
+  </Animation>
+</Animations>

@@ -1,0 +1,9 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_ChooseI" frameCount="3">
+    <Part name="MDMT_DressingRoom_Instrument_Piano">
+      <Frame x="-272.05" y="5.60" index="0"/>
+      <Frame x="-272.05" y="5.60" index="1"/>
+      <Frame x="-272.05" y="5.60" index="2"/>
+    </Part>
+  </Animation>
+</Animations>

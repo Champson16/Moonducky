@@ -4,7 +4,8 @@
 	"width": 304,
 	"height": 602,
 	"left": 20,
-	"y": -50
+	"y": -50,
+	"onTouch": "openArmoire"
 },
 {
 	"id": "Ottoman",

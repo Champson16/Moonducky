@@ -1,0 +1,9 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_ChooseF" frameCount="3">
+    <Part name="MDMT_DressingRoom_Instrument_Guitar">
+      <Frame x="-184.35" y="-124.65" scaleX="0.999" scaleY="0.999" rotation="-69.466" index="0"/>
+      <Frame x="-184.35" y="-124.65" scaleX="0.999" scaleY="0.999" rotation="-69.466" index="1"/>
+      <Frame x="-184.35" y="-124.65" scaleX="0.999" scaleY="0.999" rotation="-69.466" index="2"/>
+    </Part>
+  </Animation>
+</Animations>

@@ -1,0 +1,21 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_CloseG" frameCount="26">
+    <Part name="MDMT_DressingRoom_Instrument_RhythmComboCheeseGrater">
+      <Frame x="-169.20" y="12.60" scaleX="0.999" scaleY="0.999" rotation="-25.838" index="0"/>
+      <Frame x="-169.20" y="12.60" scaleX="0.999" scaleY="0.999" rotation="-25.838" index="1"/>
+      <Frame x="-169.20" y="12.60" scaleX="0.999" scaleY="0.999" rotation="-25.838" index="2"/>
+      <Frame x="-169.20" y="12.60" scaleX="0.997" scaleY="0.997" rotation="-25.805" index="3"/>
+      <Frame x="-166.10" y="12.60" scaleX="0.997" scaleY="0.997" rotation="-25.805" index="4"/>
+      <Frame x="-163.00" y="12.60" scaleX="0.997" scaleY="0.997" rotation="-25.805" index="5"/>
+      <Frame x="-159.90" y="12.60" scaleX="0.997" scaleY="0.997" rotation="-25.805" index="6"/>
+      <Frame x="-156.80" y="12.60" scaleX="0.997" scaleY="0.997" rotation="-25.805" index="7"/>
+      <Frame x="-153.70" y="12.60" scaleX="0.997" scaleY="0.997" rotation="-25.805" index="8"/>
+      <Frame x="-150.60" y="12.60" scaleX="0.997" scaleY="0.997" rotation="-25.805" index="9"/>
+      <Frame x="-210.10" y="12.60" scaleX="0.997" scaleY="0.997" rotation="-25.805" index="10"/>
+      <Frame x="-269.60" y="12.60" scaleX="0.997" scaleY="0.997" rotation="-25.805" index="11"/>
+      <Frame x="-329.15" y="12.60" scaleX="0.997" scaleY="0.997" rotation="-25.805" index="12"/>
+      <Frame x="-388.65" y="12.60" scaleX="0.997" scaleY="0.997" rotation="-25.805" index="13"/>
+      <Frame x="-448.20" y="12.60" scaleX="0.997" scaleY="0.997" rotation="-25.805" index="14"/>
+    </Part>
+  </Animation>
+</Animations>

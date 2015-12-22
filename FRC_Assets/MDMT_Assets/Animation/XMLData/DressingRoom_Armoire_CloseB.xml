@@ -1,0 +1,21 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_CloseB" frameCount="26">
+    <Part name="MDMT_DressingRoom_Instrument_Maracas">
+      <Frame x="-36.05" y="-122.95" index="0"/>
+      <Frame x="-36.05" y="-122.95" index="1"/>
+      <Frame x="-32.95" y="-122.95" index="2"/>
+      <Frame x="-29.85" y="-122.95" index="3"/>
+      <Frame x="-26.75" y="-122.95" index="4"/>
+      <Frame x="-23.65" y="-122.95" index="5"/>
+      <Frame x="-20.55" y="-122.95" index="6"/>
+      <Frame x="-17.45" y="-122.95" index="7"/>
+      <Frame x="-79.45" y="-122.95" scaleX="0.953" index="8"/>
+      <Frame x="-141.45" y="-122.95" scaleX="0.906" index="9"/>
+      <Frame x="-203.45" y="-122.95" scaleX="0.859" index="10"/>
+      <Frame x="-265.45" y="-122.95" scaleX="0.813" index="11"/>
+      <Frame x="-327.40" y="-122.95" scaleX="0.766" index="12"/>
+      <Frame x="-389.45" y="-122.95" scaleX="0.719" index="13"/>
+      <Frame x="-451.50" y="-122.95" scaleX="0.672" index="14"/>
+    </Part>
+  </Animation>
+</Animations>

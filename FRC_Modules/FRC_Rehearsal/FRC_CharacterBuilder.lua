@@ -184,32 +184,16 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
    titleQueryBack.strokeWidth = 8
    titleQueryBack:setStrokeColor(0)
 
-   local titleQueryLabel = display.newText( group2, "or", centerX, centerY - 100, native.systemFontBold, fontSize )
-   titleQueryLabel:setFillColor(0)
-   local titleQueryLabel2 = display.newText( group2, "Rehearse A New One?", centerX, centerY - 20, native.systemFontBold, fontSize )
-   titleQueryLabel2:setFillColor(0)
 
-   --
-   -- Load Existing Show
-   --
-   local loadButton = display.newRoundedRect( group2, centerX, titleQueryLabel.y - fromButton , screenW - 100, 80, 8 )
-   loadButton.strokeWidth = 4
-   loadButton:setStrokeColor(0)
-   loadButton.selColor = selColor1
-   loadButton.cb = function()
-      Runtime:removeEventListener( "enterFrame", group )
-      display.remove( group )
-      if( onLoad ) then
-         onLoad( )
-      end
-   end
-   local loadButtonLabel = display.newText( group2, "Load An Existing Show", loadButton.x, loadButton.y, native.systemFontBold, fontSize2 )
-   loadButtonLabel:setFillColor(0)
+   local titleQueryLabel2 = display.newText( group2, "Rehearse A New Show?", centerX, fromButton, native.systemFontBold, fontSize )
+   -- local titleQueryLabel2 = display.newText( group2, "Rehearse A New Show?", centerX, centerY - 20, native.systemFontBold, fontSize )
+   titleQueryLabel2:setFillColor(0)
 
    --
    -- Create New Show With: 'Hamsters Want To Be Free'
    --
-   local hamsterButton = display.newRoundedRect( group2, loadButton.x, titleQueryLabel2.y + fromButton, screenW - 100, 80, 4 )
+   local hamsterButton = display.newRoundedRect( group2, centerX, titleQueryLabel2.y + fromButton, screenW - 100, 80, 4 )
+   -- local hamsterButton = display.newRoundedRect( group2, loadButton.x, titleQueryLabel2.y + fromButton, screenW - 100, 80, 4 )
    hamsterButton.strokeWidth = 4
    hamsterButton:setStrokeColor(0)
    hamsterButton.selColor = selColor2
@@ -226,7 +210,7 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
    --
    -- Create New Show With: 'Mechanical Cow'
    --
-   local cowButton = display.newRoundedRect( group2, hamsterButton.x, hamsterButton.y + 120, screenW - 100, 80, 4 )
+   local cowButton = display.newRoundedRect( group2, centerX, hamsterButton.y + 120, screenW - 100, 80, 4 )
    cowButton.strokeWidth = 4
    cowButton:setStrokeColor(0)
    cowButton.selColor = selColor2
@@ -240,6 +224,28 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
    local cowButtonTitle = display.newText( group2, '"Mechanical Cow"', cowButton.x, cowButton.y,  "MoonDucky", fontSize2 )
    cowButtonTitle:setFillColor(0)
 
+   -- local titleQueryLabel = display.newText( group2, "or", centerX, centerY - 100, native.systemFontBold, fontSize )
+   local titleQueryLabel = display.newText( group2, "or", centerX, cowButton.y + 120, native.systemFontBold, fontSize )
+   titleQueryLabel:setFillColor(0)
+
+   --
+   -- Load Existing Show
+   --
+   local loadButton = display.newRoundedRect( group2, centerX, titleQueryLabel.y + 120, screenW - 100, 80, 8 )
+   -- local loadButton = display.newRoundedRect( group2, centerX, titleQueryLabel.y - fromButton , screenW - 100, 80, 8 )
+   loadButton.strokeWidth = 4
+   loadButton:setStrokeColor(0)
+   loadButton.selColor = selColor1
+   loadButton.cb = function()
+      Runtime:removeEventListener( "enterFrame", group )
+      display.remove( group )
+      if( onLoad ) then
+         onLoad( )
+      end
+   end
+   -- local loadButtonLabel = display.newText( group2, "Load An Existing Show", loadButton.x, loadButton.y, native.systemFontBold, fontSize2 )
+   local loadButtonLabel = display.newText( group2, "Load An Existing Show", loadButton.x, loadButton.y, native.systemFontBold, fontSize2 )
+   loadButtonLabel:setFillColor(0)
 
 
    local function onTouch( self, event )
@@ -298,8 +304,8 @@ function public.getCurtainPath( id )
    id = id or 1
    if( tonumber(id) == nil ) then
    end
-   --setData   
-   
+   --setData
+
    return "FRC_Assets/FRC_SetDesign/Images/" .. setData[id].curtainFile
 
 end
@@ -847,7 +853,7 @@ function public.rebuildCostumeScroller( )
    --
    -- 'None' Button
    --
-   local button_spacing = 80   
+   local button_spacing = 80
    local x = -(screenW * 0.5) + button_spacing
    --[[
    local tmp = display.newImage( "FRC_Assets/FRC_Rehearsal/Images/FRC_Rehearsal_Scroller_None.png"  )
@@ -860,9 +866,9 @@ function public.rebuildCostumeScroller( )
 
    local curChar = { id = "none" }
    local buttonScale = 0.96
-   local filePath = "FRC_Assets/FRC_Rehearsal/Images/FRC_Rehearsal_Scroller_None.png" 
+   local filePath = "FRC_Assets/FRC_Rehearsal/Images/FRC_Rehearsal_Scroller_None.png"
 
-   local button      
+   local button
    button = ui.button.new({
          id = curChar.id,
          imageUp = filePath,
@@ -895,8 +901,8 @@ function public.rebuildCostumeScroller( )
       local curChar = { id = "mysterybox", character = currentCharacterType, characters = characters }
       local buttonScale = 0.2 * FRC_Layout.getScaleFactor()
       local filePath = "FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_Scroller_MysteryBox.png"
-      
-      local button      
+
+      local button
       button = ui.button.new({
             id = curChar.id,
             imageUp = filePath,
@@ -928,8 +934,8 @@ function public.rebuildCostumeScroller( )
    local curChar = { id = "nocostume", character = currentCharacterType, categories = { Headwear = 1,  LowerTorso = 1, Neckwear = 1, UpperTorso = 1, Eyewear = 1 } }
    local buttonScale = 0.42 * FRC_Layout.getScaleFactor()
    local filePath = "FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_global_BaseCharacter_" .. currentCharacterType .. "_thumbnail.png"
-   
-   local button      
+
+   local button
    button = ui.button.new({
          id = curChar.id,
          imageUp = filePath,
@@ -951,9 +957,9 @@ function public.rebuildCostumeScroller( )
       })
    button.data = curChar
    button.x = x
-   scroller:insert(button)   
+   scroller:insert(button)
 
-   
+
    --
    -- Costume Thumbnails
    --
@@ -962,9 +968,9 @@ function public.rebuildCostumeScroller( )
       local curChar = characters[i]
       local buttonScale = 0.50 * FRC_Layout.getScaleFactor()
       local filePath = curChar.id .. curChar.thumbSuffix
-      
+
       table.dump2(curChar)
-      local button      
+      local button
       button = ui.button.new({
             id = curChar.id,
             imageUp = filePath,
@@ -980,7 +986,7 @@ function public.rebuildCostumeScroller( )
                local self = e.target
                table.dump2( curChar )
                private.scrollerCostumeTouch( curChar )
-               
+
                return true
             end
          })

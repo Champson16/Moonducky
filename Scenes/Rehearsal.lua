@@ -58,6 +58,7 @@ function scene.postCreateScene(self, event)
 					storyboard.gotoScene('Scenes.Lobby');
 				end
 			},
+			--[[
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_down.png',
@@ -65,7 +66,7 @@ function scene.postCreateScene(self, event)
 					storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "showtime" }  } );
 				end
 			},
-			--[[
+
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_ArtCenter_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_ArtCenter_down.png',

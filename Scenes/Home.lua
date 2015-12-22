@@ -25,7 +25,7 @@ scene.backHandler = function()
 			target = webView.closeButton
 		});
 	else
-		native.showAlert('Exit?', 'Are you sure you want to exit MoonDucky Music Theatre?', { "Cancel", "OK" }, function(event)
+		native.showAlert('Exit?', 'Are you sure you want to exit the MoonDucky Music Theatre?', { "Cancel", "OK" }, function(event)
 			if (event.index == 2) then
 				native.requestExit();
 			end
@@ -39,7 +39,7 @@ end
 		buildText.anchorX = 1.0;
 		buildText.anchorY = 1.0;
 		FRC_Layout.scaleToFit(buildText);
-		buildText.x = FRC_Layout.right(8);
+		buildText.x = FRC_Layout.right(-10);
 		buildText.y = display.contentHeight - 4;
 	end
 

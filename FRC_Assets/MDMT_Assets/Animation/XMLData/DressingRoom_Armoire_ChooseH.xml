@@ -1,0 +1,9 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_ChooseH" frameCount="3">
+    <Part name="MDMT_DressingRoom_Instrument_Conga">
+      <Frame x="-272.95" y="-113.05" index="0"/>
+      <Frame x="-272.95" y="-113.05" index="1"/>
+      <Frame x="-272.95" y="-113.05" index="2"/>
+    </Part>
+  </Animation>
+</Animations>

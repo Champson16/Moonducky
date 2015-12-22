@@ -13,7 +13,8 @@
 		"width": 197,
 		"height": 283,
 		"x": 249,
-		"y": 36
+		"y": 36,
+		"onTouch" : "popcornMachineActivate"
 	},
 	{
 		"id": "Jukebox",

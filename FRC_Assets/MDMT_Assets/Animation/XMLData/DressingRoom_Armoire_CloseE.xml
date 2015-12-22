@@ -1,0 +1,21 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_CloseE" frameCount="26">
+    <Part name="MDMT_DressingRoom_Instrument_RhythmComboCymbal">
+      <Frame x="-100.50" y="5.65" index="0"/>
+      <Frame x="-100.50" y="5.65" index="1"/>
+      <Frame x="-100.50" y="5.65" index="2"/>
+      <Frame x="-97.40" y="5.65" index="3"/>
+      <Frame x="-94.30" y="5.65" index="4"/>
+      <Frame x="-91.20" y="5.65" index="5"/>
+      <Frame x="-88.10" y="5.65" index="6"/>
+      <Frame x="-85.00" y="5.65" index="7"/>
+      <Frame x="-81.90" y="5.65" index="8"/>
+      <Frame x="-143.35" y="5.65" index="9"/>
+      <Frame x="-204.85" y="5.65" index="10"/>
+      <Frame x="-266.35" y="5.65" index="11"/>
+      <Frame x="-327.80" y="5.65" index="12"/>
+      <Frame x="-389.30" y="5.65" index="13"/>
+      <Frame x="-450.80" y="5.65" index="14"/>
+    </Part>
+  </Animation>
+</Animations>

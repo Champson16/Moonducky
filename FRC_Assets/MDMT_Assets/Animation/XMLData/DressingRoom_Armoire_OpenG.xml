@@ -1,0 +1,17 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_OpenG" frameCount="26">
+    <Part name="MDMT_DressingRoom_Instrument_RhythmComboCheeseGrater">
+      <Frame x="-449.20" y="12.60" scaleX="0.999" scaleY="0.999" rotation="-25.838" index="15"/>
+      <Frame x="-312.95" y="12.60" scaleX="0.999" scaleY="0.999" rotation="-25.838" index="16"/>
+      <Frame x="-234.45" y="12.60" scaleX="0.999" scaleY="0.999" rotation="-25.838" index="17"/>
+      <Frame x="-186.30" y="12.60" scaleX="0.999" scaleY="0.999" rotation="-25.838" index="18"/>
+      <Frame x="-158.00" y="12.60" scaleX="0.999" scaleY="0.999" rotation="-25.838" index="19"/>
+      <Frame x="-144.25" y="12.60" scaleX="0.999" scaleY="0.999" rotation="-25.838" index="20"/>
+      <Frame x="-142.30" y="12.60" scaleX="0.999" scaleY="0.999" rotation="-25.838" index="21"/>
+      <Frame x="-150.50" y="12.60" scaleX="0.999" scaleY="0.999" rotation="-25.838" index="22"/>
+      <Frame x="-169.25" y="12.60" scaleX="0.999" scaleY="0.999" rotation="-25.838" index="23"/>
+      <Frame x="-169.25" y="12.60" scaleX="0.999" scaleY="0.999" rotation="-25.838" index="24"/>
+      <Frame x="-169.25" y="12.60" scaleX="0.999" scaleY="0.999" rotation="-25.838" index="25"/>
+    </Part>
+  </Animation>
+</Animations>

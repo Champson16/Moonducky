@@ -1,0 +1,9 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_ChooseC" frameCount="3">
+    <Part name="MDMT_DressingRoom_Instrument_Sticks">
+      <Frame x="-25.00" y="12.80" index="0"/>
+      <Frame x="-25.00" y="12.80" index="1"/>
+      <Frame x="-25.00" y="12.80" index="2"/>
+    </Part>
+  </Animation>
+</Animations>

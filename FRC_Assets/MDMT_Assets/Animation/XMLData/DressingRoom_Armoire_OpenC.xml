@@ -1,0 +1,17 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_OpenC" frameCount="26">
+    <Part name="MDMT_DressingRoom_Instrument_Sticks">
+      <Frame x="-454.00" y="12.80" scaleX="0.595" index="15"/>
+      <Frame x="-298.40" y="12.80" index="16"/>
+      <Frame x="-194.00" y="12.80" index="17"/>
+      <Frame x="-120.60" y="12.80" index="18"/>
+      <Frame x="-68.85" y="12.80" index="19"/>
+      <Frame x="-33.45" y="12.80" index="20"/>
+      <Frame x="-11.20" y="12.80" index="21"/>
+      <Frame x="-0.10" y="12.80" index="22"/>
+      <Frame x="1.20" y="12.80" index="23"/>
+      <Frame x="-6.75" y="12.80" index="24"/>
+      <Frame x="-25.00" y="12.80" index="25"/>
+    </Part>
+  </Animation>
+</Animations>

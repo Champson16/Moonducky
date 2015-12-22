@@ -1,0 +1,9 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_ChooseB" frameCount="3">
+    <Part name="MDMT_DressingRoom_Instrument_Maracas">
+      <Frame x="-36.05" y="-122.95" index="0"/>
+      <Frame x="-36.05" y="-122.95" index="1"/>
+      <Frame x="-36.05" y="-122.95" index="2"/>
+    </Part>
+  </Animation>
+</Animations>

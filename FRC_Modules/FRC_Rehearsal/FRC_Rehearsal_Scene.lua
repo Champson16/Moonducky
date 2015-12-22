@@ -317,8 +317,8 @@ function FRC_Rehearsal_Scene:load(e)
    if( sceneMode == "showtime") then
       FRC_CharacterBuilder:stopStageCharacters()
       FRC_CharacterBuilder.setEditEnable( true )
-      
-      
+
+
       local curtainPath = FRC_CharacterBuilder.getCurtainPath( e.data.setIndex )
 
       --local curtain = display.newImageRect( FRC_Rehearsal_Scene.view._content, "FRC_Assets/FRC_Rehearsal/Images/curtain.jpg", screenW, screenH )
@@ -619,11 +619,11 @@ function FRC_Rehearsal_Scene:createScene(event)
             end
          end
       end
-      
+
       rehearsalContainer.isVisible = ( sceneMode == "showtime" );
-      
-      if( view._overlay.touchGroup and view._overlay.touchGroup.enterFrame ) then         
-         Runtime:removeEventListener( "enterFrame", view._overlay.touchGroup )         
+
+      if( view._overlay.touchGroup and view._overlay.touchGroup.enterFrame ) then
+         Runtime:removeEventListener( "enterFrame", view._overlay.touchGroup )
          view._overlay.touchGroup = nil
          display.remove(view._overlay.touchGroup)
       end
@@ -663,7 +663,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    end
 
    FRC_Rehearsal_Scene.startRehearsalMode = function( playDelay, restartingMusic )
-      playDelay = playDelay or 0      
+      playDelay = playDelay or 0
       print("StartRehearsal");
       categoriesContainer.isVisible = false;
       if itemScrollers then
@@ -673,21 +673,21 @@ function FRC_Rehearsal_Scene:createScene(event)
             end
          end
       end
-      
-      -- Code to handle transitioning controls on/off screen based on time and touches.      
+
+      -- Code to handle transitioning controls on/off screen based on time and touches.
       local touchGroup = display.newGroup()
       view._overlay.touchGroup = touchGroup
-      touchGroup.enterFrame = function( self ) 
-         if( self.removeSelf == nil ) then 
-            Runtime:removeEventListener( "enterFrame", self )            
+      touchGroup.enterFrame = function( self )
+         if( self.removeSelf == nil ) then
+            Runtime:removeEventListener( "enterFrame", self )
             return
          end
          if( self.toFront ) then
             self:toFront()
-         end            
+         end
       end
       Runtime:addEventListener( "enterFrame", touchGroup )
-   
+
       view._overlay.controlTouch = display.newRect( touchGroup, centerX, centerY, screenW, screenH )
       view._overlay.controlTouch.isHitTestable = true
       view._overlay.controlTouch.alpha = 0
@@ -698,15 +698,15 @@ function FRC_Rehearsal_Scene:createScene(event)
             local function onComplete()
                transition.to( rehearsalContainer, { delay = 1000, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
             end
-            transition.to( rehearsalContainer, { time = 700, y = rehearsalContainer.y0, onComplete = onComplete } )            
+            transition.to( rehearsalContainer, { time = 700, y = rehearsalContainer.y0, onComplete = onComplete } )
          end
          return false
       end
       view._overlay.controlTouch:addEventListener("touch")
-      
-      
+
+
       rehearsalContainer.isVisible = true;
-      
+
       local function startPlaying()
          -- get a handle to the song group
          -- songGroup = FRC_AudioManager:newGroup({
@@ -734,14 +734,18 @@ function FRC_Rehearsal_Scene:createScene(event)
                   -- end });
                end
             end
+            local startTime = system.getTimer()
             songGroup:playAll();
+            local endTime = system.getTimer()
+            print( 'audio tracks started in:' , endTime - startTime )
+
             FRC_CharacterBuilder.setEditEnable( false )
             FRC_CharacterBuilder.playStageCharacters()
          end
-         
+
          rehearsalContainer.isPlaying = true
       end
-      
+
       transition.cancel( rehearsalContainer )
       rehearsalContainer.y = rehearsalContainer.y0
       if( restartingMusic == true ) then
@@ -749,7 +753,7 @@ function FRC_Rehearsal_Scene:createScene(event)
          transition.to( rehearsalContainer, { delay = 0, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
       elseif( sceneMode == "showtime" ) then
          transition.to( rehearsalContainer, { delay = 1800, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
-         timer.performWithDelay( 2500, function() 
+         timer.performWithDelay( 2500, function()
             if( view.removeSelf == nil ) then return end
                startPlaying()
             end )
@@ -757,8 +761,8 @@ function FRC_Rehearsal_Scene:createScene(event)
          startPlaying()
          transition.to( rehearsalContainer, { delay = 1800, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
       end
-      
-      
+
+
       -- play the entire group
       --[[
     if songGroup then
@@ -846,7 +850,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    rehearsalContainer.x = display.contentCenterX
    rehearsalContainer.y = display.contentHeight - (categoriesHeight * 0.5) + (category_button_spacing * 1.65)
    rehearsalContainer.y0 = rehearsalContainer.y
-   
+
    view._playControls:insert(rehearsalContainer)
 
    for i=1,#rehearsalPlaybackData do

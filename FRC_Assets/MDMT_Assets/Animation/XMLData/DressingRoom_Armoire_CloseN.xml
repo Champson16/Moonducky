@@ -1,0 +1,38 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_CloseN" frameCount="26">
+    <Part name="MDMT_DressingRoom_ArmoireDoorRightClosed">
+      <Frame x="-219.60" y="-52.45" index="20"/>
+      <Frame x="-222.70" y="-57.05" scaleX="0.962" scaleY="1.018" index="21"/>
+      <Frame x="-225.80" y="-61.70" scaleX="0.923" scaleY="1.037" index="22"/>
+      <Frame x="-223.70" y="-58.60" scaleX="0.949" scaleY="1.025" index="23"/>
+      <Frame x="-221.65" y="-55.50" scaleX="0.974" scaleY="1.012" index="24"/>
+      <Frame x="-219.60" y="-52.45" index="25"/>
+    </Part>
+    <Part name="MDMT_DressingRoom_ArmoireDoorRightOpen01">
+      <Frame x="-181.50" y="-58.35" scaleX="1.071" index="18"/>
+      <Frame x="-190.85" y="-58.35" scaleX="1.487" index="19"/>
+    </Part>
+    <Part name="MDMT_DressingRoom_ArmoireDoorRightOpen02">
+      <Frame x="-128.80" y="-58.35" scaleX="1.071" index="16"/>
+      <Frame x="-141.30" y="-58.35" scaleX="0.719" index="17"/>
+    </Part>
+    <Part name="MDMT_DressingRoom_ArmoireDoorRightOpen03">
+      <Frame x="-104.80" y="-58.35" index="0"/>
+      <Frame x="-104.80" y="-58.35" index="1"/>
+      <Frame x="-104.80" y="-58.35" index="2"/>
+      <Frame x="-104.80" y="-58.35" index="3"/>
+      <Frame x="-104.80" y="-58.35" index="4"/>
+      <Frame x="-104.80" y="-58.35" index="5"/>
+      <Frame x="-104.80" y="-58.35" index="6"/>
+      <Frame x="-104.80" y="-58.35" index="7"/>
+      <Frame x="-104.80" y="-58.35" index="8"/>
+      <Frame x="-104.80" y="-58.35" index="9"/>
+      <Frame x="-104.80" y="-58.35" index="10"/>
+      <Frame x="-104.80" y="-58.35" index="11"/>
+      <Frame x="-103.55" y="-58.35" scaleX="1.024" index="12"/>
+      <Frame x="-102.25" y="-58.35" scaleX="1.047" index="13"/>
+      <Frame x="-100.90" y="-58.35" scaleX="1.071" index="14"/>
+      <Frame x="-104.05" y="-58.35" scaleX="1.014" index="15"/>
+    </Part>
+  </Animation>
+</Animations>

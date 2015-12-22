@@ -22,12 +22,18 @@ local imageBase = 'FRC_Assets/FRC_Lobby/Images/';
 local videoBase = 'FRC_Assets/MDMT_Assets/Videos/';
 
 local videoPlayer;
+local lobbySounds;
+local lobbySoundPlayback;
 
 --
 -- Localize some common screen dimmensions
 --
 local	screenW, screenH, contentW, contentH, centerX, centerY = FRC_Layout.getScreenDimensions() -- TRS EFM
 
+FRC_AudioManager:newGroup({
+      name = "lobbySounds",
+      maxChannels = 10
+   });
 
 local function UI(key)
 	return FRC_Lobby_Settings.UI[key];
@@ -182,8 +188,61 @@ function FRC_Lobby_Scene:createScene(event)
 	end
 
 	sceneLayoutMethods.featureComingSoon = function()
-		native.showAlert("Juke Box Coming Soon!","This feature is coming soon.", { "OK" });
+		native.showAlert("Jukebox is being repaired but should be available very soon!","This feature is coming soon.", { "OK" });
 	end
+
+	sceneLayoutMethods.popcornMachineActivate = function(event)
+		-- start the Audio
+		lobbySounds = FRC_AudioManager:findGroup("lobbySounds");
+		-- local popcornHandle = lobbySounds:findHandle("popcorn");
+		-- if lobbySounds and popcornHandle then
+		-- 	print("found lobbySounds"); -- DEBUG
+		-- 	local nextChannel = lobbySounds:findFreeChannel();
+    --   popcornHandle:play( { channel = nextChannel } );
+		-- 	print("popcorn sound playback"); -- DEBUG
+		-- end
+		local popcornHandle = FRC_AudioManager:newHandle({
+		      path = "FRC_Assets/MDMT_Assets/Audio/MDMT_Lobby_Popcorn.mp3",
+		      loadMethod = "loadSound" -- ,
+					-- group = "lobbySounds"
+		   });
+
+		if lobbySounds and popcornHandle then
+			-- print("found lobbySounds"); -- DEBUG
+			-- local nextChannel = lobbySounds:findFreeChannel();
+      -- if nextChannel then
+			-- 	popcornHandle:play( { channel = nextChannel } );
+			-- 	print("popcorn sound playback"); -- DEBUG
+			-- end
+
+			local playbackChannel = lobbySounds:addChannel();
+			lobbySounds:addHandle(popcornHandle);
+  	  lobbySounds:play(popcornHandle.name, { channel = playbackChannel });
+			print( 'playbackChannel:', playbackChannel );
+		end
+
+		-- Decode the string
+		local emitterParams = DATA('POPCORNMACHINEPARTICLE'); -- json.decode( fileData )
+
+		-- Create the emitter with the decoded parameters
+		local emitter1 = display.newEmitter( emitterParams )
+
+		-- Center the emitter within the content area
+		emitter1.x = display.contentCenterX + 249;
+		emitter1.y = display.contentCenterY + 36;
+
+		local function stopPopcornMachine(soundHandle)
+		    emitter1:stop()
+				print('stopping sound handle name: ', soundHandle.name)
+				soundHandle:stop();
+		end
+		-- Stop the emitter after 5 seconds
+		timer.performWithDelay( 5000, function()
+			stopPopcornMachine(popcornHandle)
+		end, 1);
+
+	end
+
 
 	rehearsalButton = ui.button.new({
 		imageUp = imageBase .. 'MDMT_Lobby_RehearsalDoor.png',

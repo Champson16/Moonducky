@@ -387,9 +387,59 @@ function FRC_DressingRoom_Scene:createScene(event)
 		end, 1);
 	end
 
+
 	function sceneLayoutMethods.randomCostume()
 		-- play the mystery box animation
 		sceneLayoutMethods.playMysteryBoxAnimationSequence();
+	end
+
+	-- setup the armoire animations
+	local openArmoireAnimationFiles = {};
+	local openArmoireAnimationSequences = {};
+
+	openArmoireAnimationFiles = {
+		"DressingRoom_Armoire_OpenO.xml",
+		"DressingRoom_Armoire_OpenN.xml",
+		"DressingRoom_Armoire_OpenM.xml",
+		"DressingRoom_Armoire_OpenL.xml",
+		"DressingRoom_Armoire_OpenK.xml",
+		"DressingRoom_Armoire_OpenJ.xml",
+		"DressingRoom_Armoire_OpenI.xml",
+		"DressingRoom_Armoire_OpenH.xml",
+		"DressingRoom_Armoire_OpenG.xml",
+		"DressingRoom_Armoire_OpenF.xml",
+		"DressingRoom_Armoire_OpenE.xml",
+		"DressingRoom_Armoire_OpenD.xml",
+		"DressingRoom_Armoire_OpenC.xml",
+		"DressingRoom_Armoire_OpenB.xml",
+		"DressingRoom_Armoire_OpenA.xml"
+	};
+
+	for i=1,#openArmoireAnimationFiles do
+		-- preload the animation data (XML and images) early
+		openArmoireAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(openArmoireAnimationFiles, animationXMLBase, animationImageBase);
+		view._content:insert(openArmoireAnimationSequences);
+    FRC_Layout.placeAnimation( openArmoireAnimationSequences, { x = 0, y = 45 } , false ) -- TRS EFM
+	end
+
+	-- ambient loop sequence
+	function sceneLayoutMethods.playOpenArmoireSequences()
+		for i=1, openArmoireAnimationSequences.numChildren do
+			openArmoireAnimationSequences[i]:play({
+				showLastFrame = true,
+				playBackward = false,
+				autoLoop = false,
+				palindromicLoop = false,
+				delay = 0,
+				intervalTime = 30,
+				maxIterations = 1
+			});
+		end
+	end
+
+	function sceneLayoutMethods.openArmoire()
+		-- play the mystery box animation
+		sceneLayoutMethods.playOpenArmoireSequences();
 	end
 
 	local sceneLayoutAnimationSequences;

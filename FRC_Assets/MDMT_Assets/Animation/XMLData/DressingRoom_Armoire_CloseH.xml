@@ -1,0 +1,21 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_CloseH" frameCount="26">
+    <Part name="MDMT_DressingRoom_Instrument_Conga">
+      <Frame x="-272.95" y="-113.05" index="0"/>
+      <Frame x="-272.95" y="-113.05" index="1"/>
+      <Frame x="-272.95" y="-113.05" index="2"/>
+      <Frame x="-272.95" y="-113.05" index="3"/>
+      <Frame x="-272.95" y="-113.05" index="4"/>
+      <Frame x="-269.85" y="-113.05" index="5"/>
+      <Frame x="-266.75" y="-113.05" index="6"/>
+      <Frame x="-263.65" y="-113.05" index="7"/>
+      <Frame x="-260.55" y="-113.05" index="8"/>
+      <Frame x="-257.45" y="-113.05" index="9"/>
+      <Frame x="-254.35" y="-113.05" index="10"/>
+      <Frame x="-303.95" y="-113.05" scaleX="0.924" index="11"/>
+      <Frame x="-353.55" y="-113.05" scaleX="0.848" index="12"/>
+      <Frame x="-403.15" y="-113.05" scaleX="0.772" index="13"/>
+      <Frame x="-452.75" y="-113.05" scaleX="0.696" index="14"/>
+    </Part>
+  </Animation>
+</Animations>

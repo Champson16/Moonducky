@@ -9,7 +9,8 @@ FRC_Lobby_Settings.UI = {
 
 FRC_Lobby_Settings.DATA = {
 	SCENELAYOUT = 'FRC_Assets/FRC_Lobby/Data/FRC_Lobby_SceneLayout.json',
-	USERDATA = "FRC_Assets/FRC_Lobby/Data/FRC_Lobby.json"
+	USERDATA = "FRC_Assets/FRC_Lobby/Data/FRC_Lobby.json",
+	POPCORNMACHINEPARTICLE = "FRC_Assets/FRC_Lobby/Data/FRC_PopcornMachineParticle.json"
 };
 
 

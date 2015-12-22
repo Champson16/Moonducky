@@ -1,0 +1,21 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_OpenM" frameCount="26">
+    <Part name="MDMT_DressingRoom_InstrumentRackMiddle">
+      <Frame x="-385.85" y="-58.10" scaleX="0.076" index="11"/>
+      <Frame x="-351.00" y="-58.10" scaleX="0.234" index="12"/>
+      <Frame x="-317.50" y="-58.10" scaleX="0.391" index="13"/>
+      <Frame x="-285.65" y="-58.10" scaleX="0.549" index="14"/>
+      <Frame x="-256.65" y="-58.10" scaleX="0.706" index="15"/>
+      <Frame x="-234.35" y="-58.10" scaleX="0.864" index="16"/>
+      <Frame x="-226.15" y="-58.10" scaleX="0.900" index="17"/>
+      <Frame x="-217.55" y="-58.10" scaleX="1.017" scaleY="0.967" index="18"/>
+      <Frame x="-207.95" y="-58.10" scaleX="1.059" scaleY="0.933" index="19"/>
+      <Frame x="-205.90" y="-58.10" scaleX="1.070" scaleY="0.900" index="20"/>
+      <Frame x="-207.50" y="-58.10" scaleX="1.062" scaleY="0.933" index="21"/>
+      <Frame x="-213.80" y="-58.10" scaleX="1.028" scaleY="0.967" index="22"/>
+      <Frame x="-240.95" y="-58.10" scaleX="0.890" index="23"/>
+      <Frame x="-240.95" y="-58.10" scaleX="0.890" index="24"/>
+      <Frame x="-240.95" y="-58.10" scaleX="0.890" index="25"/>
+    </Part>
+  </Animation>
+</Animations>

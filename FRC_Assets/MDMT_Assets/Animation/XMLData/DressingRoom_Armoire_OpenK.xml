@@ -1,0 +1,17 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_OpenK" frameCount="26">
+    <Part name="MDMT_DressingRoom_Instrument_Microphone_04rb">
+      <Frame x="-455.05" y="19.05" index="15"/>
+      <Frame x="-413.45" y="19.05" index="16"/>
+      <Frame x="-388.90" y="19.05" index="17"/>
+      <Frame x="-375.45" y="19.05" index="18"/>
+      <Frame x="-370.20" y="19.05" index="19"/>
+      <Frame x="-371.80" y="19.05" index="20"/>
+      <Frame x="-380.05" y="19.05" index="21"/>
+      <Frame x="-380.05" y="19.05" index="22"/>
+      <Frame x="-380.05" y="19.05" index="23"/>
+      <Frame x="-380.05" y="19.05" index="24"/>
+      <Frame x="-380.05" y="19.05" index="25"/>
+    </Part>
+  </Animation>
+</Animations>

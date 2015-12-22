@@ -1,0 +1,21 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_CloseC" frameCount="26">
+    <Part name="MDMT_DressingRoom_Instrument_Sticks">
+      <Frame x="-25.00" y="12.80" index="0"/>
+      <Frame x="-25.00" y="12.80" index="1"/>
+      <Frame x="-21.90" y="12.80" index="2"/>
+      <Frame x="-18.80" y="12.80" index="3"/>
+      <Frame x="-15.70" y="12.80" index="4"/>
+      <Frame x="-12.60" y="12.80" index="5"/>
+      <Frame x="-9.50" y="12.80" index="6"/>
+      <Frame x="-6.40" y="12.80" index="7"/>
+      <Frame x="-69.90" y="12.80" scaleX="0.960" index="8"/>
+      <Frame x="-133.50" y="12.80" scaleX="0.921" index="9"/>
+      <Frame x="-197.05" y="12.80" scaleX="0.881" index="10"/>
+      <Frame x="-260.60" y="12.80" scaleX="0.841" index="11"/>
+      <Frame x="-324.15" y="12.80" scaleX="0.802" index="12"/>
+      <Frame x="-387.70" y="12.80" scaleX="0.762" index="13"/>
+      <Frame x="-451.25" y="12.80" scaleX="0.723" index="14"/>
+    </Part>
+  </Animation>
+</Animations>

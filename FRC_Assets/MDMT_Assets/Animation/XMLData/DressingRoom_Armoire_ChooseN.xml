@@ -1,0 +1,9 @@
+<Animations>
+  <Animation name="DressingRoom_Armoire_ChooseN" frameCount="3">
+    <Part name="MDMT_DressingRoom_ArmoireDoorRightOpen03">
+      <Frame x="-104.80" y="-58.35" index="0"/>
+      <Frame x="-104.80" y="-58.35" index="1"/>
+      <Frame x="-104.80" y="-58.35" index="2"/>
+    </Part>
+  </Animation>
+</Animations>
