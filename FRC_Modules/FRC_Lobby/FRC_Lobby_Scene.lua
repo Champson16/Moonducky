@@ -25,6 +25,9 @@ local videoPlayer;
 local lobbySounds;
 local lobbySoundPlayback;
 
+local popcornEmitters = {}
+local popcornSounds = {}
+
 --
 -- Localize some common screen dimmensions
 --
@@ -217,24 +220,29 @@ function FRC_Lobby_Scene:createScene(event)
 
 			local playbackChannel = lobbySounds:addChannel();
 			lobbySounds:addHandle(popcornHandle);
-  	  lobbySounds:play(popcornHandle.name, { channel = playbackChannel });
+         lobbySounds:play(popcornHandle.name, { channel = playbackChannel });
 			print( 'playbackChannel:', playbackChannel );
+         popcornSounds[#popcornSounds+1] = popcornHandle
 		end
 
-		-- Decode the string
-		local emitterParams = DATA('POPCORNMACHINEPARTICLE'); -- json.decode( fileData )
-
+		-- Decode the string		
+      local pex = require "pex"
+      local emitter1 = pex.loadPD2( view._content, centerX + 249, centerY + 36,
+						           FRC_Lobby_Settings.DATA.POPCORNMACHINEPARTICLE, 
+                             { texturePath = "FRC_Assets/FRC_Lobby/Images/" } )
+      popcornEmitters[#popcornEmitters+1] = emitter1
+      --local emitterParams = DATA('POPCORNMACHINEPARTICLE'); -- json.decode( fileData )
 		-- Create the emitter with the decoded parameters
-		local emitter1 = display.newEmitter( emitterParams )
-
+		--local emitter1 = display.newEmitter( emitterParams )
 		-- Center the emitter within the content area
-		emitter1.x = display.contentCenterX + 249;
-		emitter1.y = display.contentCenterY + 36;
+		--emitter1.x = display.contentCenterX + 249;
+		--emitter1.y = display.contentCenterY + 36;
 
 		local function stopPopcornMachine(soundHandle)
+          if( emitter1.removeSelf == nil ) then return end
 		    emitter1:stop()
-				print('stopping sound handle name: ', soundHandle.name)
-				soundHandle:stop();
+          print('stopping sound handle name: ', soundHandle.name)
+			soundHandle:stop();
 		end
 		-- Stop the emitter after 5 seconds
 		timer.performWithDelay( 5000, function()
@@ -490,6 +498,16 @@ end
 function FRC_Lobby_Scene:exitScene(event)
 	local scene = self;
 	local view = self.view;
+   
+   for k,v in pairs( popcornEmitters ) do
+     display.remove( v )
+   end
+   popcornEmitters = {}
+   for k,v in pairs( popcornSounds ) do
+     if( v.stop ) then v:stop() end
+   end   
+   popcornSounds = {}
+   
 
 	if (scene.outboundTimer) then
 		timer.cancel(scene.outboundTimer);
