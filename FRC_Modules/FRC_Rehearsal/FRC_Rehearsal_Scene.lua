@@ -298,8 +298,8 @@ function FRC_Rehearsal_Scene:load(e)
    if( e.data.setIndex ) then
       FRC_Rehearsal_Scene.changeSet(e.data.setIndex)
    end
-   table.dump2(e.data)
-   table.dump2(FRC_Rehearsal_Scene)
+   --table.dump2(e.data)
+   --table.dump2(FRC_Rehearsal_Scene)
    currentSongID = e.data.currentSongID
 
    FRC_CharacterBuilder.init( {
@@ -322,16 +322,16 @@ function FRC_Rehearsal_Scene:load(e)
       curtain.x = centerX
       curtain.y = centerY
 
-      local function onComplete()
-         timer.performWithDelay( 1000,
-            function()
-               if( FRC_Rehearsal_Scene.view.removeSelf ~= nil ) then
-                  FRC_Rehearsal_Scene.startRehearsalMode()
-               end
-            end  )
-      end
+      --local function onComplete()
+         --timer.performWithDelay( 1000,
+           -- function()
+             --  if( FRC_Rehearsal_Scene.view.removeSelf ~= nil ) then
+                  FRC_Rehearsal_Scene.startRehearsalMode( 1500 )
+--               end
+            --end  )
+      --end
 
-      transition.to( curtain, { y = curtain.y - screenH, delay = 1000, time = 1500, transition = easing.inCirc, onComplete = onComplete } )
+      transition.to( curtain, { y = curtain.y - screenH, delay = 1000, time = 1500, transition = easing.inCirc } ) -- , onComplete = onComplete } )
       --[[
       local leftCurtain = display.newRect( view._content, "FRC_Assets\FRC_Rehearsal\Images\leftCurtain.png", screenW, screenH )
       local rightCurtain = display.newRect( view._content, "FRC_Assets\FRC_Rehearsal\Images\rightCurtain.png", screenW, screenH )
@@ -617,6 +617,11 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
       rehearsalContainer.isVisible = false;
       
+      if( view._overlay.touchGroup and view._overlay.touchGroup.enterFrame ) then         
+         Runtime:removeEventListener( "enterFrame", view._overlay.touchGroup )         
+         view._overlay.touchGroup = nil
+         display.remove(view._overlay.touchGroup)
+      end
       display.remove(view._overlay.controlTouch)
       transition.cancel( rehearsalContainer )
       rehearsalContainer.y = rehearsalContainer.y0
@@ -651,7 +656,8 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
    end
 
-   FRC_Rehearsal_Scene.startRehearsalMode = function ()
+   FRC_Rehearsal_Scene.startRehearsalMode = function(playDelay)
+      playDelay = playDelay or 0      
       print("StartRehearsal");
       categoriesContainer.isVisible = false;
       if itemScrollers then
@@ -663,14 +669,28 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
       
       -- Code to handle transitioning controls on/off screen based on time and touches.      
-      view._overlay.controlTouch = display.newRect( view._overlay, centerX, centerY, screenW, screenH )
+      local touchGroup = display.newGroup()
+      view._overlay.touchGroup = touchGroup
+      touchGroup.enterFrame = function( self ) 
+         if( self.removeSelf == nil ) then 
+            Runtime:removeEventListener( "enterFrame", self )            
+            return
+         end
+         if( self.toFront ) then
+            self:toFront()
+         end            
+      end
+      Runtime:addEventListener( "enterFrame", touchGroup )
+   
+      view._overlay.controlTouch = display.newRect( touchGroup, centerX, centerY, screenW, screenH )
       view._overlay.controlTouch.isHitTestable = true
       view._overlay.controlTouch.alpha = 0
       view._overlay.controlTouch.touch = function( self, event )
+         --table.dump2(event)
          if( event.phase == "began") then
             transition.cancel( rehearsalContainer )
             local function onComplete()
-               transition.to( rehearsalContainer, { delay = 1500, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
+               transition.to( rehearsalContainer, { delay = 1000, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
             end
             transition.to( rehearsalContainer, { time = 700, y = rehearsalContainer.y0, onComplete = onComplete } )            
          end
@@ -680,39 +700,51 @@ function FRC_Rehearsal_Scene:createScene(event)
       
       
       rehearsalContainer.isVisible = true;
+      
+      local function startPlaying()
+         -- get a handle to the song group
+         -- songGroup = FRC_AudioManager:newGroup({
+         --   name = "songGroup",
+         --   maxChannels = 8
+         -- });
+         -- get a list of the instruments that are active
+         local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
+         table.dump(instrumentList); -- DEBUG
+         -- find the song for each instrument
+         tracksGroup = FRC_AudioManager:findGroup("songTracks");
+         songGroup = FRC_AudioManager:findGroup("songPlayback");
+         print(tracksGroup); -- DEBUG
+         if (songGroup and tracksGroup and instrumentList) then
+            for i, instr in pairs(instrumentList) do
+               print(i, instr);
+               local h = tracksGroup:findHandle(currentSongID .. "_" .. string.lower(instr) )
+               -- add the song to a playback group if it is legitimate for this song
+               if (h) then
+                  print('playing ', h.name);
+                  songGroup:addHandle(h);
+                  -- h:play();
+                  -- h:play({ onComplete = function()
+                  --   FRC_Rehearsal_Scene.stopRehearsalMode();
+                  -- end });
+               end
+            end
+            songGroup:playAll();
+            FRC_CharacterBuilder.setEditEnable( false )
+            FRC_CharacterBuilder.playStageCharacters()
+         end
+      end
+      
       transition.cancel( rehearsalContainer )
       rehearsalContainer.y = rehearsalContainer.y0
-      transition.to( rehearsalContainer, { delay = 1800, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
-      -- get a handle to the song group
-      -- songGroup = FRC_AudioManager:newGroup({
-      --   name = "songGroup",
-      --   maxChannels = 8
-      -- });
-      -- get a list of the instruments that are active
-      local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
-      table.dump(instrumentList); -- DEBUG
-      -- find the song for each instrument
-      tracksGroup = FRC_AudioManager:findGroup("songTracks");
-      songGroup = FRC_AudioManager:findGroup("songPlayback");
-      print(tracksGroup); -- DEBUG
-      if (songGroup and tracksGroup and instrumentList) then
-         for i, instr in pairs(instrumentList) do
-            print(i, instr);
-            local h = tracksGroup:findHandle(currentSongID .. "_" .. string.lower(instr) )
-            -- add the song to a playback group if it is legitimate for this song
-            if (h) then
-               print('playing ', h.name);
-               songGroup:addHandle(h);
-               -- h:play();
-               -- h:play({ onComplete = function()
-               --   FRC_Rehearsal_Scene.stopRehearsalMode();
-               -- end });
-            end
-         end
-         songGroup:playAll();
-         FRC_CharacterBuilder.setEditEnable( false )
-         FRC_CharacterBuilder.playStageCharacters()
+      
+      if( sceneMode == "showtime" ) then
+         transition.to( rehearsalContainer, { delay = 1800, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight, onComplete = startPlaying } )
+      else
+         startPlaying()
+         transition.to( rehearsalContainer, { delay = 1800, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
       end
+      
+      
       -- play the entire group
       --[[
     if songGroup then
@@ -1129,7 +1161,7 @@ function FRC_Rehearsal_Scene:createScene(event)
                itemScrollers.Costume.isVisible = true
                costumesButton:press()
                costumesButton:release()
-               table.dump2( costumesButton )
+               --table.dump2( costumesButton )
             end
          })
       button.categoryId = 'Character'
