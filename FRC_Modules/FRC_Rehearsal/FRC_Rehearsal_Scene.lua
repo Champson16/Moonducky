@@ -28,7 +28,6 @@ local currentSongID = "hamsters";
 
 local sceneMode = "rehearsal" -- or "showtime"
 
-
 local character_x = 0
 local character_y = -16
 local eyeTimer
@@ -617,6 +616,11 @@ function FRC_Rehearsal_Scene:createScene(event)
          end
       end
       rehearsalContainer.isVisible = false;
+      
+      display.remove(view._overlay.controlTouch)
+      transition.cancel( rehearsalContainer )
+      rehearsalContainer.y = rehearsalContainer.y0
+
       -- TODO turn back on the appropriate scroller's visibility (last one that was active)
 
       FRC_CharacterBuilder.stopStageCharacters()
@@ -657,7 +661,28 @@ function FRC_Rehearsal_Scene:createScene(event)
             end
          end
       end
+      
+      -- Code to handle transitioning controls on/off screen based on time and touches.      
+      view._overlay.controlTouch = display.newRect( view._overlay, centerX, centerY, screenW, screenH )
+      view._overlay.controlTouch.isHitTestable = true
+      view._overlay.controlTouch.alpha = 0
+      view._overlay.controlTouch.touch = function( self, event )
+         if( event.phase == "began") then
+            transition.cancel( rehearsalContainer )
+            local function onComplete()
+               transition.to( rehearsalContainer, { delay = 1500, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
+            end
+            transition.to( rehearsalContainer, { time = 700, y = rehearsalContainer.y0, onComplete = onComplete } )            
+         end
+         return false
+      end
+      view._overlay.controlTouch:addEventListener("touch")
+      
+      
       rehearsalContainer.isVisible = true;
+      transition.cancel( rehearsalContainer )
+      rehearsalContainer.y = rehearsalContainer.y0
+      transition.to( rehearsalContainer, { delay = 1800, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
       -- get a handle to the song group
       -- songGroup = FRC_AudioManager:newGroup({
       --   name = "songGroup",
@@ -774,6 +799,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    rehearsalContainerBg.x, rehearsalContainerBg.y = 0, 0
    rehearsalContainer.x = display.contentCenterX
    rehearsalContainer.y = display.contentHeight - (categoriesHeight * 0.5) + (category_button_spacing * 1.65)
+   rehearsalContainer.y0 = rehearsalContainer.y
 
    for i=1,#rehearsalPlaybackData do
       local button = ui.button.new({
