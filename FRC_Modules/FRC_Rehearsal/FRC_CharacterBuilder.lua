@@ -11,7 +11,9 @@ local ui                      = require('ui')
 local FRC_DataLib             = require('FRC_Modules.FRC_DataLib.FRC_DataLib')
 local FRC_Layout              = require('FRC_Modules.FRC_Layout.FRC_Layout')
 local FRC_AnimationManager    = require('FRC_Modules.FRC_AnimationManager.FRC_AnimationManager')
+local FRC_SetDesign_Settings  = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign_Settings');
 local FRC_Rehearsal_Settings  = require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Settings')
+
 
 local function UI(key)
    return FRC_Rehearsal_Settings.UI[key]
@@ -20,6 +22,7 @@ local function DATA(key, baseDir)
    baseDir = baseDir or system.ResourceDirectory
    return FRC_DataLib.readJSON(FRC_Rehearsal_Settings.DATA[key], baseDir)
 end
+
 
 -- ======================================================================
 -- Forward Declarations
@@ -47,6 +50,8 @@ local currentStagePiece
 local instrumentsInUse
 
 local	screenW, screenH, contentW, contentH, centerX, centerY = FRC_Layout.getScreenDimensions()
+
+local setData = FRC_DataLib.readJSON(FRC_SetDesign_Settings.DATA.SETS, system.ResourceDirectory)
 
 -- ********************************
 -- EFM Following may be temporary (revist these locals):
@@ -285,6 +290,19 @@ end
 
 
 
+--
+-- getShowTitle() - Pop up input field to get show title
+--
+
+function public.getCurtainPath( id )
+   id = id or 1
+   if( tonumber(id) == nil ) then
+   end
+   --setData   
+   
+   return "FRC_Assets/FRC_SetDesign/Images/" .. setData[id].curtainFile
+
+end
 
 --
 -- getShowTitle() - Pop up input field to get show title

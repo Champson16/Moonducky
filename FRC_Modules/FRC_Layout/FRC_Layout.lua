@@ -214,7 +214,7 @@ end
 -- createLayers() - Creates a standard set of layers for use by all scenes.
 --
 m.createLayers = function( view )
-   local layers = { "underlay", "content", "content2", "overlay" } -- ordered bottom-to-top
+   local layers = { "underlay", "content", "content2", "overlay", "playControls" } -- ordered bottom-to-top
    for i = 1, # layers do
       local group = display.newGroup()
       view["_" .. layers[i]] = group

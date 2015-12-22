@@ -317,8 +317,12 @@ function FRC_Rehearsal_Scene:load(e)
    if( sceneMode == "showtime") then
       FRC_CharacterBuilder:stopStageCharacters()
       FRC_CharacterBuilder.setEditEnable( true )
+      
+      
+      local curtainPath = FRC_CharacterBuilder.getCurtainPath( e.data.setIndex )
 
-      local curtain = display.newImageRect( FRC_Rehearsal_Scene.view._content, "FRC_Assets/FRC_Rehearsal/Images/curtain.jpg", screenW, screenH )
+      --local curtain = display.newImageRect( FRC_Rehearsal_Scene.view._content, "FRC_Assets/FRC_Rehearsal/Images/curtain.jpg", screenW, screenH )
+      local curtain = display.newImageRect( FRC_Rehearsal_Scene.view._content, curtainPath, screenW, screenH )
       curtain.x = centerX
       curtain.y = centerY
 
@@ -842,6 +846,8 @@ function FRC_Rehearsal_Scene:createScene(event)
    rehearsalContainer.x = display.contentCenterX
    rehearsalContainer.y = display.contentHeight - (categoriesHeight * 0.5) + (category_button_spacing * 1.65)
    rehearsalContainer.y0 = rehearsalContainer.y
+   
+   view._playControls:insert(rehearsalContainer)
 
    for i=1,#rehearsalPlaybackData do
       local button = ui.button.new({
