@@ -357,8 +357,8 @@ function public.getShowTitle( onSuccess, onCancel )
       end
    end
 
-   local textBox = native.newTextField( centerX, titleQueryBack.y, screenW - 80, fontSize + 20 )
-   textBox.font = native.newFont( native.systemFontBold, fontSize )
+   local textBox = native.newTextField( centerX, titleQueryBack.y, screenW - 80, fontSize + 30 )
+   textBox.font = native.newFont( "OpenSans-Semibold", fontSize )
    textBox.text = "A Hard Act To Follow"
    textBox.isEditable = true
    textBox.userInput = inputListener
