@@ -162,6 +162,163 @@ function FRC_Rehearsal_Scene:save(e)
    local id = e.id
    if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)) end
 
+   --local saveGroup = self.view.setDesignGroup --EFM
+   local saveGroup = self.view._content --EFM
+
+   -- create mask
+   -- mask must have a minimum of 3px padding on all sides, and be a multiple of 4
+   local capture = display.capture(saveGroup)
+   local cw = ((capture.contentWidth + 12) * display.contentScaleX)
+   local ch = ((capture.contentHeight + 12) * display.contentScaleY)
+   local sx = display.contentScaleX
+   local sy = display.contentScaleY
+   if (display.contentScaleX < 1.0) then
+      cw = cw * 2
+      capture.xScale = display.contentScaleX
+      sx = 1.0
+   end
+   if (display.contentScaleY < 1.0) then
+      ch = ch * 2
+      capture.yScale = display.contentScaleY
+      sy = 1.0
+   end
+   local maskWidth = math.round(((cw) - ((cw) % 4)) * sx)
+   local maskHeight = math.round(((ch) - ((ch) % 4)) * sy)
+   local maskContainer = display.newContainer(maskWidth, maskHeight)
+   local blackRect = display.newRect(maskContainer, 0, 0, maskWidth, maskHeight)
+   blackRect:setFillColor(0, 0, 0, 1.0)
+   blackRect.x, blackRect.y = 0, 0
+   maskContainer:insert(capture)
+   capture.fill.effect = 'filter.colorMatrix'
+   capture.fill.effect.coefficients =
+   {
+      0, 0, 0, 1,  --red coefficients
+      0, 0, 0, 1,  --green coefficients
+      0, 0, 0, 1,  --blue coefficients
+      0, 0, 0, 0   --alpha coefficients
+   }
+   capture.fill.effect.bias = { 0, 0, 0, 1 }
+   maskContainer.x = display.contentCenterX
+   maskContainer.y = display.contentCenterY
+   --display.save(maskContainer, id .. '_mask.png', system.DocumentsDirectory)
+   display.save(maskContainer, {
+         filename = id .. '_mask.png',
+         baseDir = system.DocumentsDirectory,
+         isFullResolution = false
+      })
+   capture.fill.effect = nil
+
+   -- save full-size image (to be used as Stamp in ArtCenter)
+   blackRect:removeSelf() blackRect = nil
+   display.save(maskContainer, { filename=id .. '_full.jpg', baseDir=system.DocumentsDirectory })
+   local fullWidth = maskContainer.contentWidth
+   local fullHeight = maskContainer.contentHeight
+
+   -- save thumbnail
+   maskContainer.yScale = UI('THUMBNAIL_HEIGHT') / maskContainer.contentHeight
+   maskContainer.xScale = maskContainer.yScale
+   local thumbWidth = maskContainer.contentWidth
+   local thumbHeight = maskContainer.contentHeight
+   display.save(maskContainer, { filename=id .. '_thumbnail.png', baseDir=system.DocumentsDirectory })
+   maskContainer:removeSelf() maskContainer = nil
+
+
+   local saveDataFilename = FRC_Rehearsal_Settings.DATA.DATA_FILENAME
+   local newSave = {
+      id = id,
+      currentSongID = currentSongID, -- EFM Load/Create New Show Logic ++
+      setIndex = FRC_Rehearsal_Scene.setIndex,
+      thumbWidth = thumbWidth,
+      thumbHeight = thumbHeight,
+      thumbSuffix = '_thumbnail.png',
+      maskSuffix = '_mask.png',
+      fullSuffix = '_full.jpg',
+      fullWidth = fullWidth,
+      fullHeight = fullHeight
+   }
+   local exists = false
+   for i=1,#self.saveData.savedItems do
+      if (self.saveData.savedItems[i].id == id) then
+         self.saveData.savedItems[i] = newSave
+         exists = true
+      end
+   end
+   if (not exists) then
+      table.insert(self.saveData.savedItems, newSave)
+   end
+   FRC_CharacterBuilder.save(newSave)
+   FRC_DataLib.saveJSON(saveDataFilename, self.saveData)
+   self.id = id
+end
+
+function FRC_Rehearsal_Scene:load(e)
+   --table.print_r(e)
+   --[[
+   local id = e.id
+   if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)) end
+   self.changeItem('Character', e.data.character, v)
+   for k,v in pairs(e.data.categories) do
+      self.changeItem(k, e.data.character, v)
+   end
+   self.id = id
+   --]]
+   if( e.data.setIndex ) then
+      FRC_Rehearsal_Scene.changeSet(e.data.setIndex)
+   end
+   --table.dump2(e.data)
+   --table.dump2(FRC_Rehearsal_Scene)
+   currentSongID = e.data.currentSongID
+
+   FRC_CharacterBuilder.init( {
+         view                  = FRC_Rehearsal_Scene.view,
+         currentSongID         = currentSongID,
+         animationXMLBase      = animationXMLBase,
+         animationImageBase    = animationImageBase,
+         itemScrollers         = itemScrollers,
+         showTimeMode          = ( sceneMode == "showtime"),
+         categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
+   FRC_CharacterBuilder.rebuildInstrumenScroller( )
+   FRC_CharacterBuilder.load(e.data)
+
+   -- Showtime Work EFM EDOCHI
+   if( sceneMode == "showtime") then
+      FRC_CharacterBuilder:stopStageCharacters()
+      FRC_CharacterBuilder.setEditEnable( true )
+
+
+      local curtainPath = FRC_CharacterBuilder.getCurtainPath( e.data.setIndex )
+
+      --local curtain = display.newImageRect( FRC_Rehearsal_Scene.view._content, "FRC_Assets/FRC_Rehearsal/Images/curtain.jpg", screenW, screenH )
+      local curtain = display.newImageRect( FRC_Rehearsal_Scene.view._content, curtainPath, screenW, screenH )
+      curtain.x = centerX
+      curtain.y = centerY
+
+      --local function onComplete()
+      --timer.performWithDelay( 1000,
+      -- function()
+      --  if( FRC_Rehearsal_Scene.view.removeSelf ~= nil ) then
+      FRC_Rehearsal_Scene.startRehearsalMode( 1500, false )
+--               end
+      --end  )
+      --end
+
+      transition.to( curtain, { y = curtain.y - screenH, delay = 1000, time = 1500, transition = easing.inCirc } ) -- , onComplete = onComplete } )
+      --[[
+      local leftCurtain = display.newRect( view._content, "FRC_Assets\FRC_Rehearsal\Images\leftCurtain.png", screenW, screenH )
+      local rightCurtain = display.newRect( view._content, "FRC_Assets\FRC_Rehearsal\Images\rightCurtain.png", screenW, screenH )
+      leftCurtain.x = centerX
+      leftCurtain.y = centerY
+      rightCurtain.x = centerX
+      rightCurtain.y = centerY
+      --]]
+   end
+end
+
+-- TEMPORARY COPY OF SAVE W/ TITLE Editing code (so I can fix save)
+function FRC_Rehearsal_Scene:publish(e)
+   local id = e.id
+   if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)) end
+
    local function completeSave( songTitle, showTitle )
       dprint( "completeSave() ",  songTitle, showTitle )
       --local saveGroup = self.view.setDesignGroup --EFM
@@ -248,7 +405,7 @@ function FRC_Rehearsal_Scene:save(e)
       maskContainer:removeSelf() maskContainer = nil
 
 
-      local saveDataFilename = FRC_Rehearsal_Settings.DATA.DATA_FILENAME
+      local publishDataFilename = FRC_Rehearsal_Settings.DATA.PUBLISH_FILENAME
       local newSave = {
          id = id,
          currentSongID = currentSongID, -- EFM Load/Create New Show Logic ++
@@ -262,17 +419,17 @@ function FRC_Rehearsal_Scene:save(e)
          fullHeight = fullHeight
       }
       local exists = false
-      for i=1,#self.saveData.savedItems do
-         if (self.saveData.savedItems[i].id == id) then
-            self.saveData.savedItems[i] = newSave
+      for i=1,#self.publishData.savedItems do
+         if (self.publishData.savedItems[i].id == id) then
+            self.publishData.savedItems[i] = newSave
             exists = true
          end
       end
       if (not exists) then
-         table.insert(self.saveData.savedItems, newSave)
+         table.insert(self.publishData.savedItems, newSave)
       end
       FRC_CharacterBuilder.save(newSave)
-      FRC_DataLib.saveJSON(saveDataFilename, self.saveData)
+      FRC_DataLib.saveJSON(publishDataFilename, self.publishData)
       self.id = id
 
       -- EFM Add temporary label for save
@@ -284,22 +441,10 @@ function FRC_Rehearsal_Scene:save(e)
    FRC_CharacterBuilder.getShowTitle( completeSave, nil )
 end
 
-function FRC_Rehearsal_Scene:load(e)
-   --table.print_r(e)
-   --[[
-   local id = e.id
-   if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)) end
-   self.changeItem('Character', e.data.character, v)
-   for k,v in pairs(e.data.categories) do
-      self.changeItem(k, e.data.character, v)
-   end
-   self.id = id
-   --]]
+function FRC_Rehearsal_Scene:loadShowTime(e)
    if( e.data.setIndex ) then
       FRC_Rehearsal_Scene.changeSet(e.data.setIndex)
    end
-   --table.dump2(e.data)
-   --table.dump2(FRC_Rehearsal_Scene)
    currentSongID = e.data.currentSongID
 
    FRC_CharacterBuilder.init( {
@@ -318,34 +463,14 @@ function FRC_Rehearsal_Scene:load(e)
       FRC_CharacterBuilder:stopStageCharacters()
       FRC_CharacterBuilder.setEditEnable( true )
 
-
       local curtainPath = FRC_CharacterBuilder.getCurtainPath( e.data.setIndex )
-
-      --local curtain = display.newImageRect( FRC_Rehearsal_Scene.view._content, "FRC_Assets/FRC_Rehearsal/Images/curtain.jpg", screenW, screenH )
       local curtain = display.newImageRect( FRC_Rehearsal_Scene.view._content, curtainPath, screenW, screenH )
       curtain.x = centerX
       curtain.y = centerY
 
-      --local function onComplete()
-         --timer.performWithDelay( 1000,
-           -- function()
-             --  if( FRC_Rehearsal_Scene.view.removeSelf ~= nil ) then
-                  FRC_Rehearsal_Scene.startRehearsalMode( 1500, false )
---               end
-            --end  )
-      --end
+      FRC_Rehearsal_Scene.startRehearsalMode( 1500, false )
 
       transition.to( curtain, { y = curtain.y - screenH, delay = 1000, time = 1500, transition = easing.inCirc } ) -- , onComplete = onComplete } )
-      --[[
-      local leftCurtain = display.newRect( view._content, "FRC_Assets\FRC_Rehearsal\Images\leftCurtain.png", screenW, screenH )
-      local rightCurtain = display.newRect( view._content, "FRC_Assets\FRC_Rehearsal\Images\rightCurtain.png", screenW, screenH )
-      leftCurtain.x = centerX
-      leftCurtain.y = centerY
-      rightCurtain.x = centerX
-      rightCurtain.y = centerY
-      --]]
-
-
    end
 
 
@@ -385,6 +510,14 @@ function FRC_Rehearsal_Scene:createScene(event)
    -- FRC_Rehearsal.getSavedData()
    self.saveData = DATA('DATA_FILENAME', system.DocumentsDirectory)
    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal').saveData = FRC_DataLib.readJSON(saveDataFilename, system.DocumentsDirectory)
+
+
+   -- EDOCHI2
+   local publishDataFileName = FRC_Rehearsal_Settings.DATA.PUBLISH_FILENAME
+   local publishData = FRC_DataLib.readJSON(publishDataFileName, system.DocumentsDirectory) or { savedItems = {} }
+   require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal').publishData = publishData
+   self.publishData = publishData
+   table.dump2( self, nil, "EDOCHI2")
 
 
    -- TRS EFM - Please, see changes/notes below.
@@ -754,7 +887,7 @@ function FRC_Rehearsal_Scene:createScene(event)
       elseif( sceneMode == "showtime" ) then
          transition.to( rehearsalContainer, { delay = 1800, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
          timer.performWithDelay( 2500, function()
-            if( view.removeSelf == nil ) then return end
+               if( view.removeSelf == nil ) then return end
                startPlaying()
             end )
       else
@@ -1209,7 +1342,12 @@ function FRC_Rehearsal_Scene:createScene(event)
    FRC_CharacterBuilder.rebuildInstrumenScroller( ) -- EFM Load/Create New Show Logic ++
    FRC_CharacterBuilder.rebuildCostumeScroller( ) -- EFM Load/Create New Show Logic ++
 
-   local canLoad = not ((FRC_Rehearsal_Scene.saveData.savedItems == nil) or (#FRC_Rehearsal_Scene.saveData.savedItems < 1))
+   local canLoad
+   if( sceneMode == "showtime" ) then
+      canLoad = not ((FRC_Rehearsal_Scene.publishData.savedItems == nil) or (#FRC_Rehearsal_Scene.publishData.savedItems < 1))
+   else
+      canLoad = not ((FRC_Rehearsal_Scene.saveData.savedItems == nil) or (#FRC_Rehearsal_Scene.saveData.savedItems < 1))
+   end
 
    local function showLoadPopup( goHomeOnCancel )
       local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
@@ -1229,12 +1367,16 @@ function FRC_Rehearsal_Scene:createScene(event)
             hideBlank = true,
             width = screenW * 0.75,
             height = screenH * 0.75,
-            data = FRC_Rehearsal_Scene.saveData.savedItems,
+            data = ( sceneMode == "showtime" ) and FRC_Rehearsal_Scene.publishData.savedItems or FRC_Rehearsal_Scene.saveData.savedItems,
             onCancel = onCancel,
             callback = function(e)
                galleryPopup:dispose();
                galleryPopup = nil;
-               FRC_Rehearsal_Scene:load(e);
+               if( sceneMode == "showtime" ) then
+                  FRC_Rehearsal_Scene:loadShowTime(e);                     
+               else
+                  FRC_Rehearsal_Scene:load(e);
+               end
             end
          });
    end
@@ -1277,11 +1419,11 @@ function FRC_Rehearsal_Scene:createScene(event)
          showLoadPopup( true )
       else
          FRC_CharacterBuilder.easyAlert( "No Saved Shows",
-                            "You didn't save any shows yet.\n\nWould you like to go to rehearsal to make a show?",
-                            {
-                               {"Yes", function() FRC_CharacterBuilder.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad ) end },
-                               {"No", function() storyboard.gotoScene('Scenes.Home') end },
-                            } )
+            "You didn't save any shows yet.\n\nWould you like to go to rehearsal to make a show?",
+            {
+               {"Yes", function() FRC_CharacterBuilder.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad ) end },
+               {"No", function() storyboard.gotoScene('Scenes.Home') end },
+               } )
       end
    end
 
@@ -1316,17 +1458,17 @@ end
 
 
 function FRC_Rehearsal_Scene:exitScene(event)
-  local view = self.view
-  if (FRC_Rehearsal_Scene.preExitScene) then
-    FRC_Rehearsal_Scene:preExitScene(event)
-  end
+   local view = self.view
+   if (FRC_Rehearsal_Scene.preExitScene) then
+      FRC_Rehearsal_Scene:preExitScene(event)
+   end
 
-  -- in case audio was playing just before the user is leaving the scene
-  FRC_Rehearsal_Scene.stopRehearsalMode();
+   -- in case audio was playing just before the user is leaving the scene
+   FRC_Rehearsal_Scene.stopRehearsalMode();
 
-  if (FRC_Rehearsal_Scene.postExitScene) then
-    FRC_Rehearsal_Scene:postExitScene(event)
-  end
+   if (FRC_Rehearsal_Scene.postExitScene) then
+      FRC_Rehearsal_Scene:postExitScene(event)
+   end
 
 end
 

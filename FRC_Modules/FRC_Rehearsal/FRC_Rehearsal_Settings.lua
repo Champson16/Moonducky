@@ -24,6 +24,7 @@ FRC_Rehearsal_Settings.UI = {
 -- TODO: work on how to point to user data for SetDesign and Costume
 FRC_Rehearsal_Settings.DATA = {
    SAVE_PROMPT = 'Save Your Show',
+   PUBLISH_PROMPT = 'Publish Your Show',
    LOAD_PROMPT = 'Load Your Show',
    PUBLISH_PROMPT = 'Publish Your Show',
    CATEGORY = 'FRC_Assets/FRC_Rehearsal/Data/FRC_Rehearsal_Category.json',
@@ -34,7 +35,8 @@ FRC_Rehearsal_Settings.DATA = {
    COSTUME = 'FRC_DressingRoom_SaveData.json',
    SCENELAYOUT = 'FRC_Assets/FRC_Rehearsal/Data/FRC_Rehearsal_SceneLayout.json',
    EMPTY_DATAFILE = '{ "owner": "FRC_Rehearsal", "savedItems": [] }',
-   DATA_FILENAME = 'FRC_Rehearsal_SaveData.json'
+   DATA_FILENAME = 'FRC_Rehearsal_SaveData.json',
+   PUBLISH_FILENAME = 'FRC_Showtime_SaveData.json'
 }
 
 -- read data file: 'FRC_Assets/FRC_ArtCenter/Data/FRC_ArtCenter_Config.json' and store in 'CONFIG' key

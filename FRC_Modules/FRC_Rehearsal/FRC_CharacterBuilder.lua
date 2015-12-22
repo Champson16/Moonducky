@@ -303,11 +303,10 @@ end
 function public.getCurtainPath( id )
    id = id or 1
    if( tonumber(id) == nil ) then
+      id = 1
    end
-   --setData
-
+   if( not id or id < 1 ) then id = 1 end
    return "FRC_Assets/FRC_SetDesign/Images/" .. setData[id].curtainFile
-
 end
 
 --
