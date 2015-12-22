@@ -180,29 +180,33 @@ function scene.postCreateScene(self, event)
                   screenRect:addEventListener('touch', function() return true; end);
                   screenRect:addEventListener('tap', function() return true; end);
 
-                  local webView = native.newWebView(0, 0, screenW - 100, screenH - 55);
-                  webView.x = display.contentCenterX;
-                  webView.y = display.contentCenterY + 20;
-                  webView:request("Help/MDMT_FRC_WebOverlay_Help_Main_Rehearsal.html", system.CachesDirectory);
-                  local closeButton = ui.button.new({
-                        imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
-                        imageDown = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
-                        width = 50,
-                        height = 50,
-                        onRelease = function(event)
-                           local self = event.target;
-                           webView:removeSelf(); webView = nil;
-                           self:removeSelf(); closeButton = nil;
-                           screenRect:removeSelf(); screenRect = nil;
-                        end
-                     });
-                  --view:insert(closeButton);
-                  closeButton.x = 5 + (closeButton.contentWidth * 0.5) - ((screenW - display.contentWidth) * 0.5);
-                  closeButton.y = 5 + (closeButton.contentHeight * 0.5) - ((screenH - display.contentHeight) * 0.5);
-                  webView.closeButton = closeButton;
-               end
-            }
-            --[[
+					local webView = native.newWebView(0, 0, screenW - 100, screenH - 55);
+					webView.x = display.contentCenterX;
+					webView.y = display.contentCenterY + 20;
+					if (scene.sceneMode == "showtime") then
+						webView:request("Help/MDMT_FRC_WebOverlay_Help_Main_Showtime.html", system.CachesDirectory);
+					else
+						webView:request("Help/MDMT_FRC_WebOverlay_Help_Main_Rehearsal.html", system.CachesDirectory);
+					end
+					local closeButton = ui.button.new({
+						imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
+						imageDown = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
+						width = 50,
+						height = 50,
+						onRelease = function(event)
+							local self = event.target;
+							webView:removeSelf(); webView = nil;
+							self:removeSelf(); closeButton = nil;
+							screenRect:removeSelf(); screenRect = nil;
+						end
+					});
+					--view:insert(closeButton);
+					closeButton.x = 5 + (closeButton.contentWidth * 0.5) - ((screenW - display.contentWidth) * 0.5);
+					closeButton.y = 5 + (closeButton.contentHeight * 0.5) - ((screenH - display.contentHeight) * 0.5);
+					webView.closeButton = closeButton;
+				end
+			}
+			--[[
 			,{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_down.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_up.png',

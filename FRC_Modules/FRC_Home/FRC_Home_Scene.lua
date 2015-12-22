@@ -321,12 +321,30 @@ function FRC_Home_Scene:createScene(event)
 	-- donkey?
 	-- piano awning?
 
+
+	local dressingRoomButton = ui.button.new({
+			imageUp = imageBase .. 'MDMT_LandingPage_Door_DressingRoom_up.png',
+			imageDown = imageBase .. 'MDMT_LandingPage_Door_DressingRoom_down.png',
+			width = 117,
+			height = 307,
+			x = 74, --TRS EFM --1016 - 576,
+			y = 477, --TRS EFM --477 - 368,
+			onRelease = function()
+				analytics.logEvent("MDMT.Home.DressingRoom");
+	         storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time=250 });
+			end
+		});
+		dressingRoomButton.anchorX = 0.5;
+		dressingRoomButton.anchorY = 0.5;
+		view._underlay:insert(dressingRoomButton);  --TRS EFM
+	   FRC_Layout.placeUI(dressingRoomButton,bg)  --TRS EFM
+
 	local artCenterButton = ui.button.new({
 		imageUp = imageBase .. 'MDMT_LandingPage_Door_ArtCenter_up.png',
 		imageDown = imageBase .. 'MDMT_LandingPage_Door_ArtCenter_down.png',
 		width = 117,
 		height = 307,
-		x = 74, --TRS EFM --138 - 576,
+		x = 187, --TRS EFM --138 - 576,
 		y = 477, --TRS EFM -- --477 - 368,
 		onRelease = function()
 			analytics.logEvent("MDMT.Home.ArtCenter");
@@ -344,12 +362,12 @@ function FRC_Home_Scene:createScene(event)
    FRC_Layout.placeUI(artCenterButton,bg)  --TRS EFM
 
 
-	setDesignButton = ui.button.new({
+	local setDesignButton = ui.button.new({
 		imageUp = imageBase .. 'MDMT_LandingPage_Door_SetDesign_up.png',
 		imageDown = imageBase .. 'MDMT_LandingPage_Door_SetDesign_down.png',
 		width = 117,
 		height = 307,
-		x = 187, --TRS EFM --251 - 576,
+		x = 952, --TRS EFM --251 - 576,
 		y = 477, --TRS EFM --477 - 368,
 		onRelease = function()
 			analytics.logEvent("MDMT.Home.SetDesign");
@@ -361,22 +379,6 @@ function FRC_Home_Scene:createScene(event)
 	view._underlay:insert(setDesignButton);  --TRS EFM
    FRC_Layout.placeUI(setDesignButton,bg)  --TRS EFM
 
-	dressingRoomButton = ui.button.new({
-		imageUp = imageBase .. 'MDMT_LandingPage_Door_DressingRoom_up.png',
-		imageDown = imageBase .. 'MDMT_LandingPage_Door_DressingRoom_down.png',
-		width = 117,
-		height = 307,
-		x = 952, --TRS EFM --1016 - 576,
-		y = 477, --TRS EFM --477 - 368,
-		onRelease = function()
-			analytics.logEvent("MDMT.Home.DressingRoom");
-         storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time=250 });
-		end
-	});
-	dressingRoomButton.anchorX = 0.5;
-	dressingRoomButton.anchorY = 0.5;
-	view._underlay:insert(dressingRoomButton);  --TRS EFM
-   FRC_Layout.placeUI(dressingRoomButton,bg)  --TRS EFM
 
 	-- position background group at correct location
 	if (FRC_Home_Scene.postCreateScene) then
