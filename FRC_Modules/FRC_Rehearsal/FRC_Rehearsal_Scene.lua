@@ -326,7 +326,7 @@ function FRC_Rehearsal_Scene:load(e)
          --timer.performWithDelay( 1000,
            -- function()
              --  if( FRC_Rehearsal_Scene.view.removeSelf ~= nil ) then
-                  FRC_Rehearsal_Scene.startRehearsalMode( 1500 )
+                  FRC_Rehearsal_Scene.startRehearsalMode( 1500, false )
 --               end
             --end  )
       --end
@@ -607,7 +607,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    FRC_Rehearsal_Scene.stopRehearsalMode = function ()
       print("StopRehearsal");
       -- eventually we will transition animate on offscreen and the other onscreen
-      categoriesContainer.isVisible = true;
+      categoriesContainer.isVisible = ( sceneMode ~= "showtime" );
       if itemScrollers then
          for k,v in pairs( itemScrollers ) do
             if v then
@@ -615,7 +615,8 @@ function FRC_Rehearsal_Scene:createScene(event)
             end
          end
       end
-      rehearsalContainer.isVisible = false;
+      
+      rehearsalContainer.isVisible = ( sceneMode == "showtime" );
       
       if( view._overlay.touchGroup and view._overlay.touchGroup.enterFrame ) then         
          Runtime:removeEventListener( "enterFrame", view._overlay.touchGroup )         
@@ -654,9 +655,10 @@ function FRC_Rehearsal_Scene:createScene(event)
             end
          end
       end
+      rehearsalContainer.isPlaying = false
    end
 
-   FRC_Rehearsal_Scene.startRehearsalMode = function(playDelay)
+   FRC_Rehearsal_Scene.startRehearsalMode = function( playDelay, restartingMusic )
       playDelay = playDelay or 0      
       print("StartRehearsal");
       categoriesContainer.isVisible = false;
@@ -732,13 +734,21 @@ function FRC_Rehearsal_Scene:createScene(event)
             FRC_CharacterBuilder.setEditEnable( false )
             FRC_CharacterBuilder.playStageCharacters()
          end
+         
+         rehearsalContainer.isPlaying = true
       end
       
       transition.cancel( rehearsalContainer )
       rehearsalContainer.y = rehearsalContainer.y0
-      
-      if( sceneMode == "showtime" ) then
-         transition.to( rehearsalContainer, { delay = 1800, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight, onComplete = startPlaying } )
+      if( restartingMusic == true ) then
+         startPlaying()
+         transition.to( rehearsalContainer, { delay = 0, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
+      elseif( sceneMode == "showtime" ) then
+         transition.to( rehearsalContainer, { delay = 1800, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
+         timer.performWithDelay( 2500, function() 
+            if( view.removeSelf == nil ) then return end
+               startPlaying()
+            end )
       else
          startPlaying()
          transition.to( rehearsalContainer, { delay = 1800, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
@@ -846,7 +856,11 @@ function FRC_Rehearsal_Scene:createScene(event)
                -- show the focused state for the selected category icon
                local self = e.target
                if (self.id == "StopRehearsal") then
-                  FRC_Rehearsal_Scene.stopRehearsalMode();
+                  if( rehearsalContainer.isPlaying == true ) then
+                     FRC_Rehearsal_Scene.stopRehearsalMode();
+                  else
+                     FRC_Rehearsal_Scene.startRehearsalMode(0, true);
+                  end
                elseif (self.id == "RewindPreview") then
                   FRC_Rehearsal_Scene.rewindPreview();
                elseif self:getFocusState() then
