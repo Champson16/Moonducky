@@ -813,6 +813,7 @@ end
 --
 function public.rebuildCostumeScroller( )
    local ui = require('ui')
+   local button = require('ui.button')
 
    local scroller = itemScrollers.Costume
 
@@ -828,54 +829,150 @@ function public.rebuildCostumeScroller( )
    --
    -- 'None' Button
    --
-   local button_spacing = 80
+   local button_spacing = 80   
    local x = -(screenW * 0.5) + button_spacing
+   --[[
    local tmp = display.newImage( "FRC_Assets/FRC_Rehearsal/Images/FRC_Rehearsal_Scroller_None.png"  )
    tmp.x = x
    tmp.data = { id = "none" }
    scroller:insert( tmp )
-   tmp.touch = private.scrollerCostumeTouch
-   tmp:addEventListener( "touch" )
+   --tmp.touch = private.scrollerCostumeTouch
+   --tmp:addEventListener( "touch" )
+   --]]
+
+   local curChar = { id = "none" }
+   local buttonScale = 0.96
+   local filePath = "FRC_Assets/FRC_Rehearsal/Images/FRC_Rehearsal_Scroller_None.png" 
+
+   local button      
+   button = ui.button.new({
+         id = curChar.id,
+         imageUp = filePath,
+         imageDown = filePath,
+         imageFocused = filePath,
+         imageDisabled = filePath,
+         width = 100 * buttonScale,
+         height = 63 * buttonScale,
+         parentScrollContainer = scroller,
+         pressAlpha = 0.5,
+         --baseDirectory = system.DocumentsDirectory,
+         onRelease = function(e)
+            local self = e.target
+            table.dump2( curChar )
+            private.scrollerCostumeTouch( curChar )
+
+            return true
+         end
+      })
+   button.data = curChar
+   button.x = x - 8
+   scroller:insert(button)
+
 
    --
    -- 'Mystery Box' Button
    --
    if( #characters > 1 ) then
       x = x + button_spacing
-      local tmp = display.newImage( "FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_Scroller_MysteryBox.png"  )
-      tmp:scale(0.20, 0.20)
-      tmp.x = x
-      tmp.data = { id = "mysterybox", character = currentCharacterType, characters = characters }
-      scroller:insert( tmp )
-      tmp.touch = private.scrollerCostumeTouch
-      tmp:addEventListener( "touch" )
+      local curChar = { id = "mysterybox", character = currentCharacterType, characters = characters }
+      local buttonScale = 0.2 * FRC_Layout.getScaleFactor()
+      local filePath = "FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_Scroller_MysteryBox.png"
+      
+      local button      
+      button = ui.button.new({
+            id = curChar.id,
+            imageUp = filePath,
+            imageDown = filePath,
+            imageFocused = filePath,
+            imageDisabled = filePath,
+            width = 338 * buttonScale,
+            height = 256 * buttonScale,
+            parentScrollContainer = scroller,
+            pressAlpha = 0.5,
+            --baseDirectory = system.DocumentsDirectory,
+            onRelease = function(e)
+               local self = e.target
+               table.dump2( curChar )
+               private.scrollerCostumeTouch( curChar )
+
+               return true
+            end
+         })
+      button.data = curChar
+      button.x = x
+      scroller:insert(button)
    end
 
    --
    -- 'No Costume' Button
    --
    x = x + button_spacing
-   local tmp = display.newImage( "FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_global_BaseCharacter_" .. currentCharacterType .. "_thumbnail.png"  )
-   tmp:scale(0.32, 0.32)
-   tmp.x = x
-   tmp.data = { id = "nocostume", character = currentCharacterType, categories = { Headwear = 1,  LowerTorso = 1, Neckwear = 1, UpperTorso = 1, Eyewear = 1 } }
-   scroller:insert( tmp )
-   tmp.touch = private.scrollerCostumeTouch
-   tmp:addEventListener( "touch" )
+   local curChar = { id = "nocostume", character = currentCharacterType, categories = { Headwear = 1,  LowerTorso = 1, Neckwear = 1, UpperTorso = 1, Eyewear = 1 } }
+   local buttonScale = 0.42 * FRC_Layout.getScaleFactor()
+   local filePath = "FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_global_BaseCharacter_" .. currentCharacterType .. "_thumbnail.png"
+   
+   local button      
+   button = ui.button.new({
+         id = curChar.id,
+         imageUp = filePath,
+         imageDown = filePath,
+         imageFocused = filePath,
+         imageDisabled = filePath,
+         width = 109 * buttonScale,
+         height = 192 * buttonScale,
+         parentScrollContainer = scroller,
+         pressAlpha = 0.5,
+         --baseDirectory = system.DocumentsDirectory,
+         onRelease = function(e)
+            local self = e.target
+            table.dump2( curChar )
+            private.scrollerCostumeTouch( curChar )
 
+            return true
+         end
+      })
+   button.data = curChar
+   button.x = x
+   scroller:insert(button)   
 
+   
+   --
+   -- Costume Thumbnails
+   --
    for i = 1, #characters do
       x = x + button_spacing
       local curChar = characters[i]
-      --local tmp = display.newCircle( x, 0, 20 )
-      local tmp = display.newImage( curChar.id .. curChar.thumbSuffix, system.DocumentsDirectory )
-      tmp:scale(0.5,0.5)
-      tmp.x = x
-      tmp.data = curChar
-      tmp.touch = private.scrollerCostumeTouch
-      tmp:addEventListener( "touch" )
-      scroller:insert( tmp )
+      local buttonScale = 0.50 * FRC_Layout.getScaleFactor()
+      local filePath = curChar.id .. curChar.thumbSuffix
+      
+      table.dump2(curChar)
+      local button      
+      button = ui.button.new({
+            id = curChar.id,
+            imageUp = filePath,
+            imageDown = filePath,
+            imageFocused = filePath,
+            imageDisabled = filePath,
+            width = curChar.thumbWidth * buttonScale,
+            height = curChar.thumbHeight * buttonScale,
+            parentScrollContainer = scroller,
+            pressAlpha = 0.5,
+            baseDirectory = system.DocumentsDirectory,
+            onRelease = function(e)
+               local self = e.target
+               table.dump2( curChar )
+               private.scrollerCostumeTouch( curChar )
+               
+               return true
+            end
+         })
+      button.data = curChar
+      button.x = x
+      scroller:insert(button)
    end
+   --]]
+
+
 end
 
 
@@ -1098,8 +1195,65 @@ function private.getCostumeData( animalType )
 end
 
 
+--
+-- Scroller Costume Touch Handler
+--
+function private.scrollerCostumeTouch( data )
+   if( currentStagePiece ) then
+      if( currentStagePiece.pieceType == "instrument" ) then -- MODIFYING INSTRUMENT
+         if( data.id == "none" ) then
+            -- Do nothing
+         elseif( data.id == "nocostume" ) then
+            private.replaceWithCharacter( currentStagePiece, data )
 
+         elseif( data.id == "mysterybox" ) then
+            local character = data.characters[mRand(1,#data.characters)]
+            private.replaceWithCharacter( currentStagePiece, character.id )
 
+         else
+            private.replaceWithCharacter( currentStagePiece, data.id )
+         end
+
+      else -- MODIFYING CHARACTER
+         if( data.id == "none" ) then
+            -- Remove character
+            instrumentsInUse[currentStagePiece.instrument] = nil
+            display.remove(currentStagePiece)
+            currentStagePiece = nil
+            private.highlightSelected()
+
+         elseif( data.id == "nocostume" ) then
+            private.replaceWithCharacter( currentStagePiece, data )
+
+         elseif( data.id == "mysterybox" ) then
+            local character = data.characters[mRand(1,#data.characters)]
+            private.replaceWithCharacter( currentStagePiece, character.id )
+
+         else
+            private.replaceWithCharacter( currentStagePiece, data.id)
+         end
+      end
+
+   else -- CREATING CHARACTER
+      if( data.id == "none" ) then
+         -- Do nothing
+      elseif( data.id == "nocostume" ) then
+         public.placeNewCharacter( nil, nil, data )
+
+      elseif( data.id == "mysterybox" ) then
+         local character = data.characters[mRand(1,#data.characters)]
+         public.placeNewCharacter( nil, nil, character.id)
+         dprint( "Mystery Box" )
+      else
+         --table.print_r(data)
+         public.placeNewCharacter( nil, nil, data.id)
+      end
+   end
+
+   return false
+end
+
+--[[
 --
 -- Scroller Costume Touch Handler
 --
@@ -1173,9 +1327,9 @@ function private.scrollerCostumeTouch( self, event )
          end
       end
    end
-   return true
+   return false
 end
-
+--]]
 --
 -- Common Drag & Drop Handler
 --
