@@ -1,5 +1,12 @@
 [
 	{
+		"id": "Clouds",
+		"animationFiles": [  "MDMT_LandingPage_Clouds4.xml",
+		"MDMT_LandingPage_Clouds3.xml",
+		"MDMT_LandingPage_Clouds2.xml",
+		"MDMT_LandingPage_Clouds1.xml" ],
+	},
+	{
 		"id": "MarqueeLights",
 		"animationFiles": [  "MDMT_LandingPage_MarqueeLights_04.xml",
 		"MDMT_LandingPage_MarqueeLights_03.xml",
