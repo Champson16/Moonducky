@@ -288,8 +288,8 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
       loadButton.isVisible = false
       loadButtonLabel.isVisible = false
       titleQueryLabel.isVisible = false
-      titleQueryLabel2.text = "Choose a Song"
-      group2.y = group2.y - 150
+      titleQueryLabel2.text = "Choose a Song to Rehearse"
+      -- group2.y = group2.y - 150
    end
 
 end
@@ -440,9 +440,9 @@ end
 --
 function public.save(saveTable, publishingMode)
    --table.print_r(saveTable)
-   
+
    --dprint("PUBLISHING?", publishingMode)
-   
+
    currentStagePiece = nil
    private.highlightSelected()
 
@@ -457,12 +457,12 @@ function public.save(saveTable, publishingMode)
       record.pieceType        = stagePiece.pieceType
       record.instrument       = stagePiece.instrument
       record.danceNumber      = stagePiece.danceNumber
-      
+
       if( not publishingMode ) then
          record.characterID      = stagePiece.characterID
       else
          if( type(  stagePiece.characterID ) == "table" ) then
-            record.characterID = stagePiece.characterID 
+            record.characterID = stagePiece.characterID
          else
             record.characterID   = private.getDressingRoomDataByID( stagePiece.characterID, 0 )
          end
@@ -728,7 +728,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    private.attachDragger(stagePiece)
 
    -- EFM start stopped or play one cycle?
-   for i = 1, #animationSequences do      
+   for i = 1, #animationSequences do
       private.playAllAnimations( animationSequences, i )
       --private.stopAllAnimations( animationSequences, i )
    end
@@ -1080,7 +1080,7 @@ function public.playStageCharacters()
 
    for i = 1, #charactersOnStage do
       local animationSequences = charactersOnStage[i].animationSequences
-      
+
       for j = 1, #animationSequences do
          private.playAllAnimations( animationSequences, j, true )
       end
@@ -1716,35 +1716,35 @@ end
 function private.playAllAnimations( animationSequences, num, autoLoop )
    --dprint("BING @ ", num, animationSequences.completed, system.getTimer())
    num = num or mRand(1,#animationSequences)
-   local sequence    = animationSequences[num]   
-   
-   local totalSeq    = #animationSequences  
+   local sequence    = animationSequences[num]
+
+   local totalSeq    = #animationSequences
    local totalClips  = sequence.numChildren
-   
+
    if( num == 1 ) then
       --dprint("Created completed!")
-      animationSequences.completed = {}      
+      animationSequences.completed = {}
    end
-   
+
    local completed = animationSequences.completed
    local completedIndex = #completed+1
-   completed[completedIndex] = false   
-   
+   completed[completedIndex] = false
+
    local framePeriod = math.ceil(1000 / display.fps)
-   
-   for i=1, totalClips do      
+
+   for i=1, totalClips do
       local obj = sequence[i]
-   
+
       local function onCompletionGate()
          --dprint("DONG @ ", #completed, completedIndex, system.getTimer())
-         --dprint("onCompletionGate #", i, " ended @ ", system.getTimer())         
+         --dprint("onCompletionGate #", i, " ended @ ", system.getTimer())
          --table.dump2(completed)
-         
+
          completed[completedIndex] = true
-         
+
          local executeOnComplete = true
          for j = 1, #completed do
-            executeOnComplete = executeOnComplete and completed[j]                  
+            executeOnComplete = executeOnComplete and completed[j]
          end
          if( executeOnComplete ) then
             obj.isAnimating = false;
@@ -1754,9 +1754,9 @@ function private.playAllAnimations( animationSequences, num, autoLoop )
             ---end
          end
          --table.dump2(completed)
-      end   
-      
-      
+      end
+
+
       obj:play({
             showLastFrame = not(autoLoop),
             playBackward = false,
