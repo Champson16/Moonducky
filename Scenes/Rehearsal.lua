@@ -100,7 +100,7 @@ function scene.postCreateScene(self, event)
                   galleryPopup = FRC_GalleryPopup.new({
                         title = FRC_Rehearsal_Settings.DATA.SAVE_PROMPT,
                         hideBlank = false,
-                        width = screenW * 0.75,
+                        width = screenW * 0.85,
                         height = screenH * 0.75,
                         data = scene.saveData.savedItems,
                         callback = function(e)
@@ -127,7 +127,7 @@ function scene.postCreateScene(self, event)
                            title = FRC_Rehearsal_Settings.DATA.LOAD_PROMPT,
                            isLoadPopup = true,
                            hideBlank = true,
-                           width = screenW * 0.75,
+                           width = screenW * 0.85,
                            height = screenH * 0.75,
                            data = scene.saveData.savedItems,
                            callback = function(e)
@@ -153,7 +153,7 @@ function scene.postCreateScene(self, event)
                   galleryPopup = FRC_GalleryPopup.new({
                         title = FRC_Rehearsal_Settings.DATA.PUBLISH_PROMPT,
                         hideBlank = false,
-                        width = screenW * 0.75,
+                        width = screenW * 0.85,
                         height = screenH * 0.75,
                         data = scene.publishData.savedItems,
                         callback = function(e)

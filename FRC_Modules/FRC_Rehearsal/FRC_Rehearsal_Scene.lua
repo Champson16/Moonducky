@@ -1371,7 +1371,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             title = FRC_Rehearsal_Settings.DATA.LOAD_PROMPT,
             isLoadPopup = true,
             hideBlank = true,
-            width = screenW * 0.75,
+            width = screenW * 0.85,
             height = screenH * 0.75,
             data = ( sceneMode == "showtime" ) and FRC_Rehearsal_Scene.publishData.savedItems or FRC_Rehearsal_Scene.saveData.savedItems,
             onCancel = onCancel,
