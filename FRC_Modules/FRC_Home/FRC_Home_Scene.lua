@@ -78,9 +78,14 @@ function FRC_Home_Scene:createScene(event)
 
 
 	function videoPlaybackComplete(event)
-		if (FRC_AppSettings.get("ambientSoundOn")) then
-			FRC_AudioManager:findGroup("ambientMusic"):resume();
+		-- resume background music (if enabled)
+		if (FRC_AppSettings.get("soundOn")) then
+			local musicGroup = FRC_AudioManager:findGroup("music");
+			if musicGroup then
+				musicGroup:resume();
+			end
 		end
+
 		if (videoPlayer) then
 			videoPlayer:removeSelf();
 			videoPlayer = nil;
@@ -89,6 +94,14 @@ function FRC_Home_Scene:createScene(event)
 	end
 
 	function sceneLayoutMethods.playHamstersVideo()
+		-- pause background music (if enabled)
+		if (FRC_AppSettings.get("soundOn")) then
+			local musicGroup = FRC_AudioManager:findGroup("music");
+			if musicGroup then
+				musicGroup:pause();
+			end
+		end
+
 		analytics.logEvent("MDMT.Home.HamstersVideo");
 		if (FRC_AppSettings.get("ambientSoundOn")) then
 			FRC_AudioManager:findGroup("ambientMusic"):pause();
@@ -112,6 +125,14 @@ function FRC_Home_Scene:createScene(event)
 	end
 
 	function sceneLayoutMethods.playCowVideo()
+		-- pause background music (if enabled)
+		if (FRC_AppSettings.get("soundOn")) then
+			local musicGroup = FRC_AudioManager:findGroup("music");
+			if musicGroup then
+				musicGroup:pause();
+			end
+		end
+
 		analytics.logEvent("MDMT.Home.CowVideo");
 		if (FRC_AppSettings.get("ambientSoundOn")) then
 			FRC_AudioManager:findGroup("ambientMusic"):pause();
