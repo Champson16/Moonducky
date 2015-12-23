@@ -72,8 +72,10 @@ FRC_Video.new = function(parentView, videoData)
       if (videoScale == "FULLSCREEN") then
         -- FRC_Layout.scaleToFit(videoGroup);
         -- figure out the scale
-        xs = display.actualContentWidth/videoGroup.currentVideo.contentWidth;
-        ys = display.actualContentHeight/videoGroup.currentVideo.contentHeight;
+				xs = display.viewableContentWidth/videoGroup.currentVideo.contentWidth;
+				ys = display.viewableContentHeight/videoGroup.currentVideo.contentHeight;
+        -- xs = display.actualContentWidth/videoGroup.currentVideo.contentWidth;
+        -- ys = display.actualContentHeight/videoGroup.currentVideo.contentHeight;
         videoGroup.currentVideo.xScale = xs;
         videoGroup.currentVideo.yScale = ys;
         -- native.showAlert('VIDEO SCALING', 'd.pWidth: ' .. display.pixelWidth .. 'd.pHeight: ' ..display.pixelHeight .. 'cVideo.width: ' .. videoGroup.currentVideo.width .. 'cVideo.height: ' ..videoGroup.currentVideo.height .. 'd.cWidth: ' .. display.contentWidth .. 'videoDimensions.width: ' .. videoDimensions.width .. 'd.cHeight: ' .. display.contentHeight .. 'videoDimensions.height: ' .. videoDimensions.height .. ' xs/ys: ' .. xs .. '/' .. ys , { "OK" });
