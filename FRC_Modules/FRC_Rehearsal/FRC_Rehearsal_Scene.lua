@@ -51,9 +51,6 @@ end
 local animationXMLBase = UI('ANIMATION_XML_BASE')
 local animationImageBase = UI('ANIMATION_IMAGE_BASE')
 
-FRC_Rehearsal_Scene.setIndex = 0;
-FRC_Rehearsal_Scene.backdropIndex = 0;
-
 -- Setup the audio groups for each song
 FRC_AudioManager:newGroup({
       name = "songTracks",
@@ -228,8 +225,7 @@ function FRC_Rehearsal_Scene:save(e)
    local newSave = {
       id = id,
       currentSongID = currentSongID, -- EFM Load/Create New Show Logic ++
-      setIndex = FRC_Rehearsal_Scene.setIndex,
-      backdropIndex = FRC_Rehearsal_Scene.backdropIndex,
+      setID = FRC_Rehearsal_Scene.setID,
       thumbWidth = thumbWidth,
       thumbHeight = thumbHeight,
       thumbSuffix = '_thumbnail.png',
@@ -254,23 +250,17 @@ function FRC_Rehearsal_Scene:save(e)
 end
 
 function FRC_Rehearsal_Scene:load(e)
-   --table.print_r(e)
-   --[[
-   local id = e.id
-   if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)) end
-   self.changeItem('Character', e.data.character, v)
-   for k,v in pairs(e.data.categories) do
-      self.changeItem(k, e.data.character, v)
+   --table.print_r(e)   
+   if( e.data.setID ) then
+      local setDesignData = DATA('SETDESIGN') -- EFM best place?
+      FRC_Rehearsal_Scene.setID = e.data.setID 
+      for i = 1, #FRC_SetDesign.saveData.savedItems do
+         if(FRC_SetDesign.saveData.savedItems[i].id == FRC_Rehearsal_Scene.setID ) then
+            FRC_Rehearsal_Scene.changeSet(FRC_SetDesign.saveData.savedItems[i].setIndex)            
+            FRC_Rehearsal_Scene.changeBackdrop(FRC_SetDesign.saveData.savedItems[i].backdropName);
+         end
+      end      
    end
-   self.id = id
-   --]]
-   if( e.data.setIndex ) then
-      FRC_Rehearsal_Scene.changeSet(e.data.setIndex)
-   end
-   if( e.data.backdropIndex ) then
-      FRC_Rehearsal_Scene.changeBackdrop(e.data.backdropIndex)
-   end
-   
    
    --table.dump2(e.data)
    --table.dump2(FRC_Rehearsal_Scene)
@@ -287,38 +277,6 @@ function FRC_Rehearsal_Scene:load(e)
    FRC_CharacterBuilder.rebuildInstrumenScroller( )
    FRC_CharacterBuilder.load(e.data)
 
-   -- Showtime Work EFM EDOCHI
-   if( sceneMode == "showtime") then
-      FRC_CharacterBuilder:stopStageCharacters()
-      FRC_CharacterBuilder.setEditEnable( true )
-
-
-      local curtainPath = FRC_CharacterBuilder.getCurtainPath( e.data.setIndex )
-
-      --local curtain = display.newImageRect( FRC_Rehearsal_Scene.view._content, "FRC_Assets/FRC_Rehearsal/Images/curtain.jpg", screenW, screenH )
-      local curtain = display.newImageRect( FRC_Rehearsal_Scene.view._content, curtainPath, screenW, screenH )
-      curtain.x = centerX
-      curtain.y = centerY
-
-      --local function onComplete()
-      --timer.performWithDelay( 1000,
-      -- function()
-      --  if( FRC_Rehearsal_Scene.view.removeSelf ~= nil ) then
-      FRC_Rehearsal_Scene.startRehearsalMode( 1500, false )
---               end
-      --end  )
-      --end
-
-      transition.to( curtain, { y = curtain.y - screenH, delay = 1000, time = 1500, transition = easing.inCirc } ) -- , onComplete = onComplete } )
-      --[[
-      local leftCurtain = display.newRect( view._content, "FRC_Assets\FRC_Rehearsal\Images\leftCurtain.png", screenW, screenH )
-      local rightCurtain = display.newRect( view._content, "FRC_Assets\FRC_Rehearsal\Images\rightCurtain.png", screenW, screenH )
-      leftCurtain.x = centerX
-      leftCurtain.y = centerY
-      rightCurtain.x = centerX
-      rightCurtain.y = centerY
-      --]]
-   end
 end
 
 -- TEMPORARY COPY OF SAVE W/ TITLE Editing code (so I can fix save)
@@ -416,8 +374,9 @@ function FRC_Rehearsal_Scene:publish(e)
       local newSave = {
          id = id,
          currentSongID = currentSongID, -- EFM Load/Create New Show Logic ++
+         setID = FRC_Rehearsal_Scene.setID,
          setIndex = FRC_Rehearsal_Scene.setIndex,
-         backdropIndex = FRC_Rehearsal_Scene.backdropIndex,
+         backdropName = FRC_Rehearsal_Scene.backdropName,
          thumbWidth = thumbWidth,
          thumbHeight = thumbHeight,
          thumbSuffix = '_thumbnail.png',
@@ -436,7 +395,7 @@ function FRC_Rehearsal_Scene:publish(e)
       if (not exists) then
          table.insert(self.publishData.savedItems, newSave)
       end
-      FRC_CharacterBuilder.save(newSave)
+      FRC_CharacterBuilder.save(newSave, true)
       FRC_DataLib.saveJSON(publishDataFilename, self.publishData)
       self.id = id
 
@@ -450,13 +409,25 @@ function FRC_Rehearsal_Scene:publish(e)
 end
 
 function FRC_Rehearsal_Scene:loadShowTime(e)
-   if( e.data.setIndex ) then
-      FRC_Rehearsal_Scene.changeSet(e.data.setIndex)
+   --table.print_r(e)
+   local curtainIndex = e.data.setIndex or 1
+   FRC_Rehearsal_Scene.changeSet(e.data.setIndex or 0)
+   FRC_Rehearsal_Scene.changeBackdrop(e.data.backdropName or "None");
+
+   --[[
+   if( e.data.setID ) then
+      local setDesignData = DATA('SETDESIGN') -- EFM best place?
+      FRC_Rehearsal_Scene.setID = e.data.setID 
+      for i = 1, #FRC_SetDesign.saveData.savedItems do
+         if(FRC_SetDesign.saveData.savedItems[i].id == FRC_Rehearsal_Scene.setID ) then
+            FRC_Rehearsal_Scene.changeSet(FRC_SetDesign.saveData.savedItems[i].setIndex)
+            FRC_Rehearsal_Scene.changeBackdrop(FRC_SetDesign.saveData.savedItems[i].backdropName);
+            curtainIndex = FRC_SetDesign.saveData.savedItems[i].setIndex
+         end
+      end      
    end
-   if( e.data.backdropIndex ) then
-      FRC_Rehearsal_Scene.changeBackdrop(e.data.backdropIndex)
-   end
-   
+   --]]
+
    currentSongID = e.data.currentSongID
 
    FRC_CharacterBuilder.init( {
@@ -475,7 +446,7 @@ function FRC_Rehearsal_Scene:loadShowTime(e)
       FRC_CharacterBuilder:stopStageCharacters()
       FRC_CharacterBuilder.setEditEnable( true )
 
-      local curtainPath = FRC_CharacterBuilder.getCurtainPath( e.data.setIndex )
+      local curtainPath = FRC_CharacterBuilder.getCurtainPath( curtainIndex )
       local curtain = display.newImageRect( FRC_Rehearsal_Scene.view._content, curtainPath, screenW, screenH )
       curtain.x = centerX
       curtain.y = centerY
@@ -484,8 +455,6 @@ function FRC_Rehearsal_Scene:loadShowTime(e)
 
       transition.to( curtain, { y = curtain.y - screenH, delay = 1000, time = 1500, transition = easing.inCirc } ) -- , onComplete = onComplete } )
    end
-
-
 end
 
 
@@ -593,14 +562,6 @@ function FRC_Rehearsal_Scene:createScene(event)
    end
 
    local changeSet = function(index)
-
-      -- EDF TODO: Handle index value of 0 and remove the backdrop and background
-      -- THIS will be when I introduce the NONE option
-      -- We may also want to support random value (-1) for the MysteryBox
-      if (index == FRC_Rehearsal_Scene.setIndex) then return; end
-      index = index or FRC_Rehearsal_Scene.setIndex;
-      FRC_Rehearsal_Scene.setIndex = index;
-
       -- clear previous contents
       if (setGroup.numChildren > 0) then
          setGroup[1]:removeSelf();
@@ -608,6 +569,8 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
       -- if we are clearing the set, we're done
       print("set index",index); -- DEBUG
+      
+      FRC_Rehearsal_Scene.setIndex = index
       if (index == 0) then return; end
 
       --local setBackground = display.newImageRect(setGroup, SETDESIGNUI('IMAGES_PATH') .. setData[index].imageFile, setData[index].width, setData[index].height);
@@ -622,25 +585,30 @@ function FRC_Rehearsal_Scene:createScene(event)
       local selectedBackdrop = backdropGroup[1];
       if (not selectedBackdrop) then return; end
 
-      --EFM
-      ----[[
       local currentWidth = backdropData[FRC_Rehearsal_Scene.backdropIndex].width;
       local currentHeight = backdropData[FRC_Rehearsal_Scene.backdropIndex].height;
       selectedBackdrop.xScale = (frameRect.width / currentWidth);
       selectedBackdrop.yScale = (frameRect.height / currentHeight);
       selectedBackdrop.x = frameRect.left - ((setBackground.width - display.contentWidth) * 0.5);
       selectedBackdrop.y = frameRect.top - ((setBackground.height - display.contentHeight) * 0.5);
-      --]]
    end
    self.changeSet = changeSet;
    -- changeSet();
 
-   local changeBackdrop = function(index)
-      if (index == FRC_Rehearsal_Scene.backdropIndex) then return; end
+   local changeBackdrop = function(name)
+      
+      local index = 1
+      for i = 1, #backdropData do
+         if( backdropData[i].id == name ) then
+            index = i
+         end
+      end
+            
       -- ArtCenter image set as backdrop, but image was deleted (reset index to 1)
       if (not backdropData[index]) then index = 0; end
       index = index or FRC_Rehearsal_Scene.backdropIndex;
       FRC_Rehearsal_Scene.backdropIndex = index;
+      FRC_Rehearsal_Scene.backdropName = name;
       -- clear previous contents
       if (backdropGroup.numChildren > 0) then
          backdropGroup[1]:removeSelf();
@@ -648,9 +616,10 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
       -- if we are clearing the set, we're done
       print("backdrop index",index); -- DEBUG
-      if (index == 0) then return; end
+      if (name == "None") then return; end
 
       local frameRect = setGroup[1].frameRect;
+      
       local imageFile = SETDESIGNUI('IMAGES_PATH') .. backdropData[index].imageFile;
       local baseDir = system.ResourceDirectory;
       if (backdropData[index].baseDir) then
@@ -659,25 +628,15 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
       --local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, backdropData[index].width, backdropData[index].height);
       local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, screenW, screenH);
-      --backdropBackground.alpha = 0.15
-      --backdropBackground.x = centerX
-      --backdropBackground.y = centerY
-      --local scale = screenW/backdropBackground.contentWidth
-      --FRC_Layout.placeUI(backdropBackground)
-      --FRC_Layout.placeImage(backdropBackground, nil, false )  --EFM
-      ----[[
+      
       backdropBackground.anchorX = 0;
       backdropBackground.anchorY = 0;
       backdropBackground.xScale = (frameRect.width / backdropData[index].width);
       backdropBackground.yScale = (frameRect.height / backdropData[index].height);
       backdropBackground.x = frameRect.left - ((setGroup[1].width - display.contentWidth) * 0.5);
-      backdropBackground.y = frameRect.top - ((setGroup[1].height - display.contentHeight) * 0.5);
-      ----]]
+      backdropBackground.y = frameRect.top - ((setGroup[1].height - display.contentHeight) * 0.5);      
    end
    self.changeBackdrop = changeBackdrop;
-   -- changeBackdrop();
-   -- repositionSet();
-
 
    -- Get lua tables from JSON data
    local categoryData = DATA('CATEGORY')
@@ -1147,12 +1106,8 @@ function FRC_Rehearsal_Scene:createScene(event)
                imageFile = item.id .. item.thumbSuffix,
                width = item.thumbWidth,
                height = item.thumbHeight,
-               setIndex = item.setIndex,
-               backdropIndex = item.backdropIndex,
                baseDir = "DocumentsDirectory"
             });
-         -- DEBUG
-         -- print('id:', item.id, 'width:', item.thumbWidth, 'height:', item.thumbHeight);
       end
    end
 
@@ -1164,8 +1119,6 @@ function FRC_Rehearsal_Scene:createScene(event)
          height = UI('SCROLLER_NONE_HEIGHT'),
          xOffset = 0,
          yOffset = 0,
-         setIndex = 0,
-         backdropIndex = 0
       });
 
    for i=1,#setDesignData do
@@ -1191,12 +1144,21 @@ function FRC_Rehearsal_Scene:createScene(event)
                for i=1,#setDesignData do
                   if (setDesignData[i].id == self.id) then
                      if (self.id == 'none') then
-                        changeSet(0)
-                        changeBackdrop(0);
+                        dprint("NONE")
+                        FRC_Rehearsal_Scene.changeSet(0)
+                        FRC_Rehearsal_Scene.changeBackdrop("None");
                         -- repositionSet();
+                        FRC_Rehearsal_Scene.setID = nil
                      else
-                        changeSet(setDesignData[i].setIndex)
-                        changeBackdrop(setDesignData[i].backdropIndex);
+                        dprint("POOL")
+                        FRC_Rehearsal_Scene.setID = setDesignData[i].id
+                        for i = 1, #FRC_SetDesign.saveData.savedItems do
+                           if(FRC_SetDesign.saveData.savedItems[i].id == FRC_Rehearsal_Scene.setID ) then
+                              FRC_Rehearsal_Scene.changeSet(FRC_SetDesign.saveData.savedItems[i].setIndex)
+                              FRC_Rehearsal_Scene.changeBackdrop(FRC_SetDesign.saveData.savedItems[i].backdropName);
+                           end
+                        end
+
                         repositionSet();
                      end
                      return;
@@ -1394,7 +1356,7 @@ function FRC_Rehearsal_Scene:createScene(event)
                if( sceneMode == "showtime" ) then
                   FRC_Rehearsal_Scene:loadShowTime(e);
                else
-                  FRC_Rehearsal_Scene:load(e);
+                  FRC_Rehearsal_Scene:load(e);                  
                end
             end
          });
@@ -1412,7 +1374,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             animationXMLBase      = animationXMLBase,
             animationImageBase    = animationImageBase,
             itemScrollers         = itemScrollers,
-            categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
+            categoriesContainer   = categoriesContainer } ) 
       FRC_CharacterBuilder.rebuildInstrumenScroller( )
    end
 
@@ -1424,7 +1386,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             animationXMLBase      = animationXMLBase,
             animationImageBase    = animationImageBase,
             itemScrollers         = itemScrollers,
-            categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
+            categoriesContainer   = categoriesContainer } ) 
       FRC_CharacterBuilder.rebuildInstrumenScroller( )
    end
 

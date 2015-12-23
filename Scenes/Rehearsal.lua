@@ -149,7 +149,7 @@ function scene.postCreateScene(self, event)
                onRelease = function()
                   local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
                   local galleryPopup;
-                  table.print_r(scene)
+                  --table.print_r(scene)
                   galleryPopup = FRC_GalleryPopup.new({
                         title = FRC_Rehearsal_Settings.DATA.PUBLISH_PROMPT,
                         hideBlank = false,

@@ -24,6 +24,7 @@ end
 
 FRC_SetDesign_Scene.setIndex = 1;
 FRC_SetDesign_Scene.backdropIndex = 1;
+FRC_SetDesign_Scene.backdropName = "Barn";
 
 function FRC_SetDesign_Scene:saveCurrentSet(e)
 	local id = e.id;
@@ -47,6 +48,7 @@ function FRC_SetDesign_Scene:saveCurrentSet(e)
 		id = id,
 		setIndex = FRC_SetDesign_Scene.setIndex,
 		backdropIndex = FRC_SetDesign_Scene.backdropIndex,
+      backdropName = FRC_SetDesign_Scene.backdropName,
 		thumbWidth = UI('THUMBNAIL_WIDTH'),
 		thumbHeight = UI('THUMBNAIL_HEIGHT'),
 		thumbSuffix = '_thumbnail.jpg'
@@ -69,7 +71,7 @@ function FRC_SetDesign_Scene:loadSet(e)
 	local id = e.id;
 	if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)); end
 	self.changeSet(e.data.setIndex);
-	self.changeBackdrop(e.data.backdropIndex);
+	self.changeBackdrop(e.data.backdropName or "Barn");
 	self.id = id;
 end
 
@@ -156,8 +158,16 @@ function FRC_SetDesign_Scene:createScene(event)
 	self.changeSet = changeSet;
 	changeSet();
 
-	local changeBackdrop = function(index)
+	local changeBackdrop = function(name)
+      local index = 1
+      for i = 1, #backdropData do
+         if( backdropData[i].id == name ) then
+            index = i
+         end
+      end
+            
 		if (index == FRC_SetDesign_Scene.backdropIndex) then return; end
+      --table.print_r(backdropData)
 		if (not backdropData[index]) then index = 1; end -- ArtCenter image set as backdrop, but image was deleted (reset index to 1)
 		index = index or FRC_SetDesign_Scene.backdropIndex;
 		if (backdropGroup.numChildren > 0) then
@@ -180,6 +190,7 @@ function FRC_SetDesign_Scene:createScene(event)
 		backdropBackground.x = frameRect.left - ((setGroup[1].width - display.contentWidth) * 0.5);
 		backdropBackground.y = frameRect.top - ((setGroup[1].height - display.contentHeight) * 0.5);
 		FRC_SetDesign_Scene.backdropIndex = index;
+      FRC_SetDesign_Scene.backdropName = name;
 	end
 	self.changeBackdrop = changeBackdrop;
 	changeBackdrop();
@@ -315,7 +326,7 @@ function FRC_SetDesign_Scene:createScene(event)
 			pressAlpha = 0.5,
 			onRelease = function(e)
 				local self = e.target;
-				changeBackdrop(self.dataIndex);
+				changeBackdrop(backdropData[self.dataIndex].id);
 			end
 		});
 		button.dataIndex = i;

@@ -438,9 +438,11 @@ end
 --
 -- save() - Save all stage elements (excluding stage backdrop which is handled in FRC_Rehearsal_Scene.)
 --
-function public.save(saveTable)
+function public.save(saveTable, publishingMode)
    --table.print_r(saveTable)
-
+   
+   --dprint("PUBLISHING?", publishingMode)
+   
    currentStagePiece = nil
    private.highlightSelected()
 
@@ -455,7 +457,18 @@ function public.save(saveTable)
       record.pieceType        = stagePiece.pieceType
       record.instrument       = stagePiece.instrument
       record.danceNumber      = stagePiece.danceNumber
-      record.characterID      = stagePiece.characterID
+      
+      if( not publishingMode ) then
+         record.characterID      = stagePiece.characterID
+      else
+         if( type(  stagePiece.characterID ) == "table" ) then
+            record.characterID = stagePiece.characterID 
+         else
+            record.characterID   = private.getDressingRoomDataByID( stagePiece.characterID, 0 )
+         end
+         --table.print_r(record.characterID)
+      end
+      record.publishingMode   = publishingMode
       savePieces[#savePieces+1] = record
    end
    --table.print_r( savePieces )

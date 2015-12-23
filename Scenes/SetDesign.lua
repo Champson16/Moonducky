@@ -84,12 +84,14 @@ function scene.postCreateScene(self, event)
 							galleryPopup:dispose();
 							galleryPopup = nil;
 							scene:saveCurrentSet(e);
+                     self.actionBarMenu:getItem("load"):setDisabledState(false); -- after save, enable 'Load' button
 						end
 					});
 				end
 			},
 			-- LOAD button (needs icon)
 			{
+            id = "load",
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_down.png',
 				disabled = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_disabled.png',
