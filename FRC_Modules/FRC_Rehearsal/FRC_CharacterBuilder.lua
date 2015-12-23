@@ -257,7 +257,7 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
          local bounds = self.stageBounds
          local x,y = event.x, event.y
          local isWithinBounds =
-            bounds.xMin <= x and bounds.xMax >= x and bounds.yMin <= y and bounds.yMax >= y
+         bounds.xMin <= x and bounds.xMax >= x and bounds.yMin <= y and bounds.yMax >= y
 
          if( isWithinBounds ) then
             self:setFillColor( unpack( self.selColor ) )
@@ -405,7 +405,7 @@ function public.getShowTitle( onSuccess, onCancel )
          local bounds = self.stageBounds
          local x,y = event.x, event.y
          local isWithinBounds =
-            bounds.xMin <= x and bounds.xMax >= x and bounds.yMin <= y and bounds.yMax >= y
+         bounds.xMin <= x and bounds.xMax >= x and bounds.yMin <= y and bounds.yMax >= y
 
          if( isWithinBounds ) then
             self:setFillColor( unpack( self.selColor ) )
@@ -541,8 +541,8 @@ function public.placeNewInstrument( x, y, instrumentName )
 
    if( instrumentsInUse[instrumentName] ) then
       private.easyAlert( "Duplicate instrument",
-                "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage.",
-                { {"OK", nil} } )
+         "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage.",
+         { {"OK", nil} } )
       dprint("Duplicate instrument", "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage." )
       return
    end
@@ -1125,9 +1125,9 @@ function private.getDressingRoomDataByAnimalType( characterType, debugLevel )
       if( debugLevel and debugLevel > 0 ) then
          dprint("No charactes/costumes saved, can't search for this animal type: ", characterType )
          private.easyAlert( "No saved costumes",
-                            "No charactes/costumes saved, can't search for this animal type: " ..
-                            tostring(characterType) .. "\n\n Please go save some constumes first.",
-                            { {"OK", nil} } )
+            "No charactes/costumes saved, can't search for this animal type: " ..
+            tostring(characterType) .. "\n\n Please go save some constumes first.",
+            { {"OK", nil} } )
       end
       return characters
    end
@@ -1141,9 +1141,9 @@ function private.getDressingRoomDataByAnimalType( characterType, debugLevel )
    if( debugLevel and debugLevel > 0 ) then
       if( #characters == 0 ) then
          private.easyAlert( "No saved costumes",
-                            "No charactes/costumes saved for this animal type: " ..
-                            tostring(characterType) .. "\n\n Please go save some constumes first.",
-                            { {"OK", nil} } )
+            "No charactes/costumes saved for this animal type: " ..
+            tostring(characterType) .. "\n\n Please go save some constumes first.",
+            { {"OK", nil} } )
       end
       dprint("Found ", tostring(#characters), " of charactes/costumes of this type: ", characterType )
    end
@@ -1163,9 +1163,9 @@ function private.getDressingRoomDataByID( id, debugLevel )
    if( not allSaved.savedItems ) then
       if( debugLevel and debugLevel > 0 ) then
          private.easyAlert( "No saved costumes",
-                            "No charactes/costumes saved, can't search for this id: " ..
-                            tostring(id) .. "\n\n Please go save some constumes first.",
-                            { {"OK", nil} } )
+            "No charactes/costumes saved, can't search for this id: " ..
+            tostring(id) .. "\n\n Please go save some constumes first.",
+            { {"OK", nil} } )
 
          dprint("No charactes/costumes saved, can't search for this id: ", id )
       end
@@ -1182,8 +1182,8 @@ function private.getDressingRoomDataByID( id, debugLevel )
 
    if( debugLevel and debugLevel > 0 ) then
       private.easyAlert( "Unknown Dressing Room ID",
-                      "No charactes/costumes found matching this ID: " .. tostring(characterType),
-                      { {"OK", nil} } )
+         "No charactes/costumes found matching this ID: " .. tostring(characterType),
+         { {"OK", nil} } )
    end
 
    return nil
@@ -1211,8 +1211,8 @@ function private.getCostumeData( animalType )
    end
    if (not costumeData) then
       private.easyAlert( "No character data found",
-                         tostring( animalType ) .. " had no data?",
-                         { {"OK", nil} } )
+         tostring( animalType ) .. " had no data?",
+         { {"OK", nil} } )
    end
    return costumeData
 end
@@ -1381,7 +1381,7 @@ function private.dragNDrop( self, event )
       local bounds = self.stageBounds
       local x,y = event.x, event.y
       local isWithinBounds =
-         bounds.xMin <= x and bounds.xMax >= x and bounds.yMin <= y and bounds.yMax >= y
+      bounds.xMin <= x and bounds.xMax >= x and bounds.yMin <= y and bounds.yMax >= y
 
       local dx = event.x - self.x0
       local dy = event.y - self.y0
@@ -1392,14 +1392,14 @@ function private.dragNDrop( self, event )
       local myLeft = self.x - self.contentWidth/2
       local myRight = self.x + self.contentWidth/2
       if( (dx < 0 and myLeft > private.left) or
-          (dx > 0 and myRight < private.right ) ) then
+         (dx > 0 and myRight < private.right ) ) then
          self.x = self.x + dx * (self.dragScale and self.dragScale or 1)
       end
 
       local myTop = self.y - self.contentHeight/2
       local myBottom = self.y + self.contentHeight/2
       if( (dy < 0 and myTop > private.top) or
-          (dy > 0 and myBottom < private.bottom ) ) then
+         (dy > 0 and myBottom < private.bottom ) ) then
          self.y = self.y + dy * (self.dragScale and self.dragScale or 1)
       end
 
@@ -1802,7 +1802,7 @@ function private.doDrop( dropPiece )
          local dy = dropPiece.y - stagePiece.y
          local dist2 = dx * dx + dy * dy
          if( dist2 <= snapDist and
-             dropPiece.pieceType ~= stagePiece.pieceType ) then
+            dropPiece.pieceType ~= stagePiece.pieceType ) then
 
             instrumentsInUse[dropPiece.instrument] = nil
             instrumentsInUse[stagePiece.instrument] = nil
@@ -1864,12 +1864,12 @@ end
 --
 function private.attachTouchClear()
    function view.touch( self, event )
-         --table.dump2(event)
-         if( event.phase == "ended" ) then
-            currentStagePiece = nil
-            private.highlightSelected()
-         end
-         return false
+      --table.dump2(event)
+      if( event.phase == "ended" ) then
+         currentStagePiece = nil
+         private.highlightSelected()
+      end
+      return false
    end
    view:addEventListener("touch")
 end
@@ -1878,17 +1878,17 @@ end
 -- Easy Blur
 --
 private.easyBlur = function( group, time, color )
-	group = group or display.getCurrentStage()
-	time = time or 0
-	color = color or {0.5,0.5,0.5}
-	local blur = display.captureScreen()
-	blur.x, blur.y = centerX, centerY
-	blur:setFillColor(unpack(color))
-	--blur.fill.effect = "filter.blur"
-	blur.alpha = 0
-	group:insert( blur )
-	transition.to( blur, { alpha = 1, time = time } )
-	return blur
+   group = group or display.getCurrentStage()
+   time = time or 0
+   color = color or {0.5,0.5,0.5}
+   local blur = display.captureScreen()
+   blur.x, blur.y = centerX, centerY
+   blur:setFillColor(unpack(color))
+   --blur.fill.effect = "filter.blur"
+   blur.alpha = 0
+   group:insert( blur )
+   transition.to( blur, { alpha = 1, time = time } )
+   return blur
 end
 
 -- Easy alert popup
@@ -1900,23 +1900,23 @@ end
 --
 function private.easyAlert( title, msg, buttons )
 
-	local function onComplete( event )
-		local action = event.action
-		local index = event.index
-		if( action == "clicked" ) then
-			local func = buttons[index][2]
-			if( func ) then func() end
-	    end
-	    --native.cancelAlert()
-	end
+   local function onComplete( event )
+      local action = event.action
+      local index = event.index
+      if( action == "clicked" ) then
+         local func = buttons[index][2]
+         if( func ) then func() end
+      end
+      --native.cancelAlert()
+   end
 
-	local names = {}
-	for i = 1, #buttons do
-		names[i] = buttons[i][1]
-	end
-	--print( title, msg, names, onComplete )
-	local alert = native.showAlert( title, msg, names, onComplete )
-	return alert
+   local names = {}
+   for i = 1, #buttons do
+      names[i] = buttons[i][1]
+   end
+   --print( title, msg, names, onComplete )
+   local alert = native.showAlert( title, msg, names, onComplete )
+   return alert
 end
 -- EFM temporarily exposed for use in FRC_Reheasal_Scene.lua till we come up with a better plan.
 public.easyAlert = private.easyAlert
@@ -1927,60 +1927,60 @@ public.easyAlert = private.easyAlert
 --    n - Number of decimal places to round to.
 -- ==
 function private.round(val, n)
-  if (n) then
-    return math.floor( (val * 10^n) + 0.5) / (10^n)
-  else
-    return math.floor(val+0.5)
-  end
+   if (n) then
+      return math.floor( (val * 10^n) + 0.5) / (10^n)
+   else
+      return math.floor(val+0.5)
+   end
 end
 
 function private.calcMeasurementSpacing(debugEn)
-	private.w 				   = display.contentWidth
-	private.h 				   = display.contentHeight
-	private.centerX 			= display.contentCenterX
-	private.centerY 			= display.contentCenterY
-	private.fullw			   = display.actualContentWidth
-	private.fullh			   = display.actualContentHeight
-	private.unusedWidth		= private.fullw - private.w
-	private.unusedHeight		= private.fullh - private.h
-	private.deviceWidth		= math.floor((private.fullw/display.contentScaleX) + 0.5)
-	private.deviceHeight 	= math.floor((private.fullh/display.contentScaleY) + 0.5)
-	private.left				= 0 - private.unusedWidth/2
-	private.top 				= 0 - private.unusedHeight/2
-	private.right 			   = private.w + private.unusedWidth/2
-	private.bottom 			= private.h + private.unusedHeight/2
+   private.w 				   = display.contentWidth
+   private.h 				   = display.contentHeight
+   private.centerX 			= display.contentCenterX
+   private.centerY 			= display.contentCenterY
+   private.fullw			   = display.actualContentWidth
+   private.fullh			   = display.actualContentHeight
+   private.unusedWidth		= private.fullw - private.w
+   private.unusedHeight		= private.fullh - private.h
+   private.deviceWidth		= math.floor((private.fullw/display.contentScaleX) + 0.5)
+   private.deviceHeight 	= math.floor((private.fullh/display.contentScaleY) + 0.5)
+   private.left				= 0 - private.unusedWidth/2
+   private.top 				= 0 - private.unusedHeight/2
+   private.right 			   = private.w + private.unusedWidth/2
+   private.bottom 			= private.h + private.unusedHeight/2
 
 
-	private.w 				   = private.round(private.w)
-	private.h 				   = private.round(private.h)
-	private.left			   = private.round(private.left)
-	private.top				   = private.round(private.top)
-	private.right			   = private.round(private.right)
-	private.bottom			   = private.round(private.bottom)
-	private.fullw			   = private.round(private.fullw)
-	private.fullh			   = private.round(private.fullh)
+   private.w 				   = private.round(private.w)
+   private.h 				   = private.round(private.h)
+   private.left			   = private.round(private.left)
+   private.top				   = private.round(private.top)
+   private.right			   = private.round(private.right)
+   private.bottom			   = private.round(private.bottom)
+   private.fullw			   = private.round(private.fullw)
+   private.fullh			   = private.round(private.fullh)
 
-	private.orientation  	= ( private.w > private.h ) and "landscape"  or "portrait"
-	private.isLandscape 		= ( private.w > private.h )
-	private.isPortrait 		= ( private.h > private.w )
+   private.orientation  	= ( private.w > private.h ) and "landscape"  or "portrait"
+   private.isLandscape 		= ( private.w > private.h )
+   private.isPortrait 		= ( private.h > private.w )
 
-	private.left 			   = (private.left >= 0) and math.abs(private.left) or private.left
-	private.top 				= (private.top >= 0) and math.abs(private.top) or private.top
+   private.left 			   = (private.left >= 0) and math.abs(private.left) or private.left
+   private.top 				= (private.top >= 0) and math.abs(private.top) or private.top
 
-	if( debugEn ) then
-		dprint("\n---------- calcMeasurementSpacing() @ " .. system.getTimer() )
-		dprint( "w       = " 	.. private.w )
-		dprint( "h       = " 	.. private.h )
-		dprint( "centerX = " .. private.centerX )
-		dprint( "centerY = " .. private.centerY )
-		dprint( "fullw   = " 	.. private.fullw )
-		dprint( "fullh   = " 	.. private.fullh )
-		dprint( "left    = " 	.. private.left )
-		dprint( "right   = " 	.. private.right )
-		dprint( "top     = " 	.. private.top )
-		dprint( "bottom  = " 	.. private.bottom )
-		dprint("---------------\n\n")
-	end
+   if( debugEn ) then
+      dprint("\n---------- calcMeasurementSpacing() @ " .. system.getTimer() )
+      dprint( "w       = " 	.. private.w )
+      dprint( "h       = " 	.. private.h )
+      dprint( "centerX = " .. private.centerX )
+      dprint( "centerY = " .. private.centerY )
+      dprint( "fullw   = " 	.. private.fullw )
+      dprint( "fullh   = " 	.. private.fullh )
+      dprint( "left    = " 	.. private.left )
+      dprint( "right   = " 	.. private.right )
+      dprint( "top     = " 	.. private.top )
+      dprint( "bottom  = " 	.. private.bottom )
+      dprint("---------------\n\n")
+   end
 end
 private.calcMeasurementSpacing(false)
 
