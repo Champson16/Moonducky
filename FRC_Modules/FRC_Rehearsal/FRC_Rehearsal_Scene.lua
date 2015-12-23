@@ -79,7 +79,7 @@ local songTrackOffsetData = {
   mechanicalcow_guitar = 1502,
   mechanicalcow_harmonica = 3993,
   mechanicalcow_microphone = 9249,
-  mechanicalcow_piano = 1502,
+  mechanicalcow_piano = 1775,
   mechanicalcow_rhythmcombocymbal = 0
 };
 
