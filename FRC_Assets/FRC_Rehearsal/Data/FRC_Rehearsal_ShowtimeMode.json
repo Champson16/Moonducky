@@ -1,0 +1,18 @@
+[{
+	"id": "ReplayShowtime",
+	"imageUp": "FRC_Rehearsal_Icon_Replay_up.png",
+	"imageDown": "FRC_Rehearsal_Icon_Replay_down.png",
+	"imageFocused": "FRC_Rehearsal_Icon_Replay_focused.png",
+	"imageDisabled": "FRC_Rehearsal_Icon_Replay_disabled.png",
+	"width": 128,
+	"height": 128
+},
+{
+	"id": "StopPreview",
+	"imageUp": "FRC_Rehearsal_Icon_Exit_up.png",
+	"imageDown": "FRC_Rehearsal_Icon_Exit_down.png",
+	"imageFocused": "FRC_Rehearsal_Icon_Exit_focused.png",
+	"imageDisabled": "FRC_Rehearsal_Icon_Exit_disabled.png",
+	"width": 128,
+	"height": 128
+}]

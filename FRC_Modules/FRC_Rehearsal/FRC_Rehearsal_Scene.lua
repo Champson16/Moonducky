@@ -692,7 +692,12 @@ function FRC_Rehearsal_Scene:createScene(event)
 
    -- Get lua tables from JSON data
    local categoryData = DATA('CATEGORY')
-   local rehearsalPlaybackData = DATA('REHEARSAL')
+   local rehearsalPlaybackData;
+   if (sceneMode == "showtime") then
+     rehearsalPlaybackData = DATA('SHOWTIME')
+   else
+     rehearsalPlaybackData = DATA('REHEARSAL')
+   end
    local setDesignData = DATA('SETDESIGN')
    local instrumentData = DATA('INSTRUMENT')
    local characterData = DATA('CHARACTER')
@@ -1075,6 +1080,9 @@ function FRC_Rehearsal_Scene:createScene(event)
                   end
                elseif (self.id == "RewindPreview") then
                   FRC_Rehearsal_Scene.rewindPreview(true);
+                elseif (self.id == "ReplayShowtime") then
+                  FRC_Rehearsal_Scene.stopRehearsalMode(true);
+                  FRC_Rehearsal_Scene.startRehearsalMode( 1500, false );
                elseif self:getFocusState() then
                   -- hide the itemScroller
                   rehearsalItemScrollers[self.id].isVisible = false;
