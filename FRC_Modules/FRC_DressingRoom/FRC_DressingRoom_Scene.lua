@@ -396,6 +396,8 @@ function FRC_DressingRoom_Scene:createScene(event)
 	-- setup the armoire animations
 	local openArmoireAnimationFiles = {};
 	local openArmoireAnimationSequences = {};
+	local closeArmoireAnimationFiles = {};
+	local closeArmoireAnimationSequences = {};
 
 	openArmoireAnimationFiles = {
 		"DressingRoom_Armoire_OpenO.xml",
@@ -415,18 +417,45 @@ function FRC_DressingRoom_Scene:createScene(event)
 		"DressingRoom_Armoire_OpenA.xml"
 	};
 
-	for i=1,#openArmoireAnimationFiles do
-		-- preload the animation data (XML and images) early
-		openArmoireAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(openArmoireAnimationFiles, animationXMLBase, animationImageBase);
-		view._content:insert(openArmoireAnimationSequences);
-    FRC_Layout.placeAnimation( openArmoireAnimationSequences, { x = 0, y = 45 } , false ) -- TRS EFM
-	end
+	closeArmoireAnimationFiles = {
+		"DressingRoom_Armoire_CloseO.xml",
+		"DressingRoom_Armoire_CloseN.xml",
+		"DressingRoom_Armoire_CloseM.xml",
+		"DressingRoom_Armoire_CloseL.xml",
+		"DressingRoom_Armoire_CloseK.xml",
+		"DressingRoom_Armoire_CloseJ.xml",
+		"DressingRoom_Armoire_CloseI.xml",
+		"DressingRoom_Armoire_CloseH.xml",
+		"DressingRoom_Armoire_CloseG.xml",
+		"DressingRoom_Armoire_CloseF.xml",
+		"DressingRoom_Armoire_CloseE.xml",
+		"DressingRoom_Armoire_CloseD.xml",
+		"DressingRoom_Armoire_CloseC.xml",
+		"DressingRoom_Armoire_CloseB.xml",
+		"DressingRoom_Armoire_CloseA.xml"
+	};
+
 
 	-- ambient loop sequence
 	function sceneLayoutMethods.playOpenArmoireSequences()
 		for i=1, openArmoireAnimationSequences.numChildren do
 			openArmoireAnimationSequences[i]:play({
 				showLastFrame = true,
+				playBackward = false,
+				autoLoop = false,
+				palindromicLoop = false,
+				delay = 0,
+				intervalTime = 30,
+				maxIterations = 1
+			});
+		end
+	end
+
+	-- ambient loop sequence
+	function sceneLayoutMethods.playCloseArmoireSequences()
+		for i=1, closeArmoireAnimationSequences.numChildren do
+			closeArmoireAnimationSequences[i]:play({
+				showLastFrame = false,
 				playBackward = false,
 				autoLoop = false,
 				palindromicLoop = false,
@@ -488,6 +517,25 @@ function FRC_DressingRoom_Scene:createScene(event)
 			end
 		end
 	end
+
+	for i=1,#openArmoireAnimationFiles do
+		-- preload the animation data (XML and images) early
+		openArmoireAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(openArmoireAnimationFiles, animationXMLBase, animationImageBase);
+		openArmoireAnimationSequences:addEventListener('touch', sceneLayoutMethods.playCloseArmoireSequences);
+		view._content:insert(openArmoireAnimationSequences);
+		FRC_Layout.placeAnimation( openArmoireAnimationSequences, { x = -45, y = 40 } , false ) -- TRS EFM
+	end
+
+	for i=1,#closeArmoireAnimationFiles do
+		-- preload the animation data (XML and images) early
+		closeArmoireAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(closeArmoireAnimationFiles, animationXMLBase, animationImageBase);
+		closeArmoireAnimationSequences:addEventListener('touch', sceneLayoutMethods.playOpenArmoireSequences);
+		view._content:insert(closeArmoireAnimationSequences);
+		FRC_Layout.placeAnimation( closeArmoireAnimationSequences, { x = -45, y = 40 } , false ) -- TRS EFM
+	end
+
+
+
 
 	mysteryBoxAnimationFiles[1] = {
 		"SPMTM_DressingRoom_MysteryBox_v01_15.xml",

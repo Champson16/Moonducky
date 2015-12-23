@@ -3,9 +3,8 @@
 	"imageFile": "MDMT_DressingRoom_Armoire.png",
 	"width": 304,
 	"height": 602,
-	"left": 20,
-	"y": -50,
-	"onTouch": "openArmoire"
+	"x": -348,
+	"y": -50
 },
 {
 	"id": "Ottoman",
