@@ -13,6 +13,7 @@ local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
 local FRC_SetDesign_Settings  = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign_Settings');
 local FRC_SetDesign           = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign');
 local FRC_CharacterBuilder    = require('FRC_Modules.FRC_Rehearsal.FRC_CharacterBuilder') --EFM
+local FRC_AppSettings   = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
 
 local FRC_ArtCenter;
 local artCenterLoaded = pcall(function()
@@ -1431,7 +1432,15 @@ function FRC_Rehearsal_Scene:enterScene(event)
       FRC_Rehearsal_Scene:preEnterScene(event)
    end
 
-   native.setActivityIndicator(false)
+   native.setActivityIndicator(false);
+
+   -- pause background music (if enabled)
+   if (FRC_AppSettings.get("soundOn")) then
+     local musicGroup = FRC_AudioManager:findGroup("music");
+     if musicGroup then
+       musicGroup:pause();
+     end
+   end
 
    if (FRC_Rehearsal_Scene.postEnterScene) then
       FRC_Rehearsal_Scene:postEnterScene(event)
@@ -1448,6 +1457,14 @@ function FRC_Rehearsal_Scene:exitScene(event)
 
    -- in case audio was playing just before the user is leaving the scene
    FRC_Rehearsal_Scene.stopRehearsalMode();
+
+   -- resume background music (if enabled)
+   if (FRC_AppSettings.get("soundOn")) then
+     local musicGroup = FRC_AudioManager:findGroup("music");
+     if musicGroup then
+       musicGroup:resume();
+     end
+   end
 
    if (FRC_Rehearsal_Scene.postExitScene) then
       FRC_Rehearsal_Scene:postExitScene(event)
