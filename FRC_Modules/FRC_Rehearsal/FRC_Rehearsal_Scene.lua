@@ -227,6 +227,8 @@ function FRC_Rehearsal_Scene:save(e)
       id = id,
       currentSongID = currentSongID, -- EFM Load/Create New Show Logic ++
       setID = FRC_Rehearsal_Scene.setID,
+      setIndex = FRC_Rehearsal_Scene.setIndex,
+      backdropName = FRC_Rehearsal_Scene.backdropName,
       thumbWidth = thumbWidth,
       thumbHeight = thumbHeight,
       thumbSuffix = '_thumbnail.png',
@@ -647,9 +649,9 @@ function FRC_Rehearsal_Scene:createScene(event)
       --if( string.len(name) > 18 ) then -- custom backdrop 
          --bdScale = bdScale + 0.05
       --end
-      if( bdScale > 1 ) then
-         bdScale = bdScale + 0.02
-      end
+      --if( bdScale > 1 ) then
+         bdScale = bdScale + 0.04
+      --end
 
       --backdropBackground.anchorX = 0;
       backdropBackground.anchorY = 0;
@@ -659,7 +661,7 @@ function FRC_Rehearsal_Scene:createScene(event)
       --backdropBackground.x = frameRect.left * setScale - ((setGroup[1].width - 1152/2) * 0.5) * setScale;
       backdropBackground.x = centerX
       --backdropBackground.y = frameRect.top * setScale - ((setGroup[1].height - display.contentHeight) * 0.5);
-      backdropBackground.y = frameRect.top * bdScale - ((setGroup[1].height * setScale - 768) * 0.5)*bdScale;
+      backdropBackground.y = frameRect.top * bdScale - ((setGroup[1].height * bdScale - 768) * 0.5);
       -- EFM TEMPORARY FIX - There is a discrepancy in scaling right now. Maybe rounding?  So, I'm rounding up a little
 
       backdropBackground:scale(bdScale,bdScale)
