@@ -393,6 +393,7 @@ function FRC_DressingRoom_Scene:createScene(event)
 		sceneLayoutMethods.playMysteryBoxAnimationSequence();
 	end
 
+  --[[
 	-- setup the armoire animations
 	local openArmoireAnimationFiles = {};
 	local openArmoireAnimationSequences = {};
@@ -470,6 +471,7 @@ function FRC_DressingRoom_Scene:createScene(event)
 		-- play the mystery box animation
 		sceneLayoutMethods.playOpenArmoireSequences();
 	end
+	--]]
 
 	local sceneLayoutAnimationSequences;
 
@@ -518,6 +520,7 @@ function FRC_DressingRoom_Scene:createScene(event)
 		end
 	end
 
+--[[
 	for i=1,#openArmoireAnimationFiles do
 		-- preload the animation data (XML and images) early
 		openArmoireAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(openArmoireAnimationFiles, animationXMLBase, animationImageBase);
@@ -533,8 +536,7 @@ function FRC_DressingRoom_Scene:createScene(event)
 		view._content:insert(closeArmoireAnimationSequences);
 		FRC_Layout.placeAnimation( closeArmoireAnimationSequences, { x = -45, y = 40 } , false ) -- TRS EFM
 	end
-
-
+--]]
 
 
 	mysteryBoxAnimationFiles[1] = {
