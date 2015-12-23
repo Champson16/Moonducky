@@ -728,7 +728,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    private.attachDragger(stagePiece)
 
    -- EFM start stopped or play one cycle?
-   for i = 1, #animationSequences do
+   for i = 1, #animationSequences do      
       private.playAllAnimations( animationSequences, i )
       --private.stopAllAnimations( animationSequences, i )
    end
@@ -1080,6 +1080,7 @@ function public.playStageCharacters()
 
    for i = 1, #charactersOnStage do
       local animationSequences = charactersOnStage[i].animationSequences
+      
       for j = 1, #animationSequences do
          private.playAllAnimations( animationSequences, j, true )
       end
@@ -1713,6 +1714,68 @@ end
 -- playAllAnimations() - Plays all of the character's animations (EFM needs work)
 --
 function private.playAllAnimations( animationSequences, num, autoLoop )
+   --dprint("BING @ ", num, animationSequences.completed, system.getTimer())
+   num = num or mRand(1,#animationSequences)
+   local sequence    = animationSequences[num]   
+   
+   local totalSeq    = #animationSequences  
+   local totalClips  = sequence.numChildren
+   
+   if( num == 1 ) then
+      --dprint("Created completed!")
+      animationSequences.completed = {}      
+   end
+   
+   local completed = animationSequences.completed
+   local completedIndex = #completed+1
+   completed[completedIndex] = false   
+   
+   local framePeriod = math.ceil(1000 / display.fps)
+   
+   for i=1, totalClips do      
+      local obj = sequence[i]
+   
+      local function onCompletionGate()
+         --dprint("DONG @ ", #completed, completedIndex, system.getTimer())
+         --dprint("onCompletionGate #", i, " ended @ ", system.getTimer())         
+         --table.dump2(completed)
+         
+         completed[completedIndex] = true
+         
+         local executeOnComplete = true
+         for j = 1, #completed do
+            executeOnComplete = executeOnComplete and completed[j]                  
+         end
+         if( executeOnComplete ) then
+            obj.isAnimating = false;
+            for k = 1, #animationSequences do
+               timer.performWithDelay( 500, private.playAllAnimations( animationSequences, k, autoLoop ) )
+            end
+            ---end
+         end
+         --table.dump2(completed)
+      end   
+      
+      
+      obj:play({
+            showLastFrame = not(autoLoop),
+            playBackward = false,
+            autoLoop = false, -- autoLoop,
+            palindromicLoop = false,
+            delay = 30,
+            intervalTime = 30,
+            maxIterations = 1,
+            onCompletion = onCompletionGate,
+            stopGate = true
+         })
+      --timer.performWithDelay(33, function() sequence[i]:pause() end )
+   end
+end
+
+--
+-- playAllAnimations_original() - Plays all of the character's animations (NON STOP GATE)
+--
+function private.playAllAnimations_original( animationSequences, num, autoLoop )
    num = num or mRand(1,#animationSequences)
    local sequence = animationSequences[num]
    for i=1, sequence.numChildren do
@@ -1731,6 +1794,7 @@ function private.playAllAnimations( animationSequences, num, autoLoop )
       --timer.performWithDelay(33, function() sequence[i]:pause() end )
    end
 end
+
 
 --
 -- stopAllAnimations() - Stops all of the character's animations (EFM needs work)
