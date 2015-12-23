@@ -86,6 +86,10 @@ function FRC_Home_Scene:createScene(event)
 			end
 		end
 
+		if (view._overlay) then
+			view._overlay:removeEventListener('videoComplete', videoPlaybackComplete );
+		end
+
 		if (videoPlayer) then
 			videoPlayer:removeSelf();
 			videoPlayer = nil;
@@ -116,7 +120,7 @@ function FRC_Home_Scene:createScene(event)
 
 		videoPlayer = FRC_Video.new(view._overlay, videoData);
 		if videoPlayer then
-			videoPlayer:addEventListener('videoComplete', videoPlaybackComplete );
+			view._overlay:addEventListener('videoComplete', videoPlaybackComplete );
 		else
 			-- this will fire because we are running in the Simulator and the video playback ends before it begins!
 			videoPlaybackComplete();
@@ -147,7 +151,7 @@ function FRC_Home_Scene:createScene(event)
 
 		videoPlayer = FRC_Video.new(view._overlay, videoData);
 		if videoPlayer then
-			videoPlayer:addEventListener('videoComplete', videoPlaybackComplete );
+			view._overlay:addEventListener('videoComplete', videoPlaybackComplete );
 		else
 			-- this will fire because we are running in the Simulator and the video playback ends before it begins!
 			videoPlaybackComplete();
@@ -448,6 +452,10 @@ end
 function FRC_Home_Scene:exitScene(event)
 	local scene = self;
 	local view = self.view;
+
+	if (view._overlay) then
+		view._overlay:removeEventListener('videoComplete', videoPlaybackComplete );
+	end
 
 	if (scene.outboundTimer) then
 		timer.cancel(scene.outboundTimer);
