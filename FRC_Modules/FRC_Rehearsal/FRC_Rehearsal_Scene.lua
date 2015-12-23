@@ -62,6 +62,27 @@ FRC_AudioManager:newGroup({
       maxChannels = 9
    });
 
+-- TODO MOVE THIS INTO JSON STRUCTURE
+local instrumentTrackStartOffsets;
+local songTrackTimers = {};
+local songTrackOffsetData = {
+  hamsters_bass = 3797,
+  hamsters_conga = 2208,
+  hamsters_guitar = 0,
+  hamsters_harmonica = 11066,
+  hamsters_maracas = 682,
+  hamsters_microphone = 4151,
+  hamsters_rhythmcombocheesegrater = 2777,
+  hamsters_sticks = 1897,
+  mechanicalcow_bass = 1431,
+  mechanicalcow_conga = 5012,
+  mechanicalcow_guitar = 1502,
+  mechanicalcow_harmonica = 3993,
+  mechanicalcow_microphone = 9249,
+  mechanicalcow_piano = 1502,
+  mechanicalcow_rhythmcombocymbal = 0
+};
+
 -- load up the audio tracks for Hamsters song
 FRC_AudioManager:newHandle({
       name = "hamsters_bass",
@@ -563,10 +584,10 @@ function FRC_Rehearsal_Scene:createScene(event)
       --FRC_Layout.scaleToFit(setDesignGroup);
       -- view.setDesignGroup.y = view.setDesignGroup.y - 80;
    end
-   
+
    -- EFM not best place for this.  Temporary while I work out scaling on custom backdrops which are still off.
    local setScale = 1
-   --local function round(val, n) if (n) then  return math.floor( (val * 10^n) + 0.5) / (10^n); else return math.floor(val+0.5); end end   
+   --local function round(val, n) if (n) then  return math.floor( (val * 10^n) + 0.5) / (10^n); else return math.floor(val+0.5); end end
    local changeSet = function(index)
       -- clear previous contents
       if (setGroup.numChildren > 0) then
@@ -580,13 +601,13 @@ function FRC_Rehearsal_Scene:createScene(event)
       if (index == 0) then return; end
 
       local setBackground = display.newImageRect(setGroup, SETDESIGNUI('IMAGES_PATH') .. setData[index].imageFile, setData[index].width, setData[index].height);
-      
+
       local xs = display.actualContentWidth/setBackground.contentWidth
       local ys = display.actualContentHeight/setBackground.contentHeight
       dprint(backdropData[index].width, backdropData[index].height,xs,ys);
-      if( xs > ys ) then         
+      if( xs > ys ) then
          setScale = xs
-      else         
+      else
          setScale  = ys
       end
       setBackground:scale( setScale, setScale )
@@ -642,11 +663,11 @@ function FRC_Rehearsal_Scene:createScene(event)
          imageFile = backdropData[index].imageFile;
          baseDir = system[backdropData[index].baseDir];
       end
-      local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, backdropData[index].width, backdropData[index].height);      
-      
+      local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, backdropData[index].width, backdropData[index].height);
+
       local bdScale = setScale
       -- EFM Initially I thought it was just custom images, but I see it in some default images too, when coupled with certain stages.
-      --if( string.len(name) > 18 ) then -- custom backdrop 
+      --if( string.len(name) > 18 ) then -- custom backdrop
          --bdScale = bdScale + 0.05
       --end
       --if( bdScale > 1 ) then
@@ -725,28 +746,38 @@ function FRC_Rehearsal_Scene:createScene(event)
    --     end
    --  end
 
-   FRC_Rehearsal_Scene.rewindPreview = function ()
+   FRC_Rehearsal_Scene.rewindPreview = function (autoPlay)
+     -- logic flow:  stop audio, rewind it, if it was playing when we rewound, start it again
       print("rewindPreview");
       songGroup = FRC_AudioManager:findGroup("songPlayback");
+      local trackStartDelay;
+      local activeHandle;
       if (songGroup) then
          if (#songGroup.handles) then
             for i=1,#songGroup.handles do
-               audio.rewind(songGroup.handles[i]);
+              activeHandle = songGroup.handles[i];
+              -- audio.pause(activeHandle);
+              audio.rewind(activeHandle);
+              -- trackStartDelay = instrumentTrackStartOffsets[activeHandle.name];
+              -- if (trackStartDelay > 0) then
+              --   -- wait before playing the audio
+              --   timer.performWithDelay( trackStartDelay, function()
+              --       audio.resume(activeHandle);
+              --    end )
+              -- else
+              --   audio.resume(activeHandle);
+              -- end
             end
          end
-         -- for i, instr in pairs(instrumentList) do
-         --   local h = songGroup:findHandle(currentSongID .. "_" .. string.lower(instr) )
-         --   -- stop the track
-         --   if (h) then
-         --     print('rewinding ', h.name);
-         --     audio.rewind(h.handle);
-         --   end
-         -- end
+      end
+      if (autoPlay) then
+        FRC_Rehearsal_Scene.stopRehearsalMode(true);
+        FRC_Rehearsal_Scene.startRehearsalMode(0, true);
       end
    end
 
    FRC_Rehearsal_Scene.stopRehearsalMode = function (pausing)
-      print("StopRehearsal");
+      print("StopRehearsal - sceneMode: ", sceneMode);
       if not pausing then
         -- eventually we will transition animate on offscreen and the other onscreen
         categoriesContainer.isVisible = ( sceneMode ~= "showtime" );
@@ -780,6 +811,11 @@ function FRC_Rehearsal_Scene:createScene(event)
       local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
       tracksGroup = FRC_AudioManager:findGroup("songTracks");
       songGroup = FRC_AudioManager:findGroup("songPlayback");
+      -- kill track timers
+      for i=#songTrackTimers, 1,-1 do
+    		timer.cancel(songTrackTimers[i]);
+    		songTrackTimers[i] = nil;
+    	end
       if (songGroup and tracksGroup and instrumentList) then
          for i, instr in pairs(instrumentList) do
             local h = songGroup:findHandle(currentSongID .. "_" .. string.lower(instr) )
@@ -847,13 +883,31 @@ function FRC_Rehearsal_Scene:createScene(event)
       rehearsalContainer.isVisible = true;
 
       local function startPlaying()
-         -- get a handle to the song group
-         -- songGroup = FRC_AudioManager:newGroup({
-         --   name = "songGroup",
-         --   maxChannels = 8
-         -- });
          -- get a list of the instruments that are active
          local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
+         local instrID;
+         -- calculate the time offsets using the songTrackOffsetData
+         -- figure out which instrument in use is played first, grab the offset
+         local firstInstrumentOffset = 0;
+         local newOffset;
+         for i, instr in pairs(instrumentList) do
+           instrID = currentSongID .. "_" .. string.lower(instr);
+           newOffset = songTrackOffsetData[instrID];
+           -- print(instrID, newOffset)
+           if (newOffset <= firstInstrumentOffset) then
+             firstInstrumentOffset = newOffset;
+           end
+         end
+         -- figure out the offsets for all instruments by subtracting the first instrument's offset
+         -- from their offset value, making the first instrument now have an offset of 0
+         -- make a new table
+         instrumentTrackStartOffsets = {};
+         for i, instr in pairs(instrumentList) do
+           instrID = currentSongID .. "_" .. string.lower(instr);
+           instrumentTrackStartOffsets[instrID] = (songTrackOffsetData[instrID] - firstInstrumentOffset);
+         end
+         table.dump(instrumentTrackStartOffsets); -- DEBUG
+         -- use these values to create timers to delay the startup of each track's sound
          table.dump(instrumentList); -- DEBUG
          -- find the song for each instrument
          tracksGroup = FRC_AudioManager:findGroup("songTracks");
@@ -862,24 +916,26 @@ function FRC_Rehearsal_Scene:createScene(event)
          if (songGroup and tracksGroup and instrumentList) then
             for i, instr in pairs(instrumentList) do
                print(i, instr);
-               local h = tracksGroup:findHandle(currentSongID .. "_" .. string.lower(instr) )
+               instrID = currentSongID .. "_" .. string.lower(instr);
+               local h = tracksGroup:findHandle(instrID)
                -- add the song to a playback group if it is legitimate for this song
                if (h) then
                   print('playing ', h.name);
                   songGroup:addHandle(h);
-                  -- h:play();
-                  -- h:play({ onComplete = function()
-                  --   FRC_Rehearsal_Scene.stopRehearsalMode();
-                  -- end });
+                  local trackStartDelay = instrumentTrackStartOffsets[instrID];
+                  if (trackStartDelay > 0) then
+                    -- wait before playing the audio
+                    songTrackTimers[#songTrackTimers+1] = timer.performWithDelay( instrumentTrackStartOffsets[instrID], function()
+                        h:play();
+                     end )
+                  else
+                    h:play();
+                  end
                end
             end
-            -- local startTime = system.getTimer()
-            songGroup:playAll();
-            -- local endTime = system.getTimer()
-            -- print( 'audio tracks started in:' , endTime - startTime )
 
             FRC_CharacterBuilder.setEditEnable( false )
-            FRC_CharacterBuilder.playStageCharacters()
+            FRC_CharacterBuilder.playStageCharacters(instrumentTrackStartOffsets)
          end
 
          rehearsalContainer.isPlaying = true
@@ -1004,7 +1060,9 @@ function FRC_Rehearsal_Scene:createScene(event)
             onPress = function(e)
                -- show the focused state for the selected category icon
                local self = e.target
+               print("Rehearsal control selected: ",self.id);
                if (self.id == "StopPreview") then
+                 -- print("self.id == StopPreview");
                  FRC_Rehearsal_Scene.stopRehearsalMode();
                  if ( sceneMode == "showtime" ) then
                    storyboard.gotoScene('Scenes.Lobby');
@@ -1016,7 +1074,7 @@ function FRC_Rehearsal_Scene:createScene(event)
                      FRC_Rehearsal_Scene.startRehearsalMode(0, true);
                   end
                elseif (self.id == "RewindPreview") then
-                  FRC_Rehearsal_Scene.rewindPreview();
+                  FRC_Rehearsal_Scene.rewindPreview(true);
                elseif self:getFocusState() then
                   -- hide the itemScroller
                   rehearsalItemScrollers[self.id].isVisible = false;
