@@ -728,8 +728,9 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    private.attachDragger(stagePiece)
 
    -- EFM start stopped or play one cycle?
-   for i = 1, #animationSequences do
-      private.playAllAnimations( animationSequences, i )
+   for i = 1, #animationSequences do      
+      private.playAllAnimations_rehearsal( animationSequences, i )
+      --private.playAllAnimations( animationSequences, i )
       --private.stopAllAnimations( animationSequences, i )
    end
 
@@ -1081,7 +1082,7 @@ function public.playStageCharacters()
    for i = 1, #charactersOnStage do
       local animationSequences = charactersOnStage[i].animationSequences
 
-      for j = 1, #animationSequences do
+      for j = 1, #animationSequences do         
          private.playAllAnimations( animationSequences, j, true )
       end
    end
@@ -1741,13 +1742,15 @@ function private.playAllAnimations( animationSequences, num, autoLoop )
          --table.dump2(completed)
 
          completed[completedIndex] = true
+         
+         obj:stop(obj.frameCount)
 
          local executeOnComplete = true
          for j = 1, #completed do
             executeOnComplete = executeOnComplete and completed[j]
          end
          if( executeOnComplete ) then
-            obj.isAnimating = false;
+            --obj.isAnimating = false;
             for k = 1, #animationSequences do
                timer.performWithDelay( 500, private.playAllAnimations( animationSequences, k, autoLoop ) )
             end
@@ -1794,6 +1797,30 @@ function private.playAllAnimations_original( animationSequences, num, autoLoop )
       --timer.performWithDelay(33, function() sequence[i]:pause() end )
    end
 end
+
+--
+-- playAllAnimations_rehearsal() - Temporary as we finalize showtime fixes
+--
+function private.playAllAnimations_rehearsal( animationSequences, num, autoLoop )
+   num = num or mRand(1,#animationSequences)
+   local sequence = animationSequences[num]
+   for i=1, sequence.numChildren do
+
+      sequence[i]:play({
+            showLastFrame = true,
+            playBackward = false,
+            autoLoop = autoLoop,
+            palindromicLoop = false,
+            delay = 30,
+            intervalTime = 0,
+            maxIterations = 1,
+            --onCompletion = onCompletion,
+            --stopGate = true -- Not transfered yet
+         })
+      --timer.performWithDelay(33, function() sequence[i]:pause() end )
+   end
+end
+
 
 
 --

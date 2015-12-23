@@ -561,7 +561,10 @@ function FRC_Rehearsal_Scene:createScene(event)
       --FRC_Layout.scaleToFit(setDesignGroup);
       -- view.setDesignGroup.y = view.setDesignGroup.y - 80;
    end
-
+   
+   -- EFM not best place for this.  Temporary while I work out scaling on custom backdrops which are still off.
+   local setScale = 1
+   --local function round(val, n) if (n) then  return math.floor( (val * 10^n) + 0.5) / (10^n); else return math.floor(val+0.5); end end   
    local changeSet = function(index)
       -- clear previous contents
       if (setGroup.numChildren > 0) then
@@ -574,8 +577,18 @@ function FRC_Rehearsal_Scene:createScene(event)
       FRC_Rehearsal_Scene.setIndex = index
       if (index == 0) then return; end
 
-      --local setBackground = display.newImageRect(setGroup, SETDESIGNUI('IMAGES_PATH') .. setData[index].imageFile, setData[index].width, setData[index].height);
-      local setBackground = display.newImageRect(setGroup, SETDESIGNUI('IMAGES_PATH') .. setData[index].imageFile, screenW, screenH);
+      local setBackground = display.newImageRect(setGroup, SETDESIGNUI('IMAGES_PATH') .. setData[index].imageFile, setData[index].width, setData[index].height);
+      
+      local xs = display.actualContentWidth/setBackground.contentWidth
+      local ys = display.actualContentHeight/setBackground.contentHeight
+      dprint(backdropData[index].width, backdropData[index].height,xs,ys);
+      if( xs > ys ) then         
+         setScale = xs
+      else         
+         setScale  = ys
+      end
+      setBackground:scale( setScale, setScale )
+      --local setBackground = display.newImageRect(setGroup, SETDESIGNUI('IMAGES_PATH') .. setData[index].imageFile, screenW, screenH);
       --FRC_Layout.placeImage(setBackground, nil, false )  --EFM
       setBackground.x = display.contentCenterX;
       setBackground.y = display.contentCenterY;
@@ -627,15 +640,29 @@ function FRC_Rehearsal_Scene:createScene(event)
          imageFile = backdropData[index].imageFile;
          baseDir = system[backdropData[index].baseDir];
       end
-      --local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, backdropData[index].width, backdropData[index].height);
-      local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, screenW, screenH);
-
-      backdropBackground.anchorX = 0;
+      local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, backdropData[index].width, backdropData[index].height);      
+      
+      --backdropBackground.anchorX = 0;
       backdropBackground.anchorY = 0;
       backdropBackground.xScale = (frameRect.width / backdropData[index].width);
       backdropBackground.yScale = (frameRect.height / backdropData[index].height);
-      backdropBackground.x = frameRect.left - ((setGroup[1].width - display.contentWidth) * 0.5);
-      backdropBackground.y = frameRect.top - ((setGroup[1].height - display.contentHeight) * 0.5);
+      --backdropBackground.x = frameRect.left - ((setGroup[1].width - display.contentWidth) * 0.5);
+      --backdropBackground.x = frameRect.left * setScale - ((setGroup[1].width - 1152/2) * 0.5) * setScale;
+      backdropBackground.x = centerX
+      --backdropBackground.y = frameRect.top * setScale - ((setGroup[1].height - display.contentHeight) * 0.5);
+      backdropBackground.y = frameRect.top * setScale - ((setGroup[1].height * setScale - 768) * 0.5);
+      -- EFM TEMPORARY FIX - There is a discrepancy in scaling right now. Maybe rounding?  So, I'm rounding up a little
+
+      local bdScale = setScale
+      -- EFM Initially I thought it was just custom images, but I see it in some default images too, when coupled with certain stages.
+      --if( string.len(name) > 18 ) then -- custom backdrop 
+         --bdScale = bdScale + 0.05
+      --end
+      if( bdScale > 1 ) then
+         bdScale = bdScale + 0.02
+      end
+      backdropBackground:scale(bdScale,bdScale)
+      dprint("setScale", bdScale, string.len( name ), name )
    end
    self.changeBackdrop = changeBackdrop;
 
