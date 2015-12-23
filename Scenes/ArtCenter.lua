@@ -149,6 +149,7 @@ scene.postCreateScene = function(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_down.png',
 				onRelease = function(e)
+               dprint("BONG")
 					local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
 					local galleryPopup;
 					galleryPopup = FRC_GalleryPopup.new({
@@ -160,10 +161,16 @@ scene.postCreateScene = function(self, event)
 						callback = function(e)
 							galleryPopup:dispose();
 							galleryPopup = nil;
-							self.canvas:save(e.id);
-							self.canvas.id = FRC_Util.generateUniqueIdentifier();
-							self.actionBarMenu:getItem("load"):setDisabledState(false);
-							self.canvas.isDirty = false;
+                     -- EFM hide the bar,
+                     self.actionBarMenu:hide()
+                     -- then, after hiding is done... do save
+                     timer.performWithDelay( 500, 
+                        function()
+                           self.canvas:save(e.id);
+                           self.canvas.id = FRC_Util.generateUniqueIdentifier();
+                           self.actionBarMenu:getItem("load"):setDisabledState(false);
+                           self.canvas.isDirty = false;
+                        end )
 						end
 					});
 				end
