@@ -642,17 +642,6 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
       local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, backdropData[index].width, backdropData[index].height);      
       
-      --backdropBackground.anchorX = 0;
-      backdropBackground.anchorY = 0;
-      backdropBackground.xScale = (frameRect.width / backdropData[index].width);
-      backdropBackground.yScale = (frameRect.height / backdropData[index].height);
-      --backdropBackground.x = frameRect.left - ((setGroup[1].width - display.contentWidth) * 0.5);
-      --backdropBackground.x = frameRect.left * setScale - ((setGroup[1].width - 1152/2) * 0.5) * setScale;
-      backdropBackground.x = centerX
-      --backdropBackground.y = frameRect.top * setScale - ((setGroup[1].height - display.contentHeight) * 0.5);
-      backdropBackground.y = frameRect.top * setScale - ((setGroup[1].height * setScale - 768) * 0.5);
-      -- EFM TEMPORARY FIX - There is a discrepancy in scaling right now. Maybe rounding?  So, I'm rounding up a little
-
       local bdScale = setScale
       -- EFM Initially I thought it was just custom images, but I see it in some default images too, when coupled with certain stages.
       --if( string.len(name) > 18 ) then -- custom backdrop 
@@ -661,8 +650,20 @@ function FRC_Rehearsal_Scene:createScene(event)
       if( bdScale > 1 ) then
          bdScale = bdScale + 0.02
       end
+
+      --backdropBackground.anchorX = 0;
+      backdropBackground.anchorY = 0;
+      backdropBackground.xScale = (frameRect.width / backdropData[index].width);
+      backdropBackground.yScale = (frameRect.height / backdropData[index].height);
+      --backdropBackground.x = frameRect.left - ((setGroup[1].width - display.contentWidth) * 0.5);
+      --backdropBackground.x = frameRect.left * setScale - ((setGroup[1].width - 1152/2) * 0.5) * setScale;
+      backdropBackground.x = centerX
+      --backdropBackground.y = frameRect.top * setScale - ((setGroup[1].height - display.contentHeight) * 0.5);
+      backdropBackground.y = frameRect.top * bdScale - ((setGroup[1].height * setScale - 768) * 0.5)*bdScale;
+      -- EFM TEMPORARY FIX - There is a discrepancy in scaling right now. Maybe rounding?  So, I'm rounding up a little
+
       backdropBackground:scale(bdScale,bdScale)
-      dprint("setScale", bdScale, string.len( name ), name )
+      dprint("bdScale", bdScale, string.len( name ), name )
    end
    self.changeBackdrop = changeBackdrop;
 
