@@ -27,6 +27,7 @@ local	screenW, screenH, contentW, contentH, centerX, centerY = FRC_Layout.getScr
 local currentSongID = "hamsters";
 
 local sceneMode = "rehearsal" -- or "showtime"
+local sceneRehearsalPaused = false;
 
 local character_x = 0
 local character_y = -16
@@ -741,34 +742,36 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
    end
 
-   FRC_Rehearsal_Scene.stopRehearsalMode = function ()
+   FRC_Rehearsal_Scene.stopRehearsalMode = function (pausing)
       print("StopRehearsal");
-      -- eventually we will transition animate on offscreen and the other onscreen
-      categoriesContainer.isVisible = ( sceneMode ~= "showtime" );
-      if itemScrollers then
-         for k,v in pairs( itemScrollers ) do
-            if v then
-               v.isVisible = false;
-            end
-         end
+      if not pausing then
+        -- eventually we will transition animate on offscreen and the other onscreen
+        categoriesContainer.isVisible = ( sceneMode ~= "showtime" );
+        if itemScrollers then
+           for k,v in pairs( itemScrollers ) do
+              if v then
+                 v.isVisible = false;
+              end
+           end
+        end
+        rehearsalContainer.isVisible = ( sceneMode == "showtime" );
+
+        if( view._overlay.touchGroup and view._overlay.touchGroup.enterFrame ) then
+           Runtime:removeEventListener( "enterFrame", view._overlay.touchGroup )
+           view._overlay.touchGroup = nil
+           display.remove(view._overlay.touchGroup)
+        end
+        display.remove(view._overlay.controlTouch)
+        transition.cancel( rehearsalContainer )
+        rehearsalContainer.y = rehearsalContainer.y0
+
+        -- TODO turn back on the appropriate scroller's visibility (last one that was active)
+
+        FRC_CharacterBuilder.setEditEnable( true )
+        FRC_Rehearsal_Scene.rewindPreview();
       end
 
-      rehearsalContainer.isVisible = ( sceneMode == "showtime" );
-
-      if( view._overlay.touchGroup and view._overlay.touchGroup.enterFrame ) then
-         Runtime:removeEventListener( "enterFrame", view._overlay.touchGroup )
-         view._overlay.touchGroup = nil
-         display.remove(view._overlay.touchGroup)
-      end
-      display.remove(view._overlay.controlTouch)
-      transition.cancel( rehearsalContainer )
-      rehearsalContainer.y = rehearsalContainer.y0
-
-      -- TODO turn back on the appropriate scroller's visibility (last one that was active)
-
-      FRC_CharacterBuilder.stopStageCharacters()
-      FRC_CharacterBuilder.setEditEnable( true )
-      FRC_Rehearsal_Scene.rewindPreview();
+      FRC_CharacterBuilder.stopStageCharacters();
 
       -- STOP ALL AUDIO PLAYBACK OF SONG
       local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
@@ -867,10 +870,10 @@ function FRC_Rehearsal_Scene:createScene(event)
                   -- end });
                end
             end
-            local startTime = system.getTimer()
+            -- local startTime = system.getTimer()
             songGroup:playAll();
-            local endTime = system.getTimer()
-            print( 'audio tracks started in:' , endTime - startTime )
+            -- local endTime = system.getTimer()
+            -- print( 'audio tracks started in:' , endTime - startTime )
 
             FRC_CharacterBuilder.setEditEnable( false )
             FRC_CharacterBuilder.playStageCharacters()
@@ -998,9 +1001,12 @@ function FRC_Rehearsal_Scene:createScene(event)
             onPress = function(e)
                -- show the focused state for the selected category icon
                local self = e.target
-               if (self.id == "StopRehearsal") then
+               if (self.id == "StopPreview") then
+                 FRC_Rehearsal_Scene.stopRehearsalMode();
+                 storyboard.gotoScene('Scenes.Lobby');
+               elseif (self.id == "PausePreview") then
                   if( rehearsalContainer.isPlaying == true ) then
-                     FRC_Rehearsal_Scene.stopRehearsalMode();
+                     FRC_Rehearsal_Scene.stopRehearsalMode(true);
                   else
                      FRC_Rehearsal_Scene.startRehearsalMode(0, true);
                   end
@@ -1373,7 +1379,7 @@ function FRC_Rehearsal_Scene:createScene(event)
                galleryPopup:dispose();
                galleryPopup = nil;
                if( sceneMode == "showtime" ) then
-                  FRC_Rehearsal_Scene:loadShowTime(e);                     
+                  FRC_Rehearsal_Scene:loadShowTime(e);
                else
                   FRC_Rehearsal_Scene:load(e);
                end

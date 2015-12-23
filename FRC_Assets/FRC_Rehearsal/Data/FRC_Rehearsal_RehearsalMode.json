@@ -8,7 +8,16 @@
 	"height": 128
 },
 {
-	"id": "StopRehearsal",
+	"id": "PausePreview",
+	"imageUp": "FRC_Rehearsal_Icon_Pause_up.png",
+	"imageDown": "FRC_Rehearsal_Icon_Pause_down.png",
+	"imageFocused": "FRC_Rehearsal_Icon_Pause_focused.png",
+	"imageDisabled": "FRC_Rehearsal_Icon_Pause_disabled.png",
+	"width": 128,
+	"height": 128
+},
+{
+	"id": "StopPreview",
 	"imageUp": "FRC_Rehearsal_Icon_Stop_up.png",
 	"imageDown": "FRC_Rehearsal_Icon_Stop_down.png",
 	"imageFocused": "FRC_Rehearsal_Icon_Stop_focused.png",
