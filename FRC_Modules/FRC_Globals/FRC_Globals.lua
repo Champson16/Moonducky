@@ -24,6 +24,10 @@ _G.WINDOWS_DESKTOP   = (system.getInfo("platformName") == "Win");
 _G.OSX_DESKTOP       = (system.getInfo("platformName") == "Mac OS X");
 
 
+_G.fontMoonDucky     = "MoonDucky"
+_G.fontOpenSans      = "OpenSans-Semibold"
+
+
 --
 -- Sound and Music Settings
 --
