@@ -1338,7 +1338,7 @@ function FRC_Rehearsal_Scene:createScene(event)
       local onCancel
       if( goHomeOnCancel ) then
          onCancel = function()
-            storyboard.gotoScene('Scenes.Home')
+            storyboard.gotoScene('Scenes.Lobby')
          end
       end
 
@@ -1405,7 +1405,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             "You didn't save any shows yet.\n\nWould you like to go to rehearsal to make a show?",
             {
                {"Yes", function() FRC_CharacterBuilder.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad ) end },
-               {"No", function() storyboard.gotoScene('Scenes.Home') end },
+               {"No", function() storyboard.gotoScene('Scenes.Lobby') end },
                } )
       end
    end
