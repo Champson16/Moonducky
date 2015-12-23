@@ -229,6 +229,7 @@ function FRC_Rehearsal_Scene:save(e)
       id = id,
       currentSongID = currentSongID, -- EFM Load/Create New Show Logic ++
       setIndex = FRC_Rehearsal_Scene.setIndex,
+      backdropIndex = FRC_Rehearsal_Scene.backdropIndex,
       thumbWidth = thumbWidth,
       thumbHeight = thumbHeight,
       thumbSuffix = '_thumbnail.png',
@@ -266,6 +267,11 @@ function FRC_Rehearsal_Scene:load(e)
    if( e.data.setIndex ) then
       FRC_Rehearsal_Scene.changeSet(e.data.setIndex)
    end
+   if( e.data.backdropIndex ) then
+      FRC_Rehearsal_Scene.changeBackdrop(e.data.backdropIndex)
+   end
+   
+   
    --table.dump2(e.data)
    --table.dump2(FRC_Rehearsal_Scene)
    currentSongID = e.data.currentSongID
@@ -411,6 +417,7 @@ function FRC_Rehearsal_Scene:publish(e)
          id = id,
          currentSongID = currentSongID, -- EFM Load/Create New Show Logic ++
          setIndex = FRC_Rehearsal_Scene.setIndex,
+         backdropIndex = FRC_Rehearsal_Scene.backdropIndex,
          thumbWidth = thumbWidth,
          thumbHeight = thumbHeight,
          thumbSuffix = '_thumbnail.png',
@@ -446,6 +453,10 @@ function FRC_Rehearsal_Scene:loadShowTime(e)
    if( e.data.setIndex ) then
       FRC_Rehearsal_Scene.changeSet(e.data.setIndex)
    end
+   if( e.data.backdropIndex ) then
+      FRC_Rehearsal_Scene.changeBackdrop(e.data.backdropIndex)
+   end
+   
    currentSongID = e.data.currentSongID
 
    FRC_CharacterBuilder.init( {
@@ -599,7 +610,8 @@ function FRC_Rehearsal_Scene:createScene(event)
       print("set index",index); -- DEBUG
       if (index == 0) then return; end
 
-      local setBackground = display.newImageRect(setGroup, SETDESIGNUI('IMAGES_PATH') .. setData[index].imageFile, setData[index].width, setData[index].height);
+      --local setBackground = display.newImageRect(setGroup, SETDESIGNUI('IMAGES_PATH') .. setData[index].imageFile, setData[index].width, setData[index].height);
+      local setBackground = display.newImageRect(setGroup, SETDESIGNUI('IMAGES_PATH') .. setData[index].imageFile, screenW, screenH);
       --FRC_Layout.placeImage(setBackground, nil, false )  --EFM
       setBackground.x = display.contentCenterX;
       setBackground.y = display.contentCenterY;
@@ -645,7 +657,8 @@ function FRC_Rehearsal_Scene:createScene(event)
          imageFile = backdropData[index].imageFile;
          baseDir = system[backdropData[index].baseDir];
       end
-      local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, backdropData[index].width, backdropData[index].height);
+      --local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, backdropData[index].width, backdropData[index].height);
+      local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, screenW, screenH);
       --backdropBackground.alpha = 0.15
       --backdropBackground.x = centerX
       --backdropBackground.y = centerY
