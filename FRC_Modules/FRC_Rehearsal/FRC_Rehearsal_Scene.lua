@@ -250,18 +250,18 @@ function FRC_Rehearsal_Scene:save(e)
 end
 
 function FRC_Rehearsal_Scene:load(e)
-   --table.print_r(e)   
+   --table.print_r(e)
    if( e.data.setID ) then
       local setDesignData = DATA('SETDESIGN') -- EFM best place?
-      FRC_Rehearsal_Scene.setID = e.data.setID 
+      FRC_Rehearsal_Scene.setID = e.data.setID
       for i = 1, #FRC_SetDesign.saveData.savedItems do
          if(FRC_SetDesign.saveData.savedItems[i].id == FRC_Rehearsal_Scene.setID ) then
-            FRC_Rehearsal_Scene.changeSet(FRC_SetDesign.saveData.savedItems[i].setIndex)            
+            FRC_Rehearsal_Scene.changeSet(FRC_SetDesign.saveData.savedItems[i].setIndex)
             FRC_Rehearsal_Scene.changeBackdrop(FRC_SetDesign.saveData.savedItems[i].backdropName);
          end
-      end      
+      end
    end
-   
+
    --table.dump2(e.data)
    --table.dump2(FRC_Rehearsal_Scene)
    currentSongID = e.data.currentSongID
@@ -417,14 +417,14 @@ function FRC_Rehearsal_Scene:loadShowTime(e)
    --[[
    if( e.data.setID ) then
       local setDesignData = DATA('SETDESIGN') -- EFM best place?
-      FRC_Rehearsal_Scene.setID = e.data.setID 
+      FRC_Rehearsal_Scene.setID = e.data.setID
       for i = 1, #FRC_SetDesign.saveData.savedItems do
          if(FRC_SetDesign.saveData.savedItems[i].id == FRC_Rehearsal_Scene.setID ) then
             FRC_Rehearsal_Scene.changeSet(FRC_SetDesign.saveData.savedItems[i].setIndex)
             FRC_Rehearsal_Scene.changeBackdrop(FRC_SetDesign.saveData.savedItems[i].backdropName);
             curtainIndex = FRC_SetDesign.saveData.savedItems[i].setIndex
          end
-      end      
+      end
    end
    --]]
 
@@ -569,7 +569,7 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
       -- if we are clearing the set, we're done
       print("set index",index); -- DEBUG
-      
+
       FRC_Rehearsal_Scene.setIndex = index
       if (index == 0) then return; end
 
@@ -596,14 +596,14 @@ function FRC_Rehearsal_Scene:createScene(event)
    -- changeSet();
 
    local changeBackdrop = function(name)
-      
+
       local index = 1
       for i = 1, #backdropData do
          if( backdropData[i].id == name ) then
             index = i
          end
       end
-            
+
       -- ArtCenter image set as backdrop, but image was deleted (reset index to 1)
       if (not backdropData[index]) then index = 0; end
       index = index or FRC_Rehearsal_Scene.backdropIndex;
@@ -619,7 +619,7 @@ function FRC_Rehearsal_Scene:createScene(event)
       if (name == "None") then return; end
 
       local frameRect = setGroup[1].frameRect;
-      
+
       local imageFile = SETDESIGNUI('IMAGES_PATH') .. backdropData[index].imageFile;
       local baseDir = system.ResourceDirectory;
       if (backdropData[index].baseDir) then
@@ -628,13 +628,13 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
       --local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, backdropData[index].width, backdropData[index].height);
       local backdropBackground = display.newImageRect(backdropGroup, imageFile, baseDir, screenW, screenH);
-      
+
       backdropBackground.anchorX = 0;
       backdropBackground.anchorY = 0;
       backdropBackground.xScale = (frameRect.width / backdropData[index].width);
       backdropBackground.yScale = (frameRect.height / backdropData[index].height);
       backdropBackground.x = frameRect.left - ((setGroup[1].width - display.contentWidth) * 0.5);
-      backdropBackground.y = frameRect.top - ((setGroup[1].height - display.contentHeight) * 0.5);      
+      backdropBackground.y = frameRect.top - ((setGroup[1].height - display.contentHeight) * 0.5);
    end
    self.changeBackdrop = changeBackdrop;
 
@@ -975,7 +975,9 @@ function FRC_Rehearsal_Scene:createScene(event)
                local self = e.target
                if (self.id == "StopPreview") then
                  FRC_Rehearsal_Scene.stopRehearsalMode();
-                 storyboard.gotoScene('Scenes.Lobby');
+                 if ( sceneMode == "showtime" ) then
+                   storyboard.gotoScene('Scenes.Lobby');
+                 end
                elseif (self.id == "PausePreview") then
                   if( rehearsalContainer.isPlaying == true ) then
                      FRC_Rehearsal_Scene.stopRehearsalMode(true);
@@ -1356,7 +1358,7 @@ function FRC_Rehearsal_Scene:createScene(event)
                if( sceneMode == "showtime" ) then
                   FRC_Rehearsal_Scene:loadShowTime(e);
                else
-                  FRC_Rehearsal_Scene:load(e);                  
+                  FRC_Rehearsal_Scene:load(e);
                end
             end
          });
@@ -1374,7 +1376,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             animationXMLBase      = animationXMLBase,
             animationImageBase    = animationImageBase,
             itemScrollers         = itemScrollers,
-            categoriesContainer   = categoriesContainer } ) 
+            categoriesContainer   = categoriesContainer } )
       FRC_CharacterBuilder.rebuildInstrumenScroller( )
    end
 
@@ -1386,7 +1388,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             animationXMLBase      = animationXMLBase,
             animationImageBase    = animationImageBase,
             itemScrollers         = itemScrollers,
-            categoriesContainer   = categoriesContainer } ) 
+            categoriesContainer   = categoriesContainer } )
       FRC_CharacterBuilder.rebuildInstrumenScroller( )
    end
 
