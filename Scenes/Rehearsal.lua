@@ -138,7 +138,7 @@ function scene.postCreateScene(self, event)
                            end
                         });
                   end
-                  showLoadPopup(); -- TEMP DISABLED UNTIL WE ARCHITECT DATA FORMAT FOR SHOWS
+                  showLoadPopup();
                end
             },
 
@@ -159,7 +159,7 @@ function scene.postCreateScene(self, event)
                         callback = function(e)
                            galleryPopup:dispose();
                            galleryPopup = nil;
-                           scene:publish(e);                           
+                           scene:publish(e);
                         end
                      });
                end

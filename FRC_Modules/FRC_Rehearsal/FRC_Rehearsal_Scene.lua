@@ -1571,12 +1571,21 @@ function FRC_Rehearsal_Scene:createScene(event)
       if( canLoad ) then
          showLoadPopup( true )
       else
-         FRC_CharacterBuilder.easyAlert( "No Saved Shows",
-            "You didn't save any shows yet.\n\nWould you like to go to rehearsal to make a show?",
+        -- commented out because we get into trouble reloading Rehearsal from within itself
+        --[[
+        local canLoadShow = not ((FRC_Rehearsal_Scene.saveData.savedItems == nil) or (#FRC_Rehearsal_Scene.saveData.savedItems < 1));
+         FRC_CharacterBuilder.easyAlert( "No Saved Performances",
+            "You didn't created any performances yet.\n\nWould you like to go to Rehearsal\nto make a show or create a performance?",
             {
-               {"Yes", function() FRC_CharacterBuilder.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad ) end },
+               {"Yes", function() FRC_CharacterBuilder.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoadShow ) end },
                {"No", function() storyboard.gotoScene('Scenes.Lobby') end },
                } )
+        --]]
+        FRC_CharacterBuilder.easyAlert( "No Saved Performances",
+           "You didn't created any performances yet.\n\nPlease go to Rehearsal to make a show or create a performance.",
+           {
+              {"OK", function() storyboard.gotoScene('Scenes.Lobby') end },
+              } )
       end
    end
 
