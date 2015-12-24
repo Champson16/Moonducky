@@ -105,14 +105,31 @@ function scene.postCreateScene(self, event)
 				onRelease = function(e)
 					local function showLoadPopup()
 						local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
+            -- only show same character
+						local characters = {};
+						local characterType = scene:getSelectedCharacter();
+						local characterData;
+						if (characterType) then
+					    local savedItems = scene.saveData.savedItems;
+					    for i = 1, #savedItems do
+					       local current = savedItems[i]
+					       if( current.character == characterType ) then
+					          characters[#characters+1] = current
+					       end
+					    end
+							characterData = characters;
+						else
+							-- if no character filter was applied, by default show all of the characters
+							characterData = scene.saveData.savedItems;
+						end
 						local galleryPopup;
-						galleryPopup = FRC_GalleryPopup.new({
+            galleryPopup = FRC_GalleryPopup.new({
 							title = FRC_DressingRoom_Settings.DATA.LOAD_PROMPT,
 							isLoadPopup = true,
 							hideBlank = true,
 							width = screenW * 0.75,
 							height = screenH * 0.75,
-							data = scene.saveData.savedItems,
+							data = characterData,
 							callback = function(e)
 								galleryPopup:dispose();
 								galleryPopup = nil;

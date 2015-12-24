@@ -11,6 +11,7 @@ local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
 local character_x = 0;
 local character_y = -16;
 local eyeTimer;
+local selectedCharacter = '';
 
 --
 -- Localize some common screen dimmensions
@@ -198,7 +199,6 @@ function FRC_DressingRoom_Scene:createScene(event)
 	end
 
 	local layers = {};
-	local selectedCharacter = '';
 
 	-- create a new layer for each category, manually creating the first (character)
 	-- at the bottom of the layer stack
@@ -797,6 +797,10 @@ function FRC_DressingRoom_Scene:createScene(event)
 	if (FRC_DressingRoom_Scene.postCreateScene) then
 		FRC_DressingRoom_Scene:postCreateScene(event);
 	end
+end
+
+function FRC_DressingRoom_Scene:getSelectedCharacter()
+  return selectedCharacter;
 end
 
 function FRC_DressingRoom_Scene:enterScene(event)
