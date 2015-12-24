@@ -136,10 +136,6 @@ function public.init( params )
    params.view.setDesignGroup:insert( stagePieces )
 
    private.attachTouchClear()
-
-   --dprint(">>>>>>>>>>>>>>>>>>>>>>>>>", songTitles[currentSongID] )
-
-   --timer.performWithDelay( 1000, public.getShowTitle )
 end
 
 
@@ -158,12 +154,7 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
       self:toFront()
       group2:toFront()
    end
-   Runtime:addEventListener( "enterFrame", group ) -- EDOCHI
-
-   --local back = display.newRect( centerX, centerY, 10000, 10000 )
-   --back:setFillColor(0)
-   --back.alpha = 0
-   --transition.to( back, { alpha = 0.2, time = 500 } )
+   Runtime:addEventListener( "enterFrame", group )
 
    local blur = private.easyBlur( group, 500, { 0, 0.4, 0.4, 0.8 } ) --  time, color )
    blur.touch = function( self, event )
@@ -269,7 +260,6 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
          if( event.phase == "ended" ) then
             display.currentStage:setFocus( self, nil )
             self.isFocus = false
-            --table.print_r(self)
             if( isWithinBounds ) then
                if( self.cb ) then self.cb() end
             end
@@ -322,13 +312,8 @@ function public.getShowTitle( onSuccess, onCancel )
       end
       self:toFront()
    end
-   Runtime:addEventListener( "enterFrame", group ) -- EDOCHI
-
-   --local back = display.newRect( centerX, centerY, 10000, 10000 )
-   --back:setFillColor(0)
-   --back.alpha = 0
-   --transition.to( back, { alpha = 0.2, time = 500 } )
-
+   Runtime:addEventListener( "enterFrame", group ) 
+   
    local blur = private.easyBlur( group, 500, { 0, 0.4, 0.4, 0.8 } ) --  time, color )
    blur.touch = function( self, event )
       return true
@@ -417,7 +402,6 @@ function public.getShowTitle( onSuccess, onCancel )
          if( event.phase == "ended" ) then
             display.currentStage:setFocus( self, nil )
             self.isFocus = false
-            --table.print_r(self)
             if( isWithinBounds ) then
                if( self.cb ) then self.cb() end
             end
@@ -440,10 +424,6 @@ end
 -- save() - Save all stage elements (excluding stage backdrop which is handled in FRC_Rehearsal_Scene.)
 --
 function public.save(saveTable, publishingMode)
-   --table.print_r(saveTable)
-
-   --dprint("PUBLISHING?", publishingMode)
-
    currentStagePiece = nil
    private.highlightSelected()
 
@@ -466,13 +446,11 @@ function public.save(saveTable, publishingMode)
             record.characterID = stagePiece.characterID
          else
             record.characterID   = private.getDressingRoomDataByID( stagePiece.characterID, 0 )
-         end
-         --table.print_r(record.characterID)
+         end         
       end
       record.publishingMode   = publishingMode
       savePieces[#savePieces+1] = record
    end
-   --table.print_r( savePieces )
 end
 
 
@@ -480,21 +458,16 @@ end
 -- load() - Load and restore all stage elements (excluding stage backdrop which is handled in FRC_Rehearsal_Scene.)
 --
 function public.load(loadTable)
-   --dprint("LOADING>>>>")
-   --table.print_r(loadTable)
-
    public.cleanup()
 
    local restorePieces = loadTable.stagePieces or {}
    for i = 1, #restorePieces do
       local curPiece = restorePieces[i]
-      --table.dump2( curPiece,nil, "LOADING " .. tostring(i) .. " " .. tostring(curPiece.pieceType))
-
       if( curPiece.pieceType == "instrument" ) then
          public.placeNewInstrument( curPiece.x, curPiece.y, curPiece.instrument )
 
       elseif( curPiece.pieceType == "character" ) then
-         public.placeNewCharacter(  curPiece.x, curPiece.y, curPiece.characterID, curPiece.instrument, 1 ) -- curPiece.danceNumber  ) -- EDOCHI4
+         public.placeNewCharacter(  curPiece.x, curPiece.y, curPiece.characterID, curPiece.instrument, 1 )
       end
    end
 
@@ -557,7 +530,7 @@ function public.placeNewInstrument( x, y, instrumentName )
       private.easyAlert( "Duplicate instrument",
          "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage.",
          { {"OK", nil} } )
-      dprint("Duplicate instrument", "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage." )
+      --dprint("Duplicate instrument", "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage." )
       return
    end
 
@@ -600,12 +573,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
       characterData = private.getDressingRoomDataByID( characterID, 0 )
    end
 
-   --table.print_r(characterData)
-
    local animalType           = characterData.character
-   -- ***************************************** -- EFM - TEMPORARY
-   --animalType = ( animalType ~= "Chicken" and animalType ~= "Cat" ) and "Chicken" or animalType
-   -- *****************************************
    danceNumber                = private.getNextDanceNum() -- danceNumber or mRand(1,2)
    
    if( instrumentName and string.match( string.lower(instrumentName), "dance" ) ) then
@@ -728,8 +696,6 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
       animGroup:insert(animationSequences[i])
    end
 
-   --table.print_r(animationsToBuild)
-
    stagePiece:scale(characterScale,characterScale)
    private.attachDragger(stagePiece)
 
@@ -746,12 +712,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
 
    private.highlightSelected()
 
-   --dprint("Conga in use?", public.getInstrumentInUse( "Conga" ) )
-   --table.dump2( public.getInstrumentsInUse() )
-
    return stagePiece
-
-   --return animationSequences
 end
 
 --
@@ -775,7 +736,7 @@ function public.rebuildInstrumenScroller( )
    local songInstruments = instrumentData[1]
    for i = 1, #instrumentData do
       if( instrumentData[i].id == songID ) then
-         dprint("Selected instrument data for ", i, songID )
+         --dprint("Selected instrument data for ", i, songID )
          songInstruments = instrumentData[i]
       end
    end
@@ -818,14 +779,10 @@ function public.rebuildInstrumenScroller( )
 
    x = x + (button.contentWidth * 0.5) + (button_spacing * 1.5)
 
-   --table.print_r(songInstruments)
-
    -- for now, just grab the first song's instrument list
    songInstruments = songInstruments.instruments
    for i=1,#songInstruments do
-      --dprint("EDOCHI", songInstruments[i].id)
       buttonHeight = scroller.contentHeight - button_spacing
-      --table.dump2(songInstruments[i]) --EFM
       local button = ui.button.new({
             id = songInstruments[i].id,
             imageUp = UI('IMAGES_PATH') .. songInstruments[i].imageUp,
@@ -900,10 +857,8 @@ function public.rebuildCostumeScroller( )
          pressAlpha = 0.5,
          --baseDirectory = system.DocumentsDirectory,
          onRelease = function(e)
-            local self = e.target
-            table.dump2( curChar )
+            local self = e.target            
             private.scrollerCostumeTouch( curChar )
-
             return true
          end
       })
@@ -934,10 +889,8 @@ function public.rebuildCostumeScroller( )
             pressAlpha = 0.5,
             --baseDirectory = system.DocumentsDirectory,
             onRelease = function(e)
-               local self = e.target
-               table.dump2( curChar )
+               local self = e.target               
                private.scrollerCostumeTouch( curChar )
-
                return true
             end
          })
@@ -968,9 +921,7 @@ function public.rebuildCostumeScroller( )
          --baseDirectory = system.DocumentsDirectory,
          onRelease = function(e)
             local self = e.target
-            table.dump2( curChar )
             private.scrollerCostumeTouch( curChar )
-
             return true
          end
       })
@@ -988,7 +939,6 @@ function public.rebuildCostumeScroller( )
       local buttonScale = 0.50 * FRC_Layout.getScaleFactor()
       local filePath = curChar.id .. curChar.thumbSuffix
 
-      table.dump2(curChar)
       local button
       button = ui.button.new({
             id = curChar.id,
@@ -1003,9 +953,7 @@ function public.rebuildCostumeScroller( )
             baseDirectory = system.DocumentsDirectory,
             onRelease = function(e)
                local self = e.target
-               table.dump2( curChar )
                private.scrollerCostumeTouch( curChar )
-
                return true
             end
          })
@@ -1067,7 +1015,7 @@ end
 --
 function public.getCharactersOnStage()
    local tmp = {}
-   dprint("getCharactersOnStage()", stagePieces.numChildren )
+   --dprint("getCharactersOnStage()", stagePieces.numChildren )
    for i = 1, stagePieces.numChildren do
       local curPiece = stagePieces[i]
       if( curPiece and  curPiece.pieceType == "character" ) then
@@ -1081,24 +1029,31 @@ end
 --
 -- playStageCharacters() - Make all characters on stage play.
 --
-function public.playStageCharacters( instrumentTrackStartOffsets )
-   table.dump2( instrumentTrackStartOffsets, nil, "playStageCharacters() - EDOCHI4" )
+function public.playStageCharacters( instrumentTrackStartOffsets, expectedEndTime )
+   --dprint("expectedEndTime == ", expectedEndTime)
    local charactersOnStage = public.getCharactersOnStage()
-   --table.print_r( charactersOnStage )
 
    for i = 1, #charactersOnStage do
       local animationSequences = charactersOnStage[i].animationSequences
       
       local myInstrument = string.lower(charactersOnStage[i].instrument)
       local instrumentOffset = 30 -- default start offset for no instrument     
+      local instrumentEndTime = math.huge -- Dancers never stop dancing! Woohoo!
       for k,v in pairs(instrumentTrackStartOffsets) do
          if( string.match( k, myInstrument ) ) then
-            instrumentOffset = tonumber(v)
+            instrumentOffset  = tonumber(v.startOffset)
+            instrumentEndTime = tonumber(v.trackEndTime)
          end
       end      
-      dprint( i, myInstrument, instrumentOffset )
       
-      local params = { intervalTime = math.random( 30, 40 ), iterations = math.random( 1, 3 ), instrumentOffset = instrumentOffset } -- EDOCHI4 (sounds lagging animations) are late 
+      --dprint( i, myInstrument, instrumentOffset, instrumentEndTime )
+      
+      local params = { intervalTime       = math.random( 30, 40 ), 
+                       iterations         = math.random( 1, 3 ), 
+                       instrumentOffset   = instrumentOffset,
+                       instrumentEndTime  = instrumentEndTime,
+                       isFirstCall        = true,
+                       showEndTime        = expectedEndTime}
 
       local startTime = system.getTimer()
       for j = 1, #animationSequences do         
@@ -1114,8 +1069,8 @@ end
 --
 
 function public.stopStageCharacters()
+   --dprint("stopStageCharacters()")
    local charactersOnStage = public.getCharactersOnStage()
-   --table.print_r( charactersOnStage )
 
    for i = 1, #charactersOnStage do
       local animationSequences = charactersOnStage[i].animationSequences
@@ -1159,7 +1114,7 @@ function private.getDressingRoomDataByAnimalType( characterType, debugLevel )
    local allSaved = table.load( dressingRoomDataPath ) or {}
    if( not allSaved.savedItems ) then
       if( debugLevel and debugLevel > 0 ) then
-         dprint("No characters/costumes saved, can't search for this animal type: ", characterType )
+         --dprint("No characters/costumes saved, can't search for this animal type: ", characterType )
          private.easyAlert( "No saved costumes",
             "No characters/costumes saved, can't search for this animal type: " ..
             tostring(characterType) .. "\n\n Please go save some costumes first.",
@@ -1181,11 +1136,11 @@ function private.getDressingRoomDataByAnimalType( characterType, debugLevel )
             tostring(characterType) .. "\n\n Please go save some costumes first.",
             { {"OK", nil} } )
       end
-      dprint("Found ", tostring(#characters), " of characters/costumes of this type: ", characterType )
+      --dprint("Found ", tostring(#characters), " of characters/costumes of this type: ", characterType )
    end
    if( debugLevel and debugLevel > 1 ) then
       table.print_r(characters)
-      dprint("getDressingRoomDataByAnimalType()")
+      --dprint("getDressingRoomDataByAnimalType()")
    end
 
    return characters
@@ -1203,7 +1158,7 @@ function private.getDressingRoomDataByID( id, debugLevel )
             tostring(id) .. "\n\n Please go save some costumes first.",
             { {"OK", nil} } )
 
-         dprint("No characters/costumes saved, can't search for this id: ", id )
+         --dprint("No characters/costumes saved, can't search for this id: ", id )
       end
       return nil
    end
@@ -1211,7 +1166,7 @@ function private.getDressingRoomDataByID( id, debugLevel )
    for i = 1, #savedItems do
       local current = savedItems[i]
       if( current.id == id ) then
-         dprint("Found character by ID: ", id )
+         --dprint("Found character by ID: ", id )
          return current
       end
    end
@@ -1302,9 +1257,8 @@ function private.scrollerCostumeTouch( data )
       elseif( data.id == "mysterybox" ) then
          local character = data.characters[mRand(1,#data.characters)]
          public.placeNewCharacter( nil, nil, character.id)
-         dprint( "Mystery Box" )
+         --dprint( "Mystery Box" )
       else
-         --table.print_r(data)
          public.placeNewCharacter( nil, nil, data.id)
       end
    end
@@ -1312,83 +1266,6 @@ function private.scrollerCostumeTouch( data )
    return false
 end
 
---[[
---
--- Scroller Costume Touch Handler
---
-function private.scrollerCostumeTouch( self, event )
-   if( event.phase == "began" ) then
-      display.currentStage:setFocus( self, event.id )
-      self.isFocus = true
-   elseif( self.isFocus ) then
-      local bounds = self.stageBounds
-      local x,y = event.x, event.y
-      local isWithinBounds =
-         bounds.xMin <= x and bounds.xMax >= x and bounds.yMin <= y and bounds.yMax >= y
-
-      if( event.phase == "ended" ) then
-         display.currentStage:setFocus( self, nil )
-         self.isFocus = false
-         --table.print_r(self)
-         if( isWithinBounds ) then
-
-            if( currentStagePiece ) then
-               if( currentStagePiece.pieceType == "instrument" ) then -- MODIFYING INSTRUMENT
-                  if( self.data.id == "none" ) then
-                     -- Do nothing
-                  elseif( self.data.id == "nocostume" ) then
-                     private.replaceWithCharacter( currentStagePiece, self.data )
-
-                  elseif( self.data.id == "mysterybox" ) then
-                     local character = self.data.characters[mRand(1,#self.data.characters)]
-                     private.replaceWithCharacter( currentStagePiece, character.id )
-
-                  else
-                     private.replaceWithCharacter( currentStagePiece, self.data.id )
-                  end
-
-               else -- MODIFYING CHARACTER
-                  if( self.data.id == "none" ) then
-                     -- Remove character
-                     instrumentsInUse[currentStagePiece.instrument] = nil
-                     display.remove(currentStagePiece)
-                     currentStagePiece = nil
-                     private.highlightSelected()
-
-                  elseif( self.data.id == "nocostume" ) then
-                     private.replaceWithCharacter( currentStagePiece, self.data )
-
-                  elseif( self.data.id == "mysterybox" ) then
-                     local character = self.data.characters[mRand(1,#self.data.characters)]
-                     private.replaceWithCharacter( currentStagePiece, character.id )
-
-                  else
-                     private.replaceWithCharacter( currentStagePiece, self.data.id)
-                  end
-               end
-
-            else -- CREATING CHARACTER
-               if( self.data.id == "none" ) then
-                  -- Do nothing
-               elseif( self.data.id == "nocostume" ) then
-                  public.placeNewCharacter( nil, nil, self.data )
-
-               elseif( self.data.id == "mysterybox" ) then
-                  local character = self.data.characters[mRand(1,#self.data.characters)]
-                  public.placeNewCharacter( nil, nil, character.id)
-                  dprint( "Mystery Box" )
-               else
-                  --table.print_r(self.data)
-                  public.placeNewCharacter( nil, nil, self.data.id)
-               end
-            end
-
-         end
-      end
-   end
-   return false
-end
---]]
 --
 -- Common Drag & Drop Handler
 --
@@ -1402,7 +1279,7 @@ function private.attachDragger( obj )
 end
 function private.dragNDrop( self, event )
    if( not editingEnabled ) then
-      dprint("Editing disabled", editingEnabled)
+      --dprint("Editing disabled", editingEnabled)
       return
    end
    if( event.phase == "began" ) then
@@ -1431,7 +1308,6 @@ function private.dragNDrop( self, event )
       local myLeft = self.x - 70
       local myRight = self.x + 70
       
-      dprint(myLeft, private.left)
       if( (dx < 0 and myLeft > private.left) or
          (dx > 0 and myRight < private.right ) ) then
          self.x = self.x + dx * (self.dragScale and self.dragScale or 1)
@@ -1665,39 +1541,11 @@ function private.getXMLFileNames( animalType )
    return xmlFiles
 end
 
---[[
---
--- readXML() - Extracted XML reader (from animationManager) (EFM - Needs additional changes when I fix LUA bug)
---
-function private.readXML( fileName, baseXMLDir )
-   dprint( "-------------------------------------", fileName, baseXMLDir )
-   --
-   -- 1. Try to find and load an existing lua table version of XML file
-   --
-   fileName = strGSub( fileName, "%.xml", "" )
-   local luaPath = strGSub( baseXMLDir .. fileName, "%/", "." )
-   local luaFileExists = pcall( require, luaPath )
-   if( luaFileExists ) then
-      return require( luaPath )
-   end
-
-   --
-   -- 2. Failing that, read the XML file, save a lua file to the DocumentsDirectory and return xml table.
-   --
-   local xmlPath  = baseXMLDir .. fileName .. ".xml"
-   local xmltable = FRC_AnimationManager.loadXMLData( xmlPath, system.ResourceDirectory );
-   --local xmltable = FRC_AnimationManager.loadXMLData( fileName .. ".xml", baseXMLDir );
-   table.save( xmltable, fileName )
-
-   return xmltable
-end
---]]
-
 --
 -- getPartsList() - Get the parts list for this unified animation file (so we can parse and manipulate it).
 --
 function private.getPartsList( sourceFile, animationXMLBase, debugEn )
-   dprint( sourceFile, animationXMLBase, debugEn )
+   --dprint( sourceFile, animationXMLBase, debugEn )
    local xmltable = FRC_AnimationManager.loadAnimationDataUnified( sourceFile, animationXMLBase  )
    local partsList = xmltable.Animation.Part
    if( debugEn == true ) then
@@ -1741,11 +1589,10 @@ function private.createUnifiedAnimationClipGroup( sourceFile, unifiedData, anima
 end
 
 --
--- playAllAnimations() - Plays all of the character's animations (EFM needs work)
+-- playAllAnimations() - Plays all of the character's animations 
 --
-function private.playAllAnimations( animationSequences, num, autoLoop, params ) -- EDOCHI4
-   params = params or { intervalTime = 30, iterations = 1, instrumentOffset = 30 }
-   --dprint("BING @ ", num, animationSequences.completed, system.getTimer())
+function private.playAllAnimations( animationSequences, num, autoLoop, params ) 
+   params = params or { intervalTime = 30, iterations = 1, instrumentOffset = 30, instrumentEndTime = 10000 }
    num = num or mRand(1,#animationSequences)
    local sequence    = animationSequences[num]
 
@@ -1753,7 +1600,6 @@ function private.playAllAnimations( animationSequences, num, autoLoop, params ) 
    local totalClips  = sequence.numChildren
 
    if( num == 1 ) then
-      --dprint("Created completed!")
       animationSequences.completed = {}
    end
 
@@ -1767,38 +1613,65 @@ function private.playAllAnimations( animationSequences, num, autoLoop, params ) 
       local obj = sequence[i]
 
       local function onCompletionGate()
-         --dprint("DONG @ ", #completed, completedIndex, system.getTimer())
-         --dprint("onCompletionGate #", i, " ended @ ", system.getTimer())
-         --table.dump2(completed)
-
          completed[completedIndex] = true
          
+         if(obj.removeSelf == nil or obj.stop == nil) then return end
          obj:stop(obj.frameCount)
 
          local executeOnComplete = true
          for j = 1, #completed do
             executeOnComplete = executeOnComplete and completed[j]
          end
+         
          if( executeOnComplete ) then
             timer.performWithDelay( framePeriod * 2, 
                function()
-               --local params2 =  { intervalTime = math.random( 30, 40 ), iterations = math.random( 1, 3 ), instrumentOffset = math.random( 500, 2000 ) }
+                  --[[
+                  local params2 =  { intervalTime        = math.random( 30, 40 ), 
+                                     iterations          = math.random( 1, 3 ), 
+                                     instrumentOffset    = math.random( 500, 2000 ), 
+                                     instrumentEndTime   = params.instrumentEndTime }
+                  --]]
                -- EFM I occasionally see tearing if I randomize intervalTimes on each replay.
-               local params2 =  { intervalTime = params.intervalTime, iterations = math.random( 1, 3 ), instrumentOffset = math.random( 500, 2000 ) }
+               local params2 =  { intervalTime        = params.intervalTime, 
+                                  iterations          = math.random( 1, 3 ), 
+                                  instrumentOffset    = math.random( 500, 2000 ),
+                                  instrumentEndTime   = params.instrumentEndTime}
                local startTime = system.getTimer()
                for k = 1, #animationSequences do               
-                  timer.performWithDelay( 500, private.playAllAnimations( animationSequences, k, autoLoop, params2 ) )
+                  timer.performWithDelay( 500, 
+                     function()
+                        if(obj.removeSelf == nil or obj.stop == nil) then return end
+                        private.playAllAnimations( animationSequences, k, autoLoop, params2 ) 
+                     end )
                end
                local endTime = system.getTimer()
                --dprint("Duration to call ", #animationSequences, " playAllAnimations() ", endTime-startTime )             
             end )
          end
-         --table.dump2(completed)
       end
 
 
-      
-      --dprint( "intervalTime, iterations, instrumentOffset == ", params.intervalTime, params.iterations, params.instrumentOffset, system.getTimer() )
+      --[[
+      dprint( "intervalTime, iterations, instrumentOffset, instrumentEndTime == ", params.intervalTime, 
+              params.iterations, params.instrumentOffset, params.instrumentEndTime, system.getTimer() )
+      --]]
+      if( params.isFirstCall ) then
+         obj._startedPlayingAt = system.getTimer()         
+         if(obj._stopTimer) then 
+            timer.cancel( obj._stopTimer )            
+         end
+         local stopTime = params.instrumentEndTime
+         if( stopTime > params.showEndTime ) then 
+            stopTime = params.showEndTime
+         end
+         obj._stopTimer = timer.performWithDelay( stopTime,
+            function()
+               obj._stopTimer = nil
+               if(obj.removeSelf == nil or obj.stop == nil) then return end
+               obj:stop(obj.currentIndex)
+            end )
+      end
       obj:play({
             showLastFrame     = not(autoLoop),
             playBackward      = false,
@@ -2006,7 +1879,6 @@ end
 --
 function private.attachTouchClear()
    function view.touch( self, event )
-      --table.dump2(event)
       if( event.phase == "ended" ) then
          currentStagePiece = nil
          private.highlightSelected()
@@ -2022,7 +1894,7 @@ end
 -- getNextDanceNum() - Alternate dance numbers instead of relying on random.
 --
 function private.getNextDanceNum()
-   dprint("BOB", lastDanceNum )
+   --dprint("getNextDanceNum()", lastDanceNum )
    lastDanceNum = lastDanceNum + 1
    if(lastDanceNum > 2 ) then
       lastDanceNum = 1

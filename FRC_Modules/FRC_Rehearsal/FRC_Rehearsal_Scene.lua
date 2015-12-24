@@ -69,26 +69,24 @@ local songTrackTimers = {};
 ----[[ EFM - MOVED TO --> DATA('SONG_TRACK_OFFSETS')
 --local
 songTrackOffsetData = {
-  hamsters_bass                     = 3797,
-  hamsters_conga                    = 2208,
-  hamsters_guitar                   = 3045,
-  hamsters_harmonica                = 3449,
-  hamsters_maracas                  = 1100,
-  hamsters_microphone               = 4151,
-  hamsters_rhythmcombocheesegrater  = 2777,
-  hamsters_sticks                   = 1897,
+   hamsters_bass                     = 3797,
+   hamsters_conga                    = 2208,
+   hamsters_guitar                   = 3045,
+   hamsters_harmonica                = 3449,
+   hamsters_maracas                  = 1100,
+   hamsters_microphone               = 4151,
+   hamsters_rhythmcombocheesegrater  = 2777,
+   hamsters_sticks                   = 1897,
 
-  mechanicalcow_bass                = 1431,
-  mechanicalcow_conga               = 5012,
-  mechanicalcow_guitar              = 1502,
-  mechanicalcow_harmonica           = 3993,
-  mechanicalcow_microphone          = 9249,
-  mechanicalcow_piano               = 1775,
-  mechanicalcow_rhythmcombocymbal    = 0
+   mechanicalcow_bass                = 1431,
+   mechanicalcow_conga               = 5012,
+   mechanicalcow_guitar              = 1502,
+   mechanicalcow_harmonica           = 3993,
+   mechanicalcow_microphone          = 9249,
+   mechanicalcow_piano               = 1775,
+   mechanicalcow_rhythmcombocymbal    = 0
 };
 --]]
-
-table.dump2(songTrackOffsetData, nil, "EDOCHI4")
 
 -- load up the audio tracks for Hamsters song
 FRC_AudioManager:newHandle({
@@ -281,7 +279,6 @@ function FRC_Rehearsal_Scene:save(e)
 end
 
 function FRC_Rehearsal_Scene:load(e)
-   --table.print_r(e)
    if( e.data.setID ) then
       local setDesignData = DATA('SETDESIGN') -- EFM best place?
       FRC_Rehearsal_Scene.setID = e.data.setID
@@ -293,8 +290,6 @@ function FRC_Rehearsal_Scene:load(e)
       end
    end
 
-   --table.dump2(e.data)
-   --table.dump2(FRC_Rehearsal_Scene)
    currentSongID = e.data.currentSongID
 
    FRC_CharacterBuilder.init( {
@@ -304,7 +299,7 @@ function FRC_Rehearsal_Scene:load(e)
          animationImageBase    = animationImageBase,
          itemScrollers         = itemScrollers,
          showTimeMode          = ( sceneMode == "showtime"),
-         categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
+         categoriesContainer   = categoriesContainer } )
    FRC_CharacterBuilder.rebuildInstrumenScroller( )
    FRC_CharacterBuilder.load(e.data)
 
@@ -317,13 +312,10 @@ function FRC_Rehearsal_Scene:load(e)
             animationImageBase    = animationImageBase,
             itemScrollers         = itemScrollers,
             showTimeMode          = false,
-            categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
+            categoriesContainer   = categoriesContainer } ) 
       FRC_CharacterBuilder.rebuildInstrumenScroller( )
       FRC_Rehearsal_Scene.changeSet(0)
       FRC_Rehearsal_Scene.changeBackdrop("None");
-      --FRC_SetDesign.saveData.savedItems = {}
-      --table.print_r(FRC_SetDesign.saveData)
-      --table.print_r(FRC_SetDesign)
       FRC_Rehearsal_Scene.setIndex = nil
       FRC_Rehearsal_Scene.backdropName = nil
       FRC_Rehearsal_Scene.setID = nil
@@ -338,7 +330,7 @@ function FRC_Rehearsal_Scene:publish(e)
    if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)) end
 
    local function completeSave( songTitle, showTitle )
-      dprint( "completeSave() ",  songTitle, showTitle )
+      --dprint( "completeSave() ",  songTitle, showTitle )
       --local saveGroup = self.view.setDesignGroup --EFM
       local saveGroup = self.view._content --EFM
 
@@ -462,24 +454,9 @@ function FRC_Rehearsal_Scene:publish(e)
 end
 
 function FRC_Rehearsal_Scene:loadShowTime(e)
-   --table.print_r(e)
    local curtainIndex = e.data.setIndex or 1
    FRC_Rehearsal_Scene.changeSet(e.data.setIndex or 0)
    FRC_Rehearsal_Scene.changeBackdrop(e.data.backdropName or "None");
-
-   --[[
-   if( e.data.setID ) then
-      local setDesignData = DATA('SETDESIGN') -- EFM best place?
-      FRC_Rehearsal_Scene.setID = e.data.setID
-      for i = 1, #FRC_SetDesign.saveData.savedItems do
-         if(FRC_SetDesign.saveData.savedItems[i].id == FRC_Rehearsal_Scene.setID ) then
-            FRC_Rehearsal_Scene.changeSet(FRC_SetDesign.saveData.savedItems[i].setIndex)
-            FRC_Rehearsal_Scene.changeBackdrop(FRC_SetDesign.saveData.savedItems[i].backdropName);
-            curtainIndex = FRC_SetDesign.saveData.savedItems[i].setIndex
-         end
-      end
-   end
-   --]]
 
    currentSongID = e.data.currentSongID
 
@@ -490,11 +467,11 @@ function FRC_Rehearsal_Scene:loadShowTime(e)
          animationImageBase    = animationImageBase,
          itemScrollers         = itemScrollers,
          showTimeMode          = ( sceneMode == "showtime"),
-         categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
+         categoriesContainer   = categoriesContainer } )
    FRC_CharacterBuilder.rebuildInstrumenScroller( )
    FRC_CharacterBuilder.load(e.data)
 
-   -- Showtime Work EFM EDOCHI
+   -- Showtime Work
    if( sceneMode == "showtime") then
       FRC_CharacterBuilder:stopStageCharacters()
       FRC_CharacterBuilder.setEditEnable( true )
@@ -508,13 +485,31 @@ function FRC_Rehearsal_Scene:loadShowTime(e)
       FRC_Rehearsal_Scene.startRehearsalMode( 1500, false )
 
       transition.to( curtain, { y = curtain.y0 - screenH, delay = 1000, time = 1500, transition = easing.inCirc } ) -- , onComplete = onComplete } )
-   
+
       function FRC_Rehearsal_Scene.replayCurtains( downUpTime, tweenDelay )       
          FRC_Rehearsal_Scene.stopRehearsalMode( false )
          transition.cancel( curtain )
+         if( math.abs(curtain.y - centerY) < 2 ) then
+            transition.to( curtain, { y = curtain.y0 - screenH, delay = 0, time = downUpTime/2, transition = easing.inCirc } )         
+         else
+            curtain.y = curtain.y0 - screenH
+            transition.to( curtain, { y = curtain.y0 , delay = 0, time = downUpTime/2, transition = easing.outCirc } ) 
+            transition.to( curtain, { y = curtain.y0 - screenH, delay = downUpTime + tweenDelay, time = downUpTime/2, transition = easing.inCirc } )         
+         end
+      end   
+   
+      function FRC_Rehearsal_Scene.closeCurtains( downTime  )       
+         transition.cancel( curtain )
          curtain.y = curtain.y0 - screenH
-         transition.to( curtain, { y = curtain.y0 , delay = 0, time = downUpTime/2, transition = easing.outCirc } ) 
-         transition.to( curtain, { y = curtain.y0 - screenH, delay = downUpTime + tweenDelay, time = downUpTime/2, transition = easing.inCirc } )         
+         local function onComplete( self )
+            if( self.removeSelf == nil ) then  return end            
+            FRC_Rehearsal_Scene.stopRehearsalMode( false )
+            timer.performWithDelay( 500,
+               function()
+                  storyboard.gotoScene('Scenes.Lobby', { effect="crossFade", time=1000 })                  
+               end)
+         end
+         transition.to( curtain, { y = curtain.y0 ,  time = downTime, transition = easing.outCirc, onComplete = onComplete } )          
       end   
    end   
 end
@@ -532,7 +527,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    if ((not self.id) or (self.id == '')) then self.id = FRC_Util.generateUniqueIdentifier(20) end
 
    -- DEBUG:
-   dprint("FRC_Rehearsal_Scene - createScene() sceneMode == ", sceneMode)
+   --dprint("FRC_Rehearsal_Scene - createScene() sceneMode == ", sceneMode)
 
    if ((self.preCreateScene) and (type(self.preCreateScene) == 'function')) then
       self.preCreateScene(self, event);
@@ -554,17 +549,14 @@ function FRC_Rehearsal_Scene:createScene(event)
    self.saveData = DATA('DATA_FILENAME', system.DocumentsDirectory)
    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal').saveData = FRC_DataLib.readJSON(saveDataFilename, system.DocumentsDirectory)
 
-
-   -- EDOCHI2
    local publishDataFileName = FRC_Rehearsal_Settings.DATA.PUBLISH_FILENAME
    local publishData = FRC_DataLib.readJSON(publishDataFileName, system.DocumentsDirectory) or { savedItems = {} }
    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal').publishData = publishData
    self.publishData = publishData
-   --table.dump2( self, nil, "EDOCHI2")
 
 
    -- TRS EFM - Please, see changes/notes below.
-
+   
    -- 1. Create a set of standard rendering layers
    FRC_Layout.createLayers( view )
 
@@ -576,7 +568,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    --FRC_Layout.setRefDimensions( UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT') )
 
    -- 3. Create a background
-   local bg = display.newImageRect(view._content, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT')); --EDOCHI
+   local bg = display.newImageRect(view._content, UI('SCENE_BACKGROUND_IMAGE'), UI('SCENE_BACKGROUND_WIDTH'), UI('SCENE_BACKGROUND_HEIGHT'));
 
    -- 4. Scale first
    FRC_Layout.scaleToFit( bg )
@@ -609,7 +601,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    end
 
    local setScale = 1;
-   local setDesignGroup = display.newGroup(); view._content:insert(setDesignGroup); --EDOCHI
+   local setDesignGroup = display.newGroup(); view._content:insert(setDesignGroup); 
    view.setDesignGroup = setDesignGroup;
    local backdropGroup = display.newGroup(); view.setDesignGroup:insert(backdropGroup);
    local setGroup = display.newGroup(); view.setDesignGroup:insert(setGroup);
@@ -642,7 +634,7 @@ function FRC_Rehearsal_Scene:createScene(event)
 
       local xs = display.actualContentWidth/setBackground.contentWidth
       local ys = display.actualContentHeight/setBackground.contentHeight
-      dprint(backdropData[index].width, backdropData[index].height,xs,ys);
+      --dprint(backdropData[index].width, backdropData[index].height,xs,ys);
       if( xs > ys ) then
          setScale = xs
       else
@@ -706,10 +698,10 @@ function FRC_Rehearsal_Scene:createScene(event)
       local bdScale = setScale
       -- EFM Initially I thought it was just custom images, but I see it in some default images too, when coupled with certain stages.
       --if( string.len(name) > 18 ) then -- custom backdrop
-         --bdScale = bdScale + 0.05
+      --bdScale = bdScale + 0.05
       --end
       --if( bdScale > 1 ) then
-         bdScale = bdScale + 0.04
+      bdScale = bdScale + 0.04
       --end
 
       --backdropBackground.anchorX = 0;
@@ -724,7 +716,7 @@ function FRC_Rehearsal_Scene:createScene(event)
       -- EFM TEMPORARY FIX - There is a discrepancy in scaling right now. Maybe rounding?  So, I'm rounding up a little
 
       backdropBackground:scale(bdScale,bdScale)
-      dprint("bdScale", bdScale, string.len( name ), name )
+      --dprint("bdScale", bdScale, string.len( name ), name )
    end
    self.changeBackdrop = changeBackdrop;
 
@@ -732,9 +724,9 @@ function FRC_Rehearsal_Scene:createScene(event)
    local categoryData = DATA('CATEGORY')
    local rehearsalPlaybackData;
    if (sceneMode == "showtime") then
-     rehearsalPlaybackData = DATA('SHOWTIME')
+      rehearsalPlaybackData = DATA('SHOWTIME')
    else
-     rehearsalPlaybackData = DATA('REHEARSAL')
+      rehearsalPlaybackData = DATA('REHEARSAL')
    end
    local setDesignData = DATA('SETDESIGN')
    local instrumentData = DATA('INSTRUMENT')
@@ -790,7 +782,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    --  end
 
    FRC_Rehearsal_Scene.rewindPreview = function (autoPlay)
-     -- logic flow:  stop audio, rewind it, if it was playing when we rewound, start it again
+      -- logic flow:  stop audio, rewind it, if it was playing when we rewound, start it again
       print("rewindPreview");
       songGroup = FRC_AudioManager:findGroup("songPlayback");
       local trackStartDelay;
@@ -798,54 +790,63 @@ function FRC_Rehearsal_Scene:createScene(event)
       if (songGroup) then
          if (#songGroup.handles) then
             for i=1,#songGroup.handles do
-              activeHandle = songGroup.handles[i];
-              -- audio.pause(activeHandle);
-              audio.rewind(activeHandle);
-              -- trackStartDelay = instrumentTrackStartOffsets[activeHandle.name];
-              -- if (trackStartDelay > 0) then
-              --   -- wait before playing the audio
-              --   timer.performWithDelay( trackStartDelay, function()
-              --       audio.resume(activeHandle);
-              --    end )
-              -- else
-              --   audio.resume(activeHandle);
-              -- end
+               activeHandle = songGroup.handles[i];
+               -- audio.pause(activeHandle);
+               audio.rewind(activeHandle);
+               -- trackStartDelay = instrumentTrackStartOffsets[activeHandle.name];
+               -- if (trackStartDelay > 0) then
+               --   -- wait before playing the audio
+               --   timer.performWithDelay( trackStartDelay, function()
+               --       audio.resume(activeHandle);
+               --    end )
+               -- else
+               --   audio.resume(activeHandle);
+               -- end
             end
          end
       end
       if (autoPlay) then
-        FRC_Rehearsal_Scene.stopRehearsalMode(true);
-        FRC_Rehearsal_Scene.startRehearsalMode(0, true);
+         FRC_Rehearsal_Scene.stopRehearsalMode(true);
+         FRC_Rehearsal_Scene.startRehearsalMode(0, true);
       end
    end
 
    FRC_Rehearsal_Scene.stopRehearsalMode = function (pausing)
+      --dprint("stopRehearsalMode() @ ", system.getTimer()) 
+      
+      -- Do we have an 'automatic' stopRehearsal() call pending?  If so, cancel it!
+      --
+      if( FRC_Rehearsal_Scene._autoStoRehearsalTimer ) then
+         timer.cancel( FRC_Rehearsal_Scene._autoStoRehearsalTimer )
+         FRC_Rehearsal_Scene._autoStoRehearsalTimer = nil
+      end
+      
       print("StopRehearsal - sceneMode: ", sceneMode);
       if not pausing then
-        -- eventually we will transition animate on offscreen and the other onscreen
-        categoriesContainer.isVisible = ( sceneMode ~= "showtime" );
-        if itemScrollers then
-           for k,v in pairs( itemScrollers ) do
-              if v then
-                 v.isVisible = false;
-              end
-           end
-        end
-        rehearsalContainer.isVisible = ( sceneMode == "showtime" );
+         -- eventually we will transition animate on offscreen and the other onscreen
+         categoriesContainer.isVisible = ( sceneMode ~= "showtime" );
+         if itemScrollers then
+            for k,v in pairs( itemScrollers ) do
+               if v then
+                  v.isVisible = false;
+               end
+            end
+         end
+         rehearsalContainer.isVisible = ( sceneMode == "showtime" );
 
-        if( view._overlay.touchGroup and view._overlay.touchGroup.enterFrame ) then
-           Runtime:removeEventListener( "enterFrame", view._overlay.touchGroup )
-           view._overlay.touchGroup = nil
-           display.remove(view._overlay.touchGroup)
-        end
-        display.remove(view._overlay.controlTouch)
-        transition.cancel( rehearsalContainer )
-        rehearsalContainer.y = rehearsalContainer.y0
+         if( view._overlay.touchGroup and view._overlay.touchGroup.enterFrame ) then
+            Runtime:removeEventListener( "enterFrame", view._overlay.touchGroup )
+            view._overlay.touchGroup = nil
+            display.remove(view._overlay.touchGroup)
+         end
+         display.remove(view._overlay.controlTouch)
+         transition.cancel( rehearsalContainer )
+         rehearsalContainer.y = rehearsalContainer.y0
 
-        -- TODO turn back on the appropriate scroller's visibility (last one that was active)
+         -- TODO turn back on the appropriate scroller's visibility (last one that was active)
 
-        FRC_CharacterBuilder.setEditEnable( true )
-        FRC_Rehearsal_Scene.rewindPreview();
+         FRC_CharacterBuilder.setEditEnable( true )
+         FRC_Rehearsal_Scene.rewindPreview();
       end
 
       FRC_CharacterBuilder.stopStageCharacters();
@@ -856,9 +857,9 @@ function FRC_Rehearsal_Scene:createScene(event)
       songGroup = FRC_AudioManager:findGroup("songPlayback");
       -- kill track timers
       for i=#songTrackTimers, 1,-1 do
-    		timer.cancel(songTrackTimers[i]);
-    		songTrackTimers[i] = nil;
-    	end
+         timer.cancel(songTrackTimers[i]);
+         songTrackTimers[i] = nil;
+      end
       if (songGroup and tracksGroup and instrumentList) then
          for i, instr in pairs(instrumentList) do
             local h = songGroup:findHandle(currentSongID .. "_" .. string.lower(instr) )
@@ -910,7 +911,6 @@ function FRC_Rehearsal_Scene:createScene(event)
       view._overlay.controlTouch.isHitTestable = true
       view._overlay.controlTouch.alpha = 0
       view._overlay.controlTouch.touch = function( self, event )
-         --table.dump2(event)
          if( event.phase == "began") then
             transition.cancel( rehearsalContainer )
             local function onComplete()
@@ -927,14 +927,22 @@ function FRC_Rehearsal_Scene:createScene(event)
 
       -- EFM my version
       local function startPlaying()
-        tracksGroup = FRC_AudioManager:findGroup("songTracks")
-        songGroup = FRC_AudioManager:findGroup("songPlayback")
-        local expectedEndTime = 0;
-        local trackEndTime;
+         
+         -- Do we have an 'automatic' stopRehearsal() call pending?  If so, cancel it!
+         --
+         if( FRC_Rehearsal_Scene._autoStoRehearsalTimer ) then
+            timer.cancel( FRC_Rehearsal_Scene._autoStoRehearsalTimer )
+            FRC_Rehearsal_Scene._autoStoRehearsalTimer = nil
+         end
+         
+         tracksGroup = FRC_AudioManager:findGroup("songTracks")
+         songGroup = FRC_AudioManager:findGroup("songPlayback")
+         local expectedEndTime = 0;
+         local trackEndTime;
 
-        print(tracksGroup) -- DEBUG
+         print(tracksGroup) -- DEBUG
 
-        --
+         --
          -- get a list of the instruments that are active
          local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
 
@@ -954,22 +962,35 @@ function FRC_Rehearsal_Scene:createScene(event)
          instrumentTrackStartOffsets = {};
          for i, instr in pairs(instrumentList) do
             local instrID = currentSongID .. "_" .. string.lower(instr)
-            instrumentTrackStartOffsets[instrID] = (songTrackOffsetData[instrID] - shortestOffset)
+            local details = {} 
+            details.startOffset = (songTrackOffsetData[instrID] - shortestOffset)
+            instrumentTrackStartOffsets[instrID] = details
+
             -- analyze the start time offset + track duration to see if the track ends later (last eventually)
             if (tracksGroup) then
-              local h = tracksGroup:findHandle(instrID);
-              if (h) then
-                trackEndTime = tonumber(songTrackOffsetData[instrID] + h:getDuration() - shortestOffset);
-                if (trackEndTime > expectedEndTime) then
-                  -- we have a new max end time
-                  expectedEndTime = trackEndTime;
-                  -- print("expectedEndTime is now: ", expectedEndTime); -- DEBUG
-                end
-              end
+               local h = tracksGroup:findHandle(instrID);
+               if (h) then
+                  trackEndTime = tonumber(songTrackOffsetData[instrID] + h:getDuration() - shortestOffset);
+                  local details = instrumentTrackStartOffsets[instrID]
+                  details.trackEndTime = trackEndTime
+
+                  if (trackEndTime > expectedEndTime) then
+                     -- we have a new max end time
+                     expectedEndTime = trackEndTime;
+                     --dprint("expectedEndTime is now: ", expectedEndTime); -- DEBUG
+                  end
+               end
             end
 
          end
-         table.dump2(instrumentTrackStartOffsets); -- DEBUG
+         
+         --[[  -- Uncomment for quick debugging of this code.
+         for k,v in pairs(instrumentTrackStartOffsets) do
+            v.startOffset = math.random(500,1000)
+            v.trackEndTime = math.random(1200,1600)
+         end 
+         expectedEndTime = 2500
+         --]]
 
          --
          -- Find the song for each instrument
@@ -982,11 +1003,11 @@ function FRC_Rehearsal_Scene:createScene(event)
                if (h) then
                   print('playing ', h.name)
                   songGroup:addHandle(h)
-                  local trackStartDelay = instrumentTrackStartOffsets[instrID]
+                  local trackStartDelay = instrumentTrackStartOffsets[instrID].startOffset
                   if (trackStartDelay > 0) then
                      -- wait before playing the audio
-                     dprint("Wait to play", instrID, instrumentTrackStartOffsets[instrID] ) -- EDOCHI4
-                     songTrackTimers[#songTrackTimers+1] = timer.performWithDelay( instrumentTrackStartOffsets[instrID],
+                     --dprint("Wait to play", instrID, instrumentTrackStartOffsets[instrID] ) 
+                     songTrackTimers[#songTrackTimers+1] = timer.performWithDelay( trackStartDelay,
                         function()
                            h:play()
                         end )
@@ -998,6 +1019,17 @@ function FRC_Rehearsal_Scene:createScene(event)
 
             FRC_CharacterBuilder.setEditEnable( false )
             FRC_CharacterBuilder.playStageCharacters( instrumentTrackStartOffsets, expectedEndTime )
+            
+            -- Stop any outstanding stop timer we may have
+            FRC_Rehearsal_Scene._autoStoRehearsalTimer = timer.performWithDelay( expectedEndTime + 500,
+               function()
+                  FRC_Rehearsal_Scene._autoStoRehearsalTimer = nil
+                  if( sceneMode == "showtime" ) then                  
+                     FRC_Rehearsal_Scene.closeCurtains(1500)
+                  else
+                     FRC_Rehearsal_Scene.stopRehearsalMode(false)
+                  end                  
+               end )
          end
 
          rehearsalContainer.isPlaying = true
@@ -1127,11 +1159,11 @@ function FRC_Rehearsal_Scene:createScene(event)
                local self = e.target
                print("Rehearsal control selected: ",self.id);
                if (self.id == "StopPreview") then
-                 -- print("self.id == StopPreview");
-                 FRC_Rehearsal_Scene.stopRehearsalMode();
-                 if ( sceneMode == "showtime" ) then
-                   storyboard.gotoScene('Scenes.Lobby');
-                 end
+                  -- print("self.id == StopPreview");
+                  FRC_Rehearsal_Scene.stopRehearsalMode();
+                  if ( sceneMode == "showtime" ) then
+                     storyboard.gotoScene('Scenes.Lobby');
+                  end
                elseif (self.id == "PausePreview") then
                   if( rehearsalContainer.isPlaying == true ) then
                      FRC_Rehearsal_Scene.stopRehearsalMode(true);
@@ -1140,7 +1172,7 @@ function FRC_Rehearsal_Scene:createScene(event)
                   end
                elseif (self.id == "RewindPreview") then
                   FRC_Rehearsal_Scene.rewindPreview(true);
-                elseif (self.id == "ReplayShowtime") then
+               elseif (self.id == "ReplayShowtime") then
                   local curTime = system.getTimer() 
                   if( curTime - FRC_Rehearsal_Scene.lastStartTime < replayDelay ) then return end
                   replayDelay = 3000
@@ -1307,14 +1339,12 @@ function FRC_Rehearsal_Scene:createScene(event)
                -- CODE TO HANDLE SETDESIGN CHANGE GOES HERE
                for i=1,#setDesignData do
                   if (setDesignData[i].id == self.id) then
-                     if (self.id == 'none') then
-                        dprint("NONE")
+                     if (self.id == 'none') then                        
                         FRC_Rehearsal_Scene.changeSet(0)
                         FRC_Rehearsal_Scene.changeBackdrop("None");
                         -- repositionSet();
                         FRC_Rehearsal_Scene.setID = nil
-                     else
-                        dprint("POOL")
+                     else                        
                         FRC_Rehearsal_Scene.setID = setDesignData[i].id
                         for i = 1, #FRC_SetDesign.saveData.savedItems do
                            if(FRC_SetDesign.saveData.savedItems[i].id == FRC_Rehearsal_Scene.setID ) then
@@ -1387,7 +1417,6 @@ function FRC_Rehearsal_Scene:createScene(event)
    for i=1,#songInstruments do
       local scroller = itemScrollers['Instrument']
       buttonHeight = scroller.contentHeight - button_spacing
-      --table.dump2(songInstruments[i]) --EFM
       local button = ui.button.new({
             id = songInstruments[i].id,
             imageUp = UI('IMAGES_PATH') .. songInstruments[i].imageUp,
@@ -1440,7 +1469,6 @@ function FRC_Rehearsal_Scene:createScene(event)
    for i=1,#characterData do
       local scroller = itemScrollers['Character']
       buttonHeight = scroller.contentHeight - button_spacing
-      --table.dump2(characterData[i]) --EFM
       local button = ui.button.new({
             id = characterData[i].id,
             imageUp = UI('IMAGES_PATH') .. (characterData[i].bodyThumb or characterData[i].bodyImage),
@@ -1463,7 +1491,6 @@ function FRC_Rehearsal_Scene:createScene(event)
                itemScrollers.Costume.isVisible = true
                costumesButton:press()
                costumesButton:release()
-               --table.dump2( costumesButton )
             end
          })
       button.categoryId = 'Character'
@@ -1497,13 +1524,10 @@ function FRC_Rehearsal_Scene:createScene(event)
             animationImageBase    = animationImageBase,
             itemScrollers         = itemScrollers,
             showTimeMode          = false,
-            categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
+            categoriesContainer   = categoriesContainer } ) 
       FRC_CharacterBuilder.rebuildInstrumenScroller( )
       FRC_Rehearsal_Scene.changeSet(0)
       FRC_Rehearsal_Scene.changeBackdrop("None");
-      --FRC_SetDesign.saveData.savedItems = {}
-      --table.print_r(FRC_SetDesign.saveData)
-      --table.print_r(FRC_SetDesign)
       FRC_Rehearsal_Scene.setIndex = nil
       FRC_Rehearsal_Scene.backdropName = nil
       FRC_Rehearsal_Scene.setID = nil
@@ -1591,8 +1615,8 @@ function FRC_Rehearsal_Scene:createScene(event)
       if( canLoad ) then
          showLoadPopup( true )
       else
-        -- commented out because we get into trouble reloading Rehearsal from within itself
-        --[[
+         -- commented out because we get into trouble reloading Rehearsal from within itself
+         --[[
         local canLoadShow = not ((FRC_Rehearsal_Scene.saveData.savedItems == nil) or (#FRC_Rehearsal_Scene.saveData.savedItems < 1));
          FRC_CharacterBuilder.easyAlert( "No Saved Performances",
             "You didn't created any performances yet.\n\nWould you like to go to Rehearsal\nto make a show or create a performance?",
@@ -1601,15 +1625,14 @@ function FRC_Rehearsal_Scene:createScene(event)
                {"No", function() storyboard.gotoScene('Scenes.Lobby') end },
                } )
         --]]
-        FRC_CharacterBuilder.easyAlert( "No Saved Performances",
-           "You didn't created any performances yet.\n\nPlease go to Rehearsal to make a show or create a performance.",
-           {
-              {"OK", function() storyboard.gotoScene('Scenes.Lobby') end },
-              } )
+         FRC_CharacterBuilder.easyAlert( "No Saved Performances",
+            "You didn't created any performances yet.\n\nPlease go to Rehearsal to make a show or create a performance.",
+            {
+               {"OK", function() storyboard.gotoScene('Scenes.Lobby') end },
+               } )
       end
    end
 
-   -- Showtime Work EFM EDOCHI
    if( sceneMode == "showtime") then
       view._overlay.isVisible = false
    end
@@ -1634,10 +1657,10 @@ function FRC_Rehearsal_Scene:enterScene(event)
 
    -- pause background music (if enabled)
    if (FRC_AppSettings.get("soundOn")) then
-     local musicGroup = FRC_AudioManager:findGroup("music");
-     if musicGroup then
-       musicGroup:pause();
-     end
+      local musicGroup = FRC_AudioManager:findGroup("music");
+      if musicGroup then
+         musicGroup:pause();
+      end
    end
 
    if (FRC_Rehearsal_Scene.postEnterScene) then
@@ -1658,10 +1681,10 @@ function FRC_Rehearsal_Scene:exitScene(event)
 
    -- resume background music (if enabled)
    if (FRC_AppSettings.get("soundOn")) then
-     local musicGroup = FRC_AudioManager:findGroup("music");
-     if musicGroup then
-       musicGroup:resume();
-     end
+      local musicGroup = FRC_AudioManager:findGroup("music");
+      if musicGroup then
+         musicGroup:resume();
+      end
    end
 
    if (FRC_Rehearsal_Scene.postExitScene) then
