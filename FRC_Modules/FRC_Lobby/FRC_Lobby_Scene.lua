@@ -85,110 +85,25 @@ function FRC_Lobby_Scene:createScene(event)
    bg.y = centerY
 
 
-	function videoPlaybackComplete(event)
-		if (FRC_AppSettings.get("ambientSoundOn")) then
-			FRC_AudioManager:findGroup("ambientMusic"):resume();
-		end
-		if (videoPlayer) then
-			videoPlayer:removeSelf();
-			videoPlayer = nil;
-		end
-		return true
-	end
+   function videoPlaybackComplete(event)
+     -- resume background music (if enabled)
+     if (FRC_AppSettings.get("soundOn")) then
+       local musicGroup = FRC_AudioManager:findGroup("music");
+       if musicGroup then
+         musicGroup:resume();
+       end
+     end
 
-	local theatreDoorAnimationFiles = {
-		"MDMT_Lobby_UsherDoorStatic_g.xml",
-			"MDMT_Lobby_UsherDoorStatic_f.xml",
-			"MDMT_Lobby_UsherDoorStatic_e.xml",
-			"MDMT_Lobby_UsherDoorStatic_d.xml",
-			"MDMT_Lobby_UsherDoorStatic_c.xml",
-			"MDMT_Lobby_UsherDoorStatic_b.xml",
-			"MDMT_Lobby_UsherDoorStatic_a.xml"
-	}
+     if (view._overlay) then
+       view._overlay:removeEventListener('videoComplete', videoPlaybackComplete );
+     end
 
-   dprint("Placing theatreDoorAnimationSequences")
-	theatreDoorAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorAnimationFiles, animationXMLBase, animationImageBase);
-   view._content:insert(theatreDoorAnimationSequences);  -- TRS EFM
-   FRC_Layout.placeAnimation( theatreDoorAnimationSequences, nil, false ) -- TRS EFM
-
-
-	for i=1, theatreDoorAnimationSequences.numChildren do
-		theatreDoorAnimationSequences[i]:play({
-			showLastFrame = false,
-			playBackward = false,
-			autoLoop = true,
-			palindromicLoop = false,
-			delay = 0,
-			intervalTime = 30,
-			maxIterations = 1
-		});
-	end
-
-	theatreDoorAnimationSequences:addEventListener('touch', function(e)
-		if (theatreDoorAnimationSequences) then
-			if (theatreDoorAnimationSequences.numChildren) then
-				for i=1, theatreDoorAnimationSequences.numChildren do
-					local anim = theatreDoorAnimationSequences[i];
-					if (anim) then
-						-- if (anim.isPlaying) then
-							anim.dispose();
-						-- end
-						-- anim.remove();
-					end
-				end
-			end
-			theatreDoorAnimationSequences = nil;
-		end
-		sceneLayoutMethods["playOutboundAnimationSequences"]();
-	end);
-	sceneLayoutMethods.playOutboundAnimationSequences = function()
-
-	for i=1, theatreDoorSequences.numChildren do
-		theatreDoorSequences[i]:play({
-			showLastFrame = false,
-			playBackward = false,
-			autoLoop = false,
-			palindromicLoop = false,
-			delay = 0,
-			intervalTime = 30,
-			maxIterations = 1,
-			onCompletion = function ()
-				if (theatreDoorSequences) then
-					if (theatreDoorSequences.numChildren) then
-						for i=1, theatreDoorSequences.numChildren do
-							local anim = theatreDoorSequences[i];
-							if (anim) then
-								-- if (anim.isPlaying) then
-									anim.dispose();
-								-- end
-								-- anim.remove();
-							end
-						end
-					end
-					theatreDoorSequences = nil;
-				end
-				--[[ timer.performWithDelay(6000, function()
-					storyboard.gotoScene(destinationModule);
-				end, 1);
-				--]]
-
-			end
-		});
-	end
-
-	-- this is a hokey way to move to the next module at roughly the time that the animation is completed
-	-- ideally this would be triggered by an onComplete function attached to the outboundToTheatreAnimationSequences[i]:play({ call above
-	scene.outboundTimer = timer.performWithDelay(1600, function()
-		scene.outboundTimer = nil;
-		if (theatreDoorSequences) then
-			for i=1, theatreDoorSequences.numChildren do
-				theatreDoorSequences[i]:stop();
-			end
-		end
-      storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "showtime" }  } );
-		--native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
-		end, 1);
-	end
+     if (videoPlayer) then
+       videoPlayer:removeSelf();
+       videoPlayer = nil;
+     end
+     return true
+   end
 
 	sceneLayoutMethods.featureComingSoon = function()
 		native.showAlert("Jukebox is being repaired but should be available very soon!","This feature is coming soon.", { "OK" });
@@ -225,10 +140,10 @@ function FRC_Lobby_Scene:createScene(event)
          popcornSounds[#popcornSounds+1] = popcornHandle
 		end
 
-		-- Decode the string		
+		-- Decode the string
       local pex = require "pex"
       local emitter1 = pex.loadPD2( view._content, centerX + 249, centerY + 36,
-						           FRC_Lobby_Settings.DATA.POPCORNMACHINEPARTICLE, 
+						           FRC_Lobby_Settings.DATA.POPCORNMACHINEPARTICLE,
                              { texturePath = "FRC_Assets/FRC_Lobby/Images/" } )
       popcornEmitters[#popcornEmitters+1] = emitter1
       --local emitterParams = DATA('POPCORNMACHINEPARTICLE'); -- json.decode( fileData )
@@ -338,6 +253,100 @@ function FRC_Lobby_Scene:createScene(event)
 				end);
 			end
 		end
+	end
+
+  local theatreDoorAnimationFiles = {
+		"MDMT_Lobby_UsherDoorStatic_g.xml",
+			"MDMT_Lobby_UsherDoorStatic_f.xml",
+			"MDMT_Lobby_UsherDoorStatic_e.xml",
+			"MDMT_Lobby_UsherDoorStatic_d.xml",
+			"MDMT_Lobby_UsherDoorStatic_c.xml",
+			"MDMT_Lobby_UsherDoorStatic_b.xml",
+			"MDMT_Lobby_UsherDoorStatic_a.xml"
+	}
+
+   dprint("Placing theatreDoorAnimationSequences")
+	theatreDoorAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(theatreDoorAnimationFiles, animationXMLBase, animationImageBase);
+   view._content:insert(theatreDoorAnimationSequences);  -- TRS EFM
+   FRC_Layout.placeAnimation( theatreDoorAnimationSequences, nil, false ) -- TRS EFM
+
+
+	for i=1, theatreDoorAnimationSequences.numChildren do
+		theatreDoorAnimationSequences[i]:play({
+			showLastFrame = false,
+			playBackward = false,
+			autoLoop = true,
+			palindromicLoop = false,
+			delay = 0,
+			intervalTime = 30,
+			maxIterations = 1
+		});
+	end
+
+	theatreDoorAnimationSequences:addEventListener('touch', function(e)
+		if (theatreDoorAnimationSequences) then
+			if (theatreDoorAnimationSequences.numChildren) then
+				for i=1, theatreDoorAnimationSequences.numChildren do
+					local anim = theatreDoorAnimationSequences[i];
+					if (anim) then
+						-- if (anim.isPlaying) then
+							anim.dispose();
+						-- end
+						-- anim.remove();
+					end
+				end
+			end
+			theatreDoorAnimationSequences = nil;
+		end
+		sceneLayoutMethods["playOutboundAnimationSequences"]();
+	end);
+	sceneLayoutMethods.playOutboundAnimationSequences = function()
+
+	for i=1, theatreDoorSequences.numChildren do
+		theatreDoorSequences[i]:play({
+			showLastFrame = false,
+			playBackward = false,
+			autoLoop = false,
+			palindromicLoop = false,
+			delay = 0,
+			intervalTime = 30,
+			maxIterations = 1,
+			onCompletion = function ()
+				if (theatreDoorSequences) then
+					if (theatreDoorSequences.numChildren) then
+						for i=1, theatreDoorSequences.numChildren do
+							local anim = theatreDoorSequences[i];
+							if (anim) then
+								-- if (anim.isPlaying) then
+									anim.dispose();
+								-- end
+								-- anim.remove();
+							end
+						end
+					end
+					theatreDoorSequences = nil;
+				end
+				--[[ timer.performWithDelay(6000, function()
+					storyboard.gotoScene(destinationModule);
+				end, 1);
+				--]]
+
+			end
+		});
+	end
+
+	-- this is a hokey way to move to the next module at roughly the time that the animation is completed
+	-- ideally this would be triggered by an onComplete function attached to the outboundToTheatreAnimationSequences[i]:play({ call above
+	scene.outboundTimer = timer.performWithDelay(1600, function()
+		scene.outboundTimer = nil;
+		if (theatreDoorSequences) then
+			for i=1, theatreDoorSequences.numChildren do
+				theatreDoorSequences[i]:stop();
+			end
+		end
+      storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "showtime" }  } );
+		--native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
+		end, 1);
 	end
 
 	local theatreDoorAnimationFiles = {
@@ -498,16 +507,16 @@ end
 function FRC_Lobby_Scene:exitScene(event)
 	local scene = self;
 	local view = self.view;
-   
+
    for k,v in pairs( popcornEmitters ) do
      display.remove( v )
    end
    popcornEmitters = {}
    for k,v in pairs( popcornSounds ) do
      if( v.stop ) then v:stop() end
-   end   
+   end
    popcornSounds = {}
-   
+
 
 	if (scene.outboundTimer) then
 		timer.cancel(scene.outboundTimer);

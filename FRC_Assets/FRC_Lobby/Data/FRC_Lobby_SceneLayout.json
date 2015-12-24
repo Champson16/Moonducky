@@ -1,5 +1,13 @@
 [
 	{
+		"id": "TheatreDoors",
+		"imageFile": "MDMT_Lobby_TheaterDoors.png",
+		"width": 259,
+		"height": 286,
+		"x": 37,
+		"y": -5
+	},
+	{
 		"id": "DirectorsChair",
 		"imageFile": "MDMT_Lobby_DirectorChair1.png",
 		"width": 133,
