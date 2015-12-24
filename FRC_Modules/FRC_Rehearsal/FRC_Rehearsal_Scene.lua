@@ -307,6 +307,28 @@ function FRC_Rehearsal_Scene:load(e)
          categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
    FRC_CharacterBuilder.rebuildInstrumenScroller( )
    FRC_CharacterBuilder.load(e.data)
+   
+   ----[[
+   function FRC_Rehearsal_Scene.doStartOver()
+      FRC_CharacterBuilder.init( {
+            view                  = FRC_Rehearsal_Scene.view,
+            currentSongID         = currentSongID,
+            animationXMLBase      = animationXMLBase,
+            animationImageBase    = animationImageBase,
+            itemScrollers         = itemScrollers,
+            showTimeMode          = false,
+            categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
+      FRC_CharacterBuilder.rebuildInstrumenScroller( )
+      FRC_Rehearsal_Scene.changeSet(0)      
+      FRC_Rehearsal_Scene.changeBackdrop("None");
+      --FRC_SetDesign.saveData.savedItems = {}
+      --table.print_r(FRC_SetDesign.saveData)
+      --table.print_r(FRC_SetDesign)
+      FRC_Rehearsal_Scene.setIndex = nil
+      FRC_Rehearsal_Scene.backdropName = nil
+      FRC_Rehearsal_Scene.setID = nil
+   end
+   --]]
 
 end
 
@@ -1047,12 +1069,13 @@ function FRC_Rehearsal_Scene:createScene(event)
    end
 
    self.startOver = function()
-      --[[
-      changeItem('Character', selectedCharacter, 0)
-      for i=1,#categoryData do
-         changeItem(categoryData[i].id, selectedCharacter, 1)
-      end
-      --]]
+      FRC_CharacterBuilder.easyAlert( "Start Over?",
+         "Would you like to:",
+         {
+            {"Clear The Stage", function() FRC_Rehearsal_Scene.doStartOver() end },
+            {"Rehearse A New Song", function()  FRC_Rehearsal_Scene.doStartOver(); FRC_Rehearsal_Scene.redo_createOrLoadShow(); end },
+            {"Cancel", function()  end },
+            } )
    end
 
    -- create sceneLayout items
@@ -1495,6 +1518,29 @@ function FRC_Rehearsal_Scene:createScene(event)
    FRC_CharacterBuilder.rebuildInstrumenScroller( ) -- EFM Load/Create New Show Logic ++
    FRC_CharacterBuilder.rebuildCostumeScroller( ) -- EFM Load/Create New Show Logic ++
 
+
+   ----[[
+   function FRC_Rehearsal_Scene.doStartOver()
+      FRC_CharacterBuilder.init( {
+            view                  = FRC_Rehearsal_Scene.view,
+            currentSongID         = currentSongID,
+            animationXMLBase      = animationXMLBase,
+            animationImageBase    = animationImageBase,
+            itemScrollers         = itemScrollers,
+            showTimeMode          = false,
+            categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
+      FRC_CharacterBuilder.rebuildInstrumenScroller( )
+      FRC_Rehearsal_Scene.changeSet(0)      
+      FRC_Rehearsal_Scene.changeBackdrop("None");
+      --FRC_SetDesign.saveData.savedItems = {}
+      --table.print_r(FRC_SetDesign.saveData)
+      --table.print_r(FRC_SetDesign)
+      FRC_Rehearsal_Scene.setIndex = nil
+      FRC_Rehearsal_Scene.backdropName = nil
+      FRC_Rehearsal_Scene.setID = nil
+   end
+   --]]
+
    local canLoad
    if( sceneMode == "showtime" ) then
       canLoad = not ((FRC_Rehearsal_Scene.publishData.savedItems == nil) or (#FRC_Rehearsal_Scene.publishData.savedItems < 1))
@@ -1562,6 +1608,11 @@ function FRC_Rehearsal_Scene:createScene(event)
       FRC_CharacterBuilder.rebuildInstrumenScroller( )
    end
 
+
+   function FRC_Rehearsal_Scene.redo_createOrLoadShow()
+      FRC_CharacterBuilder.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad )
+   end
+   
 
    if( sceneMode == "rehearsal" ) then
       if( not event.params.skipCreateLoad ) then
