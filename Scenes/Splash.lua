@@ -1,6 +1,7 @@
 local storyboard = require('storyboard');
 local FRC_SplashScreen = require('FRC_Modules.FRC_SplashScreen.FRC_SplashScreen');
 local scene = storyboard.newScene();
+local analytics = import("analytics");
 
 function scene.enterScene(self, event)
 	analytics.logEvent("MDMT.Scene.Splash");

@@ -6,6 +6,7 @@ local FRC_SettingsBar = require('FRC_Modules.FRC_SettingsBar.FRC_SettingsBar');
 local FRC_SetDesign = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign');
 local FRC_SetDesign_Settings = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign_Settings');
 local FRC_AppSettings = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
+local analytics = import("analytics");
 
 local scene = FRC_SetDesign.newScene();
 

@@ -9,6 +9,7 @@ local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_
 local FRC_DressingRoom_Settings = require('FRC_Modules.FRC_DressingRoom.FRC_DressingRoom_Settings');
 local FRC_AppSettings = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
 local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
+local analytics = import("analytics");
 
 local storyboard = require('storyboard');
 

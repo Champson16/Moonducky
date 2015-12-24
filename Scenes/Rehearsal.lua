@@ -9,6 +9,7 @@ local FRC_AudioManager = require('FRC_Modules.FRC_AudioManager.FRC_AudioManager'
 local FRC_AppSettings = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
 -- this is only needed if you want to call table.dump to inspect a table during debugging
 local FRC_Util = require('FRC_Modules.FRC_Util.FRC_Util');
+local analytics = import("analytics");
 
 local scene = FRC_Rehearsal.newScene();
 -- DEBUG:
