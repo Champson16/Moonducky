@@ -106,7 +106,8 @@ function FRC_Lobby_Scene:createScene(event)
    end
 
 	sceneLayoutMethods.featureComingSoon = function()
-		native.showAlert("Jukebox is being repaired but should be available very soon!","This feature is coming soon.", { "OK" });
+    -- DISABLED INTENTIONALLY
+		-- native.showAlert("Jukebox is being repaired but should be available very soon!","This feature is coming soon.", { "OK" });
 	end
 
 	sceneLayoutMethods.popcornMachineActivate = function(event)
