@@ -482,6 +482,7 @@ function FRC_Rehearsal_Scene:loadShowTime(e)
       curtain.y = centerY
       curtain.y0 = curtain.y
 
+      dprint("EDOCHI9 1")
       FRC_Rehearsal_Scene.startRehearsalMode( 1500, false )
 
       transition.to( curtain, { y = curtain.y0 - screenH, delay = 1000, time = 1500, transition = easing.inCirc } ) -- , onComplete = onComplete } )
@@ -807,6 +808,7 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
       if (autoPlay) then
          FRC_Rehearsal_Scene.stopRehearsalMode(true);
+         dprint("EDOCHI9 2")
          FRC_Rehearsal_Scene.startRehearsalMode(0, true);
       end
    end
@@ -912,10 +914,12 @@ function FRC_Rehearsal_Scene:createScene(event)
       view._overlay.controlTouch.alpha = 0
       view._overlay.controlTouch.touch = function( self, event )
          if( event.phase == "began") then
+            if( rehearsalContainer.removeSelf == nil ) then return end
             transition.cancel( rehearsalContainer )
             local function onComplete()
+               if( rehearsalContainer.removeSelf == nil ) then return end
                transition.to( rehearsalContainer, { delay = 1000, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
-            end
+            end            
             transition.to( rehearsalContainer, { time = 700, y = rehearsalContainer.y0, onComplete = onComplete } )
          end
          return false
@@ -1035,12 +1039,13 @@ function FRC_Rehearsal_Scene:createScene(event)
          rehearsalContainer.isPlaying = true
       end
 
+      if( rehearsalContainer.removeSelf == nil ) then return end
       transition.cancel( rehearsalContainer )
       rehearsalContainer.y = rehearsalContainer.y0
       if( restartingMusic == true ) then
          startPlaying()
          transition.to( rehearsalContainer, { delay = 0, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
-      elseif( sceneMode == "showtime" ) then
+      elseif( sceneMode == "showtime" ) then         
          transition.to( rehearsalContainer, { delay = 1800, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
          timer.performWithDelay( 2500, function()
                if( view.removeSelf == nil ) then return end
@@ -1168,6 +1173,7 @@ function FRC_Rehearsal_Scene:createScene(event)
                   if( rehearsalContainer.isPlaying == true ) then
                      FRC_Rehearsal_Scene.stopRehearsalMode(true);
                   else
+                     dprint("EDOCHI9 3")
                      FRC_Rehearsal_Scene.startRehearsalMode(0, true);
                   end
                elseif (self.id == "RewindPreview") then
@@ -1176,7 +1182,8 @@ function FRC_Rehearsal_Scene:createScene(event)
                   local curTime = system.getTimer() 
                   if( curTime - FRC_Rehearsal_Scene.lastStartTime < replayDelay ) then return end
                   replayDelay = 3000
-                  FRC_Rehearsal_Scene.stopRehearsalMode(true);                  
+                  FRC_Rehearsal_Scene.stopRehearsalMode(true);
+                  dprint("EDOCHI 4")
                   FRC_Rehearsal_Scene.startRehearsalMode( 1600, false );
                   FRC_Rehearsal_Scene.replayCurtains( 1500, 100 )
                   FRC_Rehearsal_Scene.lastStartTime = curTime
@@ -1239,6 +1246,7 @@ function FRC_Rehearsal_Scene:createScene(event)
                -- show the focused state for the selected category icon
                local self = e.target --EDO
                if (self.id == "StartRehearsal") then
+                  dprint("EDOCHI9 5")
                   FRC_Rehearsal_Scene.startRehearsalMode();
                elseif self:getFocusState() then
                   -- hide the itemScroller
