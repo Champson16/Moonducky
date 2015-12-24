@@ -1689,7 +1689,7 @@ function private.playAllAnimations( animationSequences, num, autoLoop, params )
             autoLoop          = false, -- autoLoop,
             palindromicLoop   = false,
             delay             = params.instrumentOffset,
-            intervalTime      = params.intervalTime, --30,
+            intervalTime      = 30, --, params.intervalTime, --30, -- EFM TEARING FIX? SOURCE?
             maxIterations     = params.iterations, -- 1
             onCompletion      = onCompletionGate,
             stopGate          = true
