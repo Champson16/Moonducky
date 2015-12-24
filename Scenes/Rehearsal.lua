@@ -54,6 +54,7 @@ function scene.postCreateScene(self, event)
                  imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Home_up.png',
                  imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Home_down.png',
                  onRelease = function()
+                    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Scene').ensureRehearsalModeStopped()
                     storyboard.gotoScene('Scenes.Home');
                  end
               },
@@ -61,6 +62,7 @@ function scene.postCreateScene(self, event)
                  imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Lobby_up.png',
                  imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Lobby_down.png',
                  onRelease = function()
+                    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Scene').ensureRehearsalModeStopped()
                     storyboard.gotoScene('Scenes.Lobby');
                  end
               },
@@ -72,6 +74,7 @@ function scene.postCreateScene(self, event)
                  disabled = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_disabled.png',
                  isDisabled = ((scene.saveData.savedItems == nil) or (#scene.saveData.savedItems < 1)),
                  onRelease = function(e)
+                    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Scene').ensureRehearsalModeStopped()
                    analytics.logEvent("MDMT.Rehearsal.Load");
                     local function showLoadPopup()
                        local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
@@ -98,7 +101,7 @@ function scene.postCreateScene(self, event)
                  imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_up.png',
                  imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_down.png',
                  onRelease = function()
-
+                    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Scene').ensureRehearsalModeStopped()
                     local screenRect = display.newRect(view, 0, 0, screenW, screenH);
                     screenRect.x = display.contentCenterX;
                     screenRect.y = display.contentCenterY;
@@ -156,6 +159,7 @@ function scene.postCreateScene(self, event)
                  imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Home_up.png',
                  imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Home_down.png',
                  onRelease = function()
+                    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Scene').ensureRehearsalModeStopped()
                     storyboard.gotoScene('Scenes.Home');
                  end
               },
@@ -163,6 +167,7 @@ function scene.postCreateScene(self, event)
                  imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Lobby_up.png',
                  imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Lobby_down.png',
                  onRelease = function()
+                    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Scene').ensureRehearsalModeStopped()
                     storyboard.gotoScene('Scenes.Lobby');
                  end
               },
@@ -172,6 +177,7 @@ function scene.postCreateScene(self, event)
                  imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_up.png',
                  imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_down.png',
                  onRelease = function(e)
+                    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Scene').ensureRehearsalModeStopped()
                    analytics.logEvent("MDMT.Rehearsal.Save");
                     local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
                     local galleryPopup;
@@ -198,6 +204,7 @@ function scene.postCreateScene(self, event)
                  disabled = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_disabled.png',
                  isDisabled = ((scene.saveData.savedItems == nil) or (#scene.saveData.savedItems < 1)),
                  onRelease = function(e)
+                    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Scene').ensureRehearsalModeStopped()
                    analytics.logEvent("MDMT.Rehearsal.Load");
                     local function showLoadPopup()
                        local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
@@ -225,6 +232,7 @@ function scene.postCreateScene(self, event)
                  imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Publish_up.png',
                  imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Publish_down.png',
                  onRelease = function()
+                    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Scene').ensureRehearsalModeStopped()
                    analytics.logEvent("MDMT.Rehearsal.Publish");
                     local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
                     local galleryPopup;
@@ -252,7 +260,7 @@ function scene.postCreateScene(self, event)
                  imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_up.png',
                  imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_down.png',
                  onRelease = function()
-
+                    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Scene').ensureRehearsalModeStopped()
                     local screenRect = display.newRect(view, 0, 0, screenW, screenH);
                     screenRect.x = display.contentCenterX;
                     screenRect.y = display.contentCenterY;

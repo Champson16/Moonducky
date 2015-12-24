@@ -305,6 +305,7 @@ function FRC_Rehearsal_Scene:load(e)
 
    ----[[
    function FRC_Rehearsal_Scene.doStartOver()
+      FRC_Rehearsal_Scene.ensureRehearsalModeStopped()
       FRC_CharacterBuilder.init( {
             view                  = FRC_Rehearsal_Scene.view,
             currentSongID         = currentSongID,
@@ -482,7 +483,6 @@ function FRC_Rehearsal_Scene:loadShowTime(e)
       curtain.y = centerY
       curtain.y0 = curtain.y
 
-      dprint("EDOCHI9 1")
       FRC_Rehearsal_Scene.startRehearsalMode( 1500, false )
 
       transition.to( curtain, { y = curtain.y0 - screenH, delay = 1000, time = 1500, transition = easing.inCirc } ) -- , onComplete = onComplete } )
@@ -784,7 +784,7 @@ function FRC_Rehearsal_Scene:createScene(event)
 
    FRC_Rehearsal_Scene.rewindPreview = function (autoPlay)
       -- logic flow:  stop audio, rewind it, if it was playing when we rewound, start it again
-      print("rewindPreview");
+      dprint("rewindPreview");
       songGroup = FRC_AudioManager:findGroup("songPlayback");
       local trackStartDelay;
       local activeHandle;
@@ -808,13 +808,12 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
       if (autoPlay) then
          FRC_Rehearsal_Scene.stopRehearsalMode(true);
-         dprint("EDOCHI9 2")
          FRC_Rehearsal_Scene.startRehearsalMode(0, true);
       end
    end
 
    FRC_Rehearsal_Scene.stopRehearsalMode = function (pausing)
-      --dprint("stopRehearsalMode() @ ", system.getTimer()) 
+      dprint("stopRehearsalMode() @ ", system.getTimer(), pausing) 
       
       -- Do we have an 'automatic' stopRehearsal() call pending?  If so, cancel it!
       --
@@ -881,9 +880,13 @@ function FRC_Rehearsal_Scene:createScene(event)
          end
       end
       rehearsalContainer.isPlaying = false
+      FRC_Rehearsal_Scene.isPlaying = false -- EFM - Redundant, but needed due to scope.  Consolidate later.
    end
+   
+   
+   
 
-   FRC_Rehearsal_Scene.startRehearsalMode = function( playDelay, restartingMusic )
+   FRC_Rehearsal_Scene.startRehearsalMode = function( playDelay, restartingMusic )      
       playDelay = playDelay or 0
       print("StartRehearsal");
       categoriesContainer.isVisible = false;
@@ -1036,7 +1039,8 @@ function FRC_Rehearsal_Scene:createScene(event)
                end )
          end
 
-         rehearsalContainer.isPlaying = true
+         rehearsalContainer.isPlaying = true 
+         FRC_Rehearsal_Scene.isPlaying = true -- EFM semi-redundant but visible in other modules, so keeping for now
       end
 
       if( rehearsalContainer.removeSelf == nil ) then return end
@@ -1068,6 +1072,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    end
 
    self.startOver = function()
+      
       FRC_CharacterBuilder.easyAlert( "Start Over?",
          "Would you like to:",
          {
@@ -1173,7 +1178,6 @@ function FRC_Rehearsal_Scene:createScene(event)
                   if( rehearsalContainer.isPlaying == true ) then
                      FRC_Rehearsal_Scene.stopRehearsalMode(true);
                   else
-                     dprint("EDOCHI9 3")
                      FRC_Rehearsal_Scene.startRehearsalMode(0, true);
                   end
                elseif (self.id == "RewindPreview") then
@@ -1183,7 +1187,6 @@ function FRC_Rehearsal_Scene:createScene(event)
                   if( curTime - FRC_Rehearsal_Scene.lastStartTime < replayDelay ) then return end
                   replayDelay = 3000
                   FRC_Rehearsal_Scene.stopRehearsalMode(true);
-                  dprint("EDOCHI 4")
                   FRC_Rehearsal_Scene.startRehearsalMode( 1600, false );
                   FRC_Rehearsal_Scene.replayCurtains( 1500, 100 )
                   FRC_Rehearsal_Scene.lastStartTime = curTime
@@ -1246,7 +1249,6 @@ function FRC_Rehearsal_Scene:createScene(event)
                -- show the focused state for the selected category icon
                local self = e.target --EDO
                if (self.id == "StartRehearsal") then
-                  dprint("EDOCHI9 5")
                   FRC_Rehearsal_Scene.startRehearsalMode();
                elseif self:getFocusState() then
                   -- hide the itemScroller
@@ -1524,7 +1526,8 @@ function FRC_Rehearsal_Scene:createScene(event)
 
 
    ----[[
-   function FRC_Rehearsal_Scene.doStartOver()
+   function FRC_Rehearsal_Scene.doStartOver()      
+      FRC_Rehearsal_Scene.ensureRehearsalModeStopped()
       FRC_CharacterBuilder.init( {
             view                  = FRC_Rehearsal_Scene.view,
             currentSongID         = currentSongID,
@@ -1649,6 +1652,14 @@ function FRC_Rehearsal_Scene:createScene(event)
       FRC_Rehearsal_Scene:postCreateScene(event)
    end
 end
+
+function FRC_Rehearsal_Scene.ensureRehearsalModeStopped()
+   dprint("BONG")
+   if( FRC_Rehearsal_Scene.isPlaying == true ) then
+         FRC_Rehearsal_Scene.stopRehearsalMode()
+   end
+end
+
 
 
 
