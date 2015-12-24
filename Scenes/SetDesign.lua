@@ -23,6 +23,9 @@ scene.backHandler = function()
 end
 
 function scene.postCreateScene(self, event)
+
+	analytics.logEvent("MDMT.Scene.SetDesign");
+
 	local scene = self;
 	local view = scene.view;
 	local screenW, screenH = FRC_Layout.getScreenDimensions();
@@ -72,6 +75,7 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_down.png',
 				onRelease = function(e)
+					analytics.logEvent("MDMT.SetDesign.Save");
 					local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
 					local galleryPopup;
 					galleryPopup = FRC_GalleryPopup.new({
@@ -97,6 +101,7 @@ function scene.postCreateScene(self, event)
 				disabled = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_disabled.png',
 				isDisabled = ((scene.saveData.savedItems == nil) or (#scene.saveData.savedItems < 1)),
 				onRelease = function(e)
+					analytics.logEvent("MDMT.SetDesign.Load");
 					local function showLoadPopup()
 						local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
 						local galleryPopup;
@@ -121,6 +126,7 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_down.png',
 				onRelease = function()
+					analytics.logEvent("MDMT.SetDesign.Help");
 					local screenRect = display.newRect(view, 0, 0, screenW, screenH);
 					screenRect.x = display.contentCenterX;
 					screenRect.y = display.contentCenterY;
@@ -209,6 +215,7 @@ function scene.postCreateScene(self, event)
 				focusState = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_SoundMusic_focused.png',
 				isFocused = musicButtonFocused,
 				onPress = function(event)
+					analytics.logEvent("MDMT.SetDesign.SettingsBar.ToggleMusic");
 					local self = event.target;
 					if (FRC_AppSettings.get("soundOn")) then
 						self:setFocusState(false);

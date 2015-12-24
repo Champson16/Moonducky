@@ -103,6 +103,9 @@ end
 ----
 
 function scene.postCreateScene(self, event)
+
+	analytics.logEvent("MDMT.Scene.Home");
+
 	local scene = self;
 	local view = scene.view;
 	local screenW, screenH = FRC_Layout.getScreenDimensions();
@@ -166,7 +169,7 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_down.png',
 				onRelease = function()
-					analytics.logEvent("MDMTActionBarHomeHelp");
+					analytics.logEvent("MDMT.Home.Help");
 					local screenRect = display.newRect(view, 0, 0, screenW, screenH);
 					screenRect.x = display.contentCenterX;
 					screenRect.y = display.contentCenterY;
@@ -201,7 +204,7 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_down.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_up.png',
 				onRelease = function(e)
-					analytics.logEvent("MDMTActionBarHomeFRC");
+					analytics.logEvent("MDMT.Home.FRC");
 					local screenRect = display.newRect(view, 0, 0, screenW, screenH);
 					screenRect.x = display.contentCenterX;
 					screenRect.y = display.contentCenterY;
@@ -253,12 +256,15 @@ function scene.postCreateScene(self, event)
 		bgColor = { 1, 1, 1, .95 },
 		buttons = {
 			{
+				id = "musicControl",
 				imageUp = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_SoundMusic_up.png',
 				imageDown = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_SoundMusic_up.png',
+				disabled = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_SoundMusic_disabled.png',
 				focusState = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_SoundMusic_focused.png',
 				isFocused = musicButtonFocused,
+				isDisabled = false,
 				onPress = function(event)
-					analytics.logEvent("MDMTSettingsBarHomeToggleMusic");
+					analytics.logEvent("MDMT.Home.SettingsBar.ToggleMusic");
 					local self = event.target;
 					if (FRC_AppSettings.get("soundOn")) then
 						self:setFocusState(false);

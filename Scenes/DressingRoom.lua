@@ -28,6 +28,7 @@ scene.backHandler = function()
 end
 
 function scene.postCreateScene(self, event)
+	analytics.logEvent("MDMT.Scene.DressingRoom");
 	local scene = self;
 	local view = scene.view;
 	local screenW, screenH = FRC_Layout.getScreenDimensions();
@@ -78,6 +79,7 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_down.png',
 				onRelease = function(e)
+					analytics.logEvent("MDMT.DressingRoom.Save");
 					local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
 					local galleryPopup;
 					galleryPopup = FRC_GalleryPopup.new({
@@ -103,7 +105,8 @@ function scene.postCreateScene(self, event)
 				disabled = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_disabled.png',
 				isDisabled = ((scene.saveData.savedItems == nil) or (#scene.saveData.savedItems < 1)),
 				onRelease = function(e)
-					local function showLoadPopup()                  
+					analytics.logEvent("MDMT.DressingRoom.Load");
+					local function showLoadPopup()
 						local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
                   -- only show same character
 						local characters = {};
@@ -125,7 +128,7 @@ function scene.postCreateScene(self, event)
                   if( #characters == 0) then
                      dprint("OOPS NO COSTUMES OF THIS TYPE")
                      local FRC_CharacterBuilder = require('FRC_Modules.FRC_Rehearsal.FRC_CharacterBuilder') --EFM
-                     
+
                      FRC_CharacterBuilder.easyAlert( "No Costumes Saved Yet",
                                                       "You haven't saved any costumes for this character type.\n\nPlease save some first.",
                                                       { {"OK", nil } } )
@@ -152,12 +155,14 @@ function scene.postCreateScene(self, event)
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_StartOver_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_StartOver_down.png',
+				analytics.logEvent("MDMT.DressingRoom.StartOver");
 				onRelease = self.startOver
 			},
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_down.png',
 				onRelease = function()
+					analytics.logEvent("MDMT.DressingRoom.Help");
 					local screenRect = display.newRect(view, 0, 0, screenW, screenH);
 					screenRect.x = display.contentCenterX;
 					screenRect.y = display.contentCenterY;
@@ -246,6 +251,7 @@ function scene.postCreateScene(self, event)
 				focusState = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_SoundMusic_focused.png',
 				isFocused = musicButtonFocused,
 				onPress = function(event)
+					analytics.logEvent("MDMT.DressingRoom.SettingsBar.ToggleMusic");
 					local self = event.target;
 					if (FRC_AppSettings.get("soundOn")) then
 						self:setFocusState(false);

@@ -82,9 +82,14 @@ function FRC_Home_Scene:createScene(event)
 		if (FRC_AppSettings.get("soundOn")) then
 			local musicGroup = FRC_AudioManager:findGroup("music");
 			if musicGroup then
+				print("resuming music"); -- DEBUG
 				musicGroup:resume();
 			end
 		end
+		-- disable control
+		print("disabled: ", FRC_Home_Scene.settingsBarMenu:getItem("musicControl").isDisabled); -- DEBUG
+		FRC_Home_Scene.settingsBarMenu:getItem("musicControl"):setDisabledState(false);
+		print("disabled: ", FRC_Home_Scene.settingsBarMenu:getItem("musicControl").isDisabled); -- DEBUG
 
 		if (view._overlay) then
 			view._overlay:removeEventListener('videoComplete', videoPlaybackComplete );
@@ -102,14 +107,15 @@ function FRC_Home_Scene:createScene(event)
 		if (FRC_AppSettings.get("soundOn")) then
 			local musicGroup = FRC_AudioManager:findGroup("music");
 			if musicGroup then
+				print("pausing music"); -- DEBUG
 				musicGroup:pause();
 			end
 		end
+		-- disable control
+		FRC_Home_Scene.settingsBarMenu:getItem("musicControl"):setDisabledState(true);
 
 		analytics.logEvent("MDMT.Home.HamstersVideo");
-		if (FRC_AppSettings.get("ambientSoundOn")) then
-			FRC_AudioManager:findGroup("ambientMusic"):pause();
-		end
+
 		local videoData = {
 		HD_VIDEO_PATH = videoBase .. 'MDMT_MusicVideo_HamsterWantToBeFree.mp4',
 		HD_VIDEO_SIZE = { width = 960, height = 540 },
@@ -133,14 +139,15 @@ function FRC_Home_Scene:createScene(event)
 		if (FRC_AppSettings.get("soundOn")) then
 			local musicGroup = FRC_AudioManager:findGroup("music");
 			if musicGroup then
+				print("pausing music"); -- DEBUG
 				musicGroup:pause();
 			end
 		end
+		-- disable control
+		FRC_Home_Scene.settingsBarMenu:getItem("musicControl"):setDisabledState(true);
 
 		analytics.logEvent("MDMT.Home.CowVideo");
-		if (FRC_AppSettings.get("ambientSoundOn")) then
-			FRC_AudioManager:findGroup("ambientMusic"):pause();
-		end
+
 		local videoData = {
 		HD_VIDEO_PATH = videoBase .. 'MDMT_MusicVideo_MechanicalCow.mp4',
 		HD_VIDEO_SIZE = { width = 960, height = 540 },

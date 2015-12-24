@@ -344,6 +344,7 @@ function FRC_Lobby_Scene:createScene(event)
 				theatreDoorSequences[i]:stop();
 			end
 		end
+    analytics.logEvent("MDMT.Lobby.Showtime");
       storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "showtime" }  } );
 		--native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
 		end, 1);

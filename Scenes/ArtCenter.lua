@@ -66,6 +66,8 @@ scene.preCreateScene = function(self, event)
 end
 
 scene.postCreateScene = function(self, event)
+	analytics.logEvent("MDMT.Scene.ArtCenter");
+
 	--local self = event.target;
 	local view = self.view;
 	local screenW, screenH = FRC_Layout.getScreenDimensions();
@@ -149,6 +151,7 @@ scene.postCreateScene = function(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_down.png',
 				onRelease = function(e)
+					analytics.logEvent("MDMT.ArtCenter.Save");
                dprint("BONG")
 					local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
 					local galleryPopup;
@@ -164,7 +167,7 @@ scene.postCreateScene = function(self, event)
                      -- EFM hide the bar,
                      self.actionBarMenu:hide()
                      -- then, after hiding is done... do save
-                     timer.performWithDelay( 500, 
+                     timer.performWithDelay( 500,
                         function()
                            self.canvas:save(e.id);
                            self.canvas.id = FRC_Util.generateUniqueIdentifier();
@@ -183,6 +186,7 @@ scene.postCreateScene = function(self, event)
 				disabled = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_disabled.png',
 				isDisabled = (#FRC_ArtCenter.savedData.savedItems < 1),
 				onRelease = function(e)
+					analytics.logEvent("MDMT.ArtCenter.Load");
 					local function showLoadPopup()
 						local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
 						local galleryPopup;
@@ -216,12 +220,14 @@ scene.postCreateScene = function(self, event)
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_StartOver_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_StartOver_down.png',
+				analytics.logEvent("MDMT.ArtCenter.StartOver");
 				onRelease = self.clearCanvas
 			},
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_down.png',
 				onRelease = function()
+					analytics.logEvent("MDMT.ArtCenter.Help");
 					local screenRect = display.newRect(view, 0, 0, screenW, screenH);
 					screenRect.x = display.contentCenterX;
 					screenRect.y = display.contentCenterY;
@@ -313,6 +319,7 @@ scene.postCreateScene = function(self, event)
 				focusState = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_SoundMusic_focused.png',
 				isFocused = musicButtonFocused,
 				onPress = function(event)
+					analytics.logEvent("MDMT.ArtCenter.SettingsBar.ToggleMusic");
 					local self = event.target;
 					if (FRC_AppSettings.get("soundOn")) then
 						self:setFocusState(false);

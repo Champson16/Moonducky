@@ -28,9 +28,16 @@ scene.backHandler = function()
 end
 
 function scene.postCreateScene(self, event)
+
    local scene = self;
    local view = scene.view;
    local screenW, screenH = FRC_Layout.getScreenDimensions();
+
+   if (scene.sceneMode == "showtime") then
+     analytics.logEvent("MDMT.Scene.Showtime");
+   else
+     analytics.logEvent("MDMT.Scene.Rehearsal");
+   end
 
    -- create action bar menu at top left corner of screen
    scene.actionBarMenu = FRC_ActionBar.new({
@@ -95,6 +102,7 @@ function scene.postCreateScene(self, event)
                imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_up.png',
                imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_down.png',
                onRelease = function(e)
+                 analytics.logEvent("MDMT.Rehearsal.Save");
                   local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
                   local galleryPopup;
                   galleryPopup = FRC_GalleryPopup.new({
@@ -120,6 +128,7 @@ function scene.postCreateScene(self, event)
                disabled = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_disabled.png',
                isDisabled = ((scene.saveData.savedItems == nil) or (#scene.saveData.savedItems < 1)),
                onRelease = function(e)
+                 analytics.logEvent("MDMT.Rehearsal.Load");
                   local function showLoadPopup()
                      local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
                      local galleryPopup;
@@ -147,6 +156,7 @@ function scene.postCreateScene(self, event)
                imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Publish_up.png',
                imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Publish_down.png',
                onRelease = function()
+                 analytics.logEvent("MDMT.Rehearsal.Publish");
                   local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
                   local galleryPopup;
                   --table.print_r(scene)
@@ -173,6 +183,7 @@ function scene.postCreateScene(self, event)
                imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_up.png',
                imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_down.png',
                onRelease = function()
+
                   local screenRect = display.newRect(view, 0, 0, screenW, screenH);
                   screenRect.x = display.contentCenterX;
                   screenRect.y = display.contentCenterY;
@@ -184,8 +195,10 @@ function scene.postCreateScene(self, event)
                   webView.x = display.contentCenterX;
                   webView.y = display.contentCenterY + 20;
                   if (scene.sceneMode == "showtime") then
+                    analytics.logEvent("MDMT.Showtime.Help");
                      webView:request("Help/MDMT_FRC_WebOverlay_Help_Main_Showtime.html", system.CachesDirectory);
                   else
+                    analytics.logEvent("MDMT.Rehearsal.Help");
                      webView:request("Help/MDMT_FRC_WebOverlay_Help_Main_Rehearsal.html", system.CachesDirectory);
                   end
                   local closeButton = ui.button.new({

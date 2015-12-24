@@ -30,6 +30,9 @@ scene.backHandler = function()
 end
 
 function scene.postCreateScene(self, event)
+
+	analytics.logEvent("MDMT.Scene.Lobby");
+
 	local scene = self;
 	local view = scene.view;
 	local screenW, screenH = FRC_Layout.getScreenDimensions();
@@ -57,15 +60,14 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Rehearsal_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Rehearsal_down.png',
 				onRelease = function()
-							 storyboard.gotoScene('Scenes.Rehearsal');
+					storyboard.gotoScene('Scenes.Rehearsal');
 				end
 			},
 			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Showtime_down.png',
 				onRelease = function()
-					-- storyboard.gotoScene('Scenes.Showtime', { effect="crossFade", time="250" });
-					native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
+			    storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "showtime" }  } );
 				end
 			},
 			{
@@ -93,6 +95,7 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_down.png',
 				onRelease = function()
+					analytics.logEvent("MDMT.Lobby.Help");
 					local screenRect = display.newRect(view, 0, 0, screenW, screenH);
 					screenRect.x = display.contentCenterX;
 					screenRect.y = display.contentCenterY;
@@ -126,6 +129,7 @@ function scene.postCreateScene(self, event)
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_down.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_FRC_up.png',
 				onRelease = function(e)
+					analytics.logEvent("MDMT.Lobby.FRC");
 					local screenRect = display.newRect(view, 0, 0, screenW, screenH);
 					screenRect.x = display.contentCenterX;
 					screenRect.y = display.contentCenterY;
@@ -179,6 +183,7 @@ function scene.postCreateScene(self, event)
 				focusState = 'FRC_Assets/FRC_SettingsBar/Images/FRC_Settings_Icon_SoundMusic_focused.png',
 				isFocused = musicButtonFocused,
 				onPress = function(event)
+					analytics.logEvent("MDMT.Lobby.SettingsBar.ToggleMusic");
 					local self = event.target;
 					if (FRC_AppSettings.get("soundOn")) then
 						self:setFocusState(false);
