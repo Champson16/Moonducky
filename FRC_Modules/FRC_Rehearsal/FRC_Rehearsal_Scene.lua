@@ -67,7 +67,7 @@ FRC_AudioManager:newGroup({
 local instrumentTrackStartOffsets;
 local songTrackTimers = {};
 ----[[ EFM - MOVED TO --> DATA('SONG_TRACK_OFFSETS')
---local 
+--local
 songTrackOffsetData = {
   hamsters_bass                     = 3797,
   hamsters_conga                    = 2208,
@@ -77,7 +77,7 @@ songTrackOffsetData = {
   hamsters_microphone               = 4151,
   hamsters_rhythmcombocheesegrater  = 2777,
   hamsters_sticks                   = 1897,
-  
+
   mechanicalcow_bass                = 1431,
   mechanicalcow_conga               = 5012,
   mechanicalcow_guitar              = 1502,
@@ -307,7 +307,7 @@ function FRC_Rehearsal_Scene:load(e)
          categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
    FRC_CharacterBuilder.rebuildInstrumenScroller( )
    FRC_CharacterBuilder.load(e.data)
-   
+
    ----[[
    function FRC_Rehearsal_Scene.doStartOver()
       FRC_CharacterBuilder.init( {
@@ -319,7 +319,7 @@ function FRC_Rehearsal_Scene:load(e)
             showTimeMode          = false,
             categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
       FRC_CharacterBuilder.rebuildInstrumenScroller( )
-      FRC_Rehearsal_Scene.changeSet(0)      
+      FRC_Rehearsal_Scene.changeSet(0)
       FRC_Rehearsal_Scene.changeBackdrop("None");
       --FRC_SetDesign.saveData.savedItems = {}
       --table.print_r(FRC_SetDesign.saveData)
@@ -916,86 +916,29 @@ function FRC_Rehearsal_Scene:createScene(event)
 
       rehearsalContainer.isVisible = true;
 
-
-      -- EFM - I think there was an error here: I re-wrote this below.
-      local function startPlaying_orig()
-         -- get a list of the instruments that are active
-         local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
-         local instrID;
-         -- calculate the time offsets using the songTrackOffsetData
-         -- figure out which instrument in use is played first, grab the offset
-         local firstInstrumentOffset = 0;
-         local newOffset;
-         for i, instr in pairs(instrumentList) do
-           instrID = currentSongID .. "_" .. string.lower(instr);
-           newOffset = songTrackOffsetData[instrID];
-           dprint(instrID, newOffset)  -- EDOCHI4
-           if (newOffset <= firstInstrumentOffset) then
-             firstInstrumentOffset = newOffset;
-           end
-         end
-         dprint( "firstInstrumentOffset == ", firstInstrumentOffset )  -- EDOCHI4
-         -- figure out the offsets for all instruments by subtracting the first instrument's offset
-         -- from their offset value, making the first instrument now have an offset of 0
-         -- make a new table
-         instrumentTrackStartOffsets = {};
-         for i, instr in pairs(instrumentList) do
-           instrID = currentSongID .. "_" .. string.lower(instr);
-           instrumentTrackStartOffsets[instrID] = (songTrackOffsetData[instrID] - firstInstrumentOffset);
-         end
-         table.dump(instrumentTrackStartOffsets); -- DEBUG
-         -- use these values to create timers to delay the startup of each track's sound
-         table.dump(instrumentList); -- DEBUG
-         -- find the song for each instrument
-         tracksGroup = FRC_AudioManager:findGroup("songTracks");
-         songGroup = FRC_AudioManager:findGroup("songPlayback");
-         print(tracksGroup); -- DEBUG
-         if (songGroup and tracksGroup and instrumentList) then
-            for i, instr in pairs(instrumentList) do
-               print(i, instr);
-               instrID = currentSongID .. "_" .. string.lower(instr);
-               local h = tracksGroup:findHandle(instrID)
-               -- add the song to a playback group if it is legitimate for this song
-               if (h) then
-                  print('playing ', h.name);
-                  songGroup:addHandle(h);
-                  local trackStartDelay = instrumentTrackStartOffsets[instrID];
-                  if (trackStartDelay > 0) then
-                    -- wait before playing the audio
-                    dprint("Wait to play", instrID, instrumentTrackStartOffsets[instrID] ) -- EDOCHI4
-                    songTrackTimers[#songTrackTimers+1] = timer.performWithDelay( instrumentTrackStartOffsets[instrID], function()
-                        h:play();
-                     end )
-                  else
-                    h:play();
-                  end
-               end
-            end
-
-            FRC_CharacterBuilder.setEditEnable( false )
-            FRC_CharacterBuilder.playStageCharacters( instrumentTrackStartOffsets )
-         end
-
-         rehearsalContainer.isPlaying = true
-      end
-      --]]
-      
       -- EFM my version
       local function startPlaying()
-         --
+        tracksGroup = FRC_AudioManager:findGroup("songTracks")
+        songGroup = FRC_AudioManager:findGroup("songPlayback")
+        local expectedEndTime = 0;
+        local trackEndTime;
+
+        print(tracksGroup) -- DEBUG
+
+        --
          -- get a list of the instruments that are active
          local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
-         
+
          --
          -- Find the shortest offset
          local shortestOffset = math.huge
          for i, instr in pairs(instrumentList) do
-            local offset = tonumber(songTrackOffsetData[ currentSongID .. "_" .. string.lower(instr)])
+            local offset = tonumber(songTrackOffsetData[ currentSongID .. "_" .. string.lower(instr) ])
             if( offset < shortestOffset ) then
-               shortestOffset = offset               
+               shortestOffset = offset
             end
          end
-         
+
          --
          -- Build list of offsets for all instrument in use, subtracting 'shortestOffset'
          -- from their starting time.
@@ -1003,14 +946,24 @@ function FRC_Rehearsal_Scene:createScene(event)
          for i, instr in pairs(instrumentList) do
             local instrID = currentSongID .. "_" .. string.lower(instr)
             instrumentTrackStartOffsets[instrID] = (songTrackOffsetData[instrID] - shortestOffset)
+            -- analyze the start time offset + track duration to see if the track ends later (last eventually)
+            if (tracksGroup) then
+              local h = tracksGroup:findHandle(instrID);
+              if (h) then
+                trackEndTime = tonumber(songTrackOffsetData[instrID] + h:getDuration() - shortestOffset);
+                if (trackEndTime > expectedEndTime) then
+                  -- we have a new max end time
+                  expectedEndTime = trackEndTime;
+                  -- print("expectedEndTime is now: ", expectedEndTime); -- DEBUG
+                end
+              end
+            end
+
          end
          table.dump2(instrumentTrackStartOffsets); -- DEBUG
-         
+
          --
          -- Find the song for each instrument
-         tracksGroup = FRC_AudioManager:findGroup("songTracks")
-         songGroup = FRC_AudioManager:findGroup("songPlayback")
-         print(tracksGroup) -- DEBUG
          if (songGroup and tracksGroup and instrumentList) then
             for i, instr in pairs(instrumentList) do
                print(i, instr);
@@ -1024,7 +977,7 @@ function FRC_Rehearsal_Scene:createScene(event)
                   if (trackStartDelay > 0) then
                      -- wait before playing the audio
                      dprint("Wait to play", instrID, instrumentTrackStartOffsets[instrID] ) -- EDOCHI4
-                     songTrackTimers[#songTrackTimers+1] = timer.performWithDelay( instrumentTrackStartOffsets[instrID], 
+                     songTrackTimers[#songTrackTimers+1] = timer.performWithDelay( instrumentTrackStartOffsets[instrID],
                         function()
                            h:play()
                         end )
@@ -1035,7 +988,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             end
 
             FRC_CharacterBuilder.setEditEnable( false )
-            FRC_CharacterBuilder.playStageCharacters( instrumentTrackStartOffsets )
+            FRC_CharacterBuilder.playStageCharacters( instrumentTrackStartOffsets, expectedEndTime )
          end
 
          rehearsalContainer.isPlaying = true
@@ -1530,7 +1483,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             showTimeMode          = false,
             categoriesContainer   = categoriesContainer } ) -- EFM EDOCHI
       FRC_CharacterBuilder.rebuildInstrumenScroller( )
-      FRC_Rehearsal_Scene.changeSet(0)      
+      FRC_Rehearsal_Scene.changeSet(0)
       FRC_Rehearsal_Scene.changeBackdrop("None");
       --FRC_SetDesign.saveData.savedItems = {}
       --table.print_r(FRC_SetDesign.saveData)
@@ -1612,7 +1565,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    function FRC_Rehearsal_Scene.redo_createOrLoadShow()
       FRC_CharacterBuilder.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad )
    end
-   
+
 
    if( sceneMode == "rehearsal" ) then
       if( not event.params.skipCreateLoad ) then
