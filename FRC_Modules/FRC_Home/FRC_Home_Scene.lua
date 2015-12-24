@@ -30,6 +30,28 @@ local videoPlayer;
 --
 local	screenW, screenH, contentW, contentH, centerX, centerY = FRC_Layout.getScreenDimensions() -- TRS EFM
 
+local disabledSound = false
+local function temporarilyDisableSound()   
+   if (FRC_AppSettings.get("soundOn")) then
+      disabledSound = true
+      musicGroup = FRC_AudioManager:findGroup("music");
+      if musicGroup then
+         musicGroup:pause();
+      end
+   end
+end
+local function reEnableSound()
+   if( disabledSound ) then
+      disabledSound = false
+      FRC_AppSettings.set("soundOn", true);
+      musicGroup = FRC_AudioManager:findGroup("music");
+      if musicGroup then
+         musicGroup:resume();
+      end
+   end
+  
+end
+
 
 local function UI(key)
 	return FRC_Home_Settings.UI[key];
@@ -78,6 +100,7 @@ function FRC_Home_Scene:createScene(event)
 
 
 	function videoPlaybackComplete(event)
+      --[[
 		-- resume background music (if enabled)
 		if (FRC_AppSettings.get("soundOn")) then
 			local musicGroup = FRC_AudioManager:findGroup("music");
@@ -87,9 +110,13 @@ function FRC_Home_Scene:createScene(event)
 			end
 		end
 		-- disable control
-		print("disabled: ", FRC_Home_Scene.settingsBarMenu:getItem("musicControl").isDisabled); -- DEBUG
+		dprint("disabled: ", FRC_Home_Scene.settingsBarMenu:getItem("musicControl").isDisabled); -- DEBUG
 		FRC_Home_Scene.settingsBarMenu:getItem("musicControl"):setDisabledState(false);
-		print("disabled: ", FRC_Home_Scene.settingsBarMenu:getItem("musicControl").isDisabled); -- DEBUG
+		dprint("disabled: ", FRC_Home_Scene.settingsBarMenu:getItem("musicControl").isDisabled); -- DEBUG
+      --]]
+      
+      
+      reEnableSound()
 
     -- if this function was called directly, we don't need to remove the listener
 		if (event) then
@@ -106,6 +133,7 @@ function FRC_Home_Scene:createScene(event)
 	end
 
 	function sceneLayoutMethods.playHamstersVideo()
+      --[[
 		-- pause background music (if enabled)
 		if (FRC_AppSettings.get("soundOn")) then
 			local musicGroup = FRC_AudioManager:findGroup("music");
@@ -114,8 +142,10 @@ function FRC_Home_Scene:createScene(event)
 				musicGroup:pause();
 			end
 		end
-		-- disable control
-		FRC_Home_Scene.settingsBarMenu:getItem("musicControl"):setDisabledState(true);
+		-- disable control		
+      --]]
+      --FRC_Home_Scene.settingsBarMenu:getItem("musicControl"):setDisabledState(true);
+      temporarilyDisableSound()
 
 		analytics.logEvent("MDMT.Home.HamstersVideo");
 
@@ -138,6 +168,7 @@ function FRC_Home_Scene:createScene(event)
 	end
 
 	function sceneLayoutMethods.playCowVideo()
+      --[[
 		-- pause background music (if enabled)
 		if (FRC_AppSettings.get("soundOn")) then
 			local musicGroup = FRC_AudioManager:findGroup("music");
@@ -146,8 +177,10 @@ function FRC_Home_Scene:createScene(event)
 				musicGroup:pause();
 			end
 		end
-		-- disable control
-		FRC_Home_Scene.settingsBarMenu:getItem("musicControl"):setDisabledState(true);
+		-- disable control		
+      --]]
+      --FRC_Home_Scene.settingsBarMenu:getItem("musicControl"):setDisabledState(true);
+      temporarilyDisableSound()
 
 		analytics.logEvent("MDMT.Home.CowVideo");
 
@@ -287,7 +320,7 @@ function FRC_Home_Scene:createScene(event)
 			sceneLayout[i].onTouch = sceneLayoutMethods[sceneLayoutData[i].onTouch];
 			if (sceneLayout[i].onTouch) then
 				sceneLayout[i]:addEventListener('touch', function(e)
-					if (e.phase == "began") then
+					if (e.phase == "ended") then
 						dprint("sceneLayout onTouch EVENT", e.target.onTouch); -- DEBUG
 						e.target.onTouch();
 					end
@@ -319,6 +352,8 @@ function FRC_Home_Scene:createScene(event)
 		});
 	end
 
+   -- EDOCHI BUG
+   -- TRS EFM This should use the "ended" phase to be safe and proper
 	theatreDoorAnimationSequences:addEventListener('touch', function(e)
 		if (theatreDoorAnimationSequences) then
 			if (theatreDoorAnimationSequences.numChildren) then
@@ -463,6 +498,30 @@ function FRC_Home_Scene:exitScene(event)
 	local scene = self;
 	local view = self.view;
 
+   --[[
+   table.print_r(self)
+   table.dump2(self.settingsBarMenu)   
+   local tmp = self.settingsBarMenu:getItem("musicControl")   
+   table.dump2(tmp, nil,"musicControl")  
+   dprint("disabled: ", tmp.isDisabled); -- DEBUG
+   tmp:setDisabledState(false);
+   --]]
+   --[[
+   tmp.onPress({ target = tmp, phase == "began" }  )
+	tmp:press()
+   tmp:release()
+   tmp.onPress({ target = tmp, phase == "ended" }  )
+   --]]
+   --[[
+	dprint("disabled: ", tmp.isDisabled); -- DEBUG
+   table.dump2(tmp.disabled)   
+   dprint("**********************")
+   dprint("**********************")
+   dprint("**********************")
+   dprint("**********************")
+   --]]
+   
+
 	if (view._overlay) then
 		view._overlay:removeEventListener('videoComplete', videoPlaybackComplete );
 	end
@@ -483,6 +542,9 @@ end
 
 function FRC_Home_Scene:didExitScene(event)
 	local view = self.view;
+   
+   
+   
 
 	if (FRC_Home_Scene.preDidExitScene) then
 		FRC_Home_Scene:preDidExitScene(event);

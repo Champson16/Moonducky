@@ -36,8 +36,13 @@ FRC_Video.new = function(parentView, videoData)
     end
 	end
 
+   local startTime = system.getTimer()
   function videoGroup.skipVideo(event)
-    if (not event or event.phase == "began") then
+     local curTime = system.getTimer()
+     if( curTime - startTime < 333 ) then
+       return true
+     end
+    if (not event or event.phase == "ended") then
       if videoGroup.bg then
         videoGroup.bg:removeSelf();
         videoGroup.bg = nil;

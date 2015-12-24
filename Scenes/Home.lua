@@ -103,8 +103,11 @@ end
 ----
 
 function scene.postCreateScene(self, event)
+   dprint("DID CALL POST CREATE")
 
 	analytics.logEvent("MDMT.Scene.Home");
+   
+   table.dump2(scene)
 
 	local scene = self;
 	local view = scene.view;
@@ -240,6 +243,8 @@ function scene.postCreateScene(self, event)
 			}
 		}
 	});
+
+   table.dump2(scene.actionBarMenu)
 
 	-- create settings bar menu at top left corner of screen
 	local musicButtonFocused = false;
