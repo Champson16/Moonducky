@@ -103,9 +103,9 @@ function scene.postCreateScene(self, event)
 				disabled = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_disabled.png',
 				isDisabled = ((scene.saveData.savedItems == nil) or (#scene.saveData.savedItems < 1)),
 				onRelease = function(e)
-					local function showLoadPopup()
+					local function showLoadPopup()                  
 						local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
-            -- only show same character
+                  -- only show same character
 						local characters = {};
 						local characterType = scene:getSelectedCharacter();
 						local characterData;
@@ -122,8 +122,17 @@ function scene.postCreateScene(self, event)
 							-- if no character filter was applied, by default show all of the characters
 							characterData = scene.saveData.savedItems;
 						end
+                  if( #characters == 0) then
+                     dprint("OOPS NO COSTUMES OF THIS TYPE")
+                     local FRC_CharacterBuilder = require('FRC_Modules.FRC_Rehearsal.FRC_CharacterBuilder') --EFM
+                     
+                     FRC_CharacterBuilder.easyAlert( "No Costumes Saved Yet",
+                                                      "You haven't saved any costumes for this character type.\n\nPlease save some first.",
+                                                      { {"OK", nil } } )
+                     return
+                  end
 						local galleryPopup;
-            galleryPopup = FRC_GalleryPopup.new({
+                  galleryPopup = FRC_GalleryPopup.new({
 							title = FRC_DressingRoom_Settings.DATA.LOAD_PROMPT,
 							isLoadPopup = true,
 							hideBlank = true,
