@@ -31,10 +31,6 @@
 	},
 	{
 		"id": "Cat",
-		"imageFile": "MDMT_LandingPage_Cat_up.png",
-		"width": 87,
-		"height": 109,
-		"left": 198,
-		"bottom": 0
+		"animationFiles": [ "MDMT_LandingPage_Cat.xml" ]	
 	}
 ]
