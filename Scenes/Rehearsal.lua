@@ -34,6 +34,8 @@ function scene.postCreateScene(self, event)
    local view = scene.view;
    local screenW, screenH = FRC_Layout.getScreenDimensions();
 
+   print("scene.sceneMode", scene.sceneMode) -- DEBUG
+
    if (scene.sceneMode == "showtime") then
      analytics.logEvent("MDMT.Scene.Showtime");
      -- create action bar menu at top left corner of screen
@@ -134,6 +136,7 @@ function scene.postCreateScene(self, event)
               }
            }
         });
+      -- elseif (scene.sceneMode == "rehearsal") then -- DOESNT WORK BECAUSE IT'S NIL
 
    else
      analytics.logEvent("MDMT.Scene.Rehearsal");
