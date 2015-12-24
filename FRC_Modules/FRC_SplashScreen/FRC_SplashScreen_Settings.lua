@@ -15,7 +15,7 @@ FRC_SplashScreen_Settings.DATA = {
 			SD_VIDEO_PATH = 'FRC_Assets/FRC_SplashScreen/Video/MDMT_Intro576x384.mp4',
 			SD_VIDEO_SIZE = { width = 576, height = 384 },
 			VIDEO_SCALE = 'FULLSCREEN',
-			VIDEO_LENGTH = 10100 }
+			VIDEO_LENGTH = 9067 }
 	}
 };
 
