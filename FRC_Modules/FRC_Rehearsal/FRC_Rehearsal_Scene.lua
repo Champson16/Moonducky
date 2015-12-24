@@ -503,11 +503,20 @@ function FRC_Rehearsal_Scene:loadShowTime(e)
       local curtain = display.newImageRect( FRC_Rehearsal_Scene.view._content, curtainPath, screenW, screenH )
       curtain.x = centerX
       curtain.y = centerY
+      curtain.y0 = curtain.y
 
       FRC_Rehearsal_Scene.startRehearsalMode( 1500, false )
 
-      transition.to( curtain, { y = curtain.y - screenH, delay = 1000, time = 1500, transition = easing.inCirc } ) -- , onComplete = onComplete } )
-   end
+      transition.to( curtain, { y = curtain.y0 - screenH, delay = 1000, time = 1500, transition = easing.inCirc } ) -- , onComplete = onComplete } )
+   
+      function FRC_Rehearsal_Scene.replayCurtains( downUpTime, tweenDelay )       
+         FRC_Rehearsal_Scene.stopRehearsalMode( false )
+         transition.cancel( curtain )
+         curtain.y = curtain.y0 - screenH
+         transition.to( curtain, { y = curtain.y0 , delay = 0, time = downUpTime/2, transition = easing.outCirc } ) 
+         transition.to( curtain, { y = curtain.y0 - screenH, delay = downUpTime + tweenDelay, time = downUpTime/2, transition = easing.inCirc } )         
+      end   
+   end   
 end
 
 
@@ -1102,6 +1111,8 @@ function FRC_Rehearsal_Scene:createScene(event)
 
    view._playControls:insert(rehearsalContainer)
 
+   FRC_Rehearsal_Scene.lastStartTime = system.getTimer()    -- EFM hack!! To avoid early clicks on replay that do nothing
+   local replayDelay = 4000                                 -- EFM hack!! To avoid early clicks on replay that do nothing
    for i=1,#rehearsalPlaybackData do
       local button = ui.button.new({
             id = rehearsalPlaybackData[i].id,
@@ -1130,8 +1141,13 @@ function FRC_Rehearsal_Scene:createScene(event)
                elseif (self.id == "RewindPreview") then
                   FRC_Rehearsal_Scene.rewindPreview(true);
                 elseif (self.id == "ReplayShowtime") then
-                  FRC_Rehearsal_Scene.stopRehearsalMode(true);
-                  FRC_Rehearsal_Scene.startRehearsalMode( 1500, false );
+                  local curTime = system.getTimer() 
+                  if( curTime - FRC_Rehearsal_Scene.lastStartTime < replayDelay ) then return end
+                  replayDelay = 3000
+                  FRC_Rehearsal_Scene.stopRehearsalMode(true);                  
+                  FRC_Rehearsal_Scene.startRehearsalMode( 1600, false );
+                  FRC_Rehearsal_Scene.replayCurtains( 1500, 100 )
+                  FRC_Rehearsal_Scene.lastStartTime = curTime
                elseif self:getFocusState() then
                   -- hide the itemScroller
                   rehearsalItemScrollers[self.id].isVisible = false;
