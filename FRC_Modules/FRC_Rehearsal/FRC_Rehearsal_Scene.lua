@@ -51,6 +51,7 @@ local function SETDESIGNDATA(key, baseDir)
 end
 local animationXMLBase = UI('ANIMATION_XML_BASE')
 local animationImageBase = UI('ANIMATION_IMAGE_BASE')
+local songTrackOffsetData = DATA('SONG_TRACK_OFFSETS')
 
 -- Setup the audio groups for each song
 FRC_AudioManager:newGroup({
@@ -65,23 +66,29 @@ FRC_AudioManager:newGroup({
 -- TODO MOVE THIS INTO JSON STRUCTURE
 local instrumentTrackStartOffsets;
 local songTrackTimers = {};
-local songTrackOffsetData = {
-  hamsters_bass = 3797,
-  hamsters_conga = 2208,
-  hamsters_guitar = 0,
-  hamsters_harmonica = 11066,
-  hamsters_maracas = 682,
-  hamsters_microphone = 4151,
-  hamsters_rhythmcombocheesegrater = 2777,
-  hamsters_sticks = 1897,
-  mechanicalcow_bass = 1431,
-  mechanicalcow_conga = 5012,
-  mechanicalcow_guitar = 1502,
-  mechanicalcow_harmonica = 3993,
-  mechanicalcow_microphone = 9249,
-  mechanicalcow_piano = 1775,
-  mechanicalcow_rhythmcombocymbal = 0
+----[[ EFM - MOVED TO --> DATA('SONG_TRACK_OFFSETS')
+--local 
+songTrackOffsetData = {
+  hamsters_bass                     = 3797,
+  hamsters_conga                    = 2208,
+  hamsters_guitar                   = 3045,
+  hamsters_harmonica                = 3449,
+  hamsters_maracas                  = 1100,
+  hamsters_microphone               = 4151,
+  hamsters_rhythmcombocheesegrater  = 2777,
+  hamsters_sticks                   = 1897,
+  
+  mechanicalcow_bass                = 1431,
+  mechanicalcow_conga               = 5012,
+  mechanicalcow_guitar              = 1502,
+  mechanicalcow_harmonica           = 3993,
+  mechanicalcow_microphone          = 9249,
+  mechanicalcow_piano               = 1775,
+  mechanicalcow_rhythmcombocymbal    = 0
 };
+--]]
+
+table.dump2(songTrackOffsetData, nil, "EDOCHI4")
 
 -- load up the audio tracks for Hamsters song
 FRC_AudioManager:newHandle({
@@ -522,7 +529,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    local publishData = FRC_DataLib.readJSON(publishDataFileName, system.DocumentsDirectory) or { savedItems = {} }
    require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal').publishData = publishData
    self.publishData = publishData
-   table.dump2( self, nil, "EDOCHI2")
+   --table.dump2( self, nil, "EDOCHI2")
 
 
    -- TRS EFM - Please, see changes/notes below.
@@ -887,7 +894,9 @@ function FRC_Rehearsal_Scene:createScene(event)
 
       rehearsalContainer.isVisible = true;
 
-      local function startPlaying()
+
+      -- EFM - I think there was an error here: I re-wrote this below.
+      local function startPlaying_orig()
          -- get a list of the instruments that are active
          local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
          local instrID;
@@ -898,11 +907,12 @@ function FRC_Rehearsal_Scene:createScene(event)
          for i, instr in pairs(instrumentList) do
            instrID = currentSongID .. "_" .. string.lower(instr);
            newOffset = songTrackOffsetData[instrID];
-           -- print(instrID, newOffset)
+           dprint(instrID, newOffset)  -- EDOCHI4
            if (newOffset <= firstInstrumentOffset) then
              firstInstrumentOffset = newOffset;
            end
          end
+         dprint( "firstInstrumentOffset == ", firstInstrumentOffset )  -- EDOCHI4
          -- figure out the offsets for all instruments by subtracting the first instrument's offset
          -- from their offset value, making the first instrument now have an offset of 0
          -- make a new table
@@ -930,6 +940,7 @@ function FRC_Rehearsal_Scene:createScene(event)
                   local trackStartDelay = instrumentTrackStartOffsets[instrID];
                   if (trackStartDelay > 0) then
                     -- wait before playing the audio
+                    dprint("Wait to play", instrID, instrumentTrackStartOffsets[instrID] ) -- EDOCHI4
                     songTrackTimers[#songTrackTimers+1] = timer.performWithDelay( instrumentTrackStartOffsets[instrID], function()
                         h:play();
                      end )
@@ -940,7 +951,69 @@ function FRC_Rehearsal_Scene:createScene(event)
             end
 
             FRC_CharacterBuilder.setEditEnable( false )
-            FRC_CharacterBuilder.playStageCharacters(instrumentTrackStartOffsets)
+            FRC_CharacterBuilder.playStageCharacters( instrumentTrackStartOffsets )
+         end
+
+         rehearsalContainer.isPlaying = true
+      end
+      --]]
+      
+      -- EFM my version
+      local function startPlaying()
+         --
+         -- get a list of the instruments that are active
+         local instrumentList = FRC_CharacterBuilder.getInstrumentsInUse();
+         
+         --
+         -- Find the shortest offset
+         local shortestOffset = math.huge
+         for i, instr in pairs(instrumentList) do
+            local offset = tonumber(songTrackOffsetData[ currentSongID .. "_" .. string.lower(instr)])
+            if( offset < shortestOffset ) then
+               shortestOffset = offset               
+            end
+         end
+         
+         --
+         -- Build list of offsets for all instrument in use, subtracting 'shortestOffset'
+         -- from their starting time.
+         instrumentTrackStartOffsets = {};
+         for i, instr in pairs(instrumentList) do
+            local instrID = currentSongID .. "_" .. string.lower(instr)
+            instrumentTrackStartOffsets[instrID] = (songTrackOffsetData[instrID] - shortestOffset)
+         end
+         table.dump2(instrumentTrackStartOffsets); -- DEBUG
+         
+         --
+         -- Find the song for each instrument
+         tracksGroup = FRC_AudioManager:findGroup("songTracks")
+         songGroup = FRC_AudioManager:findGroup("songPlayback")
+         print(tracksGroup) -- DEBUG
+         if (songGroup and tracksGroup and instrumentList) then
+            for i, instr in pairs(instrumentList) do
+               print(i, instr);
+               instrID = currentSongID .. "_" .. string.lower(instr)
+               local h = tracksGroup:findHandle(instrID)
+               -- add the song to a playback group if it is legitimate for this song
+               if (h) then
+                  print('playing ', h.name)
+                  songGroup:addHandle(h)
+                  local trackStartDelay = instrumentTrackStartOffsets[instrID]
+                  if (trackStartDelay > 0) then
+                     -- wait before playing the audio
+                     dprint("Wait to play", instrID, instrumentTrackStartOffsets[instrID] ) -- EDOCHI4
+                     songTrackTimers[#songTrackTimers+1] = timer.performWithDelay( instrumentTrackStartOffsets[instrID], 
+                        function()
+                           h:play()
+                        end )
+                  else
+                     h:play()
+                  end
+               end
+            end
+
+            FRC_CharacterBuilder.setEditEnable( false )
+            FRC_CharacterBuilder.playStageCharacters( instrumentTrackStartOffsets )
          end
 
          rehearsalContainer.isPlaying = true

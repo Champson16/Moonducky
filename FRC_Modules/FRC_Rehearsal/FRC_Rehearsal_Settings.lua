@@ -37,7 +37,8 @@ FRC_Rehearsal_Settings.DATA = {
    SCENELAYOUT = 'FRC_Assets/FRC_Rehearsal/Data/FRC_Rehearsal_SceneLayout.json',
    EMPTY_DATAFILE = '{ "owner": "FRC_Rehearsal", "savedItems": [] }',
    DATA_FILENAME = 'FRC_Rehearsal_SaveData.json',
-   PUBLISH_FILENAME = 'FRC_Showtime_SaveData.json'
+   PUBLISH_FILENAME = 'FRC_Showtime_SaveData.json',
+   SONG_TRACK_OFFSETS = 'FRC_Assets/FRC_Rehearsal/Data/FRC_Rehearsal_SongTrackOffsets.json',
 }
 
 -- read data file: 'FRC_Assets/FRC_ArtCenter/Data/FRC_ArtCenter_Config.json' and store in 'CONFIG' key

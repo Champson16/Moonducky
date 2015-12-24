@@ -39,6 +39,7 @@ local strGSub     = string.gsub
 -- ======================================================================
 -- Locals
 -- ======================================================================
+local lastDanceNum   = math.random(1,2)
 local snapDist       = 100 ^ 2
 local characterScale = 0.5 -- Scale all placed characters and instruments by this much
 local instrumentScale = 0.35
@@ -456,7 +457,7 @@ function public.save(saveTable, publishingMode)
       record.y                = stagePiece.y
       record.pieceType        = stagePiece.pieceType
       record.instrument       = stagePiece.instrument
-      record.danceNumber      = stagePiece.danceNumber
+      record.danceNumber      = stagePiece.danceNumber 
 
       if( not publishingMode ) then
          record.characterID      = stagePiece.characterID
@@ -493,7 +494,7 @@ function public.load(loadTable)
          public.placeNewInstrument( curPiece.x, curPiece.y, curPiece.instrument )
 
       elseif( curPiece.pieceType == "character" ) then
-         public.placeNewCharacter(  curPiece.x, curPiece.y, curPiece.characterID, curPiece.instrument, curPiece.danceNumber  )
+         public.placeNewCharacter(  curPiece.x, curPiece.y, curPiece.characterID, curPiece.instrument, 1 ) -- curPiece.danceNumber  ) -- EDOCHI4
       end
    end
 
@@ -518,7 +519,7 @@ function public.removeInstrument()
       end
       instrumentsInUse[currentStagePiece.instrument] = nil
       local tmp = currentStagePiece
-      public.placeNewCharacter(  currentStagePiece.x, currentStagePiece.y, currentStagePiece.characterID, nil, currentStagePiece.danceNumber  )
+      public.placeNewCharacter(  currentStagePiece.x, currentStagePiece.y, currentStagePiece.characterID, nil, 1 ) -- currentStagePiece.danceNumber  )
       display.remove( tmp )
    end
 end
@@ -605,8 +606,13 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    -- ***************************************** -- EFM - TEMPORARY
    --animalType = ( animalType ~= "Chicken" and animalType ~= "Cat" ) and "Chicken" or animalType
    -- *****************************************
-   danceNumber                = danceNumber or mRand(1,2)
-   instrumentName             = instrumentName or ("Dance" .. danceNumber) -- Assume all players as dancers
+   danceNumber                = private.getNextDanceNum() -- danceNumber or mRand(1,2)
+   
+   if( instrumentName and string.match( string.lower(instrumentName), "dance" ) ) then
+      instrumentName             = "Dance" .. danceNumber -- Assume all players as dancers
+   else
+      instrumentName             = instrumentName or ("Dance" .. danceNumber) -- Assume all players as dancers
+   end
    local instrumentType       = private.instrumentNameMap(instrumentName)
    local costumeData          = private.getCostumeData( animalType )
    local xmlFiles             = private.getXMLFileNames( animalType )
@@ -728,7 +734,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    private.attachDragger(stagePiece)
 
    -- EFM start stopped or play one cycle?
-   for i = 1, #animationSequences do
+   for i = 1, #animationSequences do      
       private.playAllAnimations_rehearsal( animationSequences, i )
       --private.playAllAnimations( animationSequences, i )
       --private.stopAllAnimations( animationSequences, i )
@@ -1075,16 +1081,31 @@ end
 --
 -- playStageCharacters() - Make all characters on stage play.
 --
-function public.playStageCharacters()
+function public.playStageCharacters( instrumentTrackStartOffsets )
+   table.dump2( instrumentTrackStartOffsets, nil, "playStageCharacters() - EDOCHI4" )
    local charactersOnStage = public.getCharactersOnStage()
    --table.print_r( charactersOnStage )
 
    for i = 1, #charactersOnStage do
       local animationSequences = charactersOnStage[i].animationSequences
+      
+      local myInstrument = string.lower(charactersOnStage[i].instrument)
+      local instrumentOffset = 30 -- default start offset for no instrument     
+      for k,v in pairs(instrumentTrackStartOffsets) do
+         if( string.match( k, myInstrument ) ) then
+            instrumentOffset = tonumber(v)
+         end
+      end      
+      dprint( i, myInstrument, instrumentOffset )
+      
+      local params = { intervalTime = math.random( 30, 40 ), iterations = math.random( 1, 3 ), instrumentOffset = instrumentOffset } -- EDOCHI4 (sounds lagging animations) are late 
 
-      for j = 1, #animationSequences do
-         private.playAllAnimations( animationSequences, j, true )
+      local startTime = system.getTimer()
+      for j = 1, #animationSequences do         
+         private.playAllAnimations( animationSequences, j, true, params ) 
       end
+      local endTime = system.getTimer()
+      --dprint("Duration to call ", #animationSequences, " playAllAnimations() ", endTime-startTime ) 
    end
 end
 
@@ -1404,15 +1425,23 @@ function private.dragNDrop( self, event )
       self.x0 = event.x
       self.y0 = event.y
 
-      local myLeft = self.x - self.contentWidth/2
-      local myRight = self.x + self.contentWidth/2
+      -- EFM - content width not working on animations?
+      --local myLeft = self.x - self.contentWidth/2
+      --local myRight = self.x + self.contentWidth/2
+      local myLeft = self.x - 70
+      local myRight = self.x + 70
+      
+      dprint(myLeft, private.left)
       if( (dx < 0 and myLeft > private.left) or
          (dx > 0 and myRight < private.right ) ) then
          self.x = self.x + dx * (self.dragScale and self.dragScale or 1)
       end
 
-      local myTop = self.y - self.contentHeight/2
-      local myBottom = self.y + self.contentHeight/2
+      -- EFM - content height not working on animations?
+      --local myTop = self.y - self.contentHeight/2
+      --local myBottom = self.y + self.contentHeight/2
+      local myTop = self.y - 120
+      local myBottom = self.y + 120
       if( (dy < 0 and myTop > private.top) or
          (dy > 0 and myBottom < private.bottom ) ) then
          self.y = self.y + dy * (self.dragScale and self.dragScale or 1)
@@ -1714,7 +1743,8 @@ end
 --
 -- playAllAnimations() - Plays all of the character's animations (EFM needs work)
 --
-function private.playAllAnimations( animationSequences, num, autoLoop )
+function private.playAllAnimations( animationSequences, num, autoLoop, params ) -- EDOCHI4
+   params = params or { intervalTime = 30, iterations = 1, instrumentOffset = 30 }
    --dprint("BING @ ", num, animationSequences.completed, system.getTimer())
    num = num or mRand(1,#animationSequences)
    local sequence    = animationSequences[num]
@@ -1742,7 +1772,7 @@ function private.playAllAnimations( animationSequences, num, autoLoop )
          --table.dump2(completed)
 
          completed[completedIndex] = true
-
+         
          obj:stop(obj.frameCount)
 
          local executeOnComplete = true
@@ -1750,28 +1780,36 @@ function private.playAllAnimations( animationSequences, num, autoLoop )
             executeOnComplete = executeOnComplete and completed[j]
          end
          if( executeOnComplete ) then
-            --obj.isAnimating = false;
-            for k = 1, #animationSequences do
-               timer.performWithDelay( 500, private.playAllAnimations( animationSequences, k, autoLoop ) )
-            end
-            ---end
+            timer.performWithDelay( framePeriod * 2, 
+               function()
+               --local params2 =  { intervalTime = math.random( 30, 40 ), iterations = math.random( 1, 3 ), instrumentOffset = math.random( 500, 2000 ) }
+               -- EFM I occasionally see tearing if I randomize intervalTimes on each replay.
+               local params2 =  { intervalTime = params.intervalTime, iterations = math.random( 1, 3 ), instrumentOffset = math.random( 500, 2000 ) }
+               local startTime = system.getTimer()
+               for k = 1, #animationSequences do               
+                  timer.performWithDelay( 500, private.playAllAnimations( animationSequences, k, autoLoop, params2 ) )
+               end
+               local endTime = system.getTimer()
+               --dprint("Duration to call ", #animationSequences, " playAllAnimations() ", endTime-startTime )             
+            end )
          end
          --table.dump2(completed)
       end
 
 
+      
+      --dprint( "intervalTime, iterations, instrumentOffset == ", params.intervalTime, params.iterations, params.instrumentOffset, system.getTimer() )
       obj:play({
-            showLastFrame = not(autoLoop),
-            playBackward = false,
-            autoLoop = false, -- autoLoop,
-            palindromicLoop = false,
-            delay = 30,
-            intervalTime = 30,
-            maxIterations = 1,
-            onCompletion = onCompletionGate,
-            stopGate = true
+            showLastFrame     = not(autoLoop),
+            playBackward      = false,
+            autoLoop          = false, -- autoLoop,
+            palindromicLoop   = false,
+            delay             = params.instrumentOffset,
+            intervalTime      = params.intervalTime, --30,
+            maxIterations     = params.iterations, -- 1
+            onCompletion      = onCompletionGate,
+            stopGate          = true
          })
-      --timer.performWithDelay(33, function() sequence[i]:pause() end )
    end
 end
 
@@ -1912,12 +1950,12 @@ function private.doDrop( dropPiece )
             instrumentsInUse[stagePiece.instrument] = nil
 
             if( dropPiece.pieceType == "instrument" ) then
-               public.placeNewCharacter(  stagePiece.x, stagePiece.y, stagePiece.characterID, dropPiece.instrument, stagePiece.danceNumber  )
+               public.placeNewCharacter(  stagePiece.x, stagePiece.y, stagePiece.characterID, dropPiece.instrument, 1 ) --stagePiece.danceNumber  )
                display.remove( dropPiece )
                display.remove( stagePiece )
 
             elseif( dropPiece.pieceType == "character" ) then
-               public.placeNewCharacter(  stagePiece.x, stagePiece.y, dropPiece.characterID, stagePiece.instrument, dropPiece.danceNumber  )
+               public.placeNewCharacter(  stagePiece.x, stagePiece.y, dropPiece.characterID, stagePiece.instrument, 1 ) --dropPiece.danceNumber  )
                display.remove( dropPiece )
                display.remove( stagePiece )
             end
@@ -1940,7 +1978,7 @@ function private.replaceInstrument( target, instrument )
 
    elseif( target.pieceType == "character" ) then
       instrumentsInUse[target.instrument] = nil
-      public.placeNewCharacter(  target.x, target.y, target.characterID, instrument, target.danceNumber  )
+      public.placeNewCharacter(  target.x, target.y, target.characterID, instrument, 1 ) -- target.danceNumber  )
       display.remove( target )
    end
 end
@@ -1952,12 +1990,12 @@ function private.replaceWithCharacter( target, characterID )
 
    if( target.pieceType == "instrument" ) then
       instrumentsInUse[target.instrument] = nil
-      public.placeNewCharacter(  target.x, target.y, characterID, target.instrument, target.danceNumber  )
+      public.placeNewCharacter(  target.x, target.y, characterID, target.instrument, 1 ) -- target.danceNumber  )
       display.remove( target )
 
    elseif( target.pieceType == "character" ) then
       instrumentsInUse[target.instrument] = nil
-      public.placeNewCharacter(  target.x, target.y, characterID, target.instrument, target.danceNumber  )
+      public.placeNewCharacter(  target.x, target.y, characterID, target.instrument, 1 ) -- target.danceNumber  )
       display.remove( target )
    end
 end
@@ -1978,6 +2016,19 @@ function private.attachTouchClear()
    view:addEventListener("touch")
 end
 
+
+
+--
+-- getNextDanceNum() - Alternate dance numbers instead of relying on random.
+--
+function private.getNextDanceNum()
+   dprint("BOB", lastDanceNum )
+   lastDanceNum = lastDanceNum + 1
+   if(lastDanceNum > 2 ) then
+      lastDanceNum = 1
+   end
+   return lastDanceNum
+end
 
 -- Easy Blur
 --
