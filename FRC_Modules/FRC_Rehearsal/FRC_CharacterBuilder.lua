@@ -1623,27 +1623,27 @@ function private.playAllAnimations( animationSequences, num, autoLoop, params )
             executeOnComplete = executeOnComplete and completed[j]
          end
          
+         local curTime = system.getTimer()
+         local dt = curTime - obj._startedPlayingAt
+         
+         if( dt >= obj._playDuration ) then
+            dprint("STOPPING ANIMATION", num)
+            return 
+         end
+         
+         
          if( executeOnComplete ) then
             timer.performWithDelay( framePeriod * 2, 
                function()
-                  --[[
-                  local params2 =  { intervalTime        = math.random( 30, 40 ), 
-                                     iterations          = math.random( 1, 3 ), 
-                                     instrumentOffset    = math.random( 500, 2000 ), 
-                                     instrumentEndTime   = params.instrumentEndTime }
-                  --]]
-               -- EFM I occasionally see tearing if I randomize intervalTimes on each replay.
                local params2 =  { intervalTime        = params.intervalTime, 
                                   iterations          = math.random( 1, 3 ), 
                                   instrumentOffset    = math.random( 500, 2000 ),
                                   instrumentEndTime   = params.instrumentEndTime}
                local startTime = system.getTimer()
+               dprint("RESTARTING ANIMATION ", num )
                for k = 1, #animationSequences do               
-                  timer.performWithDelay( 500, 
-                     function()
                         if(obj.removeSelf == nil or obj.stop == nil) then return end
                         private.playAllAnimations( animationSequences, k, autoLoop, params2 ) 
-                     end )
                end
                local endTime = system.getTimer()
                --dprint("Duration to call ", #animationSequences, " playAllAnimations() ", endTime-startTime )             
@@ -1656,6 +1656,7 @@ function private.playAllAnimations( animationSequences, num, autoLoop, params )
       dprint( "intervalTime, iterations, instrumentOffset, instrumentEndTime == ", params.intervalTime, 
               params.iterations, params.instrumentOffset, params.instrumentEndTime, system.getTimer() )
       --]]
+      --[[
       if( params.isFirstCall ) then
          obj._startedPlayingAt = system.getTimer()         
          if(obj._stopTimer) then 
@@ -1667,10 +1668,20 @@ function private.playAllAnimations( animationSequences, num, autoLoop, params )
          end
          obj._stopTimer = timer.performWithDelay( stopTime,
             function()
+               dprint("STOP THIS INSTRUMENT", i)
                obj._stopTimer = nil
                if(obj.removeSelf == nil or obj.stop == nil) then return end
                obj:stop(obj.currentIndex)
             end )
+      end
+      --]]
+      if( params.isFirstCall ) then
+         obj._startedPlayingAt = system.getTimer()         
+         local stopTime = params.instrumentEndTime
+         if( stopTime > params.showEndTime ) then 
+            stopTime = params.showEndTime
+         end
+         obj._playDuration = stopTime
       end
       obj:play({
             showLastFrame     = not(autoLoop),

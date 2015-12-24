@@ -112,6 +112,7 @@ function FRC_AnimationManager.loadAnimationDataUnified( fileName, baseXMLDir )
    -- 0. Speedup code till we figure out serialization (load from 'disk' first time; get from memory next time)
    --
    if( unifiedCache[baseXMLDir..fileName] ) then
+      --return table.deepcopy(unifiedCache[baseXMLDir..fileName])
       return unifiedCache[baseXMLDir..fileName]
    end
 

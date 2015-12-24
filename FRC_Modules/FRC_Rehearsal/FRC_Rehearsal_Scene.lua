@@ -989,7 +989,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             v.startOffset = math.random(500,1000)
             v.trackEndTime = math.random(1200,1600)
          end 
-         expectedEndTime = 2500
+         expectedEndTime = 10000
          --]]
 
          --
