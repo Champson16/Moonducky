@@ -728,7 +728,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    private.attachDragger(stagePiece)
 
    -- EFM start stopped or play one cycle?
-   for i = 1, #animationSequences do      
+   for i = 1, #animationSequences do
       private.playAllAnimations_rehearsal( animationSequences, i )
       --private.playAllAnimations( animationSequences, i )
       --private.stopAllAnimations( animationSequences, i )
@@ -1082,7 +1082,7 @@ function public.playStageCharacters()
    for i = 1, #charactersOnStage do
       local animationSequences = charactersOnStage[i].animationSequences
 
-      for j = 1, #animationSequences do         
+      for j = 1, #animationSequences do
          private.playAllAnimations( animationSequences, j, true )
       end
    end
@@ -1138,10 +1138,10 @@ function private.getDressingRoomDataByAnimalType( characterType, debugLevel )
    local allSaved = table.load( dressingRoomDataPath ) or {}
    if( not allSaved.savedItems ) then
       if( debugLevel and debugLevel > 0 ) then
-         dprint("No charactes/costumes saved, can't search for this animal type: ", characterType )
+         dprint("No characters/costumes saved, can't search for this animal type: ", characterType )
          private.easyAlert( "No saved costumes",
-            "No charactes/costumes saved, can't search for this animal type: " ..
-            tostring(characterType) .. "\n\n Please go save some constumes first.",
+            "No characters/costumes saved, can't search for this animal type: " ..
+            tostring(characterType) .. "\n\n Please go save some costumes first.",
             { {"OK", nil} } )
       end
       return characters
@@ -1156,11 +1156,11 @@ function private.getDressingRoomDataByAnimalType( characterType, debugLevel )
    if( debugLevel and debugLevel > 0 ) then
       if( #characters == 0 ) then
          private.easyAlert( "No saved costumes",
-            "No charactes/costumes saved for this animal type: " ..
-            tostring(characterType) .. "\n\n Please go save some constumes first.",
+            "No characters/costumes saved for this animal type: " ..
+            tostring(characterType) .. "\n\n Please go save some costumes first.",
             { {"OK", nil} } )
       end
-      dprint("Found ", tostring(#characters), " of charactes/costumes of this type: ", characterType )
+      dprint("Found ", tostring(#characters), " of characters/costumes of this type: ", characterType )
    end
    if( debugLevel and debugLevel > 1 ) then
       table.print_r(characters)
@@ -1178,11 +1178,11 @@ function private.getDressingRoomDataByID( id, debugLevel )
    if( not allSaved.savedItems ) then
       if( debugLevel and debugLevel > 0 ) then
          private.easyAlert( "No saved costumes",
-            "No charactes/costumes saved, can't search for this id: " ..
-            tostring(id) .. "\n\n Please go save some constumes first.",
+            "No characters/costumes saved, can't search for this id: " ..
+            tostring(id) .. "\n\n Please go save some costumes first.",
             { {"OK", nil} } )
 
-         dprint("No charactes/costumes saved, can't search for this id: ", id )
+         dprint("No characters/costumes saved, can't search for this id: ", id )
       end
       return nil
    end
@@ -1197,7 +1197,7 @@ function private.getDressingRoomDataByID( id, debugLevel )
 
    if( debugLevel and debugLevel > 0 ) then
       private.easyAlert( "Unknown Dressing Room ID",
-         "No charactes/costumes found matching this ID: " .. tostring(characterType),
+         "No characters/costumes found matching this ID: " .. tostring(characterType),
          { {"OK", nil} } )
    end
 
@@ -1742,7 +1742,7 @@ function private.playAllAnimations( animationSequences, num, autoLoop )
          --table.dump2(completed)
 
          completed[completedIndex] = true
-         
+
          obj:stop(obj.frameCount)
 
          local executeOnComplete = true
