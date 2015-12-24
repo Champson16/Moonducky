@@ -24,9 +24,8 @@ FRC_Rehearsal_Settings.UI = {
 -- TODO: work on how to point to user data for SetDesign and Costume
 FRC_Rehearsal_Settings.DATA = {
    SAVE_PROMPT = 'Save Your Show',
-   PUBLISH_PROMPT = 'Publish Your Show',
+   PUBLISH_PROMPT = 'Create a Showtime Performance',
    LOAD_PROMPT = 'Load Your Show',
-   PUBLISH_PROMPT = 'Publish Your Show',
    CATEGORY = 'FRC_Assets/FRC_Rehearsal/Data/FRC_Rehearsal_Category.json',
    REHEARSAL = 'FRC_Assets/FRC_Rehearsal/Data/FRC_Rehearsal_RehearsalMode.json',
    SHOWTIME = 'FRC_Assets/FRC_Rehearsal/Data/FRC_Rehearsal_ShowtimeMode.json',
