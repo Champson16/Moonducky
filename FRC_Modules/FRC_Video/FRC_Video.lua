@@ -47,7 +47,9 @@ FRC_Video.new = function(parentView, videoData)
       if (videoGroup) then videoGroup = nil; end
 			-- let the parent view know that the video is finished
 			if (parentView) then
-	      parentView:dispatchEvent({ name = 'videoComplete' });
+				if (parentView.dispatchEvent) then
+		      parentView:dispatchEvent({ name = 'videoComplete' });
+				end
 			end
     end
     -- we handled the event
@@ -105,7 +107,9 @@ FRC_Video.new = function(parentView, videoData)
       videoGroup:removeSelf();
       if (videoGroup) then videoGroup = nil; end
 			if (parentView) then
-				parentView:dispatchEvent({ name = 'videoComplete' });
+				if (parentView.dispatchEvent) then
+					parentView:dispatchEvent({ name = 'videoComplete' });
+				end
 			end
     end
   end

@@ -91,8 +91,11 @@ function FRC_Home_Scene:createScene(event)
 		FRC_Home_Scene.settingsBarMenu:getItem("musicControl"):setDisabledState(false);
 		print("disabled: ", FRC_Home_Scene.settingsBarMenu:getItem("musicControl").isDisabled); -- DEBUG
 
-		if (view._overlay) then
-			view._overlay:removeEventListener('videoComplete', videoPlaybackComplete );
+    -- if this function was called directly, we don't need to remove the listener
+		if (event) then
+			if (view._overlay) then
+				view._overlay:removeEventListener('videoComplete', videoPlaybackComplete );
+			end
 		end
 
 		if (videoPlayer) then
