@@ -276,21 +276,38 @@ settings = {
   },
 
   plugins = {
+    -- plugins now support a supportedPlatforms keyName
+    -- For the supportedPlatforms table, the following keys are allowed and may be set to a boolean value of true (false is not supported at this time ):
+
+    -- iphone
+    -- android
+    -- ["iphone-sim"]
+    -- ["android-kindle"]
+    -- ["android-nook"]
+    -- osx
+    -- win32
+    -- ["mac-sim"]
+    -- ["win32-sim"]
+
+    -- supportedPlatforms = { ["android-kindle"] = true } IS CORRECT SYNTAX
+
+    -- If there is no supportedPlatforms table specified for a plugin then it is assumed to be available on all platforms. If a supportedPlatforms table is given then the plugin is only loaded on those platforms specified as true (you can specify multiple platforms).
+
     -- support for push notifications
     ["plugin.OneSignal"] =
     {
-        publisherId = "com.onesignal",
+        publisherId = "com.onesignal", supportedPlatforms = { iphone = true, android = true, ["android-kindle"]=true, ["android-nook"]=true }
     },
     ["plugin.google.play.services"] =
     {
         publisherId = "com.coronalabs",
-        supportedPlatforms = { android=true, ["android-kindle"]=true },
+        supportedPlatforms = { android=true, ["android-kindle"]=true, ["android-nook"]=true },
     },
-    ["plugin.notifications"] = { publisherId = "com.coronalabs" },
+    ["plugin.notifications"] = { publisherId = "com.coronalabs", supportedPlatforms = { iphone = true, android = true, ["android-kindle"]=true, ["android-nook"]=true } },
 
     -- the following plugin can be accessed via:
     -- analytics = require("analytics"); analytics:setProvider("flurry")
-    ["CoronaProvider.analytics.flurry"] = { publisherId = "com.coronalabs" },
+    ["CoronaProvider.analytics.flurry"] = { publisherId = "com.coronalabs", supportedPlatforms = { iphone = true, android = true, ["android-kindle"]=true, ["android-nook"]=true } },
     -- support for installation of Help files
     ["plugin.zip"] = { publisherId = "com.coronalabs" }
   }
