@@ -115,7 +115,7 @@ settings = {
       CFBundleDisplayName = "MoonDucky", -- app icon name
 			CFBundleName = "MoonDucky", -- overrides Corona Build dialog, Store Listing name
       -- CFBundleVersion = "1.0", -- build identifier, disabled so that Corona applies its own
-      CFBundleShortVersionString = "1.2.30", -- update this to match AppSettings JSON before release, see versionCode down below (must match)
+      CFBundleShortVersionString = "1.2.31", -- update this to match AppSettings JSON before release, see versionCode down below (must match)
 			CFBundleLocalizations = {
         "en"
 			},
@@ -241,7 +241,7 @@ settings = {
 
 	android = {
 		usesExpansionFile = false, -- set this to TRUE before building a release build
-		versionCode = "1230", -- update this to match AppSettings JSON before release
+		versionCode = "1231", -- update this to match AppSettings JSON before release
     permissions =
       {
           { name = ".permission.C2D_MESSAGE", protectionLevel = "signature" },
