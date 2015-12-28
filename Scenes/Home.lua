@@ -106,7 +106,7 @@ function scene.postCreateScene(self, event)
    dprint("DID CALL POST CREATE")
 
 	analytics.logEvent("MDMT.Scene.Home");
-   
+
    table.dump2(scene)
 
 	local scene = self;
@@ -127,6 +127,13 @@ function scene.postCreateScene(self, event)
 		alwaysVisible = true,
 		buttons = {
 			{
+				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_up.png',
+				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_down.png',
+				onRelease = function()
+					storyboard.gotoScene('Scenes.DressingRoom');
+				end
+			},
+			{
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_ArtCenter_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_ArtCenter_down.png',
 				onRelease = function()
@@ -138,13 +145,6 @@ function scene.postCreateScene(self, event)
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SetDesign_down.png',
 				onRelease = function()
 					storyboard.gotoScene('Scenes.SetDesign');
-				end
-			},
-			{
-				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_up.png',
-				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_DressingRoom_down.png',
-				onRelease = function()
-					storyboard.gotoScene('Scenes.DressingRoom');
 				end
 			},
 			{

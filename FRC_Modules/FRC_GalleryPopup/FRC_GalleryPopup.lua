@@ -13,7 +13,7 @@ FRC_GalleryPopup.new = function(options)
 			group:dispatchEvent({ name = "cancelled" });
          if( options and options.onCancel ) then
             options.onCancel()
-         end         
+         end
 			group:dispose();
 		end
 		return true;
@@ -120,7 +120,7 @@ FRC_GalleryPopup.new = function(options)
 							end
 						end
 						if ((self.id) and (self.id ~= '') and (not options.isLoadPopup)) then
-							native.showAlert('Replace Previously Saved Image?', 'You have asked to replace a previously saved image with the current one. Are you sure?', { 'Cancel', 'OK' }, function(event)
+							native.showAlert('Replace Previously Saved Item?', 'You have asked to replace a previously saved item with the current one. Are you sure?', { 'Cancel', 'OK' }, function(event)
 								if (event.index == 2) then proceedToSave(); end
 							end);
 						else

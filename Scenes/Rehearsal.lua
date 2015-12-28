@@ -34,9 +34,7 @@ function scene.postCreateScene(self, event)
    local view = scene.view;
    local screenW, screenH = FRC_Layout.getScreenDimensions();
 
-   print("scene.sceneMode", scene.sceneMode) -- DEBUG
-
-   if (scene.sceneMode == "showtime") then
+   if (scene:getSceneMode() == "showtime") then
      analytics.logEvent("MDMT.Scene.Showtime");
      -- create action bar menu at top left corner of screen
      scene.actionBarMenu = FRC_ActionBar.new({
@@ -67,6 +65,7 @@ function scene.postCreateScene(self, event)
                  end
               },
               -- LOAD button (needs icon)
+              --[[ FOR NOW, this feature is commented out
               {
                  id = "load",
                  imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_up.png',
@@ -75,7 +74,7 @@ function scene.postCreateScene(self, event)
                  isDisabled = ((scene.saveData.savedItems == nil) or (#scene.saveData.savedItems < 1)),
                  onRelease = function(e)
                     require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Scene').ensureRehearsalModeStopped()
-                   analytics.logEvent("MDMT.Rehearsal.Load");
+                   analytics.logEvent("MDMT.Showtime.Load");
                     local function showLoadPopup()
                        local FRC_GalleryPopup = require('FRC_Modules.FRC_GalleryPopup.FRC_GalleryPopup');
                        local galleryPopup;
@@ -96,7 +95,7 @@ function scene.postCreateScene(self, event)
                     end
                     showLoadPopup();
                  end
-              },
+              }, --]]
               {
                  imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_up.png',
                  imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_down.png',
@@ -112,13 +111,8 @@ function scene.postCreateScene(self, event)
                     local webView = native.newWebView(0, 0, screenW - 100, screenH - 55);
                     webView.x = display.contentCenterX;
                     webView.y = display.contentCenterY + 20;
-                    if (scene.sceneMode == "showtime") then
-                      analytics.logEvent("MDMT.Showtime.Help");
-                       webView:request("Help/MDMT_FRC_WebOverlay_Help_Main_Showtime.html", system.CachesDirectory);
-                    else
-                      analytics.logEvent("MDMT.Rehearsal.Help");
-                       webView:request("Help/MDMT_FRC_WebOverlay_Help_Main_Rehearsal.html", system.CachesDirectory);
-                    end
+                    analytics.logEvent("MDMT.Showtime.Help");
+                    webView:request("Help/MDMT_FRC_WebOverlay_Help_Main_Showtime.html", system.CachesDirectory);
                     local closeButton = ui.button.new({
                           imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
                           imageDown = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
@@ -139,9 +133,7 @@ function scene.postCreateScene(self, event)
               }
            }
         });
-      -- elseif (scene.sceneMode == "rehearsal") then -- DOESNT WORK BECAUSE IT'S NIL
-
-   else
+   else -- must be rehearsal
      analytics.logEvent("MDMT.Scene.Rehearsal");
      -- create action bar menu at top left corner of screen
      scene.actionBarMenu = FRC_ActionBar.new({
@@ -271,13 +263,9 @@ function scene.postCreateScene(self, event)
                     local webView = native.newWebView(0, 0, screenW - 100, screenH - 55);
                     webView.x = display.contentCenterX;
                     webView.y = display.contentCenterY + 20;
-                    if (scene.sceneMode == "showtime") then
-                      analytics.logEvent("MDMT.Showtime.Help");
-                       webView:request("Help/MDMT_FRC_WebOverlay_Help_Main_Showtime.html", system.CachesDirectory);
-                    else
-                      analytics.logEvent("MDMT.Rehearsal.Help");
-                       webView:request("Help/MDMT_FRC_WebOverlay_Help_Main_Rehearsal.html", system.CachesDirectory);
-                    end
+                    print("scene.sceneMode =", scene:getSceneMode());
+                    analytics.logEvent("MDMT.Rehearsal.Help");
+                    webView:request("Help/MDMT_FRC_WebOverlay_Help_Main_Rehearsal.html", system.CachesDirectory);
                     local closeButton = ui.button.new({
                           imageUp = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',
                           imageDown = imageBase .. 'FRC_Home_global_LandingPage_CloseButton.png',

@@ -182,6 +182,9 @@ FRC_AudioManager:newHandle({
       loadMethod = "loadStream"
    });
 
+function FRC_Rehearsal_Scene:getSceneMode()
+  return sceneMode;
+end
 
 function FRC_Rehearsal_Scene:save(e)
    local id = e.id
@@ -313,7 +316,7 @@ function FRC_Rehearsal_Scene:load(e)
             animationImageBase    = animationImageBase,
             itemScrollers         = itemScrollers,
             showTimeMode          = false,
-            categoriesContainer   = categoriesContainer } ) 
+            categoriesContainer   = categoriesContainer } )
       FRC_CharacterBuilder.rebuildInstrumenScroller( )
       FRC_Rehearsal_Scene.changeSet(0)
       FRC_Rehearsal_Scene.changeBackdrop("None");
@@ -487,32 +490,32 @@ function FRC_Rehearsal_Scene:loadShowTime(e)
 
       transition.to( curtain, { y = curtain.y0 - screenH, delay = 1000, time = 1500, transition = easing.inCirc } ) -- , onComplete = onComplete } )
 
-      function FRC_Rehearsal_Scene.replayCurtains( downUpTime, tweenDelay )       
+      function FRC_Rehearsal_Scene.replayCurtains( downUpTime, tweenDelay )
          FRC_Rehearsal_Scene.stopRehearsalMode( false )
          transition.cancel( curtain )
          if( math.abs(curtain.y - centerY) < 2 ) then
-            transition.to( curtain, { y = curtain.y0 - screenH, delay = 0, time = downUpTime/2, transition = easing.inCirc } )         
+            transition.to( curtain, { y = curtain.y0 - screenH, delay = 0, time = downUpTime/2, transition = easing.inCirc } )
          else
             curtain.y = curtain.y0 - screenH
-            transition.to( curtain, { y = curtain.y0 , delay = 0, time = downUpTime/2, transition = easing.outCirc } ) 
-            transition.to( curtain, { y = curtain.y0 - screenH, delay = downUpTime + tweenDelay, time = downUpTime/2, transition = easing.inCirc } )         
+            transition.to( curtain, { y = curtain.y0 , delay = 0, time = downUpTime/2, transition = easing.outCirc } )
+            transition.to( curtain, { y = curtain.y0 - screenH, delay = downUpTime + tweenDelay, time = downUpTime/2, transition = easing.inCirc } )
          end
-      end   
-   
-      function FRC_Rehearsal_Scene.closeCurtains( downTime  )       
+      end
+
+      function FRC_Rehearsal_Scene.closeCurtains( downTime  )
          transition.cancel( curtain )
          curtain.y = curtain.y0 - screenH
          local function onComplete( self )
-            if( self.removeSelf == nil ) then  return end            
+            if( self.removeSelf == nil ) then  return end
             FRC_Rehearsal_Scene.stopRehearsalMode( false )
             timer.performWithDelay( 500,
                function()
-                  storyboard.gotoScene('Scenes.Lobby', { effect="crossFade", time=1000 })                  
+                  storyboard.gotoScene('Scenes.Lobby', { effect="crossFade", time=1000 })
                end)
          end
-         transition.to( curtain, { y = curtain.y0 ,  time = downTime, transition = easing.outCirc, onComplete = onComplete } )          
-      end   
-   end   
+         transition.to( curtain, { y = curtain.y0 ,  time = downTime, transition = easing.outCirc, onComplete = onComplete } )
+      end
+   end
 end
 
 
@@ -557,7 +560,7 @@ function FRC_Rehearsal_Scene:createScene(event)
 
 
    -- TRS EFM - Please, see changes/notes below.
-   
+
    -- 1. Create a set of standard rendering layers
    FRC_Layout.createLayers( view )
 
@@ -602,7 +605,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    end
 
    local setScale = 1;
-   local setDesignGroup = display.newGroup(); view._content:insert(setDesignGroup); 
+   local setDesignGroup = display.newGroup(); view._content:insert(setDesignGroup);
    view.setDesignGroup = setDesignGroup;
    local backdropGroup = display.newGroup(); view.setDesignGroup:insert(backdropGroup);
    local setGroup = display.newGroup(); view.setDesignGroup:insert(setGroup);
@@ -813,15 +816,15 @@ function FRC_Rehearsal_Scene:createScene(event)
    end
 
    FRC_Rehearsal_Scene.stopRehearsalMode = function (pausing)
-      dprint("stopRehearsalMode() @ ", system.getTimer(), pausing) 
-      
+      dprint("stopRehearsalMode() @ ", system.getTimer(), pausing)
+
       -- Do we have an 'automatic' stopRehearsal() call pending?  If so, cancel it!
       --
       if( FRC_Rehearsal_Scene._autoStoRehearsalTimer ) then
          timer.cancel( FRC_Rehearsal_Scene._autoStoRehearsalTimer )
          FRC_Rehearsal_Scene._autoStoRehearsalTimer = nil
       end
-      
+
       print("StopRehearsal - sceneMode: ", sceneMode);
       if not pausing then
          -- eventually we will transition animate on offscreen and the other onscreen
@@ -882,11 +885,11 @@ function FRC_Rehearsal_Scene:createScene(event)
       rehearsalContainer.isPlaying = false
       FRC_Rehearsal_Scene.isPlaying = false -- EFM - Redundant, but needed due to scope.  Consolidate later.
    end
-   
-   
-   
 
-   FRC_Rehearsal_Scene.startRehearsalMode = function( playDelay, restartingMusic )      
+
+
+
+   FRC_Rehearsal_Scene.startRehearsalMode = function( playDelay, restartingMusic )
       playDelay = playDelay or 0
       print("StartRehearsal");
       categoriesContainer.isVisible = false;
@@ -922,7 +925,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             local function onComplete()
                if( rehearsalContainer.removeSelf == nil ) then return end
                transition.to( rehearsalContainer, { delay = 1000, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
-            end            
+            end
             transition.to( rehearsalContainer, { time = 700, y = rehearsalContainer.y0, onComplete = onComplete } )
          end
          return false
@@ -934,14 +937,14 @@ function FRC_Rehearsal_Scene:createScene(event)
 
       -- EFM my version
       local function startPlaying()
-         
+
          -- Do we have an 'automatic' stopRehearsal() call pending?  If so, cancel it!
          --
          if( FRC_Rehearsal_Scene._autoStoRehearsalTimer ) then
             timer.cancel( FRC_Rehearsal_Scene._autoStoRehearsalTimer )
             FRC_Rehearsal_Scene._autoStoRehearsalTimer = nil
          end
-         
+
          tracksGroup = FRC_AudioManager:findGroup("songTracks")
          songGroup = FRC_AudioManager:findGroup("songPlayback")
          local expectedEndTime = 0;
@@ -969,7 +972,7 @@ function FRC_Rehearsal_Scene:createScene(event)
          instrumentTrackStartOffsets = {};
          for i, instr in pairs(instrumentList) do
             local instrID = currentSongID .. "_" .. string.lower(instr)
-            local details = {} 
+            local details = {}
             details.startOffset = (songTrackOffsetData[instrID] - shortestOffset)
             instrumentTrackStartOffsets[instrID] = details
 
@@ -990,12 +993,12 @@ function FRC_Rehearsal_Scene:createScene(event)
             end
 
          end
-         
+
          --[[  -- Uncomment for quick debugging of this code.
          for k,v in pairs(instrumentTrackStartOffsets) do
             v.startOffset = math.random(500,1000)
             v.trackEndTime = math.random(1200,1600)
-         end 
+         end
          expectedEndTime = 10000
          --]]
 
@@ -1013,7 +1016,7 @@ function FRC_Rehearsal_Scene:createScene(event)
                   local trackStartDelay = instrumentTrackStartOffsets[instrID].startOffset
                   if (trackStartDelay > 0) then
                      -- wait before playing the audio
-                     --dprint("Wait to play", instrID, instrumentTrackStartOffsets[instrID] ) 
+                     --dprint("Wait to play", instrID, instrumentTrackStartOffsets[instrID] )
                      songTrackTimers[#songTrackTimers+1] = timer.performWithDelay( trackStartDelay,
                         function()
                            h:play()
@@ -1026,20 +1029,20 @@ function FRC_Rehearsal_Scene:createScene(event)
 
             FRC_CharacterBuilder.setEditEnable( false )
             FRC_CharacterBuilder.playStageCharacters( instrumentTrackStartOffsets, expectedEndTime )
-            
+
             -- Stop any outstanding stop timer we may have
             FRC_Rehearsal_Scene._autoStoRehearsalTimer = timer.performWithDelay( expectedEndTime + 500,
                function()
                   FRC_Rehearsal_Scene._autoStoRehearsalTimer = nil
-                  if( sceneMode == "showtime" ) then                  
+                  if( sceneMode == "showtime" ) then
                      FRC_Rehearsal_Scene.closeCurtains(1500)
                   else
                      FRC_Rehearsal_Scene.stopRehearsalMode(false)
-                  end                  
+                  end
                end )
          end
 
-         rehearsalContainer.isPlaying = true 
+         rehearsalContainer.isPlaying = true
          FRC_Rehearsal_Scene.isPlaying = true -- EFM semi-redundant but visible in other modules, so keeping for now
       end
 
@@ -1049,7 +1052,7 @@ function FRC_Rehearsal_Scene:createScene(event)
       if( restartingMusic == true ) then
          startPlaying()
          transition.to( rehearsalContainer, { delay = 0, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
-      elseif( sceneMode == "showtime" ) then         
+      elseif( sceneMode == "showtime" ) then
          transition.to( rehearsalContainer, { delay = 1800, time = 700, y = rehearsalContainer.y0 + rehearsalContainer.contentHeight } )
          timer.performWithDelay( 2500, function()
                if( view.removeSelf == nil ) then return end
@@ -1072,7 +1075,7 @@ function FRC_Rehearsal_Scene:createScene(event)
    end
 
    self.startOver = function()
-      
+
       FRC_CharacterBuilder.easyAlert( "Start Over?",
          "Would you like to:",
          {
@@ -1183,7 +1186,7 @@ function FRC_Rehearsal_Scene:createScene(event)
                elseif (self.id == "RewindPreview") then
                   FRC_Rehearsal_Scene.rewindPreview(true);
                elseif (self.id == "ReplayShowtime") then
-                  local curTime = system.getTimer() 
+                  local curTime = system.getTimer()
                   if( curTime - FRC_Rehearsal_Scene.lastStartTime < replayDelay ) then return end
                   replayDelay = 3000
                   FRC_Rehearsal_Scene.stopRehearsalMode(true);
@@ -1349,12 +1352,12 @@ function FRC_Rehearsal_Scene:createScene(event)
                -- CODE TO HANDLE SETDESIGN CHANGE GOES HERE
                for i=1,#setDesignData do
                   if (setDesignData[i].id == self.id) then
-                     if (self.id == 'none') then                        
+                     if (self.id == 'none') then
                         FRC_Rehearsal_Scene.changeSet(0)
                         FRC_Rehearsal_Scene.changeBackdrop("None");
                         -- repositionSet();
                         FRC_Rehearsal_Scene.setID = nil
-                     else                        
+                     else
                         FRC_Rehearsal_Scene.setID = setDesignData[i].id
                         for i = 1, #FRC_SetDesign.saveData.savedItems do
                            if(FRC_SetDesign.saveData.savedItems[i].id == FRC_Rehearsal_Scene.setID ) then
@@ -1526,7 +1529,7 @@ function FRC_Rehearsal_Scene:createScene(event)
 
 
    ----[[
-   function FRC_Rehearsal_Scene.doStartOver()      
+   function FRC_Rehearsal_Scene.doStartOver()
       FRC_Rehearsal_Scene.ensureRehearsalModeStopped()
       FRC_CharacterBuilder.init( {
             view                  = FRC_Rehearsal_Scene.view,
@@ -1535,7 +1538,7 @@ function FRC_Rehearsal_Scene:createScene(event)
             animationImageBase    = animationImageBase,
             itemScrollers         = itemScrollers,
             showTimeMode          = false,
-            categoriesContainer   = categoriesContainer } ) 
+            categoriesContainer   = categoriesContainer } )
       FRC_CharacterBuilder.rebuildInstrumenScroller( )
       FRC_Rehearsal_Scene.changeSet(0)
       FRC_Rehearsal_Scene.changeBackdrop("None");
