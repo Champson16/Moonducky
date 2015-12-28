@@ -67,6 +67,9 @@ local hamsterInstruments   = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas"
 local cowInstruments       = { "Bass", "Conga", "Guitar", "Harmonica", "Microphone", "Piano", "RhythmComboCymbal" }
 local allInstruments       = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" }
 
+local textBoxDefaultTitles = { "A Hard Act To Follow", "One Day At The Theatre", "Over The Moon", "Animal Band", "The Show of Shows", "A Tough Act To Follow", "Party Hat", "Sing With The Animals" };
+
+
 -- ********************************
 
 
@@ -312,8 +315,8 @@ function public.getShowTitle( onSuccess, onCancel )
       end
       self:toFront()
    end
-   Runtime:addEventListener( "enterFrame", group ) 
-   
+   Runtime:addEventListener( "enterFrame", group )
+
    local blur = private.easyBlur( group, 500, { 0, 0.4, 0.4, 0.8 } ) --  time, color )
    blur.touch = function( self, event )
       return true
@@ -343,9 +346,10 @@ function public.getShowTitle( onSuccess, onCancel )
       end
    end
 
-   local textBox = native.newTextField( centerX, titleQueryBack.y, screenW - 80, fontSize + 30 )
-   textBox.font = native.newFont( "OpenSans-Semibold", fontSize )
-   textBox.text = "A Hard Act To Follow"
+   local textBox = native.newTextField( centerX, titleQueryBack.y, screenW - 80, fontSize + 36 )
+   textBox.font = native.newFont( "OpenSans-Semibold", fontSize );
+   local textBoxTitleIndex = mRand(1, #textBoxDefaultTitles);
+   textBox.text = textBoxDefaultTitles[textBoxTitleIndex];
    textBox.isEditable = true
    textBox.userInput = inputListener
    textBox:addEventListener( "userInput"  )
@@ -401,6 +405,7 @@ function public.getShowTitle( onSuccess, onCancel )
 
          if( event.phase == "ended" ) then
             display.currentStage:setFocus( self, nil )
+            native.setKeyboardFocus( nil ); -- TRS
             self.isFocus = false
             if( isWithinBounds ) then
                if( self.cb ) then self.cb() end
@@ -437,7 +442,7 @@ function public.save(saveTable, publishingMode)
       record.y                = stagePiece.y
       record.pieceType        = stagePiece.pieceType
       record.instrument       = stagePiece.instrument
-      record.danceNumber      = stagePiece.danceNumber 
+      record.danceNumber      = stagePiece.danceNumber
 
       if( not publishingMode ) then
          record.characterID      = stagePiece.characterID
@@ -446,7 +451,7 @@ function public.save(saveTable, publishingMode)
             record.characterID = stagePiece.characterID
          else
             record.characterID   = private.getDressingRoomDataByID( stagePiece.characterID, 0 )
-         end         
+         end
       end
       record.publishingMode   = publishingMode
       savePieces[#savePieces+1] = record
@@ -575,7 +580,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
 
    local animalType           = characterData.character
    danceNumber                = private.getNextDanceNum() -- danceNumber or mRand(1,2)
-   
+
    if( instrumentName and string.match( string.lower(instrumentName), "dance" ) ) then
       instrumentName             = "Dance" .. danceNumber -- Assume all players as dancers
    else
@@ -700,7 +705,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    private.attachDragger(stagePiece)
 
    -- EFM start stopped or play one cycle?
-   for i = 1, #animationSequences do      
+   for i = 1, #animationSequences do
       private.playAllAnimations_rehearsal( animationSequences, i )
       --private.playAllAnimations( animationSequences, i )
       --private.stopAllAnimations( animationSequences, i )
@@ -857,7 +862,7 @@ function public.rebuildCostumeScroller( )
          pressAlpha = 0.5,
          --baseDirectory = system.DocumentsDirectory,
          onRelease = function(e)
-            local self = e.target            
+            local self = e.target
             private.scrollerCostumeTouch( curChar )
             return true
          end
@@ -889,7 +894,7 @@ function public.rebuildCostumeScroller( )
             pressAlpha = 0.5,
             --baseDirectory = system.DocumentsDirectory,
             onRelease = function(e)
-               local self = e.target               
+               local self = e.target
                private.scrollerCostumeTouch( curChar )
                return true
             end
@@ -1035,32 +1040,32 @@ function public.playStageCharacters( instrumentTrackStartOffsets, expectedEndTim
 
    for i = 1, #charactersOnStage do
       local animationSequences = charactersOnStage[i].animationSequences
-      
+
       local myInstrument = string.lower(charactersOnStage[i].instrument)
-      local instrumentOffset = 30 -- default start offset for no instrument     
+      local instrumentOffset = 30 -- default start offset for no instrument
       local instrumentEndTime = math.huge -- Dancers never stop dancing! Woohoo!
       for k,v in pairs(instrumentTrackStartOffsets) do
          if( string.match( k, myInstrument ) ) then
             instrumentOffset  = tonumber(v.startOffset)
             instrumentEndTime = tonumber(v.trackEndTime)
          end
-      end      
-      
+      end
+
       --dprint( i, myInstrument, instrumentOffset, instrumentEndTime )
-      
-      local params = { intervalTime       = math.random( 30, 40 ), 
-                       iterations         = math.random( 1, 3 ), 
+
+      local params = { intervalTime       = math.random( 30, 40 ),
+                       iterations         = math.random( 1, 3 ),
                        instrumentOffset   = instrumentOffset,
                        instrumentEndTime  = instrumentEndTime,
                        isFirstCall        = true,
                        showEndTime        = expectedEndTime}
 
       local startTime = system.getTimer()
-      for j = 1, #animationSequences do         
-         private.playAllAnimations( animationSequences, j, true, params ) 
+      for j = 1, #animationSequences do
+         private.playAllAnimations( animationSequences, j, true, params )
       end
       local endTime = system.getTimer()
-      --dprint("Duration to call ", #animationSequences, " playAllAnimations() ", endTime-startTime ) 
+      --dprint("Duration to call ", #animationSequences, " playAllAnimations() ", endTime-startTime )
    end
 end
 
@@ -1307,7 +1312,7 @@ function private.dragNDrop( self, event )
       --local myRight = self.x + self.contentWidth/2
       local myLeft = self.x - 70
       local myRight = self.x + 70
-      
+
       if( (dx < 0 and myLeft > private.left) or
          (dx > 0 and myRight < private.right ) ) then
          self.x = self.x + dx * (self.dragScale and self.dragScale or 1)
@@ -1589,9 +1594,9 @@ function private.createUnifiedAnimationClipGroup( sourceFile, unifiedData, anima
 end
 
 --
--- playAllAnimations() - Plays all of the character's animations 
+-- playAllAnimations() - Plays all of the character's animations
 --
-function private.playAllAnimations( animationSequences, num, autoLoop, params ) 
+function private.playAllAnimations( animationSequences, num, autoLoop, params )
    params = params or { intervalTime = 30, iterations = 1, instrumentOffset = 30, instrumentEndTime = 10000 }
    num = num or mRand(1,#animationSequences)
    local sequence    = animationSequences[num]
@@ -1614,7 +1619,7 @@ function private.playAllAnimations( animationSequences, num, autoLoop, params )
 
       local function onCompletionGate()
          completed[completedIndex] = true
-         
+
          if(obj.removeSelf == nil or obj.stop == nil) then return end
          obj:stop(obj.frameCount)
 
@@ -1622,48 +1627,48 @@ function private.playAllAnimations( animationSequences, num, autoLoop, params )
          for j = 1, #completed do
             executeOnComplete = executeOnComplete and completed[j]
          end
-         
+
          local curTime = system.getTimer()
          local dt = curTime - obj._startedPlayingAt
-         
+
          if( dt >= obj._playDuration ) then
             dprint("STOPPING ANIMATION", num)
-            return 
+            return
          end
-         
-         
+
+
          if( executeOnComplete ) then
-            timer.performWithDelay( framePeriod * 2, 
+            timer.performWithDelay( framePeriod * 2,
                function()
-               local params2 =  { intervalTime        = params.intervalTime, 
-                                  iterations          = math.random( 1, 3 ), 
+               local params2 =  { intervalTime        = params.intervalTime,
+                                  iterations          = math.random( 1, 3 ),
                                   instrumentOffset    = math.random( 500, 2000 ),
                                   instrumentEndTime   = params.instrumentEndTime}
                local startTime = system.getTimer()
                dprint("RESTARTING ANIMATION ", num )
-               for k = 1, #animationSequences do               
+               for k = 1, #animationSequences do
                         if(obj.removeSelf == nil or obj.stop == nil) then return end
-                        private.playAllAnimations( animationSequences, k, autoLoop, params2 ) 
+                        private.playAllAnimations( animationSequences, k, autoLoop, params2 )
                end
                local endTime = system.getTimer()
-               --dprint("Duration to call ", #animationSequences, " playAllAnimations() ", endTime-startTime )             
+               --dprint("Duration to call ", #animationSequences, " playAllAnimations() ", endTime-startTime )
             end )
          end
       end
 
 
       --[[
-      dprint( "intervalTime, iterations, instrumentOffset, instrumentEndTime == ", params.intervalTime, 
+      dprint( "intervalTime, iterations, instrumentOffset, instrumentEndTime == ", params.intervalTime,
               params.iterations, params.instrumentOffset, params.instrumentEndTime, system.getTimer() )
       --]]
       --[[
       if( params.isFirstCall ) then
-         obj._startedPlayingAt = system.getTimer()         
-         if(obj._stopTimer) then 
-            timer.cancel( obj._stopTimer )            
+         obj._startedPlayingAt = system.getTimer()
+         if(obj._stopTimer) then
+            timer.cancel( obj._stopTimer )
          end
          local stopTime = params.instrumentEndTime
-         if( stopTime > params.showEndTime ) then 
+         if( stopTime > params.showEndTime ) then
             stopTime = params.showEndTime
          end
          obj._stopTimer = timer.performWithDelay( stopTime,
@@ -1676,9 +1681,9 @@ function private.playAllAnimations( animationSequences, num, autoLoop, params )
       end
       --]]
       if( params.isFirstCall ) then
-         obj._startedPlayingAt = system.getTimer()         
+         obj._startedPlayingAt = system.getTimer()
          local stopTime = params.instrumentEndTime
-         if( stopTime > params.showEndTime ) then 
+         if( stopTime > params.showEndTime ) then
             stopTime = params.showEndTime
          end
          obj._playDuration = stopTime
@@ -1811,10 +1816,16 @@ function private.highlightSelected()
       local stagePiece = stagePieces[i]
       stagePiece.indicator.strokeWidth = 0
       stagePiece.indicator.stroke.effect = nil
+      -- stagePiece.indicator.fill.effect = nil; -- TRS
    end
    if( not currentStagePiece ) then return end
-   currentStagePiece.indicator.strokeWidth = 6
-   currentStagePiece.indicator.stroke.effect = "generator.marchingAnts"
+   -- currentStagePiece.indicator.strokeWidth = 6
+   -- currentStagePiece.indicator.stroke.effect = "generator.marchingAnts"
+   currentStagePiece.fill.effect = "generator.lenticularHalo" -- TRS
+  currentStagePiece.fill.effect.posX = 0.5; -- TRS
+  currentStagePiece.fill.effect.posY = 0.5; -- TRS
+  currentStagePiece.fill.effect.aspectRatio = 1; -- TRS
+  currentStagePiece.fill.effect.seed = 1; -- TRS
 end
 
 --
