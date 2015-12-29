@@ -24,7 +24,7 @@ end
 
 FRC_SetDesign_Scene.setIndex = 1;
 FRC_SetDesign_Scene.backdropIndex = 1;
-FRC_SetDesign_Scene.backdropName = "Barn";
+FRC_SetDesign_Scene.backdropName = "First";
 
 function FRC_SetDesign_Scene:saveCurrentSet(e)
 	local id = e.id;
@@ -71,7 +71,7 @@ function FRC_SetDesign_Scene:loadSet(e)
 	local id = e.id;
 	if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)); end
 	self.changeSet(e.data.setIndex);
-	self.changeBackdrop(e.data.backdropName or "Barn");
+	self.changeBackdrop(e.data.backdropName or "First");
 	self.id = id;
 end
 
@@ -159,13 +159,25 @@ function FRC_SetDesign_Scene:createScene(event)
 	changeSet();
 
 	local changeBackdrop = function(name)
-      local index = 1
+      dprint( ">>>>>>>>>>>>>>>>>>>>> changeBackdrop()", name )
+      local index = -1
       for i = 1, #backdropData do
          if( backdropData[i].id == name ) then
             index = i
          end
       end
-            
+      if ( index == -1 ) then
+         if( #FRC_SetDesign_Scene.saveData.savedItems > 0 ) then
+            name = FRC_SetDesign_Scene.saveData.savedItems[1].id 
+         else 
+            name = "Barn"
+         end
+         for i = 1, #backdropData do
+            if( backdropData[i].id == name ) then -- EDOCHI
+               index = i
+            end
+         end 
+      end
 		if (index == FRC_SetDesign_Scene.backdropIndex) then return; end
       --table.print_r(backdropData)
 		if (not backdropData[index]) then index = 1; end -- ArtCenter image set as backdrop, but image was deleted (reset index to 1)
@@ -193,7 +205,7 @@ function FRC_SetDesign_Scene:createScene(event)
       FRC_SetDesign_Scene.backdropName = name;
 	end
 	self.changeBackdrop = changeBackdrop;
-	changeBackdrop();
+	changeBackdrop("First");
 	repositionSet();
 
 	local category_button_spacing = 48;
