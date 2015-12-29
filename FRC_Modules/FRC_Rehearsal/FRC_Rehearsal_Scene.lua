@@ -189,7 +189,8 @@ end
 function FRC_Rehearsal_Scene:save(e)
    local id = e.id
    if ((not id) or (id == '')) then id = (FRC_Util.generateUniqueIdentifier(20)) end
-
+   
+   
    --local saveGroup = self.view.setDesignGroup --EFM
    local saveGroup = self.view._content --EFM
 
@@ -279,6 +280,8 @@ function FRC_Rehearsal_Scene:save(e)
    FRC_CharacterBuilder.save(newSave)
    FRC_DataLib.saveJSON(saveDataFilename, self.saveData)
    self.id = id
+   
+   FRC_CharacterBuilder.markDirty( false )   
 end
 
 function FRC_Rehearsal_Scene:load(e)
@@ -325,7 +328,8 @@ function FRC_Rehearsal_Scene:load(e)
       FRC_Rehearsal_Scene.setID = nil
    end
    --]]
-
+   
+   FRC_CharacterBuilder.markDirty( false )
 end
 
 -- TEMPORARY COPY OF SAVE W/ TITLE Editing code (so I can fix save)
@@ -526,6 +530,8 @@ end
 function FRC_Rehearsal_Scene:createScene(event)
    event.params = event.params or {}
    sceneMode = event.params.mode or sceneMode
+   
+   FRC_CharacterBuilder.markDirty( false )
 
    local view = self.view
    if ((not self.id) or (self.id == '')) then self.id = FRC_Util.generateUniqueIdentifier(20) end
@@ -623,6 +629,9 @@ function FRC_Rehearsal_Scene:createScene(event)
    local setScale = 1
    --local function round(val, n) if (n) then  return math.floor( (val * 10^n) + 0.5) / (10^n); else return math.floor(val+0.5); end end
    local changeSet = function(index)
+      
+      FRC_CharacterBuilder.markDirty( true )   
+      
       -- clear previous contents
       if (setGroup.numChildren > 0) then
          setGroup[1]:removeSelf();
@@ -667,6 +676,8 @@ function FRC_Rehearsal_Scene:createScene(event)
    -- changeSet();
 
    local changeBackdrop = function(name)
+      
+      FRC_CharacterBuilder.markDirty( true )   
 
       local index = 1
       for i = 1, #backdropData do

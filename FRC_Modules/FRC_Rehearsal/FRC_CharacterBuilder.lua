@@ -78,6 +78,32 @@ local textBoxDefaultTitles = { "A Hard Act To Follow", "One Day At The Theatre",
 -- ======================================================================
 
 --
+-- markDirty() - Mark Scene as dirty
+--
+function public.markDirty(isDirty)
+   dprint("markDirty ", isDirty) 
+   if( isDirty == nil ) then isDirty = true end
+   public.isDirty = isDirty   
+end
+
+--
+-- dirtyTest() - Mark Scene as dirty
+--
+function public.dirtyTest( cb )
+   dprint("public.dirtyTest() ", public.isDirty )
+   if( public.isDirty ) then
+      public.easyAlert( 'Exit?', 
+         'If you exit, your unsaved progress will be lost.\nIf you want to save first, tap Cancel now and then use the Save feature.',
+         { { "OK", cb }, {"Cancel", nil }, } )
+      
+   else
+      cb()
+   end
+end
+
+
+
+--
 -- cleanup() - Purge local references to key rehearsal values and groups.
 --
 function public.cleanup()
@@ -103,6 +129,8 @@ function public.destroy()
    showTimeMode         = false
    editingEnabled       = true
    instrumentNames      = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" }
+   
+   public.markDirty( false )
 
    display.remove(stagePieces)
 end
@@ -287,8 +315,6 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
    end
 
 end
-
-
 
 --
 -- getShowTitle() - Pop up input field to get show title
@@ -520,7 +546,8 @@ function public.removeCharacter()
          public.placeNewInstrument( currentStagePiece.x, currentStagePiece.y, instrumentToLeave )
       end
       display.remove( tmp )
-   end
+      public.markDirty( true )
+   end   
 end
 
 --
@@ -560,6 +587,8 @@ function public.placeNewInstrument( x, y, instrumentName )
    private.addSelectionIndicator( stagePiece )
 
    private.highlightSelected()
+   
+   public.markDirty( true )
 
    return stagePiece
 end
@@ -716,6 +745,8 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    private.addSelectionIndicator( stagePiece )
 
    private.highlightSelected()
+   
+   public.markDirty( true )
 
    return stagePiece
 end
@@ -1287,6 +1318,9 @@ function private.dragNDrop( self, event )
       --dprint("Editing disabled", editingEnabled)
       return
    end
+   
+   public.markDirty( true )
+   
    if( event.phase == "began" ) then
       display.currentStage:setFocus( self, event.id )
       self.isFocus = true
@@ -1905,7 +1939,6 @@ function private.attachTouchClear()
 end
 
 
-
 --
 -- getNextDanceNum() - Alternate dance numbers instead of relying on random.
 --
@@ -1917,6 +1950,7 @@ function private.getNextDanceNum()
    end
    return lastDanceNum
 end
+
 
 -- Easy Blur
 --
