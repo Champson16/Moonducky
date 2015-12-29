@@ -1816,16 +1816,10 @@ function private.highlightSelected()
       local stagePiece = stagePieces[i]
       stagePiece.indicator.strokeWidth = 0
       stagePiece.indicator.stroke.effect = nil
-      -- stagePiece.indicator.fill.effect = nil; -- TRS
    end
    if( not currentStagePiece ) then return end
-   -- currentStagePiece.indicator.strokeWidth = 6
-   -- currentStagePiece.indicator.stroke.effect = "generator.marchingAnts"
-   currentStagePiece.fill.effect = "generator.lenticularHalo" -- TRS
-  currentStagePiece.fill.effect.posX = 0.5; -- TRS
-  currentStagePiece.fill.effect.posY = 0.5; -- TRS
-  currentStagePiece.fill.effect.aspectRatio = 1; -- TRS
-  currentStagePiece.fill.effect.seed = 1; -- TRS
+   currentStagePiece.indicator.strokeWidth = 6
+   currentStagePiece.indicator.stroke.effect = "generator.marchingAnts"
 end
 
 --
