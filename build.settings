@@ -120,7 +120,7 @@ settings = {
         "en"
 			},
 			UIAppFonts = {
-				"MoonDucky.ttf", "OpenSans-Semibold.ttf"
+				"MoonDucky.ttf", "OpenSans-Semibold.ttf", "ticker.ttf"
 			},
 			CFBundleIconFiles = {
 				"Icon.png",
