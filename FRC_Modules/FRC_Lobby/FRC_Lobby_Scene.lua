@@ -105,9 +105,19 @@ function FRC_Lobby_Scene:createScene(event)
      return true
    end
 
-	sceneLayoutMethods.featureComingSoon = function()
-    -- DISABLED INTENTIONALLY
-		-- native.showAlert("Jukebox is being repaired but should be available very soon!","This feature is coming soon.", { "OK" });
+	sceneLayoutMethods.jukeboxActivate = function(event)
+    analytics.logEvent("MDMT.Lobby.Jukebox");
+    local FRC_Jukebox = require('FRC_Modules.FRC_Jukebox.FRC_Jukebox');
+    local jukebox;
+    jukebox = FRC_Jukebox.new({
+      hideBlank = false,
+      width = screenW * 0.9,
+      height = screenH * 0.79,
+      callback = function(e)
+        jukebox:dispose();
+        jukebox = nil;
+      end
+    });
 	end
 
 	sceneLayoutMethods.popcornMachineActivate = function(event)
@@ -347,7 +357,6 @@ function FRC_Lobby_Scene:createScene(event)
 		end
     analytics.logEvent("MDMT.Lobby.Showtime");
       storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "showtime" }  } );
-		--native.showAlert("Showtime Coming Soon!","This feature is coming soon.", { "OK" });
 		end, 1);
 	end
 

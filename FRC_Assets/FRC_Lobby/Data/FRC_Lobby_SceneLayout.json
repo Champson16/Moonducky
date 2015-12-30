@@ -30,6 +30,6 @@
 			"MDMT_Lobby_JukeboxLight_Bottom.xml",
 			"MDMT_Lobby_JukeboxLight_Sides.xml",
 			"MDMT_Lobby_JukeboxLight_Top.xml" ],
-			"onTouch": "featureComingSoon"
+			"onTouch": "jukeboxActivate"
 	}
 ]
