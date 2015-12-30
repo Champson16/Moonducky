@@ -376,7 +376,8 @@ ui.button.touch = function(event)
 		-- so ensure finger moved at least a few pixelsfrom start of touch location to consider it moved
 		local dx = math_abs(event.x - self._startX);
 		local dy = math_abs(event.y - self._startY);
-		local thresh = 3;
+		--local thresh = 3;
+      local thresh = _G.swipeThresh;
 		if ((dx >= thresh) or (dy >= thresh)) then
 			if (self.parentScrollContainer) then
 				local scrollerBounds = self.parentScrollContainer.contentBounds;
