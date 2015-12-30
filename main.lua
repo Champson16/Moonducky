@@ -8,6 +8,7 @@ meter.create_mem()
 -- main.lua
 --
 -----------------------------------------------------------------------------------------
+
 _G.edmode = false --EFM
 if( edmode ) then
    _G.dprint  = _G.print --EFM
@@ -32,13 +33,36 @@ end
 
 --timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.SetDesign', { effect="crossFade", time=0 }); end )
 --timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time=0 }); end )
---timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.Rehearsal', { time = 100, params = { mode = "rehearsal", skipCreateLoad = false } }); end )
+--timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.Rehearsal', { time = 100, params = { mode = "rehearsal", skipCreateLoad = true } }); end )
 --timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "showtime" } }); end )
 --timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.Lobby', { effect="crossFade", time=0 }); end )
 --require("mobdebug").start() -- ZeroBrane Users
 -----------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------
+
+-- ==============================================================
+-- TRS / EFM - temporary home of swipe threshold till we tune it.
+-- ==============================================================
+_G.swipeThresh = 25
+-- ==============================================================
+-- ==============================================================
+
+-- ==============================================================
+-- native.showAlert() (bug?) Fix
+-- ==============================================================
+local native_showAlert = native.showAlert
+local lastAlert
+native.showAlert = function( ... )
+   --dprint( "Calling showAlert()")
+   if( lastAlert ) then 
+      native.cancelAlert( lastAlert )
+      lastAlert = nil
+   end
+   lastAlert = native_showAlert(unpack(arg))
+end
+-- ==============================================================
+-- ==============================================================
 
 
 display.setStatusBar(display.HiddenStatusBar);
