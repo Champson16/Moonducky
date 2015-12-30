@@ -1,147 +1,178 @@
-local storyboard = require('storyboard');
-local FRC_Layout = require('FRC_Modules.FRC_Layout.FRC_Layout');
-local FRC_Video = {};
+local storyboard = require('storyboard')
+local FRC_Layout = require('FRC_Modules.FRC_Layout.FRC_Layout')
+local FRC_Video = {}
+
+local	screenW, screenH, contentW, contentH, centerX, centerY = FRC_Layout.getScreenDimensions() -- TRS EFM
 
 -- updated 12092015 TRS
 
-FRC_Video.new = function(parentView, videoData)
-	display.setDefault("background", 1.0, 1.0, 1.0);
-  local screenW, screenH = FRC_Layout.getScreenDimensions();
-	local videoGroup = display.newGroup();
-  local currentVideoLength = 0;
+FRC_Video.new = function(parentView, videoData, useWhiteFill )
+   --table.print_r( videoData )   
+   
+   if(  ON_SIMULATOR ) then
+      return 
+   end   
 
-  -- put in a black background on the entire screen
-  local bg = display.newRect(videoGroup, 0, 0, screenW, screenH);
-  bg:setFillColor(1.0);
-  FRC_Layout.alignToLeft(bg);
-  FRC_Layout.alignToTop(bg);
-  videoGroup.bg = bg;
+   local videoGroup = display.newGroup()
+   local currentVideoLength = 0
 
-	function videoGroup.freeMemory()
-		if (videoGroup.currentVideo) then
-      -- native.showAlert('DEBUG', 'Pausing video', { "OK" });
-      videoGroup.currentVideo:removeEventListener("video", videoGroup.playVideo );
-			videoGroup.currentVideo:pause();
-      -- native.showAlert('DEBUG', 'Removing video', { "OK" });
-			videoGroup.currentVideo:removeSelf();
-			if (videoGroup.currentVideo) then videoGroup.currentVideo = nil; end
-		end
-    if (videoGroup.skipVideoButton) then
-      videoGroup.skipVideoButton:removeEventListener('touch', videoGroup.skipVideo );
-      videoGroup.skipVideoButton:removeSelf();
-      if (videoGroup.skipVideoButton) then videoGroup.skipVideoButton = nil; end
-    end
-    if (videoGroup.videoTimer) then
-      timer.cancel(videoGroup.videoTimer);
-    end
-	end
+   -- Add either a white or black background depending on 'useWhiteFill'
+   local bg = display.newRect(videoGroup, centerX, centerY, screenW, screenH)
+   if( useWhiteFill == true ) then
+      display.setDefault("background", 1.0, 1.0, 1.0)
+      bg:setFillColor(1) --EFM
+   else
+      display.setDefault("background", 0, 0, 0)
+      bg:setFillColor(0) --EFM
+   end
 
+   videoGroup.bg = bg
+
+   --
+   -- Free Memory
+   function videoGroup.freeMemory()
+      if (videoGroup.currentVideo) then
+         videoGroup.currentVideo:removeEventListener("video", videoGroup.playVideo )
+         videoGroup.currentVideo:pause()         
+         videoGroup.currentVideo:removeSelf()
+         videoGroup.currentVideo = nil
+      end
+      if (videoGroup.skipVideoButton) then
+         videoGroup.skipVideoButton:removeEventListener('touch', videoGroup.skipVideo )
+         display.remove(videoGroup.skipVideoButton)
+         videoGroup.skipVideoButton = nil
+      end
+      if (videoGroup.videoTimer) then
+         timer.cancel(videoGroup.videoTimer)
+      end
+   end
+
+   --
+   -- Skip Video
    local startTime = system.getTimer()
-  function videoGroup.skipVideo(event)
-     local curTime = system.getTimer()
-     if( curTime - startTime < 333 ) then
-       return true
-     end
-    if (not event or event.phase == "ended") then
-      if videoGroup.bg then
-        videoGroup.bg:removeSelf();
-        videoGroup.bg = nil;
+   function videoGroup.skipVideo(event)
+      local curTime = system.getTimer()
+      if( curTime - startTime < 333 ) then
+         return true
       end
-      videoGroup.freeMemory();
-      videoGroup:removeSelf();
-      if (videoGroup) then videoGroup = nil; end
-			-- let the parent view know that the video is finished
-			if (parentView) then
-				if (parentView.dispatchEvent) then
-		      parentView:dispatchEvent({ name = 'videoComplete' });
-				end
-			end
-    end
-    -- we handled the event
-    return true;
-  end
+      if (not event or event.phase == "ended") then
+         if videoGroup.bg then
+            display.remove(videoGroup.bg)
+            videoGroup.bg = nil
+         end
+         videoGroup.freeMemory()
+         display.remove(videoGroup)
+         videoGroup = nil
+         -- let the parent view know that the video is finished
+         if (parentView) then
+            if ( parentView.dispatchEvent and type(parentView.dispatchEvent) == "function" ) then
+               parentView:dispatchEvent({ name = 'videoComplete' })
+            end
+         end
+      end
+      -- we handled the event
+      return true
+   end
 
-  function videoGroup.initVideo(videoData)
-    local videoFile = videoData.HD_VIDEO_PATH;
-    local videoDimensions = videoData.HD_VIDEO_SIZE;
-    local videoScale = videoData.VIDEO_SCALE;
-    -- forward declarations
-    local xs, ys;
-    if ((ANDROID_DEVICE) or (NOOK_DEVICE) or (KINDLE_DEVICE)) then
-      -- android devices generally require lower res videos for backward compatibility
-      videoFile = videoData.SD_VIDEO_PATH;
-      videoDimensions = videoData.SD_VIDEO_SIZE;
-    end
-    -- DEBUG
-    dprint("Playing video: ", videoFile);
-    if (videoFile) then
-      -- we're going to fill the screen
-      videoGroup.currentVideo = native.newVideo(0, 0, videoDimensions.width, videoDimensions.height);
-      videoGroup.currentVideo:load(videoFile);
-      if (videoScale == "FULLSCREEN") then
-        -- FRC_Layout.scaleToFit(videoGroup);
-        -- figure out the scale
-				xs = display.viewableContentWidth/videoGroup.currentVideo.contentWidth;
-				ys = display.viewableContentHeight/videoGroup.currentVideo.contentHeight;
-        -- xs = display.actualContentWidth/videoGroup.currentVideo.contentWidth;
-        -- ys = display.actualContentHeight/videoGroup.currentVideo.contentHeight;
-        videoGroup.currentVideo.xScale = xs;
-        videoGroup.currentVideo.yScale = ys;
-        -- native.showAlert('VIDEO SCALING', 'd.pWidth: ' .. display.pixelWidth .. 'd.pHeight: ' ..display.pixelHeight .. 'cVideo.width: ' .. videoGroup.currentVideo.width .. 'cVideo.height: ' ..videoGroup.currentVideo.height .. 'd.cWidth: ' .. display.contentWidth .. 'videoDimensions.width: ' .. videoDimensions.width .. 'd.cHeight: ' .. display.contentHeight .. 'videoDimensions.height: ' .. videoDimensions.height .. ' xs/ys: ' .. xs .. '/' .. ys , { "OK" });
-      elseif (videoScale == "LETTERBOX") then
-        -- do nothing for now
+   --
+   -- Init Video
+   function videoGroup.initVideo(videoData)
+      local videoFile = videoData.HD_VIDEO_PATH
+      local videoDimensions = videoData.HD_VIDEO_SIZE
+      local videoScale = videoData.VIDEO_SCALE
+      -- forward declarations      
+      if ((ANDROID_DEVICE) or (NOOK_DEVICE) or (KINDLE_DEVICE)) then
+         -- android devices generally require lower res videos for backward compatibility
+         videoFile = videoData.SD_VIDEO_PATH
+         videoDimensions = videoData.SD_VIDEO_SIZE
+      end
+
+      print("Playing video: ", videoFile) -- DEBUG
+      if( videoFile ) then
+         
+         --
+         -- Bug Workaround - ANDROID not currently showing full screen videos correctly, so they always default to 'LETTERBOX'
+         -- 12/29/2015 - Corona 2015.2799
+         --
+         if (videoScale == "FULLSCREEN" and ANDROID_DEVICE ) then
+            videoScale = "LETTERBOX"
+         end
+
+         -- ======================================================================
+         -- FULLSCREEN FULLSCREEN FULLSCREEN FULLSCREEN FULLSCREEN FULLSCREEN
+         -- ======================================================================
+         if (videoScale == "FULLSCREEN" and not ANDROID_DEVICE ) then
+            videoGroup.currentVideo = native.newVideo( centerX, centerY, videoDimensions.width, videoDimensions.height)
+            videoGroup.currentVideo:load(videoFile)
+            videoGroup.currentVideo.xScale = display.viewableContentWidth/videoGroup.currentVideo.contentWidth
+            videoGroup.currentVideo.yScale = display.viewableContentHeight/videoGroup.currentVideo.contentHeight
+            
+         -- ======================================================================
+         -- LETTERBOX LETTERBOX LETTERBOX LETTERBOX LETTERBOX LETTERBOX
+         -- ======================================================================
+         elseif (videoScale == "LETTERBOX") then
+            local ws = display.actualContentWidth/videoDimensions.width 
+            local hs = display.actualContentHeight/videoDimensions.height
+            local vidScale = ws
+            if( ws * videoDimensions.height > display.actualContentHeight) then
+               vidScale = hs
+            end
+            videoDimensions.width = videoDimensions.width * vidScale
+            videoDimensions.height = videoDimensions.height * vidScale
+            videoGroup.currentVideo = native.newVideo( centerX, centerY, videoDimensions.width, videoDimensions.height)
+            videoGroup.currentVideo:load(videoFile)
+         
+         else
+            videoGroup.currentVideo = native.newVideo( centerX, centerY, videoDimensions.width, videoDimensions.height)
+            videoGroup.currentVideo:load(videoFile)
+
+         end
+
+         videoGroup.currentVideo:addEventListener( "video", videoGroup.playVideo )
+         videoGroup.skipVideoButton = display.newRect(videoGroup, centerX, centerY, screenW, screenH)
+         videoGroup.skipVideoButton.isVisible = false
+         videoGroup.skipVideoButton:addEventListener('touch', videoGroup.skipVideo )
+         videoGroup.skipVideoButton.isHitTestable = true
       else
-        -- do nothing for now
+         if videoGroup.bg then
+            display.remove(videoGroup.bg)
+            videoGroup.bg = nil
+         end
+         videoGroup.freeMemory()
+         display.remove(videoGroup)
+         videoGroup = nil
+         if (parentView) then
+            if ( parentView.dispatchEvent and type(parentView.dispatchEvent) == "function" ) then
+               parentView:dispatchEvent({ name = 'videoComplete' })
+            end
+         end
       end
-      videoGroup.currentVideo.x = display.contentCenterX; -- Width * 0.5;
-      videoGroup.currentVideo.y = display.contentCenterY; -- Height * 0.5;
-      videoGroup.currentVideo:addEventListener("video", videoGroup.playVideo );
-      videoGroup.skipVideoButton = display.newRect(videoGroup, 0, 0, screenW, screenH);
-      videoGroup.skipVideoButton.isVisible = false;
-      videoGroup.skipVideoButton.anchorX = 0.5;
-      videoGroup.skipVideoButton.anchorY = 0.5;
-      videoGroup.skipVideoButton.x, videoGroup.skipVideoButton.y = display.contentCenterX, display.contentCenterY;
-      videoGroup.skipVideoButton:addEventListener('touch', videoGroup.skipVideo );
-      videoGroup.skipVideoButton.isHitTestable = true;
-    else
-      if videoGroup.bg then
-        videoGroup.bg:removeSelf();
-        videoGroup.bg = nil;
+   end
+
+   --
+   -- Play Video
+   function videoGroup.playVideo(event)
+      if (event.phase == "ready") then
+         videoGroup.currentVideo:play()
+         videoGroup.currentVideo:removeEventListener("video", videoGroup.playVideo )
+         videoGroup.videoTimer = timer.performWithDelay(currentVideoLength, videoGroup.skipVideo, 1)
       end
-			videoGroup.freeMemory();
-      videoGroup:removeSelf();
-      if (videoGroup) then videoGroup = nil; end
-			if (parentView) then
-				if (parentView.dispatchEvent) then
-					parentView:dispatchEvent({ name = 'videoComplete' });
-				end
-			end
-    end
-  end
+   end
 
-  function videoGroup.playVideo(event)
-    if (event.phase == "ready") then
-      videoGroup.currentVideo:play();
-      videoGroup.currentVideo:removeEventListener("video", videoGroup.playVideo );
-      videoGroup.videoTimer = timer.performWithDelay(currentVideoLength, videoGroup.skipVideo, 1);
-    end
-  end
+   -- check to see if we even have a video to play
+   -- first, if we are in the simulator, nevermind
+   if(  ON_SIMULATOR ) then
+      videoGroup.skipVideo()
+   else
+      -- next, find out whether or not we have video data
+      if (videoData) then         
+         print(videoData.HD_VIDEO_PATH, videoData.SD_VIDEO_PATH,videoData.VIDEO_LENGTH) -- DEBUG:
+         currentVideoLength = videoData.VIDEO_LENGTH
+         videoGroup.initVideo(videoData)
+      end
+   end
 
-  -- check to see if we even have a video to play
-  -- first, if we are in the simulator, nevermind
-  if(  ON_SIMULATOR ) then
-    videoGroup.skipVideo();
-  else
-    -- next, find out whether or not we have video data
-    if (videoData) then
-      -- DEBUG:
-      print(videoData.HD_VIDEO_PATH, videoData.SD_VIDEO_PATH,videoData.VIDEO_LENGTH);
-      currentVideoLength = videoData.VIDEO_LENGTH;
-      videoGroup.initVideo(videoData);
-    end
-  end
-
-	return videoGroup;
+   return videoGroup
 end
 
-return FRC_Video;
+return FRC_Video
