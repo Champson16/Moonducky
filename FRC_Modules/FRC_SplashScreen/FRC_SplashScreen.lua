@@ -61,7 +61,7 @@ FRC_SplashScreen.new = function(nextScene)
       if (videoFile) then
          
          -- EFM - Make background black on intro video
-         if( string.match( string.lower("videoFile", "intro") ) ) then
+         if( string.match( string.lower(videoFile), "intro") )  then
             bg:setFillColor(0);
          end
          
