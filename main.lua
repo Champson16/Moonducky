@@ -70,7 +70,9 @@ display.setStatusBar(display.HiddenStatusBar);
 local FRC_Globals = require('FRC_Modules.FRC_Globals.FRC_Globals');
 
 -- Stub out print when on device for quiet logs
-_G.print = ( ON_SIMULATOR ) and _G.print or function() end
+if( not edmode ) then
+   _G.print = ( ON_SIMULATOR ) and _G.print or function() end
+end
 
 -- LOAD BEFORE ALL FRC MODULES
 require ("FRC_Modules.FRC_Extensions.FRC_Extensions") 
@@ -91,7 +93,10 @@ local FRC_AppSettings      = require('FRC_Modules.FRC_AppSettings.FRC_AppSetting
 -- Push Notifications
 --
 local FRC_Notifications = require "FRC_Modules.FRC_Notifications.FRC_Notifications"
-FRC_Notifications.init( { enableLogger = false, autoShow = false, oneSignalID = "7474c044-8712-11e5-abed-a0369f2d9328", projectNumber = "709462375959" } )
+FRC_Notifications.init( { enableLogger = false, autoShow = false, 
+                          --discoverIdToken = true,
+                          oneSignalID = "7474c044-8712-11e5-abed-a0369f2d9328", 
+                          projectNumber = "709462375959" } )
 
 --== APP SETTINGS BEGIN ==--
 FRC_AppSettings.init();

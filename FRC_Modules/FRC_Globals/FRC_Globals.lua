@@ -3,6 +3,7 @@
 --
 -- Note: Some global variables may be initialzed elswhere because they are 'context sensitive'
 --
+local globals = {}
 
 --
 -- Build Information
@@ -19,10 +20,11 @@ _G.IOS_DEVICE        = (system.getInfo( "platformName" )    == "iPhone OS");
 _G.ANDROID_DEVICE    = (system.getInfo( "platformName" )    == "Android");
 _G.NOOK_DEVICE       = (system.getInfo( "targetAppStore" )  == "nook");
 _G.KINDLE_DEVICE     = (system.getInfo( "targetAppStore" )  == "amazon");
-_G.ANDROID_DEVICE    = ANDROID_DEVICE or NOOK_DEVICE or KINDLE_DEVICE;
-_G.WINDOWS_DESKTOP   = (system.getInfo("platformName") == "Win");
-_G.OSX_DESKTOP       = (system.getInfo("platformName") == "Mac OS X");
-
+_G.TABEO_DEVICE      = (system.getInfo("model")             == "TABEO");
+_G.WINDOWS_PHONE     = (system.getInfo("platformName")      == "WinPhone");
+_G.WINDOWS_DESKTOP   = (system.getInfo("platformName")      == "Win");
+_G.OSX_DESKTOP       = (system.getInfo("platformName")      == "Mac OS X");
+_G.ANDROID_DEVICE    = ANDROID_DEVICE or NOOK_DEVICE or KINDLE_DEVICE or TABEO_DEVICE;
 
 _G.fontMoonDucky     = "MoonDucky"
 _G.fontOpenSans      = "OpenSans-Semibold"
@@ -35,3 +37,4 @@ _G.MUSIC_CHANNEL  = 11;
 _G.VO_CHANNEL     = 12;
 _G.SFX_CHANNEL    = 13;
 
+return globals 

@@ -153,7 +153,7 @@ function FRC_Lobby_Scene:createScene(event)
 
 		-- Decode the string
       local pex = require "pex"
-      local emitter1 = pex.loadPD2( view._content, centerX + 249, centerY + 36,
+      local emitter1 = pex.loadPD2( view._content, event.target.x, event.target.y,          --centerX + 249, centerY + 36,
 						           FRC_Lobby_Settings.DATA.POPCORNMACHINEPARTICLE,
                              { texturePath = "FRC_Assets/FRC_Lobby/Images/" } )
       popcornEmitters[#popcornEmitters+1] = emitter1
@@ -257,8 +257,8 @@ function FRC_Lobby_Scene:createScene(event)
 			if (sceneLayout[i].onTouch) then
 				sceneLayout[i]:addEventListener('touch', function(e)
 					if (e.phase == "began") then
-						-- print("sceneLayout onTouch EVENT", e.target.onTouch); -- DEBUG
-						e.target.onTouch();
+						--print("sceneLayout onTouch EVENT", e.target.onTouch); -- DEBUG
+						e.target.onTouch(e);
 					end
 					return true;
 				end);
