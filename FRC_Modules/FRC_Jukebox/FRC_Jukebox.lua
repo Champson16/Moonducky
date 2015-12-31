@@ -176,7 +176,7 @@ FRC_Jukebox.new = function(options)
 			if tickerGroupContainer then
 				if tickerGroup then
 					if tickerGroup.x + tickerGroup.contentWidth + tickerGroupContainer.contentWidth > 0 then
-						tickerGroup:translate(-1,0); -- shift it to the left
+						tickerGroup:translate(-2,0); -- shift it to the left
 					else
 						tickerGroup.x = 0; -- tickerGroupContainer.contentWidth; -- 0;
 					end
