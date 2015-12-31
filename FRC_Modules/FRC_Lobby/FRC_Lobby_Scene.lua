@@ -110,9 +110,10 @@ function FRC_Lobby_Scene:createScene(event)
     local FRC_Jukebox = require('FRC_Modules.FRC_Jukebox.FRC_Jukebox');
     local jukebox;
     jukebox = FRC_Jukebox.new({
+      parent = view._overlay,
       hideBlank = false,
       width = screenW * 0.9,
-      height = screenH * 0.79,
+      height = screenH * 0.9,
       callback = function(e)
         jukebox:dispose();
         jukebox = nil;
@@ -152,11 +153,11 @@ function FRC_Lobby_Scene:createScene(event)
 		end
 
 		-- Decode the string
-      local pex = require "pex"
-      local emitter1 = pex.loadPD2( view._content, event.target.x, event.target.y,          --centerX + 249, centerY + 36,
-						           FRC_Lobby_Settings.DATA.POPCORNMACHINEPARTICLE,
-                             { texturePath = "FRC_Assets/FRC_Lobby/Images/" } )
-      popcornEmitters[#popcornEmitters+1] = emitter1
+    local pex = require "pex"
+    local emitter1 = pex.loadPD2( view._content, centerX + 249, centerY + 36,
+					           FRC_Lobby_Settings.DATA.POPCORNMACHINEPARTICLE,
+                           { texturePath = "FRC_Assets/FRC_Lobby/Images/" } )
+    popcornEmitters[#popcornEmitters+1] = emitter1
       --local emitterParams = DATA('POPCORNMACHINEPARTICLE'); -- json.decode( fileData )
 		-- Create the emitter with the decoded parameters
 		--local emitter1 = display.newEmitter( emitterParams )
@@ -193,8 +194,8 @@ function FRC_Lobby_Scene:createScene(event)
 	});
 	rehearsalButton.anchorX = 0.5;
 	rehearsalButton.anchorY = 0.5;
-   view._underlay:insert(rehearsalButton);
-   FRC_Layout.placeUI(rehearsalButton)
+  view._underlay:insert(rehearsalButton);
+  FRC_Layout.placeUI(rehearsalButton)
 
 
 	-- query server
