@@ -16,4 +16,101 @@ FRC_Jukebox_Settings.DEFAULTS = {
   CLOSE_BUTTON_WIDTH = 50
 };
 
+FRC_Jukebox_Settings.DATA = {
+	MEDIA = {
+		{
+			MEDIA_TYPE = "VIDEO",
+			POSTER_FRAME = 'MDMT_MusicVideo_HamsterWantToBeFree_Poster.png',
+			HD_VIDEO_PATH = 'MDMT_MusicVideo_HamsterWantToBeFree.mp4',
+			HD_VIDEO_SIZE = { width = 960, height = 540 },
+			SD_VIDEO_PATH = 'MDMT_MusicVideo_HamsterWantToBeFree.mp4',
+			SD_VIDEO_SIZE = { width = 960, height = 540 },
+			VIDEO_SCALE = 'FULLSCREEN',
+			VIDEO_LENGTH = 146000 },
+		{
+			MEDIA_TYPE = "VIDEO",
+			POSTER_FRAME = 'MDMT_MusicVideo_MechanicalCow_Poster.png',
+			HD_VIDEO_PATH = 'MDMT_MusicVideo_MechanicalCow.mp4',
+			HD_VIDEO_SIZE = { width = 960, height = 540 },
+			SD_VIDEO_PATH = 'MDMT_MusicVideo_MechanicalCow.mp4',
+			SD_VIDEO_SIZE = { width = 960, height = 540 },
+			VIDEO_SCALE = 'FULLSCREEN',
+			VIDEO_LENGTH = 204000 },
+		{
+			POSTER_FRAME = 'MDMT_MusicVideo_KittyCatComesToTown_Poster.png',
+			HD_VIDEO_PATH = 'MDMT_MusicVideo_KittyCatComesToTown.mp4',
+			HD_VIDEO_SIZE = { width = 960, height = 540 },
+			SD_VIDEO_PATH = 'MDMT_MusicVideo_KittyCatComesToTown.mp4',
+			SD_VIDEO_SIZE = { width = 960, height = 540 },
+			VIDEO_SCALE = 'FULLSCREEN',
+			VIDEO_LENGTH = 133000 },
+		{
+			MEDIA_TYPE = "VIDEO",
+			POSTER_FRAME = 'MDMT_MusicVideo_FloatingNotes_PieInTheSky_Poster.png',
+			HD_VIDEO_PATH = 'MDMT_MusicVideo_FloatingNotes_PieInTheSky.mp4',
+			HD_VIDEO_SIZE = { width = 960, height = 540 },
+			SD_VIDEO_PATH = 'MDMT_MusicVideo_FloatingNotes_PieInTheSky.mp4',
+			SD_VIDEO_SIZE = { width = 960, height = 540 },
+			VIDEO_SCALE = 'FULLSCREEN',
+			VIDEO_LENGTH = 176000 },
+		{
+			MEDIA_TYPE = "VIDEO",
+			POSTER_FRAME = 'MDMT_MusicVideo_FloatingNotes_KangaroosUpsideDown_Poster.png',
+			HD_VIDEO_PATH = 'MDMT_MusicVideo_FloatingNotes_KangaroosUpsideDown.mp4',
+			HD_VIDEO_SIZE = { width = 960, height = 540 },
+			SD_VIDEO_PATH = 'MDMT_MusicVideo_FloatingNotes_KangaroosUpsideDown.mp4',
+			SD_VIDEO_SIZE = { width = 960, height = 540 },
+			VIDEO_SCALE = 'FULLSCREEN',
+			VIDEO_LENGTH = 129000 },
+		{
+			MEDIA_TYPE = "VIDEO",
+			POSTER_FRAME = 'MDMT_MusicVideo_FloatingNotes_DreamTime_Poster.png',
+			HD_VIDEO_PATH = 'MDMT_MusicVideo_FloatingNotes_DreamTime.mp4',
+			HD_VIDEO_SIZE = { width = 960, height = 540 },
+			SD_VIDEO_PATH = 'MDMT_MusicVideo_FloatingNotes_DreamTime.mp4',
+			SD_VIDEO_SIZE = { width = 960, height = 540 },
+			VIDEO_SCALE = 'FULLSCREEN',
+			VIDEO_LENGTH = 164000 },
+		{
+			MEDIA_TYPE = "VIDEO",
+			POSTER_FRAME = 'MDMT_MusicVideo_FloatingNotes_RainComeDown_Poster.png',
+			HD_VIDEO_PATH = 'MDMT_MusicVideo_FloatingNotes_RainComeDown.mp4',
+			HD_VIDEO_SIZE = { width = 960, height = 540 },
+			SD_VIDEO_PATH = 'MDMT_MusicVideo_FloatingNotes_RainComeDown.mp4',
+			SD_VIDEO_SIZE = { width = 960, height = 540 },
+			VIDEO_SCALE = 'FULLSCREEN',
+			VIDEO_LENGTH = 127000 },
+		{
+			MEDIA_TYPE = "AUDIO",
+			POSTER_FRAME = 'MDMT_MusicTheatre_HamsterWantToBeFree_Poster.png',
+			SONG_TITLE = 'Hamster Want To Be Free',
+			AUDIO_PATH = 'MDMT_global_BGMUSIC_HamstersJustWantToBeFree.mp3',
+			AUDIO_LENGTH = 148000 },
+		{
+			MEDIA_TYPE = "AUDIO",
+			POSTER_FRAME = 'MDMT_MusicTheatre_MechanicalCow_Poster.png',
+			SONG_TITLE = 'Mechanical Cow',
+			AUDIO_PATH = 'MDMT_global_BGMUSIC_MechanicalCow.mp3',
+			AUDIO_LENGTH = 210000 },
+		{
+			MEDIA_TYPE = "AUDIO",
+			POSTER_FRAME = 'MDMT_MusicTheatre_KittyCatComesToTown_Poster.png',
+			SONG_TITLE = 'Kitty Cat Comes To Town',
+			AUDIO_PATH = 'MDMT_global_BGMUSIC_KittyCatComesToTown.mp3',
+			AUDIO_LENGTH = 135000 },
+		{
+			MEDIA_TYPE = "AUDIO",
+			POSTER_FRAME = 'MDMT_MusicTheatre_Imagination_Poster.png',
+			SONG_TITLE = 'Imagination',
+			AUDIO_PATH = 'MDMT_global_BGMUSIC_Imagination.mp3',
+			AUDIO_LENGTH = 231000 },
+		{
+			MEDIA_TYPE = "AUDIO",
+			POSTER_FRAME = 'MDMT_MusicTheatre_O-De-O_Poster.png',
+			SONG_TITLE = 'O-De-O',
+			AUDIO_PATH = 'MDMT_global_BGMUSIC_O-De-O.mp3',
+			AUDIO_LENGTH = 172000 },
+	}
+};
+
 return FRC_Jukebox_Settings;

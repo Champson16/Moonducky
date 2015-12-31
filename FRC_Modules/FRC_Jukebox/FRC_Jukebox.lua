@@ -108,7 +108,7 @@ FRC_Jukebox.new = function(options)
 	-- pause control
 	-- ticker box
 	-- ticker text
-	local tickerText = "COMING SOON - AN INTERACTIVE JUKEBOX WHICH WILL SHOW SONG TITLES IN A TICKER DISPLAY LIKE THIS!"
+	local tickerText = "AN INTERACTIVE JUKEBOX!"
 
 	local chunkSize=160
 	-- This variable defines the number of characters by which to divide long ticker text
@@ -117,9 +117,21 @@ FRC_Jukebox.new = function(options)
 	-- this number. But unless you are using an absurdly large font, you shouldn't need to adjust
 	-- this variable.
 
-	-- local tickerGroupContainer = display.newContainer( jukeboxGroup, jukeboxGroup.winWidth, FRC_Layout.getScaleFactor() * 40 );
+	local tickerGroupContainer = display.newContainer( jukeboxGroup.winWidth, FRC_Layout.getScaleFactor() * 40 );
+	tickerGroupContainer:translate( tickerGroupContainer.width*0.5, tickerGroupContainer.height*0.5 );
+
+	-- test image
+	local maskedImage = display.newImageRect(imageBase .. "MDMT_MusicTheatre_HamsterWantToBeFree_Poster@2x.png", 608, 463);
+	tickerGroupContainer:insert(maskedImage);
+	-- maskedImage.x, maskedImage.y = 0;
+	print("maskedImage", maskedImage.width, maskedImage.height);
+	print("maskedImage", maskedImage.x, maskedImage.y);
+
+	-- jukeboxGroup:insert(tickerGroupContainer);
 	local tickerGroup = display.newGroup();
-	-- tickerGroupContainer:insert(tickerGroup);
+	tickerGroupContainer:insert(tickerGroup);
+	tickerGroupContainer.y = jukeboxGroup.height / 2 + (FRC_Layout.getScaleFactor() * 35);
+
 
 	local startTickerTextCrawl = function()
 
@@ -130,12 +142,12 @@ FRC_Jukebox.new = function(options)
 			local ticker = display.newText(string.sub(tickerText, chunkSize*(i-1)+1, chunkSize*i),0,0,"ticker",28)
 
 			if (i == 1) then
-				ticker.x = display.contentWidth/2; -- TODO change this
+				ticker.x = jukeboxGroup.winWidth/2; -- TODO change this
 			else
 				ticker.x = tickerGroup[i-1].x + tickerGroup[i-1].contentWidth
 			end
 
-			ticker.y = jukeboxGroup.height / 2 + (FRC_Layout.getScaleFactor() * 38);
+			-- ticker.y = jukeboxGroup.height / 2 + (FRC_Layout.getScaleFactor() * 38);
 			ticker:setTextColor(255,255,255)
 			tickerGroup:insert(ticker)
 			ticker = nil
@@ -143,10 +155,10 @@ FRC_Jukebox.new = function(options)
 
 		local textMove = function()
 			if tickerGroup then
-				if tickerGroup.x + tickerGroup.contentWidth + display.contentWidth > 0 then
+				if tickerGroup.x + tickerGroup.contentWidth + tickerGroupContainer.contentWidth > 0 then
 					tickerGroup:translate(-3,0)
 				else
-					tickerGroup.x = display.contentWidth; -- 0;
+					tickerGroup.x = 0; -- tickerGroupContainer.contentWidth; -- 0;
 				end
 			end
 		end
@@ -155,8 +167,8 @@ FRC_Jukebox.new = function(options)
 	end
 	FRC_Jukebox.startTickerTextCrawl = startTickerTextCrawl;
 
-	-- print("tickerGroupContainer", tickerGroupContainer.width, tickerGroupContainer.height);
-	-- print("tickerGroupContainer", tickerGroupContainer.x, tickerGroupContainer.y);
+	print("tickerGroupContainer", tickerGroupContainer.width, tickerGroupContainer.height);
+	print("tickerGroupContainer", tickerGroupContainer.x, tickerGroupContainer.y);
 
 	local stopTickerTextCrawl = function()
 		Runtime:removeEventListener("enterFrame",textMove);
@@ -170,9 +182,7 @@ FRC_Jukebox.new = function(options)
 	print("tickerGroup", tickerGroup.width, tickerGroup.height);
 	print("tickerGroup", tickerGroup.x, tickerGroup.y);
 
-	-- selection box
 	-- prev media selector
-
 	local previousMediaButton = ui.button.new({
 		imageUp = imageBase .. 'FRC_Jukebox_Button_Previous_up.png',
 		imageDown = imageBase .. 'FRC_Jukebox_Button_Previous_down.png',
@@ -190,12 +200,10 @@ FRC_Jukebox.new = function(options)
 	previousMediaButton.anchorX = 0.5;
 	previousMediaButton.anchorY = 0.5;
   jukeboxGroup:insert(previousMediaButton);
+	jukeboxGroup.previousMediaButton = previousMediaButton;
   FRC_Layout.placeUI(previousMediaButton)
 
-	-- left media selector
-	-- right media selector
 	-- next media selector
-
 	local nextMediaButton = ui.button.new({
 		imageUp = imageBase .. 'FRC_Jukebox_Button_Next_up.png',
 		imageDown = imageBase .. 'FRC_Jukebox_Button_Next_down.png',
@@ -213,7 +221,63 @@ FRC_Jukebox.new = function(options)
 	nextMediaButton.anchorX = 0.5;
 	nextMediaButton.anchorY = 0.5;
 	jukeboxGroup:insert(nextMediaButton);
+	jukeboxGroup.nextMediaButton = nextMediaButton;
 	FRC_Layout.placeUI(nextMediaButton)
+
+	-- replay media
+	local replayMediaButton = ui.button.new({
+		imageUp = imageBase .. 'FRC_Jukebox_Button_Replay_up.png',
+		imageDown = imageBase .. 'FRC_Jukebox_Button_Replay_down.png',
+		imageDisabled = imageBase .. 'FRC_Jukebox_Button_Replay_disabled.png',
+		imageFocused = imageBase .. 'FRC_Jukebox_Button_Replay_focused.png',
+		width = 96,
+		height = 96,
+		x = -290,
+		y = 28,
+		onRelease = function()
+			analytics.logEvent("MDMT.Lobby.Jukebox.ReplayMedia");
+			-- navigate media
+		end
+	});
+	replayMediaButton.anchorX = 0.5;
+	replayMediaButton.anchorY = 0.5;
+	jukeboxGroup:insert(replayMediaButton);
+	jukeboxGroup.replayMediaButton = replayMediaButton;
+	FRC_Layout.placeUI(replayMediaButton)
+
+	-- pause media
+	local pauseMediaButton = ui.button.new({
+		imageUp = imageBase .. 'FRC_Jukebox_Button_Pause_up.png',
+		imageDown = imageBase .. 'FRC_Jukebox_Button_Pause_down.png',
+		imageDisabled = imageBase .. 'FRC_Jukebox_Button_Pause_disabled.png',
+		imageFocused = imageBase .. 'FRC_Jukebox_Button_Pause_focused.png',
+		width = 96,
+		height = 96,
+		x = 290,
+		y = 28,
+		onRelease = function()
+			analytics.logEvent("MDMT.Lobby.Jukebox.PauseMedia");
+			-- navigate media
+		end
+	});
+	pauseMediaButton.anchorX = 0.5;
+	pauseMediaButton.anchorY = 0.5;
+	jukeboxGroup:insert(pauseMediaButton);
+	jukeboxGroup.pauseMediaButton = pauseMediaButton;
+	FRC_Layout.placeUI(pauseMediaButton)
+
+	-- build the media display (for the first two items)
+	local mediaData = settings.DATA.MEDIA;
+	local pageCount = math.ceil(#mediaData / 2);
+	local jukeboxPage = 1;
+
+	-- make an array of buttons based on each entry
+	-- each has a MEDIA_TYPE and POSTER_FRAME
+	-- onRelease will playMedia and pass the indexID for the button
+	-- playMedia function will call either FRC_Video or FRC_AudioManager
+	-- if MEDIA_TYPE== "SONG" then enable display of replayMedia and pauseMedia controls
+
+
 
 
   --[[
