@@ -96,6 +96,8 @@ FRC_Jukebox.new = function(options)
 	}
 
 	local animationContainer = display.newContainer( jukeboxGroup.winWidth, jukeboxGroup.winHeight );
+	local jukeboxScaleX = jukeboxGroup.winWidth/screenW;
+	local jukeboxScaleY = jukeboxGroup.winHeight/screenH;
 	-- animationContainer:translate(display.contentWidth*0.5, display.contentHeight*0.5 );
 	print("animationContainer", animationContainer.width, animationContainer.height);
 	print("animationContainer", animationContainer.x, animationContainer.y);
@@ -103,9 +105,19 @@ FRC_Jukebox.new = function(options)
 	jukeboxBackgroundAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(jukeboxBackgroundAnimationFiles, animationXMLBase, animationImageBase);
 	animationContainer:insert(jukeboxBackgroundAnimationSequences);
 	-- FRC_Layout.placeAnimation( jukeboxBackgroundAnimationSequences, { x = -jukeboxGroup.winWidth/2, y = -jukeboxGroup.winHeight/2 }, false );
-	FRC_Layout.placeAnimation( jukeboxBackgroundAnimationSequences, { x = -(screenW/2), y = -(screenH/2) }, false ); -- temp version based on unscaled anim
+	-- FRC_Layout.placeAnimation( jukeboxBackgroundAnimationSequences, { x = FRC_Layout.getScaleFactor() * -(screenW/2), y = FRC_Layout.getScaleFactor() * -(screenH/2) }, false ); -- temp version based on unscaled anim
+	-- FRC_Layout.placeAnimation( jukeboxBackgroundAnimationSequences, { x = 0, y = 0}, false );
+	jukeboxBackgroundAnimationSequences.anchorX = 0.5;
+	jukeboxBackgroundAnimationSequences.anchorY = 0.5;
+
+	FRC_Layout.placeAnimation( jukeboxBackgroundAnimationSequences, { x = -512, y = -384 }, false );
+
 	print("jukeboxBackgroundAnimationSequences", jukeboxBackgroundAnimationSequences.width, jukeboxBackgroundAnimationSequences.height);
 	print("jukeboxBackgroundAnimationSequences", jukeboxBackgroundAnimationSequences.x, jukeboxBackgroundAnimationSequences.y);
+	print("screen scaleX", screenW/1024);
+	print("screen scaleY", screenH/768);
+  print("xScaleTransform", (screenW/1024) * (jukeboxGroup.winWidth / jukeboxBackgroundAnimationSequences.width));
+	print("yScaleTransform", (screenH/768) * (jukeboxGroup.winHeight / jukeboxBackgroundAnimationSequences.height));
 
 	for i=1, jukeboxBackgroundAnimationSequences.numChildren do
 		jukeboxBackgroundAnimationSequences[i]:play({
@@ -116,8 +128,8 @@ FRC_Jukebox.new = function(options)
 			delay = 0,
 			intervalTime = 30,
 			maxIterations = 1,
-			transformations = { xScaleTransform = jukeboxGroup.winWidth / jukeboxBackgroundAnimationSequences.width,
-			yScaleTransform = jukeboxGroup.winHeight / jukeboxBackgroundAnimationSequences.height }
+			transformations = { xScaleTransform = (screenW/1024) * (jukeboxGroup.winWidth / jukeboxBackgroundAnimationSequences.width),
+			yScaleTransform = (screenH/768) * (jukeboxGroup.winHeight / jukeboxBackgroundAnimationSequences.height) }
 		});
 	end
 
@@ -150,34 +162,34 @@ FRC_Jukebox.new = function(options)
 			local ticker = display.newText(string.sub(tickerText, chunkSize*(i-1)+1, chunkSize*i),0,0,"ticker",32)
 
 			if (i == 1) then
-				ticker.x = jukeboxGroup.winWidth/2; -- TODO change this
+				ticker.x = jukeboxGroup.winWidth/2;
 			else
-				ticker.x = tickerGroup[i-1].x + tickerGroup[i-1].contentWidth
+				ticker.x = tickerGroup[i-1].x + tickerGroup[i-1].contentWidth;
 			end
 
-			ticker:setTextColor(255,255,255)
-			tickerGroup:insert(ticker)
-			-- ticker = nil
+			ticker:setTextColor(255,255,255);
+			tickerGroup:insert(ticker);
+			ticker = nil;
 		end
 
 		local textMove = function()
 			if tickerGroupContainer then
 				if tickerGroup then
 					if tickerGroup.x + tickerGroup.contentWidth + tickerGroupContainer.contentWidth > 0 then
-						tickerGroup:translate(-1,0)
+						tickerGroup:translate(-1,0); -- shift it to the left
 					else
 						tickerGroup.x = 0; -- tickerGroupContainer.contentWidth; -- 0;
 					end
 				end
 			end
 		end
-
-		Runtime:addEventListener("enterFrame",textMove)
+		FRC_Jukebox.textMove = textMove;
+		Runtime:addEventListener("enterFrame",FRC_Jukebox.textMove)
 	end
 	FRC_Jukebox.startTickerTextCrawl = startTickerTextCrawl;
 
 	local stopTickerTextCrawl = function()
-		Runtime:removeEventListener("enterFrame",textMove);
+		Runtime:removeEventListener("enterFrame",FRC_Jukebox.textMove);
 		for i=tickerGroup.numChildren,1,-1 do
 			if (tickerGroup[i].remove) then
 				tickerGroup[i]:remove();
@@ -245,8 +257,8 @@ FRC_Jukebox.new = function(options)
 				videoPlaybackComplete();
 			end
 		elseif mData.MEDIA_TYPE == "AUDIO" then
-			stopTickerTextCrawl();
-			startTickerTextCrawl(mData.SONG_TITLE)
+			FRC_Jukebox.stopTickerTextCrawl();
+			FRC_Jukebox.startTickerTextCrawl(mData.SONG_TITLE);
 			-- if MEDIA_TYPE== "SONG" then enable display of replayMedia and pauseMedia controls
 			-- replayMedia.isVisible = true;
 			-- pauseMedia.isVisible = true;
