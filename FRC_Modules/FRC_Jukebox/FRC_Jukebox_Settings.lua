@@ -83,31 +83,31 @@ FRC_Jukebox_Settings.DATA = {
 		{
 			MEDIA_TYPE = "AUDIO",
 			POSTER_FRAME = 'MDMT_MusicTheatre_HamsterWantToBeFree_Poster.png',
-			SONG_TITLE = 'Hamster Want To Be Free',
+			SONG_TITLE = 'HAMSTERS WANT TO BE FREE',
 			AUDIO_PATH = 'MDMT_global_BGMUSIC_HamstersJustWantToBeFree.mp3',
 			AUDIO_LENGTH = 148000 },
 		{
 			MEDIA_TYPE = "AUDIO",
 			POSTER_FRAME = 'MDMT_MusicTheatre_MechanicalCow_Poster.png',
-			SONG_TITLE = 'Mechanical Cow',
+			SONG_TITLE = 'MECHANICAL COW',
 			AUDIO_PATH = 'MDMT_global_BGMUSIC_MechanicalCow.mp3',
 			AUDIO_LENGTH = 210000 },
 		{
 			MEDIA_TYPE = "AUDIO",
 			POSTER_FRAME = 'MDMT_MusicTheatre_KittyCatComesToTown_Poster.png',
-			SONG_TITLE = 'Kitty Cat Comes To Town',
+			SONG_TITLE = 'KITTY CAT COMES TO TOWN',
 			AUDIO_PATH = 'MDMT_global_BGMUSIC_KittyCatComesToTown.mp3',
 			AUDIO_LENGTH = 135000 },
 		{
 			MEDIA_TYPE = "AUDIO",
 			POSTER_FRAME = 'MDMT_MusicTheatre_Imagination_Poster.png',
-			SONG_TITLE = 'Imagination',
+			SONG_TITLE = 'IMAGINATION',
 			AUDIO_PATH = 'MDMT_global_BGMUSIC_Imagination.mp3',
 			AUDIO_LENGTH = 231000 },
 		{
 			MEDIA_TYPE = "AUDIO",
 			POSTER_FRAME = 'MDMT_MusicTheatre_O-De-O_Poster.png',
-			SONG_TITLE = 'O-De-O',
+			SONG_TITLE = 'O-DE-O',
 			AUDIO_PATH = 'MDMT_global_BGMUSIC_O-De-O.mp3',
 			AUDIO_LENGTH = 172000 },
 	}

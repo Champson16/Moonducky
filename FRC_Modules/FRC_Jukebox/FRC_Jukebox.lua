@@ -18,7 +18,6 @@ local imageBase = 'FRC_Assets/FRC_Jukebox/Images/';
 local videoBase = 'FRC_Assets/MDMT_Assets/Videos/';
 
 local videoPlayer;
-local jukeboxSounds;
 
 -- local function UI(key)
 -- 	return FRC_Jukebox_Settings.UI[key];
@@ -36,8 +35,28 @@ FRC_Jukebox.new = function(options)
 	local borderSize = settings.DEFAULTS.BORDER_SIZE;
 	local elementPadding = settings.DEFAULTS.ELEMENT_PADDING;
 
+	local currentPageIndex = 1;
+
+
 	local jukeboxGroup = display.newContainer(screenW, screenH); -- display.newGroup();
 	FRC_Jukebox.jukeboxGroup = jukeboxGroup;
+
+	-- forward declarations
+	local currentAudio;
+	FRC_Jukebox.currentAudio = currentAudio;
+
+	local previousMediaButton;
+	local leftMediaButton;
+	local rightMediaButton;
+	local nextMediaButton;
+	local replayMediaButton;
+	local pauseMediaButton;
+
+	local jukeboxAudioGroup = FRC_AudioManager:newGroup({
+	      name = "jukeboxAudio",
+	      maxChannels = 1
+	   });
+	FRC_Jukebox.jukeboxAudioGroup = jukeboxAudioGroup;
 
 	local cancelTouch = function(e)
 		if (e.phase == 'began') then
@@ -104,12 +123,7 @@ FRC_Jukebox.new = function(options)
 
 	jukeboxGroup:insert(animationContainer);
 
-	-- startover control
-	-- pause control
-	-- ticker box
-	-- ticker text
-	local tickerText = "AN INTERACTIVE JUKEBOX!"
-
+  -- TICKER TEXT
 	local chunkSize=160
 	-- This variable defines the number of characters by which to divide long ticker text
 	-- strings. This prevents errors by ensuring that your ticker's width doesn't exceed the
@@ -117,29 +131,23 @@ FRC_Jukebox.new = function(options)
 	-- this number. But unless you are using an absurdly large font, you shouldn't need to adjust
 	-- this variable.
 
-	local tickerGroupContainer = display.newContainer( jukeboxGroup.winWidth, FRC_Layout.getScaleFactor() * 40 );
-	tickerGroupContainer:translate( tickerGroupContainer.width*0.5, tickerGroupContainer.height*0.5 );
-
-	-- test image
-	local maskedImage = display.newImageRect(imageBase .. "MDMT_MusicTheatre_HamsterWantToBeFree_Poster@2x.png", 608, 463);
-	tickerGroupContainer:insert(maskedImage);
-	-- maskedImage.x, maskedImage.y = 0;
-	print("maskedImage", maskedImage.width, maskedImage.height);
-	print("maskedImage", maskedImage.x, maskedImage.y);
-
-	-- jukeboxGroup:insert(tickerGroupContainer);
-	local tickerGroup = display.newGroup();
-	tickerGroupContainer:insert(tickerGroup);
+	local tickerGroupContainer = display.newContainer( FRC_Layout.getScaleFactor() * 500, FRC_Layout.getScaleFactor() * 44 );
+	FRC_Jukebox.tickerGroupContainer = tickerGroupContainer;
+	tickerGroupContainer:translate( display.contentWidth*0.5, tickerGroupContainer.height*0.5 );
+	local tickerGroup;
 	tickerGroupContainer.y = jukeboxGroup.height / 2 + (FRC_Layout.getScaleFactor() * 35);
 
+	local startTickerTextCrawl = function(text)
+		tickerGroup = display.newGroup();
+		tickerGroupContainer:insert(tickerGroup);
 
-	local startTickerTextCrawl = function()
+		local tickerText = text or "WELCOME TO THE MOONDUCKY MUSIC THEATRE";
 
 		local tickerLength = string.len(tickerText)
 		local objectCount = math.ceil(tickerLength/chunkSize)
 
 		for i=1,objectCount do
-			local ticker = display.newText(string.sub(tickerText, chunkSize*(i-1)+1, chunkSize*i),0,0,"ticker",28)
+			local ticker = display.newText(string.sub(tickerText, chunkSize*(i-1)+1, chunkSize*i),0,0,"ticker",32)
 
 			if (i == 1) then
 				ticker.x = jukeboxGroup.winWidth/2; -- TODO change this
@@ -147,18 +155,19 @@ FRC_Jukebox.new = function(options)
 				ticker.x = tickerGroup[i-1].x + tickerGroup[i-1].contentWidth
 			end
 
-			-- ticker.y = jukeboxGroup.height / 2 + (FRC_Layout.getScaleFactor() * 38);
 			ticker:setTextColor(255,255,255)
 			tickerGroup:insert(ticker)
-			ticker = nil
+			-- ticker = nil
 		end
 
 		local textMove = function()
-			if tickerGroup then
-				if tickerGroup.x + tickerGroup.contentWidth + tickerGroupContainer.contentWidth > 0 then
-					tickerGroup:translate(-3,0)
-				else
-					tickerGroup.x = 0; -- tickerGroupContainer.contentWidth; -- 0;
+			if tickerGroupContainer then
+				if tickerGroup then
+					if tickerGroup.x + tickerGroup.contentWidth + tickerGroupContainer.contentWidth > 0 then
+						tickerGroup:translate(-1,0)
+					else
+						tickerGroup.x = 0; -- tickerGroupContainer.contentWidth; -- 0;
+					end
 				end
 			end
 		end
@@ -167,11 +176,13 @@ FRC_Jukebox.new = function(options)
 	end
 	FRC_Jukebox.startTickerTextCrawl = startTickerTextCrawl;
 
-	print("tickerGroupContainer", tickerGroupContainer.width, tickerGroupContainer.height);
-	print("tickerGroupContainer", tickerGroupContainer.x, tickerGroupContainer.y);
-
 	local stopTickerTextCrawl = function()
 		Runtime:removeEventListener("enterFrame",textMove);
+		for i=tickerGroup.numChildren,1,-1 do
+			if (tickerGroup[i].remove) then
+				tickerGroup[i]:remove();
+			end
+		end
 		tickerGroup:removeSelf();
 		tickerGroup = nil;
 	end
@@ -179,11 +190,169 @@ FRC_Jukebox.new = function(options)
 
 	startTickerTextCrawl(); -- Loads and starts the Text Ticker
 
-	print("tickerGroup", tickerGroup.width, tickerGroup.height);
-	print("tickerGroup", tickerGroup.x, tickerGroup.y);
+	-- MEDIA HANDLING FUNCTIONS AND LAYOUT
+	local videoPlaybackComplete = function(event)
+		-- reEnableSound()
+
+		-- if this function was called directly, we don't need to remove the listener
+		if (event) then
+			if (jukeboxGroup) then
+				jukeboxGroup:removeEventListener('videoComplete', videoPlaybackComplete );
+			end
+		end
+
+		if (videoPlayer) then
+			videoPlayer:removeSelf();
+			videoPlayer = nil;
+		end
+		return true
+	end
+
+	-- build the media display (for the first two items)
+	local mediaData = settings.DATA.MEDIA;
+	local pageCount = math.ceil(#mediaData / 2);
+	local jukeboxPage = 1;
+
+	local playJukeboxMedia = function(itemID)
+		-- shut down any active audio
+		jukeboxAudioGroup:stop();
+		-- remove active track
+		if currentAudio then
+			jukeboxAudioGroup:removeHandle(currentAudio);
+		end
+
+		local mData = mediaData[itemID];
+		if not mData then return; end
+
+		-- each button has a MEDIA_TYPE
+		if mData.MEDIA_TYPE == "VIDEO" then
+
+			-- onRelease will playMedia and pass the indexID for the button
+			-- playMedia function will call either FRC_Video or FRC_AudioManager
+			local videoData = {
+			HD_VIDEO_PATH = videoBase .. mData.HD_VIDEO_PATH,
+			HD_VIDEO_SIZE = mData.HD_VIDEO_SIZE,
+			SD_VIDEO_PATH = videoBase .. mData.SD_VIDEO_PATH,
+			SD_VIDEO_SIZE = mData.SD_VIDEO_SIZE,
+			VIDEO_SCALE = mData.VIDEO_SCALE,
+			VIDEO_LENGTH = mData.VIDEO_LENGTH };
+
+			videoPlayer = FRC_Video.new(jukeboxGroup, videoData);
+			if videoPlayer then
+				jukeboxGroup:addEventListener('videoComplete', videoPlaybackComplete );
+			else
+				-- this will fire because we are running in the Simulator and the video playback ends before it begins!
+				videoPlaybackComplete();
+			end
+		elseif mData.MEDIA_TYPE == "AUDIO" then
+			stopTickerTextCrawl();
+			startTickerTextCrawl(mData.SONG_TITLE)
+			-- if MEDIA_TYPE== "SONG" then enable display of replayMedia and pauseMedia controls
+			-- replayMedia.isVisible = true;
+			-- pauseMedia.isVisible = true;
+			-- play the AUDIO
+			currentAudio = FRC_AudioManager:newHandle({
+						name = "song",
+						path = "FRC_Assets/MDMT_Assets/Audio/" .. mData.AUDIO_PATH,
+						group = "jukeboxAudio",
+						loadMethod = "loadStream"
+				 });
+			currentAudio:play();
+		end
+	end
+
+
+	local loadJukeboxPage = function(pageIndex)
+		local pageIndex = pageIndex or currentPageIndex;
+		currentPageIndex = pageIndex;
+		-- set up the left media button
+		-- set up the right media button
+		-- decide whether or not to disable the prev or next media buttons
+		if pageIndex == 1 then
+		  previousMediaButton:setDisabledState(true);
+		else
+			previousMediaButton:setDisabledState(false);
+		end
+		if pageIndex == pageCount then
+			nextMediaButton:setDisabledState(true);
+		else
+			nextMediaButton:setDisabledState(false);
+		end
+		-- get the data for the buttons
+		local leftButtonDataIndex = (pageIndex * 2) - 1;
+		if leftMediaButton then
+			if (leftMediaButton.removeSelf) then
+				leftMediaButton:removeSelf();
+				leftMediaButton = nil
+			end
+		end
+
+		if (leftButtonDataIndex > 0 and leftButtonDataIndex <= #mediaData) then
+			-- we have a valid index position
+			-- get the DATA
+			local leftButtonData = mediaData[leftButtonDataIndex];
+			-- make the button
+
+			leftMediaButton = ui.button.new({
+				id = leftButtonDataIndex,
+				imageUp = imageBase .. leftButtonData.POSTER_FRAME,
+				imageDown = imageBase .. leftButtonData.POSTER_FRAME,
+				width = 225, -- 274,
+				height = 171, -- 208,
+				x = -130,
+				y = 180,
+				onRelease = function(event)
+					local self = event.target;
+					analytics.logEvent("MDMT.Lobby.Jukebox.MediaSelection");
+		      -- play media
+					playJukeboxMedia(self.id)
+				end
+			});
+			leftMediaButton.anchorX = 0.5;
+			leftMediaButton.anchorY = 0.5;
+		  jukeboxGroup:insert(leftMediaButton);
+		  FRC_Layout.placeUI(leftMediaButton);
+		end
+
+		local rightButtonDataIndex = pageIndex * 2;
+		if (rightMediaButton) then
+			if (rightMediaButton.removeSelf) then
+				rightMediaButton:removeSelf();
+				rightMediaButton = nil
+			end
+		end
+		-- in case there are an odd number of items, the right media item may be blank
+		if (rightButtonDataIndex > 0 and rightButtonDataIndex <= #mediaData) then
+			-- we have a valid index position
+			-- get the DATA
+			local rightButtonData = mediaData[rightButtonDataIndex];
+			-- make the button
+
+			rightMediaButton = ui.button.new({
+				id = rightButtonDataIndex,
+				imageUp = imageBase .. rightButtonData.POSTER_FRAME,
+				imageDown = imageBase .. rightButtonData.POSTER_FRAME,
+				width = 225, -- 274,
+				height = 171, -- 208,
+				x = 130,
+				y = 180,
+				onRelease = function(event)
+					local self = event.target;
+					analytics.logEvent("MDMT.Lobby.Jukebox.MediaSelection");
+		      -- play media
+					playJukeboxMedia(self.id)
+				end
+			});
+			rightMediaButton.anchorX = 0.5;
+			rightMediaButton.anchorY = 0.5;
+		  jukeboxGroup:insert(rightMediaButton);
+		  FRC_Layout.placeUI(rightMediaButton);
+		end
+
+	end
 
 	-- prev media selector
-	local previousMediaButton = ui.button.new({
+	previousMediaButton = ui.button.new({
 		imageUp = imageBase .. 'FRC_Jukebox_Button_Previous_up.png',
 		imageDown = imageBase .. 'FRC_Jukebox_Button_Previous_down.png',
 		imageDisabled = imageBase .. 'FRC_Jukebox_Button_Previous_disabled.png',
@@ -195,6 +364,10 @@ FRC_Jukebox.new = function(options)
 		onRelease = function()
 			analytics.logEvent("MDMT.Lobby.Jukebox.PreviousMedia");
       -- navigate media
+			if currentPageIndex > 1 then
+				currentPageIndex = currentPageIndex - 1;
+				loadJukeboxPage();
+			end
 		end
 	});
 	previousMediaButton.anchorX = 0.5;
@@ -204,7 +377,7 @@ FRC_Jukebox.new = function(options)
   FRC_Layout.placeUI(previousMediaButton)
 
 	-- next media selector
-	local nextMediaButton = ui.button.new({
+	nextMediaButton = ui.button.new({
 		imageUp = imageBase .. 'FRC_Jukebox_Button_Next_up.png',
 		imageDown = imageBase .. 'FRC_Jukebox_Button_Next_down.png',
 		imageDisabled = imageBase .. 'FRC_Jukebox_Button_Next_disabled.png',
@@ -216,6 +389,10 @@ FRC_Jukebox.new = function(options)
 		onRelease = function()
 			analytics.logEvent("MDMT.Lobby.Jukebox.NextMedia");
 			-- navigate media
+			if currentPageIndex < pageCount then
+				currentPageIndex = currentPageIndex + 1;
+				loadJukeboxPage();
+			end
 		end
 	});
 	nextMediaButton.anchorX = 0.5;
@@ -225,7 +402,7 @@ FRC_Jukebox.new = function(options)
 	FRC_Layout.placeUI(nextMediaButton)
 
 	-- replay media
-	local replayMediaButton = ui.button.new({
+	replayMediaButton = ui.button.new({
 		imageUp = imageBase .. 'FRC_Jukebox_Button_Replay_up.png',
 		imageDown = imageBase .. 'FRC_Jukebox_Button_Replay_down.png',
 		imageDisabled = imageBase .. 'FRC_Jukebox_Button_Replay_disabled.png',
@@ -237,6 +414,9 @@ FRC_Jukebox.new = function(options)
 		onRelease = function()
 			analytics.logEvent("MDMT.Lobby.Jukebox.ReplayMedia");
 			-- navigate media
+			if (currentAudio) then
+        audio.rewind(currentAudio);
+      end
 		end
 	});
 	replayMediaButton.anchorX = 0.5;
@@ -246,7 +426,7 @@ FRC_Jukebox.new = function(options)
 	FRC_Layout.placeUI(replayMediaButton)
 
 	-- pause media
-	local pauseMediaButton = ui.button.new({
+	pauseMediaButton = ui.button.new({
 		imageUp = imageBase .. 'FRC_Jukebox_Button_Pause_up.png',
 		imageDown = imageBase .. 'FRC_Jukebox_Button_Pause_down.png',
 		imageDisabled = imageBase .. 'FRC_Jukebox_Button_Pause_disabled.png',
@@ -258,6 +438,13 @@ FRC_Jukebox.new = function(options)
 		onRelease = function()
 			analytics.logEvent("MDMT.Lobby.Jukebox.PauseMedia");
 			-- navigate media
+			if (audio.isChannelPaused(currentAudio.channel)) then
+				print("resuming jukebox audio"); -- DEBUG
+				currentAudio:resume();
+			else
+				print("pausing jukebox audio"); -- DEBUG
+        currentAudio:pause();
+      end
 		end
 	});
 	pauseMediaButton.anchorX = 0.5;
@@ -266,16 +453,8 @@ FRC_Jukebox.new = function(options)
 	jukeboxGroup.pauseMediaButton = pauseMediaButton;
 	FRC_Layout.placeUI(pauseMediaButton)
 
-	-- build the media display (for the first two items)
-	local mediaData = settings.DATA.MEDIA;
-	local pageCount = math.ceil(#mediaData / 2);
-	local jukeboxPage = 1;
-
-	-- make an array of buttons based on each entry
-	-- each has a MEDIA_TYPE and POSTER_FRAME
-	-- onRelease will playMedia and pass the indexID for the button
-	-- playMedia function will call either FRC_Video or FRC_AudioManager
-	-- if MEDIA_TYPE== "SONG" then enable display of replayMedia and pauseMedia controls
+  -- show the jukebox media selections
+	loadJukeboxPage();
 
 
 
@@ -411,8 +590,15 @@ FRC_Jukebox.disposeAnimations = function(self)
 end
 
 FRC_Jukebox.dispose = function(self)
+	FRC_Jukebox.jukeboxAudioGroup:stop();
+	-- remove active track
+	if FRC_Jukebox.currentAudio then
+		FRC_Jukebox.jukeboxAudioGroup:removeHandle(FRC_Jukebox.currentAudio);
+	end
 	FRC_Jukebox.modalBackground:removeSelf();
 	FRC_Jukebox.stopTickerTextCrawl();
+	FRC_Jukebox.tickerGroupContainer:removeSelf();
+	FRC_Jukebox.tickerGroupContainer = nil;
 	-- remove the animations
 	FRC_Jukebox:disposeAnimations();
 	if (FRC_Jukebox.jukeboxGroup) then FRC_Jukebox.jukeboxGroup:removeSelf(); end
