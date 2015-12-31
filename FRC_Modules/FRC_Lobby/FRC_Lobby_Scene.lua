@@ -106,6 +106,20 @@ function FRC_Lobby_Scene:createScene(event)
    end
 
 	sceneLayoutMethods.jukeboxActivate = function(event)
+    -- shutdown popcorn machine emitters
+    if popcornEmitters then
+      for k,v in pairs( popcornEmitters ) do
+        display.remove( v )
+      end
+    end
+    popcornEmitters = {}
+    if popcornSounds then
+      for k,v in pairs( popcornSounds ) do
+        if( v.stop ) then v:stop() end
+      end
+    end
+    popcornSounds = {}
+
     analytics.logEvent("MDMT.Lobby.Jukebox");
     local FRC_Jukebox = require('FRC_Modules.FRC_Jukebox.FRC_Jukebox');
     local jukebox;

@@ -108,7 +108,7 @@ FRC_Jukebox.new = function(options)
 	-- pause control
 	-- ticker box
 	-- ticker text
-	local tickerText = "COMING IN THE NEXT BUILD WILL BE AN INTERACTIVE JUKEBOX WHICH WILL SHOW SONG TITLES IN A TICKER DISPLAY LIKE THIS!"
+	local tickerText = "COMING SOON - AN INTERACTIVE JUKEBOX WHICH WILL SHOW SONG TITLES IN A TICKER DISPLAY LIKE THIS!"
 
 	local chunkSize=160
 	-- This variable defines the number of characters by which to divide long ticker text
