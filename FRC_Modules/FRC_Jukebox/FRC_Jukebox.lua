@@ -238,7 +238,10 @@ FRC_Jukebox.new = function(options)
 
 		-- each button has a MEDIA_TYPE
 		if mData.MEDIA_TYPE == "VIDEO" then
+			analytics.logEvent("MDMT.Lobby.Jukebox.MediaSelection", { MEDIA_TYPE = "VIDEO", MEDIA_TITLE = mData.MEDIA_TITLE });
 
+			FRC_Jukebox.stopTickerTextCrawl();
+			FRC_Jukebox.startTickerTextCrawl(mData.MEDIA_TITLE);
 			-- onRelease will playMedia and pass the indexID for the button
 			-- playMedia function will call either FRC_Video or FRC_AudioManager
 			local videoData = {
@@ -258,7 +261,7 @@ FRC_Jukebox.new = function(options)
 			end
 		elseif mData.MEDIA_TYPE == "AUDIO" then
 			FRC_Jukebox.stopTickerTextCrawl();
-			FRC_Jukebox.startTickerTextCrawl(mData.SONG_TITLE);
+			FRC_Jukebox.startTickerTextCrawl(mData.MEDIA_TITLE);
 			-- if MEDIA_TYPE== "SONG" then enable display of replayMedia and pauseMedia controls
 			-- replayMedia.isVisible = true;
 			-- pauseMedia.isVisible = true;

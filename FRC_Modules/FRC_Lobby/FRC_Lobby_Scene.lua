@@ -282,7 +282,8 @@ function FRC_Lobby_Scene:createScene(event)
 	end
 
   local theatreDoorAnimationFiles = {
-		"MDMT_Lobby_UsherDoorStatic_g.xml",
+			"MDMT_Lobby_UsherDoorStatic_h.xml",
+      "MDMT_Lobby_UsherDoorStatic_g.xml",
 			"MDMT_Lobby_UsherDoorStatic_f.xml",
 			"MDMT_Lobby_UsherDoorStatic_e.xml",
 			"MDMT_Lobby_UsherDoorStatic_d.xml",
@@ -376,7 +377,8 @@ function FRC_Lobby_Scene:createScene(event)
 	end
 
 	local theatreDoorAnimationFiles = {
-	"MDMT_Lobby_UsherDoorAnim_b.xml",
+	"MDMT_Lobby_UsherDoorAnim_c.xml",
+  "MDMT_Lobby_UsherDoorAnim_b.xml",
 	"MDMT_Lobby_UsherDoorAnim_a.xml"
 	 };
    -- preload the animation data (XML and images) early
