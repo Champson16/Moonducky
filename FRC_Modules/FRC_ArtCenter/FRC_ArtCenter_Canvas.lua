@@ -357,7 +357,7 @@ local load = function(self, data)
             display.setDefault( "textureWrapX", "repeat" )
             display.setDefault( "textureWrapY", "repeat" )
 
-            local newPath = string.gsub( data.objectsLayer[i].fillImage, "Images/CCC", "Images/fills/CCC" )
+            local newPath = string.gsub( data.objectsLayer[i].fillImage, "Images/MDMT", "Images/fills/MDMT" ) -- remove hardcoding
             shape.fill = { type="image", filename=newPath };
 
             if( data.objectsLayer[i].fill_scaleX ) then

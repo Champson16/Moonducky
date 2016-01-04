@@ -86,7 +86,7 @@ local function onButtonRelease(event)
                display.setDefault( "textureWrapY", "repeat" )
 
                --obj.fill = { type="image", filename=self._texturePath };
-               local newPath = string.gsub( self._texturePath, "Images/CCC", "Images/fills/CCC" )
+               local newPath = string.gsub( self._texturePath, "Images/MDMT", "Images/fills/MDMT" ) -- remove hardcoding
                obj.fill = { type="image", filename = newPath };
 
                obj:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);

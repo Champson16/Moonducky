@@ -342,7 +342,7 @@ local function onShapeButtonRelease(event)
 
 
 	--shape.fill = { type="image", filename=scene.currentColor.texturePreview._imagePath };
-   local newPath = string.gsub( scene.currentColor.texturePreview._imagePath, "Images/CCC", "Images/fills/CCC" )
+   local newPath = string.gsub( scene.currentColor.texturePreview._imagePath, "Images/MDMT", "Images/fills/MDMT" ) -- remove hardcoding
    shape.fill = { type="image", filename = newPath };
 	shape:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
 
