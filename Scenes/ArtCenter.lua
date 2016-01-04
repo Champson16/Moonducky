@@ -149,6 +149,7 @@ scene.postCreateScene = function(self, event)
 			-- SAVE button
 			{
 				id = "save",
+				isSaveButton = true,
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_SaveText_down.png',
 				onRelease = function(e)
@@ -182,6 +183,7 @@ scene.postCreateScene = function(self, event)
 			-- LOAD button (needs icon)
 			{
 				id = "load",
+				isLoadButton = true,
 				imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_up.png',
 				imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_down.png',
 				disabled = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_LoadText_disabled.png',

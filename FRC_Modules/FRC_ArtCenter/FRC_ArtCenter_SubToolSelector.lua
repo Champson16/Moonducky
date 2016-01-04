@@ -2,6 +2,8 @@ local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_
 local ui = require('ui');
 local FRC_DataLib1 = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
 local FRC_Layout = require('FRC_Modules.FRC_Layout.FRC_Layout');
+local FRC_MultiTouch = require('FRC_Modules.FRC_MultiTouch.FRC_MultiTouch');
+
 local FRC_Store;
 if (not FRC_ArtCenter_Settings.DISABLE_STORE) then
 	FRC_Store = require('FRC_Modules.FRC_Store.FRC_Store');
@@ -15,7 +17,11 @@ local function selectObject(scene, obj)
 	local canvas = scene.canvas;
 
 	-- create object selection polygon
-	if (scene.objectSelection) then scene.objectSelection:removeSelf(); end
+	if (scene.objectSelection) then
+		if scene.objectSelection.removeSelf then
+			scene.objectSelection:removeSelf();
+		end
+	end
 	local padding = 5;
 	scene.objectSelection = display.newRect(canvas.layerSelection, obj.x - ((obj.width * obj.xScale) * 0.5) - padding, obj.y - ((obj.height * obj.yScale) * 0.5) - padding, obj.width * obj.xScale + (padding * 2), obj.height * obj.yScale + (padding * 2));
 	scene.objectSelection:setStrokeColor(scene.selectedTool.SELECTION_COLOR[1], scene.selectedTool.SELECTION_COLOR[2], scene.selectedTool.SELECTION_COLOR[3]);
@@ -326,8 +332,46 @@ local function onShapeButtonRelease(event)
 	else
 		shape = display.newCircle(shapeGroup, 0, 0, size);
 	end
+
+   -- cache settings
+   local textureWrapX = display.getDefault( "textureWrapX" )
+   local textureWrapY = display.getDefault( "textureWrapY" )
+   -- change to repeat
+   display.setDefault( "textureWrapX", "repeat" )
+   display.setDefault( "textureWrapY", "repeat" )
+
+
+	--shape.fill = { type="image", filename=scene.currentColor.texturePreview._imagePath };
+   local newPath = string.gsub( scene.currentColor.texturePreview._imagePath, "Images/CCC", "Images/fills/CCC" )
+   shape.fill = { type="image", filename = newPath };
+	shape:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
+
+   -- restore settings
+   display.setDefault( "textureWrapX", textureWrapX )
+   display.setDefault( "textureWrapY", textureWrapY )
+
+   -- dynamic re-scaler
+   if( not shape.enterFrame ) then
+      function shape.enterFrame( self )
+         if( not self ) then return end
+         if( not self.fill or not self.removeSelf ) then
+            Runtime:removeEventListener( "enterFrame", self )
+            self.enterFrame = nil
+            return
+         end
+         -- EFM initially I didn't notice the scale was being applied to the parent.
+         self.fill.scaleX = 1/self.parent.xScale
+         self.fill.scaleY = 1/self.parent.yScale
+      end
+      Runtime:addEventListener( "enterFrame", shape )
+   end
+
+   -- ORIG
+   --[[
 	shape.fill = { type="image", filename=scene.currentColor.texturePreview._imagePath };
 	shape:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
+   --]]
+
 
 	shape.isHitTestable = true;
 	shapeGroup.objectType = 'shape';
@@ -336,8 +380,8 @@ local function onShapeButtonRelease(event)
 	shapeGroup.fillColor = { scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0 };
 	shapeGroup.toolMode = self.toolMode;
 	shapeGroup.isHitTestable = true;
-	shapeGroup:addEventListener('touch', handleMultiTouch);
-	shapeGroup:addEventListener('multitouch', tool.onShapePinch);
+	shapeGroup:addEventListener('touch', FRC_MultiTouch.handleTouch);
+   shapeGroup:addEventListener('onPinch', tool.onPinch );
 	canvas.layerObjects:insert(shapeGroup);
 
 	local canvasColor = FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR;
@@ -428,8 +472,8 @@ local function onStampButtonRelease(event)
 	stampGroup.imagePath = image; -- used for saving/loading
 	stampGroup.fillColor = { 1.0, 1.0, 1.0, 1.0 };
 	stampGroup.toolMode = self.toolMode;
-	stampGroup:addEventListener('touch', handleMultiTouch);
-	stampGroup:addEventListener('multitouch', tool.onStampPinch);
+	stampGroup:addEventListener('touch', FRC_MultiTouch.handleTouch);
+	stampGroup:addEventListener('onPinch', tool.onPinch );
 	canvas.layerObjects:insert(stampGroup);
 	if (self.baseDir) then
 		if (self.baseDir == system.DocumentsDirectory) then
@@ -476,9 +520,11 @@ FRC_ArtCenter_SubToolSelector.new = function(scene, id, width, height)
 
 	local bgAlpha = 0.75;
 
-	if (FRC_ArtCenter_Settings.CONFIG.subtools.right) then
-		if (FRC_ArtCenter_Settings.CONFIG.subtools.right.hideBackground) then
-			bgAlpha = 0;
+	if (FRC_ArtCenter_Settings.CONFIG.subtools) then
+		if (FRC_ArtCenter_Settings.CONFIG.subtools.right) then
+			if (FRC_ArtCenter_Settings.CONFIG.subtools.right.hideBackground) then
+				bgAlpha = 0;
+			end
 		end
 	end
 

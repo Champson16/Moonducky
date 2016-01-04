@@ -113,8 +113,40 @@ local function onButtonRelease(event)
 		if ((scene.objectSelection) and (scene.objectSelection.selectedObject)) then
 			local obj = scene.objectSelection.selectedObject[1];
 			if (scene.mode == scene.modes.SHAPE_PLACEMENT) then
-				obj.fill = { type="image", filename=scene.currentColor.texturePreview._imagePath };
+				--ORIG obj.fill = { type="image", filename=scene.currentColor.texturePreview._imagePath };
 				obj.parent.fillImage = scene.currentColor.texturePreview._imagePath;
+
+            -- cache settings
+            local textureWrapX = display.getDefault( "textureWrapX" )
+            local textureWrapY = display.getDefault( "textureWrapY" )
+            -- change to repeat
+            display.setDefault( "textureWrapX", "repeat" )
+            display.setDefault( "textureWrapY", "repeat" )
+
+
+            local newPath = string.gsub( scene.currentColor.texturePreview._imagePath, "Images/CCC", "Images/fills/CCC" )
+            obj.fill = { type="image", filename = newPath };
+            obj:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
+
+            -- restore settings
+            display.setDefault( "textureWrapX", textureWrapX )
+            display.setDefault( "textureWrapY", textureWrapY )
+
+            -- dynamic re-scaler
+            if( not obj.enterFrame ) then
+               function obj.enterFrame( self )
+                  if( not self ) then return end
+                  if( not self.fill or not self.removeSelf ) then
+                     Runtime:removeEventListener( "enterFrame", self )
+                     self.enterFrame = nil
+                     return
+                  end
+                  -- EFM initially I didn't notice the scale was being applied to the parent.
+                  self.fill.scaleX = 1/self.parent.xScale
+                  self.fill.scaleY = 1/self.parent.yScale
+               end
+               Runtime:addEventListener( "enterFrame", obj )
+            end
 			end
 			obj:setFillColor(self.r, self.g, self.b, 1.0);
 			obj.parent.fillColor = { self.r, self.g, self.b, 1.0 };
@@ -250,8 +282,8 @@ FRC_ArtCenter_ColorSelector.new = function(scene, width, height)
 		xScroll = false,
 		topPadding = BUTTON_PADDING,
 		bottomPadding = BUTTON_PADDING,
-		bgColor = { 1.0, 1.0, 1.0, 0.75 },
-		--bgColor = { 0, 0, 0, 0 },
+		-- bgColor = { 1.0, 1.0, 1.0, 0.75 },
+		bgColor = { 0, 0, 0, 0 },
 		borderRadius = 11,
 		borderWidth = 0,
 		borderColor = { 0, 0, 0, 1.0 }

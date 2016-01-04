@@ -589,7 +589,9 @@ function FRC_ArtCenter_Scene.clearCanvas(skipAlert)
 
 				-- remove object selection
 				if (FRC_ArtCenter_Scene.objectSelection) then
-					FRC_ArtCenter_Scene.objectSelection:removeSelf();
+					if FRC_ArtCenter_Scene.objectSelection.removeSelf then
+						FRC_ArtCenter_Scene.objectSelection:removeSelf();
+					end
 					FRC_ArtCenter_Scene.objectSelection = nil;
 					FRC_ArtCenter_Scene.eraserGroup.button:setDisabledState(true);
 				end

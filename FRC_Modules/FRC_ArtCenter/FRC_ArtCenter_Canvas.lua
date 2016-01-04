@@ -2,8 +2,7 @@ local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_
 local FRC_ArtCenter_Scene = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Scene');
 local FRC_ArtCenter = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
-local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
-
+local FRC_MultiTouch = require('FRC_Modules.FRC_MultiTouch.FRC_MultiTouch');
 local Canvas = {};
 
 local function fillBackground(self, r, g, b, a)
@@ -34,23 +33,23 @@ end
 local function onCanvasTouch(event)
 	require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter').notifyMenuBars();
 	if ((not FRC_ArtCenter_Scene) or (not FRC_ArtCenter_Scene.selectedTool)) then return; end
-	local self = event.target;
+	local target = event.target;
 
 	if (event.phase == "began") then
-		self._hasFocus = true;
+		target._hasFocus = true;
 
-		FRC_ArtCenter_Scene.selectedTool.onCanvasTouch(self, event);
+		FRC_ArtCenter_Scene.selectedTool.onCanvasTouch(target, event);
 
-	elseif (self._hasFocus) then
+	elseif (target._hasFocus) then
 
 		if (event.phase == "moved") then
-			FRC_ArtCenter_Scene.selectedTool.onCanvasTouch(self, event);
+			FRC_ArtCenter_Scene.selectedTool.onCanvasTouch(target, event);
 			FRC_ArtCenter_Scene.canvas.isDirty = true;
 
 		elseif ((event.phase == "cancelled") or (event.phase == "ended")) then
-			FRC_ArtCenter_Scene.selectedTool.onCanvasTouch(self, event);
+			FRC_ArtCenter_Scene.selectedTool.onCanvasTouch(target, event);
 
-			self._hasFocus = false;
+			target._hasFocus = false;
 		end
 	end
 	return true;
@@ -209,6 +208,15 @@ local function save(self, id)
 				objData.strokeColor = obj.strokeColor;
 				objData.strokeWidth = obj.strokeWidth;
 
+            -- Save Fill Settings -- EFM
+            if(obj.numChildren == 1) then
+               local child = obj[1]
+               if( child.fill ) then
+                  objData.fill_scaleX = child.fill.scaleX
+                  objData.fill_scaleY = child.fill.scaleY
+               end
+            end
+
 			elseif ((obj.objectType) == 'stamp') then
 
 				objData.imagePath = obj.imagePath;
@@ -224,6 +232,7 @@ local function save(self, id)
 			objData.rotation = obj.rotation;
 			objData.x = obj.x;
 			objData.y = obj.y;
+
 			-- DEBUG:
 			print("saving baseDir: ",obj.baseDir);
 			objData.baseDir = obj.baseDir;
@@ -253,7 +262,7 @@ end
 local load = function(self, data)
 	-- clear canvas and generate a new id
 	FRC_ArtCenter_Scene.clearCanvas(true);
-	self.id = FRC_Util.generateUniqueIdentifier();
+	self.id = FRC_ArtCenter.generateUniqueIdentifier();
 
 	if (type(data) == "string") then
 		local loadId = data;
@@ -343,7 +352,44 @@ local load = function(self, data)
 				shape = display.newCircle(shapeGroup, 0, 0, size);
 			end
 			if (data.objectsLayer[i].fillImage) then
-				shape.fill = { type="image", filename=data.objectsLayer[i].fillImage };
+
+            -- change to repeat
+            display.setDefault( "textureWrapX", "repeat" )
+            display.setDefault( "textureWrapY", "repeat" )
+
+            local newPath = string.gsub( data.objectsLayer[i].fillImage, "Images/CCC", "Images/fills/CCC" )
+            shape.fill = { type="image", filename=newPath };
+
+            if( data.objectsLayer[i].fill_scaleX ) then
+               shape.fill.scaleX = data.objectsLayer[i].fill_scaleX
+            end
+            if( data.objectsLayer[i].fill_scaleY ) then
+               shape.fill.scaleY = data.objectsLayer[i].fill_scaleY
+            end
+
+            -- restore settings
+            display.setDefault( "textureWrapX", textureWrapX )
+            display.setDefault( "textureWrapY", textureWrapY )
+
+            -- dynamic re-scaler
+            if( not shape.enterFrame ) then
+               function shape.enterFrame( self )
+                  if( not self ) then return end
+                  if( not self.fill or not self.removeSelf ) then
+                     Runtime:removeEventListener( "enterFrame", self )
+                     self.enterFrame = nil
+                     return
+                  end
+                  -- EFM initially I didn't notice the scale was being applied to the parent.
+                  self.fill.scaleX = 1/self.parent.xScale
+                  self.fill.scaleY = 1/self.parent.yScale
+                  --dprint(self.__id, self.fill.scaleX, self.parent.xScale)
+               end
+               Runtime:addEventListener( "enterFrame", shape )
+            end
+
+
+				--shape.fill = { type="image", filename=data.objectsLayer[i].fillImage };
 			end
 			shape:setFillColor(data.objectsLayer[i].fillColor[1], data.objectsLayer[i].fillColor[2], data.objectsLayer[i].fillColor[3], data.objectsLayer[i].fillColor[4]);
 
@@ -354,8 +400,8 @@ local load = function(self, data)
 			shapeGroup.fillColor = data.objectsLayer[i].fillColor;
 			shapeGroup.toolMode = 'SHAPE_PLACEMENT';
 			shapeGroup.isHitTestable = true;
-			shapeGroup:addEventListener('touch', handleMultiTouch);
-			shapeGroup:addEventListener('multitouch', require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Tool_Shapes').onShapePinch);
+			shapeGroup:addEventListener('touch', FRC_MultiTouch.handleTouch);
+         shapeGroup:addEventListener('onPinch', require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Tool_Shapes').onPinch );
 			self.layerObjects:insert(shapeGroup);
 
 			if (data.objectsLayer[i].strokeColor) then
@@ -384,43 +430,46 @@ local load = function(self, data)
 				stampGroup.baseDir = data.objectsLayer[i].baseDir; -- new code to fix stamp resaving bug
 				baseDir = system[data.objectsLayer[i].baseDir];
 				-- DEBUG:
-				print("Loading stamp with baseDir: ", data.objectsLayer[i].baseDir, baseDir);				
+				print("Loading stamp with baseDir: ", data.objectsLayer[i].baseDir, baseDir);
 			end
 
 			local stamp = display.newImage(stampGroup, image, baseDir);
-			local scaleX = size / stamp.width;
-			local scaleY = size / stamp.height;
+			-- if we hit bad data, we need to skip this
+			if stamp then
+				local scaleX = size / stamp.width;
+				local scaleY = size / stamp.height;
 
-			if (data.objectsLayer[i].maskFile) then
-				local mask = graphics.newMask(data.objectsLayer[i].maskFile, baseDir);
-				stamp:setMask(mask);
-				stamp.isHitTestMasked = true;
-				stampGroup.maskFile = data.objectsLayer[i].maskFile;
+				if (data.objectsLayer[i].maskFile) then
+					local mask = graphics.newMask(data.objectsLayer[i].maskFile, baseDir);
+					stamp:setMask(mask);
+					stamp.isHitTestMasked = true;
+					stampGroup.maskFile = data.objectsLayer[i].maskFile;
+				end
+
+				stampGroup.objectType = 'stamp';
+				stampGroup.imagePath = image; -- used for saving/loading
+				stampGroup.toolMode = 'STAMP_PLACEMENT';
+				stampGroup:addEventListener('touch', FRC_MultiTouch.handleTouch);
+				stampGroup:addEventListener('onPinch', require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Tool_Stamps').onPinch );
+				self.layerObjects:insert(stampGroup);
+
+				if (data.objectsLayer[i].fillColor) then
+					stamp:setFillColor(data.objectsLayer[i].fillColor[1], data.objectsLayer[i].fillColor[2], data.objectsLayer[i].fillColor[3], data.objectsLayer[i].fillColor[4]);
+					stampGroup.fillColor = data.objectsLayer[i].fillColor;
+				else
+					stampGroup.fillColor = { 1.0, 1.0, 1.0, 1.0 };
+				end
+
+				if (data.objectsLayer[i].rotation) then
+					stampGroup.x = data.objectsLayer[i].x;
+					stampGroup.y = data.objectsLayer[i].y;
+					stampGroup.rotation = data.objectsLayer[i].rotation;
+					stampGroup.xScale = data.objectsLayer[i].xScale;
+					stampGroup.yScale = data.objectsLayer[i].yScale;
+				end
+
+				stampGroup._scene = scene;
 			end
-
-			stampGroup.objectType = 'stamp';
-			stampGroup.imagePath = image; -- used for saving/loading
-			stampGroup.toolMode = 'STAMP_PLACEMENT';
-			stampGroup:addEventListener('touch', handleMultiTouch);
-			stampGroup:addEventListener('multitouch', require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Tool_Stamps').onStampPinch);
-			self.layerObjects:insert(stampGroup);
-
-			if (data.objectsLayer[i].fillColor) then
-				stamp:setFillColor(data.objectsLayer[i].fillColor[1], data.objectsLayer[i].fillColor[2], data.objectsLayer[i].fillColor[3], data.objectsLayer[i].fillColor[4]);
-				stampGroup.fillColor = data.objectsLayer[i].fillColor;
-			else
-				stampGroup.fillColor = { 1.0, 1.0, 1.0, 1.0 };
-			end
-
-			if (data.objectsLayer[i].rotation) then
-				stampGroup.x = data.objectsLayer[i].x;
-				stampGroup.y = data.objectsLayer[i].y;
-				stampGroup.rotation = data.objectsLayer[i].rotation;
-				stampGroup.xScale = data.objectsLayer[i].xScale;
-				stampGroup.yScale = data.objectsLayer[i].yScale;
-			end
-
-			stampGroup._scene = scene;
 		end
 	end
 end
@@ -497,7 +546,7 @@ Canvas.new = function(width, height, x, y, borderWidth, borderHeight)
 
 	local eraserColor = FRC_ArtCenter_Settings.UI.DEFAULT_CANVAS_COLOR;
 	local canvas = display.newContainer(width, height);
-	canvas.id = FRC_Util.generateUniqueIdentifier();
+	canvas.id = FRC_ArtCenter.generateUniqueIdentifier();
 	canvas.layerBgColor = display.newGroup(); canvas:insert(canvas.layerBgColor);
 	canvas.layerBgImageColor = display.newSnapshot(width, height); canvas.layerBgImageColor.canvasMode = "discard";
 
@@ -544,8 +593,8 @@ Canvas.new = function(width, height, x, y, borderWidth, borderHeight)
 	canvas.layerBgColor:insert(bgRect, true);
 	canvas.layerBgColor.bg = bgRect;
 	canvas.layerBgColor.bg.r, canvas.layerBgColor.bg.g, canvas.layerBgColor.bg.b = eraserColor, eraserColor, eraserColor;
-	canvas.layerBgColor:addEventListener('touch', handleMultiTouch);
-	canvas.layerBgColor:addEventListener("multitouch", onCanvasTouch);
+	canvas.layerBgColor:addEventListener('touch', FRC_MultiTouch.handleTouch);
+	canvas.layerBgColor:addEventListener("onPinch", onCanvasTouch );
 	canvas.onCanvasTouch = onCanvasTouch;
 
 	canvas.x = x;

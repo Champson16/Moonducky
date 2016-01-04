@@ -14,6 +14,9 @@ local FRC_ArtCenter_ToolSelector = {};
 local function onButtonRelease(event)
 	local self = event.target;
 	local scene = self._scene;
+   local FRC_MultiTouch = require "FRC_Modules.FRC_MultiTouch.FRC_MultiTouch"
+   FRC_MultiTouch.init() 
+   
 	if ((scene.mode == scene.modes["BACKGROUND_SELECTION"]) and (self.mode == "BACKGROUND_SELECTION")) then return; end
 
 	scene.mode = scene.modes[self.mode];
@@ -47,8 +50,10 @@ local function onButtonRelease(event)
 
 	-- de-select any selected shape or stamp
 	if (scene.objectSelection) then
-		scene.objectSelection:removeSelf();
-		scene.objectSelection = nil;
+    if scene.objectSelection.removeSelf then
+  		scene.objectSelection:removeSelf();
+  		scene.objectSelection = nil;
+    end
 	end
 
 	-- restore selected tool's properties

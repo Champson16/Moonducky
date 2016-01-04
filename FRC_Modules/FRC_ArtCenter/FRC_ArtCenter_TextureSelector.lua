@@ -53,7 +53,10 @@ local function onButtonRelease(event)
 			local obj = scene.objectSelection.selectedObject[1];
 			if (scene.mode == scene.modes.SHAPE_PLACEMENT) then
 				if (self.id == "Blank") then
-					if ((scene.currentColor.preview.r == canvasColor) and (scene.currentColor.preview.g == canvasColor) and (scene.currentColor.preview.g == canvasColor)) then
+					if ((scene.currentColor.preview.r == canvasColor) and
+                   (scene.currentColor.preview.g == canvasColor) and
+                   (scene.currentColor.preview.b == canvasColor)) then
+
 						obj:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 0);
 						obj:setStrokeColor(0, 0, 0, 1.0);
 						obj.strokeWidth = 5;
@@ -71,16 +74,60 @@ local function onButtonRelease(event)
 						obj.parent.fillColor = { scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0 };
 						obj.parent.strokeWidth = 0;
 					end
-				else
-					obj.fill = { type="image", filename=self._texturePath };
-					obj:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
-					obj.strokeWidth = 0;
 
-					obj.parent.fillImage = self._texturePath;
-					obj.parent.fillColor = { scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0 };
-					obj.parent.strokeWidth = 0;
+				else
+
+               -- FIX
+               -- cache settings
+               local textureWrapX = display.getDefault( "textureWrapX" )
+               local textureWrapY = display.getDefault( "textureWrapY" )
+               -- change to repeat
+               display.setDefault( "textureWrapX", "repeat" )
+               display.setDefault( "textureWrapY", "repeat" )
+
+               --obj.fill = { type="image", filename=self._texturePath };
+               local newPath = string.gsub( self._texturePath, "Images/CCC", "Images/fills/CCC" )
+               obj.fill = { type="image", filename = newPath };
+
+               obj:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
+               obj.strokeWidth = 0;
+
+               obj.parent.fillImage = self._texturePath;
+               obj.parent.fillColor = { scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0 };
+               obj.parent.strokeWidth = 0;
+
+               -- restore settings
+               display.setDefault( "textureWrapX", textureWrapX )
+               display.setDefault( "textureWrapY", textureWrapY )
+
+               -- dynamic re-scaler
+               if( not obj.enterFrame ) then
+                  function obj.enterFrame( self )
+                     if( not self ) then return end
+                     if( not self.fill or not self.removeSelf ) then
+                        Runtime:removeEventListener( "enterFrame", self )
+                        self.enterFrame = nil
+                        return
+                     end
+                     -- EFM initially I didn't notice the scale was being applied to the parent.
+                     self.fill.scaleX = 1/self.parent.xScale
+                     self.fill.scaleY = 1/self.parent.yScale
+                  end
+                  Runtime:addEventListener( "enterFrame", obj )
+               end
+
+               -- ORIGINAL
+               --[[
+               obj.fill = { type="image", filename=self._texturePath };
+               obj:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
+               obj.strokeWidth = 0;
+
+               obj.parent.fillImage = self._texturePath;
+               obj.parent.fillColor = { scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0 };
+               obj.parent.strokeWidth = 0;
+               --]]
 				end
-			else
+         else
 				obj:setFillColor(scene.currentColor.preview.r, scene.currentColor.preview.g, scene.currentColor.preview.b, 1.0);
 			end
 		end
@@ -113,6 +160,7 @@ local function setTexture(self, imagePath)
 		else
 			self._scene.currentColor.texturePreview:setFillColor(r, g, b, 0.5);
 		end
+
 	else
 		self._scene.currentColor.texturePreview.fill = nil;
 	end

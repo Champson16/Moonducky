@@ -1,16 +1,32 @@
 local FRC_ArtCenter_Settings = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Settings');
 local FRC_ArtCenter_Scene = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Scene');
 local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
-local FRC_Util                = require("FRC_Modules.FRC_Util.FRC_Util")
-
 local json = require "json";
 local FRC_ArtCenter = {};
+math.randomseed(os.time());
 
 local function DATA(key, baseDir)
 	baseDir = baseDir or system.ResourceDirectory;
 	return FRC_DataLib.readJSON(FRC_ArtCenter_Settings.DATA[key], baseDir);
 end
 
+-- used to generate a unique 20-digit internal identifier for each drawing (for saving/loading)
+local generateUniqueIdentifier = function(digits)
+	digits = digits or 20;
+	local alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+	local s = '';
+	for i=1,digits do
+		if (i == 1) then
+			s = s .. alphabet[math.random(1, #alphabet)];
+		elseif (math.random(0,1) == 1) then
+			s = s .. math.random(0, 9);
+		else
+			s = s .. alphabet[math.random(1, #alphabet)];
+		end
+	end
+	return tostring(s);
+end
+FRC_ArtCenter.generateUniqueIdentifier = generateUniqueIdentifier;
 
 local emptyDataFile = json.decode(FRC_ArtCenter_Settings.DATA.EMPTY_DATAFILE);
 -- load saved data or save new data

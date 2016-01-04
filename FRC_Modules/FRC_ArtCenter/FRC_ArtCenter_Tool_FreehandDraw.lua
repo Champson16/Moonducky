@@ -182,7 +182,7 @@ end
 
 FRC_ArtCenter_Tool_FreehandDraw.onCanvasTouch = function(self, e)
 	if (not FRC_ArtCenter_Tool_FreehandDraw.graphic.image) then return; end
-	if (self.isProcessingErase) then return; end
+	-- if (self.isProcessingErase) then return; end
 	
 	local event = {};
 	for k,v in pairs(e) do
@@ -194,6 +194,9 @@ FRC_ArtCenter_Tool_FreehandDraw.onCanvasTouch = function(self, e)
 	
 	if ((event.phase == "began") or (event.phase == "moved")) then
 		local scene = require('FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Scene');
+		if (_G.ANDROID_DEVICE and scene.canvas.freehandSaveTimer) then
+			pcall(function() timer.cancel(scene.canvas.freehandSaveTimer); scene.canvas.freehandSaveTimer = nil; end);
+		end
 		local point = {x = event.x, y = event.y };
 		table.insert(points, point);
 		hasMoved = true;
@@ -207,6 +210,22 @@ FRC_ArtCenter_Tool_FreehandDraw.onCanvasTouch = function(self, e)
 		end
 
 	else
+		-- on Android, call display.save() on the freehand draw layer after 1 second of inactivity
+		if (event.phase == "ended" and _G.ANDROID_DEVICE) then
+			local canvas = require("FRC_Modules.FRC_ArtCenter.FRC_ArtCenter_Scene").canvas;
+			if (canvas.freehandSaveTimer) then
+				pcall(function() timer.cancel(canvas.freehandSaveTimer); end);
+			end
+			canvas.freehandSaveTimer = timer.performWithDelay(1000, function()
+				if (canvas.layerDrawing and canvas.layerDrawing.invalidate) then
+					canvas.layerDrawing:invalidate("canvas");
+				end
+				timer.performWithDelay(1, function()
+					canvas.freehandTempSaved = true;
+					display.save(canvas.layerDrawing, "temp_freehandsave.png", system.DocumentsDirectory);
+				end, 1);
+			end, 1);
+		end
 		points = {};
 	end
 end
