@@ -201,16 +201,23 @@ function FRC_Rehearsal_Scene:save(e)
    local ch = ((capture.contentHeight + 12) * display.contentScaleY)
    local sx = display.contentScaleX
    local sy = display.contentScaleY
+   
+   -- EFM Always
+   cw = cw / display.contentScaleX; --EFM
+   ch = ch / display.contentScaleY; --EFM
+
    if (display.contentScaleX < 1.0) then
-      cw = cw * 2
+      --EFM cw = cw * 2;      
       capture.xScale = display.contentScaleX
       sx = 1.0
    end
    if (display.contentScaleY < 1.0) then
-      ch = ch * 2
+      --EFM ch = ch * 2;
       capture.yScale = display.contentScaleY
       sy = 1.0
    end
+   
+   
    local maskWidth = math.round(((cw) - ((cw) % 4)) * sx)
    local maskHeight = math.round(((ch) - ((ch) % 4)) * sy)
    local maskContainer = display.newContainer(maskWidth, maskHeight)
@@ -372,16 +379,22 @@ function FRC_Rehearsal_Scene:publish(e)
       local ch = ((capture.contentHeight + 12) * display.contentScaleY)
       local sx = display.contentScaleX
       local sy = display.contentScaleY
+      
+      -- EFM Always
+      cw = cw / display.contentScaleX; --EFM
+      ch = ch / display.contentScaleY; --EFM
+
       if (display.contentScaleX < 1.0) then
-         cw = cw * 2
+         --EFM cw = cw * 2;      
          capture.xScale = display.contentScaleX
          sx = 1.0
       end
       if (display.contentScaleY < 1.0) then
-         ch = ch * 2
+         --EFM ch = ch * 2;
          capture.yScale = display.contentScaleY
          sy = 1.0
-      end
+      end      
+      
       local maskWidth = math.round(((cw) - ((cw) % 4)) * sx)
       local maskHeight = math.round(((ch) - ((ch) % 4)) * sy)
       local maskContainer = display.newContainer(maskWidth, maskHeight)
