@@ -333,6 +333,7 @@ function FRC_Rehearsal_Scene:load(e)
       FRC_Rehearsal_Scene.setIndex = nil
       FRC_Rehearsal_Scene.backdropName = nil
       FRC_Rehearsal_Scene.setID = nil
+      FRC_CharacterBuilder.markDirty( false ) 
    end
    --]]
 
