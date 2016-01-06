@@ -59,9 +59,28 @@ function FRC_DressingRoom_Scene:save(e)
       sy = 1.0
    end
    
-   dprint(cw,ch,sx,sy,display.contentScaleX,display.contentScaleY)
-	local maskWidth = math.round(((cw) - ((cw) % 4)) * sx);
-	local maskHeight = math.round(((ch) - ((ch) % 4)) * sy);
+	local maskWidth = math.round(((cw) - ((cw) % 4)) * sx) 
+	local maskHeight = math.round(((ch) - ((ch) % 4)) * sy)
+   
+   -- Adjust for scaling that will be applied when saving the mask  (masks are saved as true size == display size / axis scale )
+   local toAdd = 0
+   for i = 1, 3 do
+      if( math.round((maskWidth+i)/display.contentScaleX) % 4 == 0) then
+         toAdd = i
+      end         
+      --dprint("maskWidth", (maskWidth+i) , math.round((maskWidth+i)/display.contentScaleX) % 4, toAdd )
+   end
+   maskWidth = maskWidth + toAdd
+   
+   local toAdd = 0
+   for i = 1, 3 do
+      if( math.round((maskHeight+i)/display.contentScaleY) % 4 == 0) then
+         toAdd = i
+      end         
+      --dprint("maskHeight", (maskHeight+i) , math.round((maskHeight+i)/display.contentScaleY) % 4, toAdd )
+   end
+   maskHeight = maskHeight + toAdd
+   
 	local maskContainer = display.newContainer(maskWidth, maskHeight);
 	local blackRect = display.newRect(maskContainer, 0, 0, maskWidth, maskHeight);
 	blackRect:setFillColor(0, 0, 0, 1.0);
