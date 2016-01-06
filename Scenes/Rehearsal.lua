@@ -63,7 +63,7 @@ function scene.postCreateScene(self, event)
                  onRelease = function()
                     require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Scene').ensureRehearsalModeStopped()
                     storyboard.gotoScene('Scenes.Lobby');
-                    
+
                  end
               },
               -- LOAD button (needs icon)
@@ -228,7 +228,7 @@ function scene.postCreateScene(self, event)
                           end
                           showLoadPopup();
                         end )
-                    
+
 
                  end
               },
@@ -259,7 +259,8 @@ function scene.postCreateScene(self, event)
               {
                  imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_StartOver_up.png',
                  imageDown = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_StartOver_down.png',
-                 onRelease = function()  FRC_CharacterBuilder.dirtyTest( self.startOver ) end
+                 onRelease = function()  self.startOver() end
+                 -- onRelease = function()  FRC_CharacterBuilder.dirtyTest( self.startOver ) end
               },
               {
                  imageUp = 'FRC_Assets/FRC_ActionBar/Images/FRC_ActionBar_Icon_Help_up.png',
