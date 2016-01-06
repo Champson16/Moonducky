@@ -178,7 +178,7 @@ function FRC_SetDesign_Scene:createScene(event)
             end
          end 
       end
-		if (index == FRC_SetDesign_Scene.backdropIndex) then return; end
+		--if (index == FRC_SetDesign_Scene.backdropIndex) then return; end
       --table.print_r(backdropData)
 		if (not backdropData[index]) then index = 1; end -- ArtCenter image set as backdrop, but image was deleted (reset index to 1)
 		index = index or FRC_SetDesign_Scene.backdropIndex;
