@@ -23,7 +23,7 @@ end
 
 
 FRC_SetDesign_Scene.setIndex = 1;
-FRC_SetDesign_Scene.backdropIndex = 1;
+--EFMFRC_SetDesign_Scene.backdropIndex = 1;
 FRC_SetDesign_Scene.backdropName = "First";
 
 function FRC_SetDesign_Scene:saveCurrentSet(e)
@@ -47,7 +47,7 @@ function FRC_SetDesign_Scene:saveCurrentSet(e)
 	local newSave = {
 		id = id,
 		setIndex = FRC_SetDesign_Scene.setIndex,
-		backdropIndex = FRC_SetDesign_Scene.backdropIndex,
+		--EFMbackdropIndex = FRC_SetDesign_Scene.backdropIndex,
       backdropName = FRC_SetDesign_Scene.backdropName,
 		thumbWidth = UI('THUMBNAIL_WIDTH'),
 		thumbHeight = UI('THUMBNAIL_HEIGHT'),
@@ -146,14 +146,14 @@ function FRC_SetDesign_Scene:createScene(event)
 		FRC_SetDesign_Scene.setIndex = index;
 
 		-- resize selected backdrop to fit in selected set
-		local selectedBackdrop = backdropGroup[1];
-		if (not selectedBackdrop) then return; end
-		local currentWidth = backdropData[FRC_SetDesign_Scene.backdropIndex].width;
-		local currentHeight = backdropData[FRC_SetDesign_Scene.backdropIndex].height;
-		selectedBackdrop.xScale = (frameRect.width / currentWidth);
-		selectedBackdrop.yScale = (frameRect.height / currentHeight);
-		selectedBackdrop.x = frameRect.left - ((setBackground.width - display.contentWidth) * 0.5);
-		selectedBackdrop.y = frameRect.top - ((setBackground.height - display.contentHeight) * 0.5);
+		--EFMlocal selectedBackdrop = backdropGroup[1];
+		--EFMif (not selectedBackdrop) then return; end
+		--EFMlocal currentWidth = backdropData[FRC_SetDesign_Scene.backdropIndex].width;
+		--EFMlocal currentHeight = backdropData[FRC_SetDesign_Scene.backdropIndex].height;
+		--EFMselectedBackdrop.xScale = (frameRect.width / currentWidth);
+		--EFMselectedBackdrop.yScale = (frameRect.height / currentHeight);
+		--EFMselectedBackdrop.x = frameRect.left - ((setBackground.width - display.contentWidth) * 0.5);
+		--EFMselectedBackdrop.y = frameRect.top - ((setBackground.height - display.contentHeight) * 0.5);
 	end
 	self.changeSet = changeSet;
 	changeSet();
@@ -178,10 +178,10 @@ function FRC_SetDesign_Scene:createScene(event)
             end
          end 
       end
-		--if (index == FRC_SetDesign_Scene.backdropIndex) then return; end
+		--EFM--if (index == FRC_SetDesign_Scene.backdropIndex) then return; end
       --table.print_r(backdropData)
 		if (not backdropData[index]) then index = 1; end -- ArtCenter image set as backdrop, but image was deleted (reset index to 1)
-		index = index or FRC_SetDesign_Scene.backdropIndex;
+		index = index --EFMor FRC_SetDesign_Scene.backdropIndex;
 		if (backdropGroup.numChildren > 0) then
 			backdropGroup[1]:removeSelf();
 			backdropGroup[1] = nil;
@@ -201,7 +201,7 @@ function FRC_SetDesign_Scene:createScene(event)
 		backdropBackground.yScale = (frameRect.height / backdropData[index].height);
 		backdropBackground.x = frameRect.left - ((setGroup[1].width - display.contentWidth) * 0.5);
 		backdropBackground.y = frameRect.top - ((setGroup[1].height - display.contentHeight) * 0.5);
-		FRC_SetDesign_Scene.backdropIndex = index;
+		--EFMFRC_SetDesign_Scene.backdropIndex = index;
       FRC_SetDesign_Scene.backdropName = name;
 	end
 	self.changeBackdrop = changeBackdrop;

@@ -676,15 +676,15 @@ function FRC_Rehearsal_Scene:createScene(event)
       setBackground.frameRect = frameRect;
 
       -- resize selected backdrop to fit in selected set
-      local selectedBackdrop = backdropGroup[1];
-      if (not selectedBackdrop) then return; end
+      --EFMlocal selectedBackdrop = backdropGroup[1];
+      --EFMif (not selectedBackdrop) then return; end
 
-      local currentWidth = backdropData[FRC_Rehearsal_Scene.backdropIndex].width;
-      local currentHeight = backdropData[FRC_Rehearsal_Scene.backdropIndex].height;
-      selectedBackdrop.xScale = (frameRect.width / currentWidth);
-      selectedBackdrop.yScale = (frameRect.height / currentHeight);
-      selectedBackdrop.x = frameRect.left - ((setBackground.width - display.contentWidth) * 0.5);
-      selectedBackdrop.y = frameRect.top - ((setBackground.height - display.contentHeight) * 0.5);
+      --EFMlocal currentWidth = backdropData[FRC_Rehearsal_Scene.backdropIndex].width;
+      --EFMlocal currentHeight = backdropData[FRC_Rehearsal_Scene.backdropIndex].height;
+      --EFMselectedBackdrop.xScale = (frameRect.width / currentWidth);
+      --EFMselectedBackdrop.yScale = (frameRect.height / currentHeight);
+      --EFMselectedBackdrop.x = frameRect.left - ((setBackground.width - display.contentWidth) * 0.5);
+      --EFMselectedBackdrop.y = frameRect.top - ((setBackground.height - display.contentHeight) * 0.5);
    end
    self.changeSet = changeSet;
    -- changeSet();
@@ -701,9 +701,9 @@ function FRC_Rehearsal_Scene:createScene(event)
       end
 
       -- ArtCenter image set as backdrop, but image was deleted (reset index to 1)
-      if (not backdropData[index]) then index = 0; end
-      index = index or FRC_Rehearsal_Scene.backdropIndex;
-      FRC_Rehearsal_Scene.backdropIndex = index;
+      if (not backdropData[index]) then index = 1; end --EFM
+      index = index --EFMor FRC_Rehearsal_Scene.backdropIndex;
+      --EFMFRC_Rehearsal_Scene.backdropIndex = index;
       FRC_Rehearsal_Scene.backdropName = name;
       -- clear previous contents
       if (backdropGroup.numChildren > 0) then
