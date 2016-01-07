@@ -1022,7 +1022,7 @@ function FRC_Rehearsal_Scene:createScene(event)
          --[[  -- Uncomment for quick debugging of this code.
          for k,v in pairs(instrumentTrackStartOffsets) do
             v.startOffset = math.random(500,1000)
-            v.trackEndTime = math.random(1200,1600)
+            v.trackEndTime = math.random(8200,9600)
          end
          expectedEndTime = 10000
          --]]

@@ -618,7 +618,6 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    local instrumentType       = private.instrumentNameMap(instrumentName)
    local costumeData          = private.getCostumeData( animalType )
    local xmlFiles             = private.getXMLFileNames( animalType )
-   local animationSequences   = {}
 
    --
    -- Get costume adjustment data for this character
@@ -642,7 +641,6 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    stagePiece.instrument         = instrumentName
    stagePiece.danceNumber        = danceNumber
    stagePiece.characterID        = characterID
-   stagePiece.animationSequences = animationSequences
 
    -- Only preclude re-use of instruments (not dancers)
    if( not strMatch( strLower( instrumentName ), "dance" ) ) then
@@ -652,23 +650,16 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
 
    function stagePiece.destroy( self )
       instrumentsInUse[self.instrument] = nil
-
-      -- ****************************************
-      -- EFM SOMETHING WRONG HERE!  CRASHES IF STILL PLAYING ANIMATION
-      -- ****************************************
-      for i = 1, #animationSequences do
-         local sequence = animationSequences[i]
-         for j = 1, sequence.numChildren do
-            --sequence[j]:dispose()
-            sequence[j]:stop()
-         end
-      end
-      -- ****************************************
+      
+      local sequence = stagePiece.animationSequence
+      for i = 1, sequence.numChildren do
+         sequence[i]:stop()
+      end      
    end
 
    -- Get all known parts for the selected instrument type within the previously selected character (animal) type
-   local partsList = private.getPartsList( xmlFiles[instrumentType], animationXMLBase, false )
-
+   local partsList, xmlTable = private.getPartsList( xmlFiles[instrumentType], animationXMLBase, false )
+   
    --
    -- Generate a list of the animation parts we need for this particular character
    --
@@ -679,18 +670,18 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    for i = 1, #allParts do
       local partName = allParts[i][1]
       local partExcludeName = allParts[i][2]
-      for j = 1, #partsList do
+      for j = 1, #partsList do         
          if( strMatch( partsList[j].name, partName ) ~= nil ) then
-            private.findAnimationParts( partsList, partName, partExcludeName, animationsToBuild, allParts[i][3] )
+            private.findAnimationParts( partsList, partName, partsList[j].name, partExcludeName, animationsToBuild, allParts[i][3] )
          end
       end
-   end
+   end   
 
    --
    -- Adjust parts (costume names and offsets).
    --
    -- Note 1: Costume names are not applied till the moment animation manager prepares to build this animation.
-   -- Note 2: Offet is used in this file after animation manager returns the new animation clip group.
+   -- Note 2: Offset is used in this file after animation manager returns the new animation clip group.
    --
    local tmp = {}
    for i = 1, #animationsToBuild do
@@ -705,40 +696,60 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    animationsToBuild = tmp
    tmp = nil
 
+   -- Copy the xml table, then trim it to just the parts we need to build this character
    --
-   -- Finally, create animation groups (sequences) from our list of animations to build
+   local xmlTable = table.deepCopy( xmlTable ) 
+   local newPart = {}
+   local part = xmlTable.Animation.Part
+   
+   for i = 1, #animationsToBuild do    
+      local unifiedData = animationsToBuild[i]
+      local partsList = unifiedData[2]
+      for j = 1, #partsList do
+         local aNewPart = table.deepCopy(part[partsList[j]])
+         aNewPart.animationImageBase = unifiedData[3] 
+         newPart[#newPart+1] = aNewPart
+         if( unifiedData[4] ) then 
+            aNewPart.name = string.gsub( string.lower(aNewPart.name), string.lower(unifiedData[4].fromPart), unifiedData[4].toPart )                  
+         end
+      end
+   end
+   xmlTable.Animation.Part = newPart   
+   
+   --
+   --  Finally, build the character as a single clipgroup
    --
    local animGroup = display.newGroup()
    local xOffset = -(display.contentWidth/2)
    local yOffset = -(display.contentHeight/2)
-   stagePiece:insert(animGroup)
-   for i = 1, #animationsToBuild do
-      local adjustment = adjustments[animationsToBuild[i][1]]
-      local animationGroupProperties = {}
-      animationSequences[i] = private.createUnifiedAnimationClipGroup(
-         xmlFiles[instrumentType],
-         animationsToBuild[i],
-         animationXMLBase,
-         animationsToBuild[i][3], -- animationImageBase,
-         animationGroupProperties )
-      animationSequences[i].x = xOffset
-      animationSequences[i].y = yOffset
-      if( adjustment ) then
-         animationSequences[i].x = animationSequences[i].x + adjustment.offset[1]
-         animationSequences[i].y = animationSequences[i].y + adjustment.offset[2]
-      end
-      animGroup:insert(animationSequences[i])
-   end
+   
+   stagePiece.animationSequence = FRC_AnimationManager.createAnimationClipGroup( { xmlTable }, animationXMLBase, animationImageBase, 
+      { unifiedData = { allParts = allParts, adjustments = adjustments } } )
+   
+   stagePiece.animationSequence.x = xOffset
+   stagePiece.animationSequence.y = yOffset
+   
+   stagePiece:insert(stagePiece.animationSequence)
+   
 
    stagePiece:scale(characterScale,characterScale)
    private.attachDragger(stagePiece)
 
-   -- EFM start stopped or play one cycle?
-   for i = 1, #animationSequences do
-      private.playAllAnimations_rehearsal( animationSequences, i )
-      --private.playAllAnimations( animationSequences, i )
-      --private.stopAllAnimations( animationSequences, i )
+   -- PING PONG
+   local sequence = stagePiece.animationSequence   
+   dprint( "sequence.numChildren == " ,  sequence.numChildren )   
+   for i=1, sequence.numChildren do
+      sequence[i]:play({
+            showLastFrame     = true,
+            playBackward      = false,
+            autoLoop          = false,
+            palindromicLoop   = false,
+            delay             = 0,
+            intervalTime      = 0, 
+            maxIterations     = 1,
+         })
    end
+   
 
    currentStagePiece = stagePiece
 
@@ -1070,7 +1081,7 @@ function public.playStageCharacters( instrumentTrackStartOffsets, expectedEndTim
    local charactersOnStage = public.getCharactersOnStage()
 
    for i = 1, #charactersOnStage do
-      local animationSequences = charactersOnStage[i].animationSequences
+      local animationSequence = charactersOnStage[i].animationSequence
 
       local myInstrument = string.lower(charactersOnStage[i].instrument)
       local instrumentOffset = 30 -- default start offset for no instrument
@@ -1092,11 +1103,8 @@ function public.playStageCharacters( instrumentTrackStartOffsets, expectedEndTim
                        showEndTime        = expectedEndTime}
 
       local startTime = system.getTimer()
-      for j = 1, #animationSequences do
-         private.playAllAnimations( animationSequences, j, true, params )
-      end
+      private.playAllAnimations( animationSequence, params ) -- PING PONG
       local endTime = system.getTimer()
-      --dprint("Duration to call ", #animationSequences, " playAllAnimations() ", endTime-startTime )
    end
 end
 
@@ -1109,10 +1117,8 @@ function public.stopStageCharacters()
    local charactersOnStage = public.getCharactersOnStage()
 
    for i = 1, #charactersOnStage do
-      local animationSequences = charactersOnStage[i].animationSequences
-      for j = 1, #animationSequences do
-         private.stopAllAnimations( animationSequences, j )
-      end
+      local animationSequence = charactersOnStage[i].animationSequence
+      private.stopAllAnimations( animationSequence )
    end
 end
 
@@ -1592,22 +1598,46 @@ function private.getPartsList( sourceFile, animationXMLBase, debugEn )
          dprint( "partsList[" .. i .. "] ", partsList[i].name, animationImageBase )
       end
    end
-   return partsList
+   return partsList, xmltable
 end
 
 --
 -- findAnimationParts() - Find a specific animation in a unified animation export by name (with optional 'exclusion' match for names that match a sub-name in another animation)
 --
-function private.findAnimationParts( parts, partSubName, partExcludeName, toTable, animationImageBase )
+function private.findAnimationParts( parts, partSubName, partExactName, partExcludeName, toTable, animationImageBase )
    local subParts = {}
    for i = 1, #parts do
       if( partExcludeName and string.len(partExcludeName) > 0 ) then
-         if( strMatch( parts[i].name, partSubName ) and
+         if( strMatch( parts[i].name, partExactName ) and            
             strMatch( parts[i].name, partExcludeName ) == nil ) then
+            --dprint("edochi a", i, parts[i].name )
+            subParts[#subParts+1] = i
+         end
+      else
+         if( strMatch( parts[i].name, partExactName ) ) then
+            --dprint("edochi b", i, parts[i].name )
+            subParts[#subParts+1] = i
+         end
+      end
+   end
+   if(toTable and #subParts > 0) then
+      toTable[#toTable+1] = { partSubName, subParts, animationImageBase }
+      --toTable[#toTable+1] = { partExactName, subParts, animationImageBase }
+   end
+   return subParts
+end
+function private.findAnimationParts_orig( parts, partSubName, partExcludeName, toTable, animationImageBase )
+   local subParts = {}
+   for i = 1, #parts do
+      if( partExcludeName and string.len(partExcludeName) > 0 ) then
+         if( strMatch( parts[i].name, partSubName ) and            
+            strMatch( parts[i].name, partExcludeName ) == nil ) then
+            dprint("edochi a", i, parts[i].name )
             subParts[#subParts+1] = i
          end
       else
          if( strMatch( parts[i].name, partSubName ) ) then
+            dprint("edochi b", i, parts[i].name )
             subParts[#subParts+1] = i
          end
       end
@@ -1619,30 +1649,177 @@ function private.findAnimationParts( parts, partSubName, partExcludeName, toTabl
 end
 
 --
--- createUnifiedAnimationClipGroup() - Creates a set of animation clipgroups from a unified export and unified data (reduction) mapping.
---
-function private.createUnifiedAnimationClipGroup( sourceFile, unifiedData, animationXMLBase, animationImageBase, animationGroupProperties )
-   animationGroupProperties = animationGroupProperties or {}
-   animationGroupProperties.unifiedData = unifiedData
-   return FRC_AnimationManager.createAnimationClipGroup( { sourceFile }, animationXMLBase, animationImageBase, animationGroupProperties )
-end
-
---
 -- playAllAnimations() - Plays all of the character's animations
 --
-function private.playAllAnimations( animationSequences, num, autoLoop, params )
-   params = params or { intervalTime = 30, iterations = 1, instrumentOffset = 30, instrumentEndTime = 10000 }
-   num = num or mRand(1,#animationSequences)
-   local sequence    = animationSequences[num]
+function private.playAllAnimations( animationSequence, params )
+   local sequence                = animationSequence
+   local totalClips              = sequence.numChildren
+   animationSequence.completed   = {}
+   local completed               = animationSequence.completed
+   local framePeriod             = math.ceil(1000 / display.fps)
+   
+   -- Determine when this animation should stop
+   if( params.isFirstCall ) then
+      sequence._startedPlayingAt = system.getTimer()
+      local stopTime = params.instrumentEndTime
+      -- Dancers don't have a stop time, so just make it the end of ths show
+      if( stopTime > params.showEndTime ) then
+         stopTime = params.showEndTime
+      end
+      sequence._playDuration = stopTime
+   end   
 
-   local totalSeq    = #animationSequences
+   -- play the clips
+   for i=1, totalClips do
+      completed[i] = false      
+      local obj = sequence[i]
+
+      local function onCompletionGate()
+         completed[i] = true         
+         if(obj.removeSelf == nil or obj.stop == nil) then return end
+         
+         obj:stop(obj.frameCount)
+         
+         local executeOnComplete = true
+         for j = 1, #completed do
+            executeOnComplete = executeOnComplete and completed[j]
+         end
+
+         local curTime     = system.getTimer()
+         local dt          = curTime - sequence._startedPlayingAt
+         local remaining   = sequence._playDuration - dt      
+
+         if( remaining < 1000 ) then
+            dprint("SKIPPING RESTART ANIMATION" )
+            return
+         end
+
+         if( executeOnComplete ) then            
+            timer.performWithDelay( framePeriod * 2,
+               function()
+               local params2 =  { intervalTime        = params.intervalTime,
+                                  iterations          = math.random( 1, 3 ),
+                                  instrumentOffset    = math.random( 500, 2000 ),
+                                  instrumentEndTime   = params.instrumentEndTime}
+               local startTime = system.getTimer()
+               dprint("RESTART ANIMATION ", i, sequence, obj, system.getTimer() )
+               if(sequence.removeSelf == nil) then return end
+               private.playAllAnimations( animationSequence, params2 )               
+            end )
+         else
+            --dprint("NOT ALL DONE WAITING", i, sequence, obj, system.getTimer() )
+         end
+      end
+      
+      obj:play({
+            showLastFrame     = not(autoLoop),
+            playBackward      = false,
+            autoLoop          = false, 
+            palindromicLoop   = false,
+            delay             = params.instrumentOffset,
+            intervalTime      = params.intervalTime, --30, -- EFM TEARING FIX? SOURCE?
+            maxIterations     = params.iterations, -- 1
+            onCompletion      = onCompletionGate,
+            stopGate          = true
+         })
+   end
+end
+
+
+
+--
+-- Tested alternate method using 'pause' and 'resume' -- It didn't work great and eventually desynchronized
+--
+function private.playAllAnimations_pause( animationSequence, params )
+   local sequence    = animationSequence
+   local totalClips  = sequence.numChildren
+   local framePeriod = math.ceil(1000 / display.fps)
+   
+   for i=1, totalClips do
+      local obj = sequence[i]
+      obj:play({
+            showLastFrame     = false,
+            playBackward      = false,
+            autoLoop          = false, 
+            palindromicLoop   = false,
+            delay             = params.instrumentOffset,
+            intervalTime      = 30, --, params.intervalTime, --30, -- EFM TEARING FIX? SOURCE?
+            maxIterations     = 10000, --params.iterations, -- 1            
+         })
+      obj.__paused = false
+   end
+   
+   -- Determine when this animation should stop
+   sequence._startedPlayingAt = system.getTimer()
+   local stopTime = params.instrumentEndTime
+   -- Dancers don't have a stop time, so just make it the end of ths show
+   if( stopTime > params.showEndTime ) then
+      stopTime = params.showEndTime
+   end
+   sequence._playDuration = stopTime
+   
+   -- Clear any existing timer on this object      
+   if( sequence.__myLastTimer ) then 
+      timer.cancel( sequence.__myLastTimer )
+      sequence.__myLastTimer = nil
+   end
+   
+   -- Mark sequence as 'running' (not paused)   
+   sequence.__isPaused = false
+   
+   -- Set a timer to pause/resume at random intervals till we need to stop
+   sequence.timer = function( self )
+      if( self.removeSelf == nil ) then
+         self.__myLastTimer = nil
+         --dprint( "QUITTING TIMER" )
+         return
+      end
+      
+      local curTime = system.getTimer()
+      local dt             = curTime - sequence._startedPlayingAt
+      local remainingTime  = sequence._playDuration - dt      
+      local chance         = math.random(1,100)
+      local nextTime       = math.random(1000,2000)
+      
+      --dprint("Timer", sequence.__isPaused, chance, curTime, dt, remainingTime )
+      
+      if(remainingTime < 1000) then 
+         --dprint("Timer abort")
+         return 
+      end      
+      if( sequence.__isPaused ) then         
+         for i=1, totalClips do
+            local obj            = sequence[i]
+            obj:resume()
+         end
+         sequence.__isPaused = false
+         --dprint( "RESUMED" )
+      
+      elseif( chance > 66 ) then      
+         for i=1, totalClips do
+            local obj = sequence[i]
+            obj:pause()
+         end
+         sequence.__isPaused = true
+         --dprint( "PAUSED" )
+      end
+      sequence.__myLastTimer = timer.performWithDelay( nextTime, sequence )
+   end
+   sequence.__myLastTimer = timer.performWithDelay( params.instrumentOffset + math.random(2000,4000), sequence )
+end
+
+
+
+--[[
+function private.playAllAnimations_orig( animationSequence, params )
+   params = params or { intervalTime = 30, iterations = 1, instrumentOffset = 30, instrumentEndTime = 10000 }
+   local sequence    = animationSequence
+
    local totalClips  = sequence.numChildren
 
-   if( num == 1 ) then
-      animationSequences.completed = {}
-   end
-
-   local completed = animationSequences.completed
+   animationSequence.completed = {}
+   
+   local completed = animationSequence.completed
    local completedIndex = #completed+1
    completed[completedIndex] = false
 
@@ -1666,10 +1843,9 @@ function private.playAllAnimations( animationSequences, num, autoLoop, params )
          local dt = curTime - obj._startedPlayingAt
 
          if( dt >= obj._playDuration ) then
-            dprint("STOPPING ANIMATION", num)
+            dprint("STOPPING ANIMATION" )
             return
          end
-
 
          if( executeOnComplete ) then
             timer.performWithDelay( framePeriod * 2,
@@ -1679,41 +1855,38 @@ function private.playAllAnimations( animationSequences, num, autoLoop, params )
                                   instrumentOffset    = math.random( 500, 2000 ),
                                   instrumentEndTime   = params.instrumentEndTime}
                local startTime = system.getTimer()
-               dprint("RESTARTING ANIMATION ", num )
-               for k = 1, #animationSequences do
-                        if(obj.removeSelf == nil or obj.stop == nil) then return end
-                        private.playAllAnimations( animationSequences, k, autoLoop, params2 )
-               end
-               local endTime = system.getTimer()
-               --dprint("Duration to call ", #animationSequences, " playAllAnimations() ", endTime-startTime )
-            end )
-         end
-      end
-
-
-      --[[
-      dprint( "intervalTime, iterations, instrumentOffset, instrumentEndTime == ", params.intervalTime,
-              params.iterations, params.instrumentOffset, params.instrumentEndTime, system.getTimer() )
-      --]]
-      --[[
-      if( params.isFirstCall ) then
-         obj._startedPlayingAt = system.getTimer()
-         if(obj._stopTimer) then
-            timer.cancel( obj._stopTimer )
-         end
-         local stopTime = params.instrumentEndTime
-         if( stopTime > params.showEndTime ) then
-            stopTime = params.showEndTime
-         end
-         obj._stopTimer = timer.performWithDelay( stopTime,
-            function()
-               dprint("STOP THIS INSTRUMENT", i)
-               obj._stopTimer = nil
+               dprint("RESTARTING ANIMATION " )
                if(obj.removeSelf == nil or obj.stop == nil) then return end
-               obj:stop(obj.currentIndex)
+               -- PING PONG
+               private.playAllAnimations( animationSequence, params2 )               
+               local endTime = system.getTimer()               
             end )
+         end
       end
-      --]]
+
+
+      
+      --dprint( "intervalTime, iterations, instrumentOffset, instrumentEndTime == ", params.intervalTime,
+      --        params.iterations, params.instrumentOffset, params.instrumentEndTime, system.getTimer() )
+      
+--      if( params.isFirstCall ) then
+--         obj._startedPlayingAt = system.getTimer()
+--         if(obj._stopTimer) then
+--            timer.cancel( obj._stopTimer )
+--         end
+--         local stopTime = params.instrumentEndTime
+--         if( stopTime > params.showEndTime ) then
+--            stopTime = params.showEndTime
+--         end
+--         obj._stopTimer = timer.performWithDelay( stopTime,
+--            function()
+--               dprint("STOP THIS INSTRUMENT", i)
+--               obj._stopTimer = nil
+--               if(obj.removeSelf == nil or obj.stop == nil) then return end
+--               obj:stop(obj.currentIndex)
+--            end )
+--      end
+      
       if( params.isFirstCall ) then
          obj._startedPlayingAt = system.getTimer()
          local stopTime = params.instrumentEndTime
@@ -1725,7 +1898,7 @@ function private.playAllAnimations( animationSequences, num, autoLoop, params )
       obj:play({
             showLastFrame     = not(autoLoop),
             playBackward      = false,
-            autoLoop          = false, -- autoLoop,
+            autoLoop          = false, 
             palindromicLoop   = false,
             delay             = params.instrumentOffset,
             intervalTime      = 30, --, params.intervalTime, --30, -- EFM TEARING FIX? SOURCE?
@@ -1735,68 +1908,20 @@ function private.playAllAnimations( animationSequences, num, autoLoop, params )
          })
    end
 end
-
---
--- playAllAnimations_original() - Plays all of the character's animations (NON STOP GATE)
---
-function private.playAllAnimations_original( animationSequences, num, autoLoop )
-   num = num or mRand(1,#animationSequences)
-   local sequence = animationSequences[num]
-   for i=1, sequence.numChildren do
-
-      sequence[i]:play({
-            showLastFrame = not(autoLoop),
-            playBackward = false,
-            autoLoop = autoLoop,
-            palindromicLoop = false,
-            delay = 30,
-            intervalTime = 30,
-            maxIterations = 1,
-            --onCompletion = onCompletion,
-            --stopGate = true -- Not transfered yet
-         })
-      --timer.performWithDelay(33, function() sequence[i]:pause() end )
-   end
-end
-
---
--- playAllAnimations_rehearsal() - Temporary as we finalize showtime fixes
---
-function private.playAllAnimations_rehearsal( animationSequences, num, autoLoop )
-   num = num or mRand(1,#animationSequences)
-   local sequence = animationSequences[num]
-   for i=1, sequence.numChildren do
-
-      sequence[i]:play({
-            showLastFrame = true,
-            playBackward = false,
-            autoLoop = autoLoop,
-            palindromicLoop = false,
-            delay = 30,
-            intervalTime = 0,
-            maxIterations = 1,
-            --onCompletion = onCompletion,
-            --stopGate = true -- Not transfered yet
-         })
-      --timer.performWithDelay(33, function() sequence[i]:pause() end )
-   end
-end
-
-
+--]]
 
 --
 -- stopAllAnimations() - Stops all of the character's animations (EFM needs work)
 --
-function private.stopAllAnimations( animationSequences, num )
-   num = num or mRand(1,#animationSequences)
-   local sequence = animationSequences[num]
+function private.stopAllAnimations( animationSequence )
+   local sequence = animationSequence
    for i=1, sequence.numChildren do
       sequence[i]:stop()
       sequence[i]:play({
-            showLastFrame = true,
-            delay = 0,
-            intervalTime = 0,
-            maxIterations = 1,
+            showLastFrame  = true,
+            delay          = 0,
+            intervalTime   = 0,
+            maxIterations  = 1,
          })
    end
 end
