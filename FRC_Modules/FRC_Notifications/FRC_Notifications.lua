@@ -4,10 +4,10 @@
 
 -- =============================================================
 -- =============================================================
--- Key functions to understand in this module: 
+-- Key functions to understand in this module:
 --
 --                public.init() -- Initalizes pushes on this device.
---  private.oneSignalListener() -- Handles (REMOTE) pushes from OneSignal, processes them, 
+--  private.oneSignalListener() -- Handles (REMOTE) pushes from OneSignal, processes them,
 --                                 and acts on them or routes them to other modules.
 --  public.localListener()     -- Handles (LOCAL) pushes.
 -- =============================================================
@@ -24,8 +24,8 @@ local OneSignal = require("plugin.OneSignal");
 
 -- EFM WE NEED TO CENTRALIZE PLATFORM DETECTION
 local onSimulator    = system.getInfo( "environment" ) == "simulator"
-local oniOS          = ( system.getInfo("platformName") == "iPhone OS") 
-local onAndroid      = ( system.getInfo("platformName") == "Android") 
+local oniOS          = ( system.getInfo("platformName") == "iPhone OS")
+local onAndroid      = ( system.getInfo("platformName") == "Android")
 local onWinPhone     = (system.getInfo("platformName") == "WinPhone");
 local onOSX          = ( system.getInfo("platformName") == "Mac OS X")
 local onWin          = ( system.getInfo("platformName") == "Win")
@@ -45,7 +45,7 @@ local pairs             = pairs
 
 
 -- =============================================================
--- PUBLIC PUBLIC PUBLIC PUBLIC PUBLIC PUBLIC PUBLIC PUBLIC PUBLIC 
+-- PUBLIC PUBLIC PUBLIC PUBLIC PUBLIC PUBLIC PUBLIC PUBLIC PUBLIC
 -- =============================================================
 -- ==
 --  public.init( params )
@@ -72,7 +72,7 @@ function public.init( params )
       private.logger.print_r = function() end
       private.logger.purge = function() end
       private.logger.show = function() end
-   end  
+   end
 
    private.enableLogger = params.enableLogger
    private.autoShow = params.autoShow
@@ -81,7 +81,7 @@ function public.init( params )
    -- Initialize Push Notifications for/on iOS (automatic on Android)
    --
    local notifications = require( "plugin.notifications" )
-   notifications.registerForPushNotifications()   
+   notifications.registerForPushNotifications()
 
    Runtime:addEventListener( "notification", public.localListener )
 
@@ -92,9 +92,9 @@ function public.init( params )
    OneSignal.Init( params.oneSignalID, params.projectNumber, private.oneSignalListener)
 
    -- Tag This User In 'Push Dev Group'
-   --OneSignal.SendTags({["group"] = "PushDev",["user"] = "RoamingGamer"})   
-   --OneSignal.SendTags({["group"] = "PushDev"})   
-   --OneSignal.SendTags({["user"] = "RGMoonDucky"})   
+   --OneSignal.SendTags({["group"] = "PushDev",["user"] = "RoamingGamer"})
+     OneSignal.SendTags({["group"] = "PushDev"})
+   --OneSignal.SendTags({["user"] = "RGMoonDucky"})
 
    if( params.discoverIdToken == true) then
       print("Discover ID & Token")
@@ -111,7 +111,7 @@ function public.queryIDToken( )
    local function listener( id, token )
       private.logger.print( "queryIDToken() ID: " .. tostring(id) )
       private.logger.print( "TOKEN: ", token )
-      --private.logger.show() 
+      --private.logger.show()
       if( id and token ) then
          public.setIDToken( id, token )
       else
@@ -163,39 +163,39 @@ end
 --   isActive  - Unknown (EFM?)
 --
 -- ==
-function private.oneSignalListener( msg, data, isActive )   
-   -- 
+function private.oneSignalListener( msg, data, isActive )
+   --
    -- Clean up the 'data' field to ensure it is ready for consumption by logic below
-   -- 
-   data = data or {} 
+   --
+   data = data or {}
    local isEmpty = true
    for k,v in pairs( data ) do
       isEmpty = false
    end
-   data = ( isEmpty ) and {} or data 
+   data = ( isEmpty ) and {} or data
 
    -- Force message type if not specified.
    data.title     = data.title or "Missing Title"
    data.msgType   = data.msgType or "message"
 
 
-   -- 
+   --
    -- Dump details to logger (if not enabled this goes to the bit bucket)
-   -- 
+   --
    private.logger.print( "Got Push Notification: ", data.title )
    private.logger.print( "Content ==> " )
    private.logger.print_r( msg )
    private.logger.print( "isActive ==> ", isActive )
-   -- 
+   --
    -- Automatically pop up logger?
-   -- 
+   --
    if( private.autoShow ) then private.logger.show(); end
 
    -- ==================================
    -- Push Type 1 - 'message'
    --
    -- Display message and body in a dialog with one option:  'OK' to close
-   -- 
+   --
    -- ==================================
    if( data.msgType == "message" ) then
       private.easyAlert( data.title, msg , { { "OK", nil } } )
@@ -205,9 +205,9 @@ function private.oneSignalListener( msg, data, isActive )
       --
       -- Functionality TBD.  For now display: message, body, and promoDetails string.
       --
-      -- In the future we will use the promoDetails and perhaps more data to show a promotional dialog.  
+      -- In the future we will use the promoDetails and perhaps more data to show a promotional dialog.
       -- There may be similarities to  the 'New Home For Charlie' discover feature.
-      -- 
+      --
       -- ==================================
    elseif( data.msgType == "promo" ) then
       local promoDetails = data.promoDetails or "None"
@@ -249,16 +249,18 @@ function private.oneSignalListener( msg, data, isActive )
 
       if( ( promoType and promoType == "appstore" ) and
           ( promoURL and promoURL ~= "None" ) ) then
-         private.easyAlert( data.title, msg .. "\n\nPromo Details: " .. promoDetails, 
-            { 
-               { "Cancel", nil }, 
+         -- private.easyAlert( data.title, msg .. "\n\nPromo Details: " .. promoDetails,
+         private.easyAlert( data.title, msg .. "\n\n" .. promoDetails,
+            {
+               { "Cancel", nil },
                { "Get The App", function() system.openURL( promoURL ) end } } )
       else
-         private.easyAlert( data.title, msg .. "\n\nPromo Details: " .. promoDetails, 
+         -- private.easyAlert( data.title, msg .. "\n\nPromo Details: " .. promoDetails,
+         private.easyAlert( data.title, msg .. "\n\n" .. promoDetails,
             { { "OK", nil } } )
       end
    end
-end 
+end
 
 
 -- ==
@@ -269,20 +271,20 @@ function public.localListener( event )
    private.logger.print("In Local Listener")
    private.logger.print_r(event)
 
-   -- 
+   --
    -- Clean up the 'custom' field to ensure it is ready for consumption by logic below
-   -- 
-   event = event or {} 
+   --
+   event = event or {}
    event.alert = event.alert or ""
    event.custom = event.custom or {}
    local isEmpty = true
    for k,v in pairs( event.custom ) do
       isEmpty = false
    end
-   local custom = ( isEmpty ) and { msgType = "message", title = event.alert } or event.custom 
+   local custom = ( isEmpty ) and { msgType = "message", title = event.alert } or event.custom
 
 
-   -- 
+   --
    -- Only handle local alerts here
    --
    if( event.type == "remoteRegistration" ) then
@@ -295,12 +297,12 @@ function public.localListener( event )
       --
       -- Route through oneSignalListener() for handling
       --
-      private.oneSignalListener( event.alert, custom, false )   
+      private.oneSignalListener( event.alert, custom, false )
    else
       -- What!?
-      private.easyAlert( "Wrong Handler", "Got non-local push in this handler.\nIgnoring it.\n" .. tostring( event.type ) , { { "OK", nil } } )      
+      private.easyAlert( "Wrong Handler", "Got non-local push in this handler.\nIgnoring it.\n" .. tostring( event.type ) , { { "OK", nil } } )
    end
-end 
+end
 
 -- ==
 --     Easy alert popup
@@ -318,7 +320,7 @@ function private.easyAlert( title, msg, buttons )
       local index = event.index
       if( action == "clicked" ) then
          local func = buttons[index][2]
-         if( func ) then func() end 
+         if( func ) then func() end
       end
       --native.cancelAlert()
    end
@@ -335,5 +337,3 @@ end
 
 
 return public
-
-

@@ -39,6 +39,10 @@ FRC_Jukebox.new = function(options)
 
 
 	local jukeboxGroup = display.newContainer(screenW, screenH); -- display.newGroup();
+	jukeboxGroup.x, jukeboxGroup.y = 0,0;
+	jukeboxGroup.anchorX = 0.5;
+	jukeboxGroup.anchorY = 0.5;
+	jukeboxGroup.anchorChildren = true;
 	FRC_Jukebox.jukeboxGroup = jukeboxGroup;
 
 	-- forward declarations
@@ -80,7 +84,7 @@ FRC_Jukebox.new = function(options)
 	FRC_Jukebox.modalBackground = modalBackground;
 
 	-- setup the frame and background
-	local border = display.newRect(jukeboxGroup, 0, 0, options.width or screenW, options.height or screenH);
+	local border = display.newRect(jukeboxGroup, 0, 0, options.width or screenW * .9, options.height or screenH * .9);
 	border:setFillColor(1.0, 1.0, 1.0, 0.80);
 	border.x, border.y = 0, 0;
 
@@ -89,51 +93,85 @@ FRC_Jukebox.new = function(options)
 	back.x, back.y = 0, 0;
 	jukeboxGroup.winWidth = back.width;
 	jukeboxGroup.winHeight = back.height;
+	jukeboxGroup.winX = back.x;
+	jukeboxGroup.winY = back.y;
+	local jukeboxScaleX = jukeboxGroup.winWidth/1152; -- screenW;
+	local jukeboxScaleY = jukeboxGroup.winHeight/768; -- screenH;
 
-  -- setup the background animation
+  -- setup the jukebox animations
 	local jukeboxBackgroundAnimationFiles = {
 		"MDMT_Jukebox_Background.xml"
 	}
+	local jukeboxForegroundAnimationFiles = {
+		"MDMT_Jukebox_AnimDiscPlay_d.xml",
+		"MDMT_Jukebox_AnimDiscPlay_c.xml",
+		"MDMT_Jukebox_AnimDiscPlay_b.xml",
+		"MDMT_Jukebox_AnimDiscPlay_a.xml"
+	}
 
 	local animationContainer = display.newContainer( jukeboxGroup.winWidth, jukeboxGroup.winHeight );
-	local jukeboxScaleX = jukeboxGroup.winWidth/screenW;
-	local jukeboxScaleY = jukeboxGroup.winHeight/screenH;
 	-- animationContainer:translate(display.contentWidth*0.5, display.contentHeight*0.5 );
+
+	animationContainer.x, animationContainer.y = jukeboxGroup.winX, jukeboxGroup.winY;
 	print("animationContainer", animationContainer.width, animationContainer.height);
 	print("animationContainer", animationContainer.x, animationContainer.y);
 
 	jukeboxBackgroundAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(jukeboxBackgroundAnimationFiles, animationXMLBase, animationImageBase);
 	animationContainer:insert(jukeboxBackgroundAnimationSequences);
+	-- jukeboxGroup:insert(jukeboxBackgroundAnimationSequences);
 	-- FRC_Layout.placeAnimation( jukeboxBackgroundAnimationSequences, { x = -jukeboxGroup.winWidth/2, y = -jukeboxGroup.winHeight/2 }, false );
 	-- FRC_Layout.placeAnimation( jukeboxBackgroundAnimationSequences, { x = FRC_Layout.getScaleFactor() * -(screenW/2), y = FRC_Layout.getScaleFactor() * -(screenH/2) }, false ); -- temp version based on unscaled anim
 	-- FRC_Layout.placeAnimation( jukeboxBackgroundAnimationSequences, { x = 0, y = 0}, false );
-	jukeboxBackgroundAnimationSequences.anchorX = 0.5;
-	jukeboxBackgroundAnimationSequences.anchorY = 0.5;
+	-- jukeboxBackgroundAnimationSequences.anchorX = 0.5;
+	-- jukeboxBackgroundAnimationSequences.anchorY = 0.5;
 
-	FRC_Layout.placeAnimation( jukeboxBackgroundAnimationSequences, { x = -512, y = -384 }, false );
+	-- FRC_Layout.placeAnimation( jukeboxBackgroundAnimationSequences, { x = -(576 * jukeboxScaleX), y = -(368 * jukeboxScaleY) }, false );
+	-- jukeboxBackgroundAnimationSequences.anchorX, jukeboxBackgroundAnimationSequences.anchorY = 0.5, 0.5;
+	-- jukeboxBackgroundAnimationSequences.x, jukeboxBackgroundAnimationSequences.y = -(576 * jukeboxScaleX), -(368 * jukeboxScaleY); -- 0,0;
 
+	-- jukeboxBackgroundAnimationSequences.x, jukeboxBackgroundAnimationSequences.y = -(jukeboxGroup.winWidth * 0.5) + ((screenW - jukeboxGroup.winWidth)/2), -(jukeboxGroup.winHeight * 0.5 + ((screenH - jukeboxGroup.winHeight)/2)); -- 0,0;
+	jukeboxBackgroundAnimationSequences.x, jukeboxBackgroundAnimationSequences.y = -(border.width * 0.5), -(border.height * 0.5 + ((screenH - border.height)/2)); -- 0,0;
+
+	jukeboxForegroundAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(jukeboxForegroundAnimationFiles, animationXMLBase, animationImageBase);
+	animationContainer:insert(jukeboxForegroundAnimationSequences);
+	-- jukeboxGroup:insert(jukeboxForegroundAnimationSequences);
+	-- FRC_Layout.placeAnimation( jukeboxBackgroundAnimationSequences, { x = -jukeboxGroup.winWidth/2, y = -jukeboxGroup.winHeight/2 }, false );
+	-- FRC_Layout.placeAnimation( jukeboxBackgroundAnimationSequences, { x = FRC_Layout.getScaleFactor() * -(screenW/2), y = FRC_Layout.getScaleFactor() * -(screenH/2) }, false ); -- temp version based on unscaled anim
+	-- FRC_Layout.placeAnimation( jukeboxBackgroundAnimationSequences, { x = 0, y = 0}, false );
+	-- jukeboxForegroundAnimationSequences.anchorX = 0.5;
+	-- jukeboxForegroundAnimationSequences.anchorY = 0.5;
+
+	-- FRC_Layout.placeAnimation( jukeboxForegroundAnimationSequences, { x = -(576 * jukeboxScaleX), y = -(368 * jukeboxScaleY) }, false );
+
+	jukeboxForegroundAnimationSequences.x, jukeboxForegroundAnimationSequences.y = -(border.width * 0.5), -(border.height * 0.5 + ((screenH - border.height)/2)); -- 0,0;
+
+
+  -- DEBUG
 	print("jukeboxBackgroundAnimationSequences", jukeboxBackgroundAnimationSequences.width, jukeboxBackgroundAnimationSequences.height);
 	print("jukeboxBackgroundAnimationSequences", jukeboxBackgroundAnimationSequences.x, jukeboxBackgroundAnimationSequences.y);
 	print("screen scaleX", screenW/1024);
 	print("screen scaleY", screenH/768);
-  print("xScaleTransform", (screenW/1024) * (jukeboxGroup.winWidth / jukeboxBackgroundAnimationSequences.width));
-	print("yScaleTransform", (screenH/768) * (jukeboxGroup.winHeight / jukeboxBackgroundAnimationSequences.height));
+  print("xScaleTransform", jukeboxGroup.winWidth / jukeboxBackgroundAnimationSequences.width);
+	print("yScaleTransform", jukeboxGroup.winHeight / jukeboxBackgroundAnimationSequences.height);
+	print("jukebox X offset", (screenW - jukeboxGroup.winWidth)/2);
 
 	for i=1, jukeboxBackgroundAnimationSequences.numChildren do
 		jukeboxBackgroundAnimationSequences[i]:play({
-			showLastFrame = false,
+			showLastFrame = true,
 			playBackward = false,
-			autoLoop = true,
+			autoLoop = false,
 			palindromicLoop = false,
 			delay = 0,
 			intervalTime = 30,
 			maxIterations = 1,
-			transformations = { xScaleTransform = (screenW/1024) * (jukeboxGroup.winWidth / jukeboxBackgroundAnimationSequences.width),
-			yScaleTransform = (screenH/768) * (jukeboxGroup.winHeight / jukeboxBackgroundAnimationSequences.height) }
+			-- transformations = { xScaleTransform = jukeboxScaleX, yScaleTransform = jukeboxScaleY }
 		});
 	end
 
 	jukeboxGroup:insert(animationContainer);
+	-- animationContainer.x, animationContainer.y = jukeboxGroup.x, jukeboxGroup.y;
+	-- animationContainer:translate( display.contentWidth*0.5, display.contentHeight*0.5 );
+
 
   -- TICKER TEXT
 	local chunkSize=160
@@ -143,11 +181,11 @@ FRC_Jukebox.new = function(options)
 	-- this number. But unless you are using an absurdly large font, you shouldn't need to adjust
 	-- this variable.
 
-	local tickerGroupContainer = display.newContainer( FRC_Layout.getScaleFactor() * 500, FRC_Layout.getScaleFactor() * 44 );
+	local tickerGroupContainer = display.newContainer( jukeboxScaleX * 600, jukeboxScaleY * 44 );
 	FRC_Jukebox.tickerGroupContainer = tickerGroupContainer;
 	tickerGroupContainer:translate( display.contentWidth*0.5, tickerGroupContainer.height*0.5 );
 	local tickerGroup;
-	tickerGroupContainer.y = jukeboxGroup.height / 2 + (FRC_Layout.getScaleFactor() * 35);
+	tickerGroupContainer.y = jukeboxGroup.winHeight / 2 + (jukeboxScaleY * 90);
 
 	local startTickerTextCrawl = function(text)
 		tickerGroup = display.newGroup();
@@ -272,7 +310,23 @@ FRC_Jukebox.new = function(options)
 						group = "jukeboxAudio",
 						loadMethod = "loadStream"
 				 });
-			currentAudio:play();
+
+			for i=1, jukeboxForegroundAnimationSequences.numChildren do
+				jukeboxForegroundAnimationSequences[i]:play({
+					showLastFrame = true,
+					playBackward = false,
+					autoLoop = false,
+					palindromicLoop = false,
+					delay = 0,
+					intervalTime = 30,
+					maxIterations = 1,
+					-- transformations = { xScaleTransform = ( jukeboxGroup.winWidth/ 1152), yScaleTransform = (jukeboxGroup.winHeight/ 768) },
+					onCompletion = function()
+						currentAudio:play();
+					end
+				});
+			end
+			-- currentAudio:play();
 		end
 	end
 
@@ -314,8 +368,8 @@ FRC_Jukebox.new = function(options)
 				imageDown = imageBase .. leftButtonData.POSTER_FRAME,
 				width = 225, -- 274,
 				height = 171, -- 208,
-				x = -130,
-				y = 180,
+				x = -160 * jukeboxScaleX,
+				y = 180 * jukeboxScaleY,
 				onRelease = function(event)
 					local self = event.target;
 					analytics.logEvent("MDMT.Lobby.Jukebox.MediaSelection");
@@ -326,7 +380,7 @@ FRC_Jukebox.new = function(options)
 			leftMediaButton.anchorX = 0.5;
 			leftMediaButton.anchorY = 0.5;
 		  jukeboxGroup:insert(leftMediaButton);
-		  FRC_Layout.placeUI(leftMediaButton);
+		  -- FRC_Layout.placeUI(leftMediaButton);
 		end
 
 		local rightButtonDataIndex = pageIndex * 2;
@@ -349,8 +403,8 @@ FRC_Jukebox.new = function(options)
 				imageDown = imageBase .. rightButtonData.POSTER_FRAME,
 				width = 225, -- 274,
 				height = 171, -- 208,
-				x = 130,
-				y = 180,
+				x = 160 * jukeboxScaleX,
+				y = 180 * jukeboxScaleY,
 				onRelease = function(event)
 					local self = event.target;
 					analytics.logEvent("MDMT.Lobby.Jukebox.MediaSelection");
@@ -361,7 +415,7 @@ FRC_Jukebox.new = function(options)
 			rightMediaButton.anchorX = 0.5;
 			rightMediaButton.anchorY = 0.5;
 		  jukeboxGroup:insert(rightMediaButton);
-		  FRC_Layout.placeUI(rightMediaButton);
+		  -- FRC_Layout.placeUI(rightMediaButton);
 		end
 
 	end
@@ -374,8 +428,8 @@ FRC_Jukebox.new = function(options)
 		imageFocused = imageBase .. 'FRC_Jukebox_Button_Previous_focused.png',
 		width = 128,
 		height = 128,
-		x = -270,
-		y = 185,
+		x = -370 * jukeboxScaleX,
+		y = 185 * jukeboxScaleY,
 		onRelease = function()
 			analytics.logEvent("MDMT.Lobby.Jukebox.PreviousMedia");
       -- navigate media
@@ -389,7 +443,7 @@ FRC_Jukebox.new = function(options)
 	previousMediaButton.anchorY = 0.5;
   jukeboxGroup:insert(previousMediaButton);
 	jukeboxGroup.previousMediaButton = previousMediaButton;
-  FRC_Layout.placeUI(previousMediaButton)
+  -- FRC_Layout.placeUI(previousMediaButton)
 
 	-- next media selector
 	nextMediaButton = ui.button.new({
@@ -399,8 +453,8 @@ FRC_Jukebox.new = function(options)
 		imageFocused = imageBase .. 'FRC_Jukebox_Button_Next_focused.png',
 		width = 128,
 		height = 128,
-		x = 270,
-		y = 185,
+		x = 370 * jukeboxScaleX,
+		y = 195 * jukeboxScaleY,
 		onRelease = function()
 			analytics.logEvent("MDMT.Lobby.Jukebox.NextMedia");
 			-- navigate media
@@ -414,7 +468,7 @@ FRC_Jukebox.new = function(options)
 	nextMediaButton.anchorY = 0.5;
 	jukeboxGroup:insert(nextMediaButton);
 	jukeboxGroup.nextMediaButton = nextMediaButton;
-	FRC_Layout.placeUI(nextMediaButton)
+	-- FRC_Layout.placeUI(nextMediaButton)
 
 	-- replay media
 	replayMediaButton = ui.button.new({
@@ -438,7 +492,7 @@ FRC_Jukebox.new = function(options)
 	replayMediaButton.anchorY = 0.5;
 	jukeboxGroup:insert(replayMediaButton);
 	jukeboxGroup.replayMediaButton = replayMediaButton;
-	FRC_Layout.placeUI(replayMediaButton)
+	-- FRC_Layout.placeUI(replayMediaButton)
 
 	-- pause media
 	pauseMediaButton = ui.button.new({
@@ -466,95 +520,10 @@ FRC_Jukebox.new = function(options)
 	pauseMediaButton.anchorY = 0.5;
 	jukeboxGroup:insert(pauseMediaButton);
 	jukeboxGroup.pauseMediaButton = pauseMediaButton;
-	FRC_Layout.placeUI(pauseMediaButton)
+	-- FRC_Layout.placeUI(pauseMediaButton)
 
   -- show the jukebox media selections
 	loadJukeboxPage();
-
-
-
-
-  --[[
-	local thumbImage, baseDirectory, thumbWidth, thumbHeight;
-	thumbWidth = settings.DEFAULTS.BLANK_SLOT_WIDTH;
-	thumbHeight = settings.DEFAULTS.BLANK_SLOT_HEIGHT;
-	local largestThumbWidth = thumbWidth;
-	local largestThumbHeight = thumbHeight;
-
-  local pageCount = settings.DEFAULTS.TOTAL_PAGES;
-	local j = 1;
-	local removeIndexes = {};
-	for i=1,pageCount do
-		local x, y = 0, 0;
-		local max = 0; --settings.UI.PER_PAGE_ROWS * settings.UI.PER_PAGE_COLS;
-		if (options.data) then
-			max = #options.data;
-		end
-
-		local blankCount = 0;
-		local totalThumbs = settings.DEFAULTS.PER_PAGE_ROWS * settings.DEFAULTS.PER_PAGE_COLS;
-
-		for row=1,settings.DEFAULTS.PER_PAGE_ROWS do
-			x = 0;
-			for col=1,settings.DEFAULTS.PER_PAGE_COLS do
-				local baseDirectory = system.ResourceDirectory;
-				local id = nil;
-				local item;
-
-				if ((options.data) and (options.data[j])) then
-					item = options.data[j];
-					id = item.id;
-					thumbImage = id .. item.thumbSuffix;
-					if (item.thumbWidth > thumbWidth) then
-						largestThumbWidth = item.thumbWidth;
-					end
-					if (item.thumbHeight > thumbHeight) then
-						largestThumbHeight = item.thumbHeight;
-					end
-					thumbWidth = item.thumbWidth;
-					thumbHeight = item.thumbHeight;
-					baseDirectory = system.DocumentsDirectory;
-				else
-					id = nil;
-					thumbImage = settings.DEFAULTS.BLANK_SLOT_IMAGE;
-					if (settings.DEFAULTS.BLANK_SLOT_WIDTH > thumbWidth) then
-						largestThumbWidth = settings.DEFAULTS.BLANK_SLOT_WIDTH;
-					end
-					if (settings.DEFAULTS.BLANK_SLOT_HEIGHT > thumbHeight) then
-						largestThumbHeight = settings.DEFAULTS.BLANK_SLOT_HEIGHT;
-					end
-					thumbWidth = settings.DEFAULTS.BLANK_SLOT_WIDTH;
-					thumbHeight = settings.DEFAULTS.BLANK_SLOT_HEIGHT;
-					baseDirectory = system.ResourceDirectory;
-				end
-
-				local thumbButton = ui.button.new({
-					id = id,
-					baseDirectory = baseDirectory,
-					imageUp = thumbImage,
-					imageDown = thumbImage,
-					width = thumbWidth,
-					height = thumbHeight,
-					pressAlpha = 0.5,
-					onRelease = function(e)
-						local self = e.target;
-						local function proceedToPlay()
-							if (options.callback) then
-								options.callback({
-									id = self.id,
-									page = i,
-									row = row,
-									column = col,
-									data = item
-								});
-							end
-						proceedToPlay();
-					end
-				});
-			end
-		end
-	end
-  --]]
 
 	-- close button
 	local closeButton = ui.button.new({
@@ -580,8 +549,13 @@ FRC_Jukebox.new = function(options)
 		titleText.y = -(popup.height * 0.5) + (titleText.contentHeight * 0.5) + (settings.DEFAULTS.THUMBNAIL_SPACING);
 	end
 
-	if (options.parent) then options.parent:insert(jukeboxGroup); end
-	jukeboxGroup.x, jukeboxGroup.y = display.contentCenterX, display.contentCenterY;
+	if (options.parent) then
+		options.parent:insert(jukeboxGroup);
+	end
+	-- center the jukebox
+	-- jukeboxGroup.anchorX = 0;
+	-- jukeboxGroup.anchorY = 0;
+	jukeboxGroup.x, jukeboxGroup.y =  display.contentCenterX, display.contentCenterY; -- (screenW - jukeboxGroup.winWidth) * 0.5, (screenH - jukeboxGroup.winHeight) * 0.5; -- display.contentCenterX, display.contentCenterY;
 	return jukeboxGroup;
 
 end
@@ -590,7 +564,6 @@ FRC_Jukebox.disposeAnimations = function(self)
 
 	-- kill the animation objects
 	if (jukeboxBackgroundAnimationSequences) then
-
 		for i=1, jukeboxBackgroundAnimationSequences.numChildren do
 			local anim = jukeboxBackgroundAnimationSequences[i];
 			if (anim) then
@@ -602,6 +575,20 @@ FRC_Jukebox.disposeAnimations = function(self)
 		end
 		jukeboxBackgroundAnimationSequences = nil;
 	end
+
+	if (jukeboxForegroundAnimationSequences) then
+		for i=1, jukeboxForegroundAnimationSequences.numChildren do
+			local anim = jukeboxForegroundAnimationSequences[i];
+			if (anim) then
+				if (anim.isPlaying) then
+					anim:stop();
+				end
+				anim:dispose();
+			end
+		end
+		jukeboxForegroundAnimationSequences = nil;
+	end
+
 end
 
 FRC_Jukebox.dispose = function(self)

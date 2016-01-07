@@ -124,7 +124,7 @@ function FRC_Lobby_Scene:createScene(event)
     local FRC_Jukebox = require('FRC_Modules.FRC_Jukebox.FRC_Jukebox');
     local jukebox;
     jukebox = FRC_Jukebox.new({
-      parent = view._overlay,
+      parent = view._overlay or view,
       hideBlank = false,
       width = screenW * 0.9,
       height = screenH * 0.9,
