@@ -162,48 +162,6 @@ settings = {
             ["UILaunchImageOrientation"] = "Portrait",
             ["UILaunchImageSize"] = "{375, 667}"
         },
-        {  -- iPhone 6 Plus Portrait
-            ["UILaunchImageMinimumOSVersion"] = "8.0",
-            ["UILaunchImageName"] = "Default-736h",
-            ["UILaunchImageOrientation"] = "Portrait",
-            ["UILaunchImageSize"] = "{414, 736}"
-        },
-        {  -- iPhone 4 LandscapeLeft
-            ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default",
-            ["UILaunchImageOrientation"] = "LandscapeLeft",
-            ["UILaunchImageSize"] = "{320, 480}"
-        },
-        {  -- iPhone 4 LandscapeRight
-            ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default",
-            ["UILaunchImageOrientation"] = "LandscapeRight",
-            ["UILaunchImageSize"] = "{320, 480}"
-        },
-        {  -- iPhone 5 LandscapeLeft
-            ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default-568h",
-            ["UILaunchImageOrientation"] = "LandscapeLeft",
-            ["UILaunchImageSize"] = "{320, 568}"
-        },
-        {  -- iPhone 5 LandscapeRight
-            ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default-568h",
-            ["UILaunchImageOrientation"] = "LandscapeRight",
-            ["UILaunchImageSize"] = "{320, 568}"
-        },
-        {  -- iPad / iPad Retina LandscapeLeft
-            ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default-Landscape",
-            ["UILaunchImageOrientation"] = "LandscapeLeft",
-            ["UILaunchImageSize"] = "{768, 1024}"
-        },
-        {  -- iPad / iPad Retina LandscapeRight
-            ["UILaunchImageMinimumOSVersion"] = "7.0",
-            ["UILaunchImageName"] = "Default-Landscape",
-            ["UILaunchImageOrientation"] = "LandscapeRight",
-            ["UILaunchImageSize"] = "{768, 1024}"
-        },
         {  -- iPhone 6 LandscapeLeft
             ["UILaunchImageMinimumOSVersion"] = "8.0",
             ["UILaunchImageName"] = "Default-667h",
@@ -215,6 +173,12 @@ settings = {
             ["UILaunchImageName"] = "Default-667h",
             ["UILaunchImageOrientation"] = "LandscapeRight",
             ["UILaunchImageSize"] = "{375, 667}"
+        },
+        {  -- iPhone 6 Plus Portrait
+            ["UILaunchImageMinimumOSVersion"] = "8.0",
+            ["UILaunchImageName"] = "Default-736h",
+            ["UILaunchImageOrientation"] = "Portrait",
+            ["UILaunchImageSize"] = "{414, 736}"
         },
         {  -- iPhone 6 Plus LandscapeLeft
             ["UILaunchImageMinimumOSVersion"] = "8.0",
@@ -228,16 +192,28 @@ settings = {
             ["UILaunchImageOrientation"] = "LandscapeRight",
             ["UILaunchImageSize"] = "{414, 736}"
         },
-        { -- iPad Pro Landscape Right
-            ["UILaunchImageMinimumOSVersion"] = "9.0",
-            ["UILaunchImageName"] = "Default-Landscape-1336",
+        {  -- iPad / iPad Retina LandscapeLeft
+            ["UILaunchImageMinimumOSVersion"] = "7.0",
+            ["UILaunchImageName"] = "Default-Landscape",
+            ["UILaunchImageOrientation"] = "LandscapeLeft",
+            ["UILaunchImageSize"] = "{768, 1024}"
+        },
+        {  -- iPad / iPad Retina LandscapeRight
+            ["UILaunchImageMinimumOSVersion"] = "7.0",
+            ["UILaunchImageName"] = "Default-Landscape",
             ["UILaunchImageOrientation"] = "LandscapeRight",
-            ["UILaunchImageSize"] = "{1024, 1366}"
+            ["UILaunchImageSize"] = "{768, 1024}"
         },
         { -- iPad Pro Landscape Left
             ["UILaunchImageMinimumOSVersion"] = "9.0",
             ["UILaunchImageName"] = "Default-Landscape-1336",
             ["UILaunchImageOrientation"] = "LandscapeLeft",
+            ["UILaunchImageSize"] = "{1024, 1366}"
+        },
+        { -- iPad Pro Landscape Right
+            ["UILaunchImageMinimumOSVersion"] = "9.0",
+            ["UILaunchImageName"] = "Default-Landscape-1336",
+            ["UILaunchImageOrientation"] = "LandscapeRight",
             ["UILaunchImageSize"] = "{1024, 1366}"
         }
       },
