@@ -44,13 +44,15 @@ local oy             = 0
 local ox2            = -60
 local oy2            = -60
 
+local animationScalingFactor = 1.07
+
 -- setup the jukebox animations
-local jukeboxBackgroundAnimationFiles = 
+local jukeboxBackgroundAnimationFiles =
 {
    "MDMT_Jukebox_Background.xml"
 }
 
-local jukeboxForegroundAnimationFiles = 
+local jukeboxForegroundAnimationFiles =
 {
    "MDMT_Jukebox_AnimDiscPlay_d.xml",
    "MDMT_Jukebox_AnimDiscPlay_c.xml",
@@ -69,7 +71,7 @@ local debugEn        = false
 -- ******************************************************
 function FRC_Jukebox.new( options )
    options = options or {}
-   
+
    -- ==
    --    Misc
    -- ==
@@ -81,7 +83,7 @@ function FRC_Jukebox.new( options )
    -- ==
    local jukeboxGroup = display.newGroup()
    jukeboxGroup.x = centerX
-   jukeboxGroup.y = centerY	
+   jukeboxGroup.y = centerY
    jukeboxGroup.ctrl = {} -- Table to attach references to.  Gets rid of need for forward declarations
    FRC_Jukebox.jukeboxGroup = jukeboxGroup
 
@@ -116,7 +118,7 @@ function FRC_Jukebox.new( options )
    --
    --    All objects should be placed according to design resolution rules. i.e. Where they should be at design resolution.
    --    Scaling this container last will handle all child object scaling.
-   --    
+   --
    -- ==
    local jukeboxContainer = display.newContainer( jukeboxGroup, designWidth, designHeight) -- Assumes 1152 x 768 was the design resolution
 
@@ -127,11 +129,11 @@ function FRC_Jukebox.new( options )
    border:setFillColor(1.0, 1.0, 1.0, 0.80)
    local back = display.newRect(jukeboxContainer, 0, 0, designWidth - borderSize * 2, designHeight - borderSize * 2 )
    back:setFillColor(.188235294, .188235294, .188235294, 1.0)
-      
+
    -- ==
    --    Animated (?) Jukebox Background
    -- ==
-   local animationContainer = display.newContainer( jukeboxContainer, designWidth, designHeight ) -- used to trim jukebox  
+   local animationContainer = display.newContainer( jukeboxContainer, designWidth, designHeight ) -- used to trim jukebox
    jukeboxBackgroundAnimationSequences = FRC_AnimationManager.createAnimationClipGroup(jukeboxBackgroundAnimationFiles, animationXMLBase, animationImageBase)
    animationContainer:insert(jukeboxBackgroundAnimationSequences)
    jukeboxBackgroundAnimationSequences.x = -designWidth/2 + ox
@@ -141,7 +143,9 @@ function FRC_Jukebox.new( options )
    animationContainer:insert(jukeboxForegroundAnimationSequences)
    jukeboxForegroundAnimationSequences.x = -designWidth/2 + ox
    jukeboxForegroundAnimationSequences.y = -designHeight/2 + oy
-   
+
+   animationContainer:scale(animationScalingFactor, animationScalingFactor);
+
    for i=1, jukeboxBackgroundAnimationSequences.numChildren do
       jukeboxBackgroundAnimationSequences[i]:play({
             showLastFrame = true,
@@ -150,14 +154,14 @@ function FRC_Jukebox.new( options )
             palindromicLoop = false,
             delay = 0,
             intervalTime = 30,
-            maxIterations = 1            
+            maxIterations = 1
          })
    end
- 
+
    -- ==
    --    Ticker Crawler
    -- ==
-   local tickerGroupContainer = display.newContainer( jukeboxContainer, 590, 44 ) -- Used to trim ticker
+   local tickerGroupContainer = display.newContainer( jukeboxContainer, 588 * animationScalingFactor, 44 ) -- Used to trim ticker
    --local tickerGroupContainer = display.newGroup()
    --jukeboxContainer:insert( tickerGroupContainer )
    tickerGroupContainer.y = 40
@@ -190,23 +194,23 @@ function FRC_Jukebox.new( options )
          lastWidth      = ticker.contentWidth
          totalWidth     = totalWidth + lastWidth
       end
-      
+
       tickerGroup.x     = 590/2 + firstWidth
-      tickerGroup.x0    = tickerGroup.x 
-      tickerGroup.x1    = tickerGroup.x0 - totalWidth - 590 - firstWidth + (numLetters * padding)      
+      tickerGroup.x0    = tickerGroup.x
+      tickerGroup.x1    = tickerGroup.x0 - totalWidth - 590 - firstWidth + (numLetters * padding)
       local dist        = math.abs(tickerGroup.x0 - tickerGroup.x1)
-      
+
       -- hack (EFM not sure why this is needed but it works across all cases)
       if( dist < 1200 ) then
          dist = 1200
-         tickerGroup.x1 = tickerGroup.x0 - dist 
+         tickerGroup.x1 = tickerGroup.x0 - dist
       end
-         
+
       local speed       = 120 -- pixels per second
       local time        = 1000 * dist/speed
-      
+
       function tickerGroup.onComplete( self )
-         if( self.destroying == true ) then return end         
+         if( self.destroying == true ) then return end
          if( self.removeSelf == nil ) then return end
          --dprint("tickerGroup.onComplete", text)
          self.x = self.x0
@@ -217,7 +221,7 @@ function FRC_Jukebox.new( options )
    end
    FRC_Jukebox.startTickerTextCrawl = startTickerTextCrawl
    startTickerTextCrawl()
-   
+
 
    -- ==
    --    Video Playback Complete Listener
@@ -254,14 +258,14 @@ function FRC_Jukebox.new( options )
          FRC_Jukebox.startTickerTextCrawl(mData.MEDIA_TITLE)
          -- onRelease will playMedia and pass the indexID for the button
          -- playMedia function will call either FRC_Video or FRC_AudioManager
-         local videoData = 
+         local videoData =
          {
             HD_VIDEO_PATH  = videoBase .. mData.HD_VIDEO_PATH,
             HD_VIDEO_SIZE  = mData.HD_VIDEO_SIZE,
             SD_VIDEO_PATH  = videoBase .. mData.SD_VIDEO_PATH,
             SD_VIDEO_SIZE  = mData.SD_VIDEO_SIZE,
             VIDEO_SCALE    = mData.VIDEO_SCALE,
-            VIDEO_LENGTH   = mData.VIDEO_LENGTH 
+            VIDEO_LENGTH   = mData.VIDEO_LENGTH
          }
 
          videoPlayer = FRC_Video.new(jukeboxGroup, videoData)
@@ -302,22 +306,22 @@ function FRC_Jukebox.new( options )
    local function loadJukeboxPage(pageIndex)
       local pageIndex = pageIndex or currentPageIndex
       currentPageIndex = pageIndex
-      
+
       --
       -- LEFT MEDIA BUTTON / IMAGE
-      --      
+      --
       if( pageIndex == 1 ) then
          jukeboxGroup.ctrl.previousMediaButton:setDisabledState(true)
       else
          jukeboxGroup.ctrl.previousMediaButton:setDisabledState(false)
       end
-      
+
       if( pageIndex == pageCount ) then
          jukeboxGroup.ctrl.nextMediaButton:setDisabledState(true)
       else
          jukeboxGroup.ctrl.nextMediaButton:setDisabledState(false)
       end
-      
+
       local leftButtonDataIndex = (pageIndex * 2) - 1
       if( jukeboxGroup and jukeboxGroup.ctrl ) then
          display.remove( jukeboxGroup.ctrl.leftMediaButton )
@@ -330,11 +334,11 @@ function FRC_Jukebox.new( options )
                id          = leftButtonDataIndex,
                imageUp     = imageBase .. leftButtonData.POSTER_FRAME,
                imageDown   = imageBase .. leftButtonData.POSTER_FRAME,
-               width       = 225,
-               height      = 171,
+               width       = 265,
+               height      = 201,
                x           = -160,
-               y           = 180,
-               onRelease = function(event)                  
+               y           = 200,
+               onRelease = function(event)
                   analytics.logEvent( "MDMT.Lobby.Jukebox.MediaSelection" )
                   playJukeboxMedia( event.target.id )
                end
@@ -345,12 +349,12 @@ function FRC_Jukebox.new( options )
       --
       -- RIGHT MEDIA BUTTON  / IMAGE
       --
-      local rightButtonDataIndex = pageIndex * 2      
+      local rightButtonDataIndex = pageIndex * 2
       if( jukeboxGroup and jukeboxGroup.ctrl ) then
          display.remove( jukeboxGroup.ctrl.rightMediaButton )
          jukeboxGroup.ctrl.rightMediaButton = nil
       end
-      
+
       -- in case there are an odd number of items, the right media item may be blank
       if( rightButtonDataIndex > 0 and rightButtonDataIndex <= #mediaData ) then
          local rightButtonData = mediaData[rightButtonDataIndex]
@@ -358,11 +362,11 @@ function FRC_Jukebox.new( options )
                id          = rightButtonDataIndex,
                imageUp     = imageBase .. rightButtonData.POSTER_FRAME,
                imageDown   = imageBase .. rightButtonData.POSTER_FRAME,
-               width       = 225,
-               height      = 171,
+               width       = 265,
+               height      = 201,
                x           = 160,
-               y           = 180,
-               onRelease   = function( event )                  
+               y           = 200,
+               onRelease   = function( event )
                   analytics.logEvent( "MDMT.Lobby.Jukebox.MediaSelection" )
                   playJukeboxMedia( event.target.id )
                end
@@ -370,7 +374,7 @@ function FRC_Jukebox.new( options )
          jukeboxContainer:insert(jukeboxGroup.ctrl.rightMediaButton)
       end
    end
-   
+
    -- ==
    --    Previous Media Selector (Button)
    -- ==
@@ -381,8 +385,8 @@ function FRC_Jukebox.new( options )
          imageFocused   = imageBase .. 'FRC_Jukebox_Button_Previous_focused.png',
          width          = 128,
          height         = 128,
-         x              = -320,
-         y              = 195,
+         x              = -330,
+         y              = 205,
          onRelease      = function()
             analytics.logEvent("MDMT.Lobby.Jukebox.PreviousMedia")
             if currentPageIndex > 1 then
@@ -403,8 +407,8 @@ function FRC_Jukebox.new( options )
          imageFocused   = imageBase .. 'FRC_Jukebox_Button_Next_focused.png',
          width          = 128,
          height         = 128,
-         x              = 320,
-         y              = 195,
+         x              = 330,
+         y              = 205,
          onRelease      = function()
             analytics.logEvent("MDMT.Lobby.Jukebox.NextMedia")
             if currentPageIndex < pageCount then
@@ -425,7 +429,7 @@ function FRC_Jukebox.new( options )
          imageFocused   = imageBase .. 'FRC_Jukebox_Button_Replay_focused.png',
          width          = 96,
          height         = 96,
-         x              = -340,
+         x              = -360,
          y              = 32,
          onRelease      = function()
             analytics.logEvent("MDMT.Lobby.Jukebox.ReplayMedia")
@@ -446,7 +450,7 @@ function FRC_Jukebox.new( options )
          imageFocused   = imageBase .. 'FRC_Jukebox_Button_Pause_focused.png',
          width          = 96,
          height         = 96,
-         x              = 340,
+         x              = 360,
          y              = 32,
          onRelease      = function()
             analytics.logEvent("MDMT.Lobby.Jukebox.PauseMedia")
@@ -458,7 +462,7 @@ function FRC_Jukebox.new( options )
                FRC_Jukebox.currentAudio:pause()
             end
          end
-      })   
+      })
    jukeboxContainer:insert(jukeboxGroup.ctrl.pauseMediaButton)
 
    -- ==
@@ -474,7 +478,7 @@ function FRC_Jukebox.new( options )
          height      = settings.DEFAULTS.CLOSE_BUTTON_HEIGHT,
          onRelease   = function() FRC_Jukebox:dispose() end
       })
-   closeButton.x = -designWidth/2 + closeButton.contentWidth/2 
+   closeButton.x = -designWidth/2 + closeButton.contentWidth/2
    closeButton.y = -designHeight/2 + closeButton.contentHeight/2
    jukeboxContainer:insert(closeButton)
 
