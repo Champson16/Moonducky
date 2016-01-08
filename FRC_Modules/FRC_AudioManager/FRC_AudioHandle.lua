@@ -127,7 +127,7 @@ function public:dispose()
 end
 
 function AudioHandle.new(options, streamOptions)
-	streamOptions = streamOptions or { bufferSize=8192, maxQueueBuffers=12, startupBuffers=1, buffersQueuedPerUpdate=2 };
+	streamOptions = streamOptions or { bufferSize=8192, maxQueueBuffers=12, startupBuffers=8, buffersQueuedPerUpdate=4 };
 	options = options or {};
 	-- valid options are: name (string), path (string), useLoadSound (boolean), group (group object or string)
 	if (options.name) then

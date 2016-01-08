@@ -150,10 +150,34 @@ settings = {
             ["UILaunchImageOrientation"] = "Portrait",
             ["UILaunchImageSize"] = "{320, 480}"
         },
+        {  -- iPhone 4 LandscapeLeft
+            ["UILaunchImageMinimumOSVersion"] = "7.0",
+            ["UILaunchImageName"] = "Default",
+            ["UILaunchImageOrientation"] = "LandscapeLeft",
+            ["UILaunchImageSize"] = "{320, 480}"
+        },
+        {  -- iPhone 4 LandscapeRight
+            ["UILaunchImageMinimumOSVersion"] = "7.0",
+            ["UILaunchImageName"] = "Default",
+            ["UILaunchImageOrientation"] = "LandscapeRight",
+            ["UILaunchImageSize"] = "{320, 480}"
+        },
         {  -- iPhone 5 Portrait
             ["UILaunchImageMinimumOSVersion"] = "7.0",
             ["UILaunchImageName"] = "Default-568h",
             ["UILaunchImageOrientation"] = "Portrait",
+            ["UILaunchImageSize"] = "{320, 568}"
+        },
+        {  -- iPhone 5 LandscapeLeft
+            ["UILaunchImageMinimumOSVersion"] = "7.0",
+            ["UILaunchImageName"] = "Default-568h",
+            ["UILaunchImageOrientation"] = "LandscapeLeft",
+            ["UILaunchImageSize"] = "{320, 568}"
+        },
+        {  -- iPhone 5 LandscapeRight
+            ["UILaunchImageMinimumOSVersion"] = "7.0",
+            ["UILaunchImageName"] = "Default-568h",
+            ["UILaunchImageOrientation"] = "LandscapeRight",
             ["UILaunchImageSize"] = "{320, 568}"
         },
         {  -- iPhone 6 Portrait
