@@ -660,6 +660,8 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    -- Get all known parts for the selected instrument type within the previously selected character (animal) type
    local partsList, xmlTable = private.getPartsList( xmlFiles[instrumentType], animationXMLBase, false )
    
+   --table.print_r( partsList )
+   
    --
    -- Generate a list of the animation parts we need for this particular character
    --
@@ -672,10 +674,17 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
       local partExcludeName = allParts[i][2]
       for j = 1, #partsList do         
          if( strMatch( partsList[j].name, partName ) ~= nil ) then
+            --dprint( partName, partsList[j].name, partExcludeName ) 
             private.findAnimationParts( partsList, partName, partsList[j].name, partExcludeName, animationsToBuild, allParts[i][3] )
          end
       end
    end   
+   
+   --table.print_r( allParts )
+   --for i = 1, #animationsToBuild do
+      --dprint("animationsToBuild ", i, animationsToBuild[i][1] )
+   --end
+   --table.print_r( animationsToBuild )
 
    --
    -- Adjust parts (costume names and offsets).
@@ -695,6 +704,8 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    end
    animationsToBuild = tmp
    tmp = nil
+   
+   
 
    -- Copy the xml table, then trim it to just the parts we need to build this character
    --
@@ -715,6 +726,8 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
       end
    end
    xmlTable.Animation.Part = newPart   
+   
+   --table.print_r(newPart)
    
    --
    --  Finally, build the character as a single clipgroup
@@ -1462,7 +1475,7 @@ function private.getAllPartsList( instrumentType )
          { "LeftArm", "", animationImageBase },
          { "RightArm", "", animationImageBase },
       }
-   elseif( instrumentType == 10 ) then -- Cheese Grater
+   elseif( instrumentType == 10 ) then -- Cheese Grater 
       allParts = {
          { "Body", "", animationImageBase },
          { "Neckwear", "", dressingRoomImageBase },
@@ -1473,6 +1486,7 @@ function private.getAllPartsList( instrumentType )
          { "Eyewear", "", dressingRoomImageBase },
          { "Headwear", "", dressingRoomImageBase },
          { "Instrument_RhythmComboCheeseGrater", "Instrument_RhythmComboCheeseGrater_Fork", animationImageBase },
+         --{ "Instrument_RhythmComboCheeseGrater", "", animationImageBase },
          { "RightArm", "", animationImageBase },
          { "Instrument_RhythmComboCheeseGrater_Fork", "", animationImageBase },
          { "LeftArm", "", animationImageBase },
@@ -1606,16 +1620,20 @@ end
 --
 function private.findAnimationParts( parts, partSubName, partExactName, partExcludeName, toTable, animationImageBase )
    local subParts = {}
-   for i = 1, #parts do
+   for i = 1, #parts do      
       if( partExcludeName and string.len(partExcludeName) > 0 ) then
          if( strMatch( parts[i].name, partExactName ) and            
             strMatch( parts[i].name, partExcludeName ) == nil ) then
-            --dprint("edochi a", i, parts[i].name )
+            if( string.match( partSubName, "Instrument") ) then
+               --dprint("edochi a", i, parts[i].name )
+            end
             subParts[#subParts+1] = i
          end
       else
          if( strMatch( parts[i].name, partExactName ) ) then
-            --dprint("edochi b", i, parts[i].name )
+            if( string.match( partSubName, "Instrument") ) then
+               --dprint("edochi b", i, parts[i].name )
+            end
             subParts[#subParts+1] = i
          end
       end
@@ -1632,12 +1650,12 @@ function private.findAnimationParts_orig( parts, partSubName, partExcludeName, t
       if( partExcludeName and string.len(partExcludeName) > 0 ) then
          if( strMatch( parts[i].name, partSubName ) and            
             strMatch( parts[i].name, partExcludeName ) == nil ) then
-            dprint("edochi a", i, parts[i].name )
+            --dprint("edochi a", i, parts[i].name )
             subParts[#subParts+1] = i
          end
       else
          if( strMatch( parts[i].name, partSubName ) ) then
-            dprint("edochi b", i, parts[i].name )
+            --dprint("edochi b", i, parts[i].name )
             subParts[#subParts+1] = i
          end
       end

@@ -48,6 +48,9 @@
 -- START OF VO:  START VO TEXT, START DREAMY BGMUSIC, START DREAM BUBBLE ANIMATION, START DREAM BUBBLE SFX
 -- DELAY FROM START VO:  START DOGS PLAYING BALL SFX
 
+
+
+
 local FRC_AnimationManager = {};
 
 -- Uncomment line below to remove all print statements for this module
@@ -998,29 +1001,44 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
             local baseName       = xmltable.Animation.name
             
             local allParts       = animationClipGroup.unifiedData.allParts
-            local adjustments    = animationClipGroup.unifiedData.adjustments            
+            local adjustments    = animationClipGroup.unifiedData.adjustments 
+            --table.print_r( allParts )
             
-            local partTypes      = {}            
+            local partSubNames      = {}            
             for j = 1, #allParts do
-               partTypes[j] = allParts[j][1]
+               partSubNames[j] = { allParts[j][1], allParts[j][2] }
             end            
-            --table.print_r( partTypes )
+            --table.print_r( partSubNames )
             
-            for j = 1, #partTypes do
+            local strMatch = string.match
+            
+            for j = 1, #partSubNames do
             --for j = 1, 3 do
-               local partType = partTypes[j]
+               local partSubName    = partSubNames[j][1]
+               local partExcludeName = partSubNames[j][2]
                local newPart = {}
                xmltable.Animation.Part = newPart
                local found = false
                for k = 1, #originalPart do
                   local curPart = originalPart[k]
-                  if( string.match( curPart.name, partType ) ~= nil ) then                     
-                     newPart[#newPart+1] = curPart
-                     --dprint("FOUND", curPart.name, partType, #newPart )
-                     found = true
+                  --dprint( "LOOKING ", curPart )                  
+                  if( partExcludeName and string.len(partExcludeName) > 0 ) then
+                     if( strMatch( curPart.name, partSubName ) and            
+                        strMatch( curPart.name, partExcludeName ) == nil ) then
+                        --dprint("edochi a", i, curPart.name )
+                        newPart[#newPart+1] = curPart
+                        found = true
+                        --dprint( "MATCH ", curPart.name, partSubName, partExcludeName  )
+                     end
+                  else
+                     if( strMatch( curPart.name, partSubName ) ) then
+                        --dprint("edochi b", i, curPart.name )
+                        newPart[#newPart+1] = curPart
+                        found = true
+                        --dprint( "MATCH ", curPart.name, partSubName, partExcludeName  )
+                     end
                   end
                end
-               
                
                if( found ) then
                   local adjustment = adjustments[ partType ]
