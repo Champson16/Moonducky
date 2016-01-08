@@ -171,7 +171,7 @@ pagecontainer.getPage = function(self, index)
 	return self.pages[index];
 end
 
-pagecontainer.addPage = function(self, options)
+pagecontainer.addPage = function(self, options, curPage, pageCount)
 	options = options or {};
 
 	local index = options.index or (self.pages.numChildren + 1);
@@ -188,6 +188,11 @@ pagecontainer.addPage = function(self, options)
 	dot:setFillColor(self.pageIndicatorColor[1], self.pageIndicatorColor[2], self.pageIndicatorColor[3]);
 	dot.x = (self.pages.numChildren - 1) * ((self.pageIndicatorRadius * 2) + self.pageIndicatorSpacing);
 	dot.y = 0;
+   
+   if( curPage and pageCount) then 
+      local size = self.pageIndicatorRadius * 2 + self.pageIndicatorSpacing
+      dot.x = dot.x - (pageCount/2 - 2) * size --+ (curPage-1) * size
+   end
 
 	if (self.pages.numChildren == 1) then
 		self.activePage = 1;

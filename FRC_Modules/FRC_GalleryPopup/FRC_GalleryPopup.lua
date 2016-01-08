@@ -41,7 +41,7 @@ FRC_GalleryPopup.new = function(options)
 	-- there are 6 entries per gallery page
 	local pageCount = settings.DEFAULTS.TOTAL_PAGES;
 	for i=1, pageCount do
-		pages[i] = popup:addPage();
+		pages[i] = popup:addPage( {}, i, pageCount );
 		pages[i].thumbGroup = display.newGroup(); pages[i]:insert(pages[i].thumbGroup);
 		pages[i].thumbGroup.anchorChildren = true;
 	end
