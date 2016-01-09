@@ -2,6 +2,7 @@ local FRC_Layout = require('FRC_Modules.FRC_Layout.FRC_Layout')
 local FRC_AnimationManager = require('FRC_Modules.FRC_AnimationManager.FRC_AnimationManager')
 local FRC_AudioManager = require('FRC_Modules.FRC_AudioManager.FRC_AudioManager')
 local FRC_Video = require('FRC_Modules.FRC_Video.FRC_Video')
+local FRC_AppSettings   = require('FRC_Modules.FRC_AppSettings.FRC_AppSettings');
 
 local ui = require('ui')
 local settings = require('FRC_Modules.FRC_Jukebox.FRC_Jukebox_Settings')
@@ -71,6 +72,14 @@ local debugEn        = false
 -- ******************************************************
 function FRC_Jukebox.new( options )
    options = options or {}
+
+   -- pause background music (if enabled)
+   if (FRC_AppSettings.get("soundOn")) then
+      local musicGroup = FRC_AudioManager:findGroup("music");
+      if musicGroup then
+         musicGroup:pause();
+      end
+   end
 
    -- ==
    --    Misc
@@ -454,12 +463,16 @@ function FRC_Jukebox.new( options )
          y              = 32,
          onRelease      = function()
             analytics.logEvent("MDMT.Lobby.Jukebox.PauseMedia")
-            if (audio.isChannelPaused(FRC_Jukebox.currentAudio.channel)) then
-               print("resuming jukebox audio") -- DEBUG
-               FRC_Jukebox.currentAudio:resume()
-            else
-               print("pausing jukebox audio") -- DEBUG
-               FRC_Jukebox.currentAudio:pause()
+            if (FRC_Jukebox.currentAudio) then
+              if (FRC_Jukebox.currentAudio.channel) then
+                if (audio.isChannelPaused(FRC_Jukebox.currentAudio.channel)) then
+                   print("resuming jukebox audio") -- DEBUG
+                   FRC_Jukebox.currentAudio:resume()
+                else
+                   print("pausing jukebox audio") -- DEBUG
+                   FRC_Jukebox.currentAudio:pause()
+                end
+              end
             end
          end
       })
@@ -540,6 +553,13 @@ FRC_Jukebox.dispose = function(self)
    -- remove the animations
    FRC_Jukebox:disposeAnimations()
    if (FRC_Jukebox.jukeboxGroup) then FRC_Jukebox.jukeboxGroup:removeSelf() end
+   -- resume background music (if enabled)
+   if (FRC_AppSettings.get("soundOn")) then
+      local musicGroup = FRC_AudioManager:findGroup("music");
+      if musicGroup then
+         musicGroup:resume();
+      end
+   end
 end
 
 return FRC_Jukebox
