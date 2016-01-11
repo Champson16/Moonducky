@@ -1041,7 +1041,7 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
                end
                
                if( found ) then
-                  local adjustment = adjustments[ partType ]
+                  local adjustment = adjustments[ partSubName ]
                
                   local animData = FRC_AnimationManager.getAnimationData(xmltable, baseImageDir);
                   local clip = FRC_AnimationManager.createAnimationClip(animData)
