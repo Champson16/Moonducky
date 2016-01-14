@@ -1,6 +1,6 @@
 <Animations>
   <Animation name="MDMT_Animation_Cat_Dance1" frameCount="80">
-    <Part name="MDMT_DressingRoom_Costume_Eyewear_Cat_bono">
+    <Part name="MDMT_DressingRoom_Costume_Eyewear_Cat_Bono">
       <Frame x="-0.90" y="-148.00" index="0"/>
       <Frame x="-0.90" y="-148.00" index="1"/>
       <Frame x="-0.90" y="-148.00" index="2"/>
@@ -82,7 +82,7 @@
       <Frame x="15.25" y="-153.95" index="78"/>
       <Frame x="15.25" y="-153.95" index="79"/>
     </Part>
-    <Part name="MDMT_DressingRoom_Costume_Headwear_Cat_bandana">
+    <Part name="MDMT_DressingRoom_Costume_Headwear_Cat_Bandana">
       <Frame x="-0.45" y="-210.20" index="0"/>
       <Frame x="-0.45" y="-210.20" index="1"/>
       <Frame x="-0.45" y="-210.20" index="2"/>
@@ -164,7 +164,7 @@
       <Frame x="15.70" y="-217.00" index="78"/>
       <Frame x="15.70" y="-217.00" index="79"/>
     </Part>
-    <Part name="MDMT_DressingRoom_Costume_LowerTorso_Cat_goat">
+    <Part name="MDMT_DressingRoom_Costume_LowerTorso_Cat_Goat">
       <Frame x="5.65" y="47.50" index="0"/>
       <Frame x="5.65" y="47.50" index="1"/>
       <Frame x="5.65" y="47.50" index="2"/>
@@ -246,7 +246,7 @@
       <Frame x="20.55" y="45.80" index="78"/>
       <Frame x="20.55" y="45.80" index="79"/>
     </Part>
-    <Part name="MDMT_DressingRoom_Costume_Neckwear_Cat_blue">
+    <Part name="MDMT_DressingRoom_Costume_Neckwear_Cat_Blue">
       <Frame x="1.65" y="-12.60" index="0"/>
       <Frame x="1.65" y="-12.60" index="1"/>
       <Frame x="1.65" y="-12.60" index="2"/>
@@ -669,26 +669,26 @@
       <Frame x="-26.30" y="-16.10" index="79"/>
     </Part>
     <Part name="MDMT_MusicTheatre_Cat_RightArm_Dance1_001_004">
-      <Frame x="84.15" y="-21.75" index="0"/>
-      <Frame x="84.15" y="-21.75" index="1"/>
-      <Frame x="84.15" y="-21.75" index="2"/>
-      <Frame x="84.15" y="-21.75" index="3"/>
-      <Frame x="84.15" y="-21.75" index="4"/>
-      <Frame x="84.15" y="-21.75" index="5"/>
-      <Frame x="84.15" y="-21.75" index="6"/>
-      <Frame x="84.15" y="-21.75" index="7"/>
-      <Frame x="84.15" y="-21.75" index="8"/>
-      <Frame x="84.15" y="-21.75" index="9"/>
-      <Frame x="84.15" y="-21.75" index="40"/>
-      <Frame x="84.15" y="-21.75" index="41"/>
-      <Frame x="84.15" y="-21.75" index="42"/>
-      <Frame x="84.15" y="-21.75" index="43"/>
-      <Frame x="84.15" y="-21.75" index="44"/>
-      <Frame x="84.15" y="-21.75" index="45"/>
-      <Frame x="84.15" y="-21.75" index="46"/>
-      <Frame x="84.15" y="-21.75" index="47"/>
-      <Frame x="84.15" y="-21.75" index="48"/>
-      <Frame x="84.15" y="-21.75" index="49"/>
+      <Frame x="80.35" y="-26.75" index="0"/>
+      <Frame x="80.35" y="-26.75" index="1"/>
+      <Frame x="80.35" y="-26.75" index="2"/>
+      <Frame x="80.35" y="-26.75" index="3"/>
+      <Frame x="80.35" y="-26.75" index="4"/>
+      <Frame x="80.35" y="-26.75" index="5"/>
+      <Frame x="80.35" y="-26.75" index="6"/>
+      <Frame x="80.35" y="-26.75" index="7"/>
+      <Frame x="80.35" y="-26.75" index="8"/>
+      <Frame x="80.35" y="-26.75" index="9"/>
+      <Frame x="80.35" y="-26.75" index="40"/>
+      <Frame x="80.35" y="-26.75" index="41"/>
+      <Frame x="80.35" y="-26.75" index="42"/>
+      <Frame x="80.35" y="-26.75" index="43"/>
+      <Frame x="80.35" y="-26.75" index="44"/>
+      <Frame x="80.35" y="-26.75" index="45"/>
+      <Frame x="80.35" y="-26.75" index="46"/>
+      <Frame x="80.35" y="-26.75" index="47"/>
+      <Frame x="80.35" y="-26.75" index="48"/>
+      <Frame x="80.35" y="-26.75" index="49"/>
     </Part>
     <Part name="MDMT_MusicTheatre_Cat_RightArm_Dance1_002_004">
       <Frame x="46.65" y="-21.25" index="10"/>
