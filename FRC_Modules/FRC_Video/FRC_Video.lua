@@ -73,6 +73,7 @@ FRC_Video.new = function(parentView, videoData, useWhiteFill )
       -- we handled the event
       return true
    end
+   
 
    --
    -- Init Video
@@ -90,6 +91,8 @@ FRC_Video.new = function(parentView, videoData, useWhiteFill )
       print("Playing video: ", videoFile) -- DEBUG
       if( videoFile ) then
          
+         local currentVideo 
+         
          --
          -- Bug Workaround - ANDROID not currently showing full screen videos correctly, so they always default to 'LETTERBOX'
          -- 12/29/2015 - Corona 2015.2799
@@ -102,10 +105,10 @@ FRC_Video.new = function(parentView, videoData, useWhiteFill )
          -- FULLSCREEN FULLSCREEN FULLSCREEN FULLSCREEN FULLSCREEN FULLSCREEN
          -- ======================================================================
          if (videoScale == "FULLSCREEN" and not ANDROID_DEVICE ) then
-            videoGroup.currentVideo = native.newVideo( centerX, centerY, videoDimensions.width, videoDimensions.height)
-            videoGroup.currentVideo:load(videoFile)
-            videoGroup.currentVideo.xScale = display.viewableContentWidth/videoGroup.currentVideo.contentWidth
-            videoGroup.currentVideo.yScale = display.viewableContentHeight/videoGroup.currentVideo.contentHeight
+            currentVideo = native.newVideo( centerX, centerY, videoDimensions.width, videoDimensions.height)
+            currentVideo:load(videoFile)
+            currentVideo.xScale = display.viewableContentWidth/currentVideo.contentWidth
+            currentVideo.yScale = display.viewableContentHeight/currentVideo.contentHeight
             
          -- ======================================================================
          -- LETTERBOX LETTERBOX LETTERBOX LETTERBOX LETTERBOX LETTERBOX
@@ -119,16 +122,36 @@ FRC_Video.new = function(parentView, videoData, useWhiteFill )
             end
             videoDimensions.width = videoDimensions.width * vidScale
             videoDimensions.height = videoDimensions.height * vidScale
-            videoGroup.currentVideo = native.newVideo( centerX, centerY, videoDimensions.width, videoDimensions.height)
-            videoGroup.currentVideo:load(videoFile)
+            currentVideo = native.newVideo( centerX, centerY, videoDimensions.width, videoDimensions.height)
+            currentVideo:load(videoFile)
          
          else
-            videoGroup.currentVideo = native.newVideo( centerX, centerY, videoDimensions.width, videoDimensions.height)
-            videoGroup.currentVideo:load(videoFile)
+            currentVideo = native.newVideo( centerX, centerY, videoDimensions.width, videoDimensions.height)
+            currentVideo:load(videoFile)
 
          end
-
-         videoGroup.currentVideo:addEventListener( "video", videoGroup.playVideo )
+      
+         if( currentVideo ) then
+            videoGroup.currentVideo = currentVideo
+            --
+            -- Video Listener
+            function currentVideo.video( self, event )
+               if( event.phase == "ready" ) then
+                  self:play()
+                  --videoGroup.videoTimer = timer.performWithDelay( currentVideoLength + 100, videoGroup.skipVideo, 1 )                                 
+               elseif( event.phase == "ended" ) then
+                  if( parentView and parentView.dispatchEvent ) then
+                     parentView:dispatchEvent({ name = 'videoComplete' })
+                  end   
+                  videoGroup.skipVideo()
+               end
+            end
+            currentVideo:addEventListener( "video" )
+         end
+         
+         
+         
+         
          videoGroup.skipVideoButton = display.newRect(videoGroup, centerX, centerY, screenW, screenH)
          videoGroup.skipVideoButton.isVisible = false
          videoGroup.skipVideoButton:addEventListener('touch', videoGroup.skipVideo )
@@ -149,16 +172,7 @@ FRC_Video.new = function(parentView, videoData, useWhiteFill )
       end
    end
 
-   --
-   -- Play Video
-   function videoGroup.playVideo(event)
-      if (event.phase == "ready") then
-         videoGroup.currentVideo:play()
-         videoGroup.currentVideo:removeEventListener("video", videoGroup.playVideo )
-         videoGroup.videoTimer = timer.performWithDelay(currentVideoLength, videoGroup.skipVideo, 1)
-      end
-   end
-
+   
    -- check to see if we even have a video to play
    -- first, if we are in the simulator, nevermind
    if(  ON_SIMULATOR ) then

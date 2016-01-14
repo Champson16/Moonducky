@@ -231,11 +231,17 @@ function FRC_Jukebox.new( options )
    FRC_Jukebox.startTickerTextCrawl = startTickerTextCrawl
    startTickerTextCrawl()
 
-
+   
    -- ==
    --    Video Playback Complete Listener
    -- ==
+   --[[
    local function videoPlaybackComplete( event )
+      dprint("videoPlaybackComplete() &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+      dprint("videoPlaybackComplete() &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+      dprint("videoPlaybackComplete() &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+      dprint("videoPlaybackComplete() &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+      table.dump2( event )
       if( event ) then
          if (jukeboxGroup) then
             jukeboxGroup:removeEventListener('videoComplete', videoPlaybackComplete )
@@ -247,6 +253,7 @@ function FRC_Jukebox.new( options )
       end
       return true
    end
+   --]]
 
    -- ==
    --    Play Juke Box Media
@@ -278,12 +285,14 @@ function FRC_Jukebox.new( options )
          }
 
          videoPlayer = FRC_Video.new(jukeboxGroup, videoData)
+         --[[
          if videoPlayer then
             jukeboxGroup:addEventListener('videoComplete', videoPlaybackComplete )
          else
             -- this will fire because we are running in the Simulator and the video playback ends before it begins!
             videoPlaybackComplete()
          end
+         --]]
       elseif mData.MEDIA_TYPE == "AUDIO" then
          FRC_Jukebox.startTickerTextCrawl(mData.MEDIA_TITLE)
          FRC_Jukebox.currentAudio = FRC_AudioManager:newHandle({
