@@ -10,6 +10,7 @@ meter.create_mem()
 -----------------------------------------------------------------------------------------
 
 _G.edmode = false --EFM
+_G.animMeter = false
 if( edmode ) then
    _G.dprint  = _G.print --EFM
    require ("FRC_Modules.FRC_Extensions.FRC_Extensions") 
