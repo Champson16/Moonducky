@@ -1026,6 +1026,8 @@ function FRC_Rehearsal_Scene:createScene(event)
          end
          expectedEndTime = 10000
          --]]
+         -- Quick option 2
+         --expectedEndTime = 30000
 
          --
          -- Find the song for each instrument

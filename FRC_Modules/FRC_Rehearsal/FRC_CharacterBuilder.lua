@@ -1705,19 +1705,37 @@ function private.playAllAnimations( animationSequence, params )
 
          local curTime     = system.getTimer()
          local dt          = curTime - sequence._startedPlayingAt
-         local remaining   = sequence._playDuration - dt      
+         local remaining   = sequence._playDuration - dt     
+         
+         local minTime = 500
+         local maxTime = 2000
+         local earlyQuitTime = maxTime - minTime
+         
+         local minIter = 1
+         local maxIter = 3
 
-         if( remaining < 1000 ) then
+         if( remaining < earlyQuitTime ) then
             dprint("SKIPPING RESTART ANIMATION" )
             return
+         end
+         
+         if( remaining < maxTime ) then
+            minIter = 1
+            maxIter = 1
+            minTime = remaining - 30
+            maxTime = remaining - minTime
+            if( maxTime < minTime ) then
+               maxTime = minTime
+            end                        
+            dprint("ADJUSTING LAST PLAY TIME TO BE CLOSER TO ACTUAL END TIME...", minTime, maxTime, minIter, maxIter )
          end
 
          if( executeOnComplete ) then            
             timer.performWithDelay( framePeriod * 2,
                function()
                local params2 =  { intervalTime        = params.intervalTime,
-                                  iterations          = math.random( 1, 3 ),
-                                  instrumentOffset    = math.random( 500, 2000 ),
+                                  iterations          = math.random( minIter, maxIter ),
+                                  instrumentOffset    = math.random( minTime, maxTime ),
                                   instrumentEndTime   = params.instrumentEndTime}
                local startTime = system.getTimer()
                dprint("RESTART ANIMATION ", i, sequence, obj, system.getTimer() )
