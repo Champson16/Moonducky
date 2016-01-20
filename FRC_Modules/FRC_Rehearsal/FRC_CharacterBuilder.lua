@@ -839,8 +839,8 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    end
    
    if( _G.enableLagFix ) then
-      local lastChild = sequence[sequence.numChildren]
-      function lastChild.enterFrame( self )
+      local firstChild = sequence[1]
+      function firstChild.enterFrame( self )
          if( self.removeSelf == nil ) then
             Runtime:removeEventListener( "enterFrame", self )
             dprint("AUTO STOP ENTERFRAME")
@@ -857,7 +857,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
             sequence[k].currentIndex = maxFrame
          end
       end
-      Runtime:addEventListener( "enterFrame", lastChild )
+      Runtime:addEventListener( "enterFrame", firstChild )
    end    
    
    return stagePiece
