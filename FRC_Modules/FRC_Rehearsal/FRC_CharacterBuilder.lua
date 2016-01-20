@@ -794,6 +794,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
          bar.lbl.anchorY = 0
          bar.lbl:setFillColor( 0, 0, 0 )
          labels[bar.lbl] = bar.lbl
+         bar.firstChild = ( i == 1 )
          
          if( i % 2  == 0 ) then
             bar:setFillColor(1,0,0)
@@ -808,23 +809,62 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
                Runtime:removeEventListener( "enterFrame", self )
                return
             end
+            
+            if( not _G.enableLagFix ) then
+               -- First child forces all frames to align
+               if( self.firstChild ) then
+                  local maxFrame = 0
+                  for k = 1, sequence.numChildren do
+                     local idx = sequence[k].currentIndex
+                     maxFrame = (idx > maxFrame) and idx or maxFrame
+                  end
+                  for k = 1, sequence.numChildren do
+                     sequence[k].currentIndex = maxFrame
+                  end
+               end
+            end
+            
             self.yScale = child.currentIndex * 4
-            bar.lbl.text = child.currentIndex
+            self.lbl.text = child.currentIndex
          end
          Runtime:addEventListener( "enterFrame", bar )
       end      
       back:setFillColor(1,1,0)
       stagePiece:insert( dFrame )
-      local scale = 140/dFrame.contentWidth
+      local scale = 200/dFrame.contentWidth
       dFrame:scale(scale,1) 
       for k,v in pairs( labels ) do
          v:scale( 1/scale, 1 )
       end
    end
    
+   if( _G.enableLagFix ) then
+      local lastChild = sequence[sequence.numChildren]
+      function lastChild.enterFrame( self )
+         if( self.removeSelf == nil ) then
+            Runtime:removeEventListener( "enterFrame", self )
+            dprint("AUTO STOP ENTERFRAME")
+            return
+         end
+         
+         -- First child forces all frames to align
+         local maxFrame = 0
+         for k = 1, sequence.numChildren do
+            local idx = sequence[k].currentIndex
+            maxFrame = (idx > maxFrame) and idx or maxFrame
+         end
+         for k = 1, sequence.numChildren do
+            sequence[k].currentIndex = maxFrame
+         end
+      end
+      Runtime:addEventListener( "enterFrame", lastChild )
+   end    
+   
    return stagePiece
    
 end
+
+
 
 --
 -- setCurrentCharacterType() - Builds the costume scroller based on the currently selected character type
@@ -1788,7 +1828,8 @@ function private.playAllAnimations( animationSequence, params )
          end
 
 
-         if( executeOnComplete ) then            
+         if( executeOnComplete ) then 
+            --obj:stop(obj.frameCount) -- EDOCHI
             timer.performWithDelay( framePeriod * 2,
                function()
                local params2 =  { intervalTime        = params.intervalTime,
