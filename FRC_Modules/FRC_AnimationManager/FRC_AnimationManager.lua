@@ -256,7 +256,7 @@ FRC_AnimationManager.getAnimationData = function(xmltable, baseImageDir)
          -- loop through all of the animation frames and store the translated data into our animation table
          for j=1, #ft do
             local fi = tonumber(ft[j].index)+1; -- we need to increment from 0-based (Flash export to XML) to 1-based
-            
+
             -- grab the frame's data from the table
             local x = ft[j].x;
             local y = ft[j].y;
@@ -373,7 +373,7 @@ FRC_AnimationManager.createAnimationClip = function(data)
       -- grab the new frame's data
       local frameData = animData.frameData[tostring(index)];
       -- check if there is frame data for this frame in the sequence
-      
+
       --[[
       
       -- These changes broke marque and cow
@@ -385,7 +385,7 @@ FRC_AnimationManager.createAnimationClip = function(data)
          end
       elseif (frameData) then
       --]]
-      
+
       if (frameData) then
          -- get the part
          local p = frameData.part;
@@ -991,29 +991,29 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
             isUnified = true
             --table.dump2( xmltable )
          end
-         
+
          if( isUnified ) then
             --dprint("*****************************************")
             --dprint("** IS UNIFIED * IS UNIFIED * IS UNIFIED * ")
             --dprint("*****************************************")
-            
+
             local originalPart   = xmltable.Animation.Part
             local baseName       = xmltable.Animation.name
-            
+
             local allParts       = animationClipGroup.unifiedData.allParts
             local adjustments    = animationClipGroup.unifiedData.adjustments 
             --table.print_r( allParts )
-            
+
             local partSubNames      = {}            
             for j = 1, #allParts do
                partSubNames[j] = { allParts[j][1], allParts[j][2] }
             end            
             --table.print_r( partSubNames )
-            
+
             local strMatch = string.match
-            
+
             for j = 1, #partSubNames do
-            --for j = 1, 3 do
+               --for j = 1, 3 do
                local partSubName    = partSubNames[j][1]
                local partExcludeName = partSubNames[j][2]
                local newPart = {}
@@ -1039,24 +1039,24 @@ FRC_AnimationManager.createAnimationClipGroup = function(inputFiles, baseXMLDir,
                      end
                   end
                end
-               
+
                if( found ) then
                   local adjustment = adjustments[ partSubName ]
-               
+
                   local animData = FRC_AnimationManager.getAnimationData(xmltable, baseImageDir);
                   local clip = FRC_AnimationManager.createAnimationClip(animData)
-                  
+
                   if( adjustment ) then
                      clip[i].x = clip[i].x + adjustment.offset[1]
                      clip[i].y = clip[i].y + adjustment.offset[2]
                   end                 
-                  
+
                   animationClipGroup:insert(clip);               
                else
                   --dprint( "PART NOT FOUND ... SKIPPING: ", partType ) -- EFM THIS SEEMS LIKE A BUG (MISSING DATA?)
                end
             end
-            
+
             --dprint("*****************************************")
             --dprint("*****************************************")
             --dprint("*****************************************")

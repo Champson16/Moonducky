@@ -11,7 +11,7 @@ local ui                      = require('ui')
 local FRC_DataLib             = require('FRC_Modules.FRC_DataLib.FRC_DataLib')
 local FRC_Layout              = require('FRC_Modules.FRC_Layout.FRC_Layout')
 local FRC_AnimationManager    = require('FRC_Modules.FRC_AnimationManager.FRC_AnimationManager')
-local FRC_SetDesign_Settings  = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign_Settings');
+local FRC_SetDesign_Settings  = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign_Settings')
 local FRC_Rehearsal_Settings  = require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Settings')
 
 
@@ -29,7 +29,7 @@ end
 -- ======================================================================
 
 -- ======================================================================
--- Localizations (for speedup and simplicity)
+-- Localizations (for speedup and ease of typing)
 -- ======================================================================
 local mRand       = math.random
 local strLower    = string.lower
@@ -39,38 +39,34 @@ local strGSub     = string.gsub
 -- ======================================================================
 -- Locals
 -- ======================================================================
-local lastDanceNum   = math.random(1,2)
-local snapDist       = 100 ^ 2
-local characterScale = 0.5 -- Scale all placed characters and instruments by this much
-local instrumentScale = 0.35
+local	screenW, screenH, contentW, contentH, centerX, centerY = FRC_Layout.getScreenDimensions()
+
+local lastDanceNum      = math.random(1,2)
+local snapDist          = 100 ^ 2
+local characterScale    = 0.5 -- Scale all placed characters and instruments by this much
+local instrumentScale   = 0.35
 local stagePieces
 local view, currentSongID, animationXMLBase, animationImageBase, itemsScroller, categoriesContainer
-local editingEnabled = true
+local editingEnabled    = true
 local screenW, screenH = FRC_Layout.getScreenDimensions()
 local currentStagePiece
 local instrumentsInUse
 
-local	screenW, screenH, contentW, contentH, centerX, centerY = FRC_Layout.getScreenDimensions()
 
 local setData = FRC_DataLib.readJSON(FRC_SetDesign_Settings.DATA.SETS, system.ResourceDirectory)
 
 -- ********************************
 -- EFM Following may be temporary (revist these locals):
 -- ********************************
-local animalsNames         = { "Chicken", "Cat", "Dog", "Hamster", "Pig", "Sheep", "Goat" }
+--EFM REMOVE local animalsNames         = { "Chicken", "Cat", "Dog", "Hamster", "Pig", "Sheep", "Goat" }
 local instrumentNames      = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" }
-local songTitles        = {}
-songTitles.hamsters = "Hamsters Want To Be Free"
-songTitles.mechanicalcow = "Mechanical Cow"
-
+local songTitles           = { hamsters = "Hamsters Want To Be Free", mechanicalcow  = "Mechanical Cow" }
 local hamsterInstruments   = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Sticks", "RhythmComboCheeseGrater" }
 local cowInstruments       = { "Bass", "Conga", "Guitar", "Harmonica", "Microphone", "Piano", "RhythmComboCymbal" }
 local allInstruments       = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" }
 
-local textBoxDefaultTitles = { "A Hard Act To Follow", "One Day At The Theatre", "Over The Moon", "Animal Band", "The Show of Shows", "A Tough Act To Follow", "Party Hat", "Sing With The Animals" };
-
-
--- ********************************
+local textBoxDefaultTitles = { "A Hard Act To Follow", "One Day At The Theatre", "Over The Moon", "Animal Band", "The Show of Shows", 
+                               "A Tough Act To Follow", "Party Hat", "Sing With The Animals" }
 
 
 -- ======================================================================
@@ -94,14 +90,11 @@ function public.dirtyTest( cb )
    if( public.isDirty ) then
       public.easyAlert( 'Exit?', 
          'If you exit, your unsaved progress will be lost.\nIf you want to save first, tap Cancel now and then use the Save feature.',
-         { { "OK", cb }, {"Cancel", nil }, } )
-      
+         { { "OK", cb }, {"Cancel", nil }, } )      
    else
       cb()
    end
 end
-
-
 
 --
 -- cleanup() - Purge local references to key rehearsal values and groups.
@@ -131,7 +124,6 @@ function public.destroy()
    instrumentNames      = { "Bass", "Conga", "Guitar", "Harmonica", "Maracas", "Microphone", "Piano", "Sticks", "RhythmComboCheeseGrater", "RhythmComboCymbal" }
    
    public.markDirty( false )
-
    display.remove(stagePieces)
 end
 
@@ -146,9 +138,9 @@ function public.init( params )
    animationImageBase   = params.animationImageBase
    itemScrollers        = params.itemScrollers
    categoriesContainer  = params.categoriesContainer
-
    editingEnabled       = true
-
+   showTimeMode         = false
+   
    if(params.showTimeMode ~= nil) then
       showTimeMode = params.showTimeMode
    end
@@ -162,13 +154,10 @@ function public.init( params )
    end
 
    stagePieces          = display.newGroup()
-   instrumentsInUse     = {}
-
    params.view.setDesignGroup:insert( stagePieces )
-
+   instrumentsInUse     = {}   
    private.attachTouchClear()
 end
-
 
 --
 -- createOrLoadShow() - Pop up dialog to select between loading a show or creating a new show.
@@ -193,7 +182,6 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
    end
    blur:addEventListener( "touch" )
 
-   -- EFM Add temporary label for save
    local backH       = screenH - 50
    local fontSize    = 60
    local fontSize2   = 44
@@ -207,16 +195,13 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
    titleQueryBack.strokeWidth = 8
    titleQueryBack:setStrokeColor(0)
 
-
    local titleQueryLabel2 = display.newText( group2, "Rehearse A New Show?", centerX, fromButton, native.systemFontBold, fontSize )
-   -- local titleQueryLabel2 = display.newText( group2, "Rehearse A New Show?", centerX, centerY - 20, native.systemFontBold, fontSize )
    titleQueryLabel2:setFillColor(0)
 
    --
    -- Create New Show With: 'Hamsters Want To Be Free'
    --
    local hamsterButton = display.newRoundedRect( group2, centerX, titleQueryLabel2.y + fromButton, screenW - 100, 80, 4 )
-   -- local hamsterButton = display.newRoundedRect( group2, loadButton.x, titleQueryLabel2.y + fromButton, screenW - 100, 80, 4 )
    hamsterButton.strokeWidth = 4
    hamsterButton:setStrokeColor(0)
    hamsterButton.selColor = selColor2
@@ -247,15 +232,13 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
    local cowButtonTitle = display.newText( group2, '"Mechanical Cow"', cowButton.x, cowButton.y,  "MoonDucky", fontSize2 )
    cowButtonTitle:setFillColor(0)
 
-   -- local titleQueryLabel = display.newText( group2, "or", centerX, centerY - 100, native.systemFontBold, fontSize )
    local titleQueryLabel = display.newText( group2, "or", centerX, cowButton.y + 120, native.systemFontBold, fontSize )
    titleQueryLabel:setFillColor(0)
 
    --
    -- Load Existing Show
    --
-   local loadButton = display.newRoundedRect( group2, centerX, titleQueryLabel.y + 120, screenW - 100, 80, 8 )
-   -- local loadButton = display.newRoundedRect( group2, centerX, titleQueryLabel.y - fromButton , screenW - 100, 80, 8 )
+   local loadButton = display.newRoundedRect( group2, centerX, titleQueryLabel.y + 120, screenW - 100, 80, 8 )   
    loadButton.strokeWidth = 4
    loadButton:setStrokeColor(0)
    loadButton.selColor = selColor1
@@ -265,11 +248,9 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
       if( onLoad ) then
          onLoad( )
       end
-   end
-   -- local loadButtonLabel = display.newText( group2, "Load An Existing Show", loadButton.x, loadButton.y, native.systemFontBold, fontSize2 )
+   end   
    local loadButtonLabel = display.newText( group2, "Load An Existing Show", loadButton.x, loadButton.y, native.systemFontBold, fontSize2 )
    loadButtonLabel:setFillColor(0)
-
 
    local function onTouch( self, event )
       if( event.phase == "began" ) then
@@ -310,16 +291,14 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
       loadButton.isVisible = false
       loadButtonLabel.isVisible = false
       titleQueryLabel.isVisible = false
-      titleQueryLabel2.text = "Choose a Song to Rehearse"
-      -- group2.y = group2.y - 150
+      titleQueryLabel2.text = "Choose a Song to Rehearse"      
    end
 
 end
 
 --
--- getShowTitle() - Pop up input field to get show title
+-- getCurtainPath() - Creat image path string for requested curtain.
 --
-
 function public.getCurtainPath( id )
    id = id or 1
    if( tonumber(id) == nil ) then
@@ -373,9 +352,9 @@ function public.getShowTitle( onSuccess, onCancel )
    end
 
    local textBox = native.newTextField( centerX, titleQueryBack.y, screenW - 80, fontSize + 36 )
-   textBox.font = native.newFont( "OpenSans-Semibold", fontSize );
-   local textBoxTitleIndex = mRand(1, #textBoxDefaultTitles);
-   textBox.text = textBoxDefaultTitles[textBoxTitleIndex];
+   textBox.font = native.newFont( "OpenSans-Semibold", fontSize )
+   local textBoxTitleIndex = mRand(1, #textBoxDefaultTitles)
+   textBox.text = textBoxDefaultTitles[textBoxTitleIndex]
    textBox.isEditable = true
    textBox.userInput = inputListener
    textBox:addEventListener( "userInput"  )
@@ -431,7 +410,7 @@ function public.getShowTitle( onSuccess, onCancel )
 
          if( event.phase == "ended" ) then
             display.currentStage:setFocus( self, nil )
-            native.setKeyboardFocus( nil ); -- TRS
+            native.setKeyboardFocus( nil ) -- TRS
             self.isFocus = false
             if( isWithinBounds ) then
                if( self.cb ) then self.cb() end
@@ -445,11 +424,7 @@ function public.getShowTitle( onSuccess, onCancel )
    cancelButton.touch = onTouch
    cancelButton:addEventListener("touch")
    okButton:addEventListener("touch")
-
-
 end
-
-
 
 --
 -- save() - Save all stage elements (excluding stage backdrop which is handled in FRC_Rehearsal_Scene.)
@@ -504,7 +479,6 @@ function public.load(loadTable)
 
    currentStagePiece = nil
    private.highlightSelected()
-
 end
 
 --
@@ -561,11 +535,9 @@ function public.placeNewInstrument( x, y, instrumentName )
    if( instrumentsInUse[instrumentName] ) then
       private.easyAlert( "Duplicate instrument",
          "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage.",
-         { {"OK", nil} } )
-      --dprint("Duplicate instrument", "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage." )
+         { {"OK", nil} } )      
       return
    end
-
 
    local stagePiece = display.newImage( stagePieces, "FRC_Assets/FRC_Rehearsal/Images/MDMT_Rehearsal_Stage_Instrument_" .. instrumentName .. ".png"  ) --EFM: hardcoded
    stagePiece.x = x
@@ -594,7 +566,7 @@ function public.placeNewInstrument( x, y, instrumentName )
 end
 
 --
--- placeNewCharacter() -
+-- placeNewCharacter() - Create a new character and place it on the stage.
 --
 function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumber  )
    x = x or display.contentCenterX
@@ -660,8 +632,6 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    -- Get all known parts for the selected instrument type within the previously selected character (animal) type
    local partsList, xmlTable = private.getPartsList( xmlFiles[instrumentType], animationXMLBase, false )
    
-   --table.print_r( partsList )
-   
    --
    -- Generate a list of the animation parts we need for this particular character
    --
@@ -679,12 +649,6 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
          end
       end
    end   
-   
-   --table.print_r( allParts )
-   --for i = 1, #animationsToBuild do
-      --dprint("animationsToBuild ", i, animationsToBuild[i][1] )
-   --end
-   --table.print_r( animationsToBuild )
 
    --
    -- Adjust parts (costume names and offsets).
@@ -703,8 +667,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
       end
    end
    animationsToBuild = tmp
-   tmp = nil
-   
+   tmp = nil   
    
 
    -- Copy the xml table, then trim it to just the parts we need to build this character
@@ -727,8 +690,6 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    end
    xmlTable.Animation.Part = newPart   
    
-   --table.print_r(newPart)
-   
    --
    --  Finally, build the character as a single clipgroup
    --
@@ -742,13 +703,11 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    stagePiece.animationSequence.x = xOffset
    stagePiece.animationSequence.y = yOffset
    
-   stagePiece:insert(stagePiece.animationSequence)
-   
+   stagePiece:insert(stagePiece.animationSequence)   
 
    stagePiece:scale(characterScale,characterScale)
    private.attachDragger(stagePiece)
-
-   -- PING PONG
+   
    local sequence = stagePiece.animationSequence   
    dprint( "sequence.numChildren == " ,  sequence.numChildren )   
    for i=1, sequence.numChildren do
@@ -761,8 +720,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
             intervalTime      = 0, 
             maxIterations     = 1,
          })
-   end
-   
+   end   
 
    currentStagePiece = stagePiece
 
@@ -772,9 +730,11 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    
    public.markDirty( true )
    
-   -- EDOCHI - Debug meter to show what frame each animation clip is at relative to other clips
+   -- EFM MOVE THIS CODE TO UTILITY
    --
-   --  If things are working correctly, they should always line vertically.  i.e. No ripple in meter.
+   -- EFM - Debug meter to show what frame each animation clip is at relative to other clips
+   --
+   --  If things are working correctly, they should always line up vertically.  i.e. No ripple in meter.
    --
    if( animMeter ) then
       local labels = {}
@@ -860,8 +820,7 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
       Runtime:addEventListener( "enterFrame", firstChild )
    end    
    
-   return stagePiece
-   
+   return stagePiece   
 end
 
 
@@ -879,27 +838,23 @@ end
 function public.rebuildInstrumenScroller( )
    local ui = require('ui')
 
-   --if(true) then return end
-
    local instrumentData = DATA('INSTRUMENT')
    local songID = strGSub(songTitles[currentSongID], " ", "")
 
    local songInstruments = instrumentData[1]
    for i = 1, #instrumentData do
-      if( instrumentData[i].id == songID ) then
-         --dprint("Selected instrument data for ", i, songID )
+      if( instrumentData[i].id == songID ) then         
          songInstruments = instrumentData[i]
       end
    end
 
    local scroller = itemScrollers.Instrument
 
-   -- Destroy OLD scroller CONTENT ONLY
+   -- Destroy OLD scroller content
    while( scroller.content.numChildren > 0 ) do
       display.remove( scroller.content[1] )
    end
 
-   --local button_spacing = 80
    local category_button_spacing = 48
    local button_spacing = 24
    local button_scale = 0.75
@@ -958,17 +913,15 @@ function public.rebuildInstrumenScroller( )
    end
 end
 
-
 --
 -- rebuildCostumeScroller() - Builds the costume scroller based on the currently selected character type
 --
 function public.rebuildCostumeScroller( )
    local ui = require('ui')
    local button = require('ui.button')
-
    local scroller = itemScrollers.Costume
 
-   -- Destroy OLD scroller CONTENT ONLY
+   -- Destroy OLD scroller content
    while( scroller.content.numChildren > 0 ) do
       display.remove( scroller.content[1] )
    end
@@ -982,15 +935,6 @@ function public.rebuildCostumeScroller( )
    --
    local button_spacing = 80
    local x = -(screenW * 0.5) + button_spacing
-   --[[
-   local tmp = display.newImage( "FRC_Assets/FRC_Rehearsal/Images/FRC_Rehearsal_Scroller_None.png"  )
-   tmp.x = x
-   tmp.data = { id = "none" }
-   scroller:insert( tmp )
-   --tmp.touch = private.scrollerCostumeTouch
-   --tmp:addEventListener( "touch" )
-   --]]
-
    local curChar = { id = "none" }
    local buttonScale = 0.96
    local filePath = "FRC_Assets/FRC_Rehearsal/Images/FRC_Rehearsal_Scroller_None.png"
@@ -1112,9 +1056,7 @@ function public.rebuildCostumeScroller( )
       button.x = x
       scroller:insert(button)
    end
-   --]]
-
-
+   
 end
 
 
@@ -1181,7 +1123,6 @@ end
 -- playStageCharacters() - Make all characters on stage play.
 --
 function public.playStageCharacters( instrumentTrackStartOffsets, expectedEndTime )
-   --dprint("expectedEndTime == ", expectedEndTime)
    local charactersOnStage = public.getCharactersOnStage()
 
    for i = 1, #charactersOnStage do
@@ -1196,9 +1137,7 @@ function public.playStageCharacters( instrumentTrackStartOffsets, expectedEndTim
             instrumentEndTime = tonumber(v.trackEndTime)
          end
       end
-
-      --dprint( i, myInstrument, instrumentOffset, instrumentEndTime )
-
+     
       local params = { intervalTime       = math.random( 30, 40 ),
                        iterations         = math.random( 1, 3 ),
                        instrumentOffset   = instrumentOffset,
@@ -1216,8 +1155,7 @@ end
 -- stopStageCharacters() - Make all characters on stage stop playing.
 --
 
-function public.stopStageCharacters()
-   --dprint("stopStageCharacters()")
+function public.stopStageCharacters()   
    local charactersOnStage = public.getCharactersOnStage()
 
    for i = 1, #charactersOnStage do
@@ -1228,7 +1166,7 @@ end
 
 if( edmode ) then
    local function onKey( event )
-      local storyboard = require("storyboard");
+      local storyboard = require("storyboard")
       if( event.phase ~= "up" ) then return false end
 
       if( event.keyName == "p" ) then
@@ -1254,13 +1192,11 @@ end
 -- getDressingRoomDataByAnimalType( characterType ) - Extract just 'characterType' characters from saved list of (dressing room) characters
 --
 function private.getDressingRoomDataByAnimalType( characterType, debugLevel )
-
    local characters = {}
    local dressingRoomDataPath = "FRC_DressingRoom_SaveData.json"
    local allSaved = table.load( dressingRoomDataPath ) or {}
    if( not allSaved.savedItems ) then
       if( debugLevel and debugLevel > 0 ) then
-         --dprint("No characters/costumes saved, can't search for this animal type: ", characterType )
          private.easyAlert( "No saved costumes",
             "No characters/costumes saved, can't search for this animal type: " ..
             tostring(characterType) .. "\n\n Please go save some costumes first.",
@@ -1282,11 +1218,9 @@ function private.getDressingRoomDataByAnimalType( characterType, debugLevel )
             tostring(characterType) .. "\n\n Please go save some costumes first.",
             { {"OK", nil} } )
       end
-      --dprint("Found ", tostring(#characters), " of characters/costumes of this type: ", characterType )
    end
    if( debugLevel and debugLevel > 1 ) then
       table.print_r(characters)
-      --dprint("getDressingRoomDataByAnimalType()")
    end
 
    return characters
@@ -1303,8 +1237,6 @@ function private.getDressingRoomDataByID( id, debugLevel )
             "No characters/costumes saved, can't search for this id: " ..
             tostring(id) .. "\n\n Please go save some costumes first.",
             { {"OK", nil} } )
-
-         --dprint("No characters/costumes saved, can't search for this id: ", id )
       end
       return nil
    end
@@ -1330,20 +1262,19 @@ end
 -- EFM() - EFM
 --
 function private.getCostumeData( animalType )
-   local FRC_DressingRoom_Settings = require('FRC_Modules.FRC_DressingRoom.FRC_DressingRoom_Settings');
-   local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib');
+   local FRC_DressingRoom_Settings = require('FRC_Modules.FRC_DressingRoom.FRC_DressingRoom_Settings')
+   local FRC_DataLib = require('FRC_Modules.FRC_DataLib.FRC_DataLib')
    local function DATA(key, baseDir)
-      baseDir = baseDir or system.ResourceDirectory;
-      return FRC_DataLib.readJSON(FRC_DressingRoom_Settings.DATA[key], baseDir);
+      baseDir = baseDir or system.ResourceDirectory
+      return FRC_DataLib.readJSON(FRC_DressingRoom_Settings.DATA[key], baseDir)
    end
-   local characterData = DATA('CHARACTER');
+   local characterData = DATA('CHARACTER')
 
-
-   local costumeData;
+   local costumeData
    for i=1,#characterData do
       if( characterData[i].id == animalType ) then
-         costumeData = characterData[i];
-         break;
+         costumeData = characterData[i]
+         break
       end
    end
    if (not costumeData) then
@@ -1402,8 +1333,7 @@ function private.scrollerCostumeTouch( data )
 
       elseif( data.id == "mysterybox" ) then
          local character = data.characters[mRand(1,#data.characters)]
-         public.placeNewCharacter( nil, nil, character.id)
-         --dprint( "Mystery Box" )
+         public.placeNewCharacter( nil, nil, character.id)         
       else
          public.placeNewCharacter( nil, nil, data.id)
       end
@@ -1418,14 +1348,12 @@ end
 function private.attachDragger( obj )
    if( showTimeMode ) then
       return
-   end
-   --obj.isHitTestMasked = true
+   end   
    obj.touch = private.dragNDrop
    obj:addEventListener( "touch" )
 end
 function private.dragNDrop( self, event )
    if( not editingEnabled ) then
-      --dprint("Editing disabled", editingEnabled)
       return
    end
    
@@ -1478,57 +1406,14 @@ function private.dragNDrop( self, event )
          if( isWithinBounds ) then
             private.doDrop( self )
          end
-         --currentStagePiece = nil
-         --private.highlightSelected()
 
       end
    end
    return true
 end
 
---[[
-function private.dragNDrop( self, event )
-   if( event.phase == "began" ) then
-      display.currentStage:setFocus( self, event.id )
-      self.isFocus = true
-      self.x0 = self.x
-      self.y0 = self.y
-      self:toFront()
-      currentStagePiece = self
-      private.highlightSelected()
-   elseif( self.isFocus ) then
-      local bounds = self.stageBounds
-      local x,y = event.x, event.y
-      local isWithinBounds =
-         bounds.xMin <= x and bounds.xMax >= x and bounds.yMin <= y and bounds.yMax >= y
 
-      local dx = event.x - event.xStart
-      local dy = event.y - event.yStart
-
-      local myLeft = self.x - self.contentWidth/2
-      local myRight = self.x + self.contentWidth/2
-      if( (dx < 0 and myLeft > private.left) or
-          (dx > 0 and myRight < private.right ) ) then
-         self.x = self.x0 + dx * (self.dragScale and self.dragScale or 1)
-      end
-      self.y = self.y0 + dy * (self.dragScale and self.dragScale or 1)
-
-      if( event.phase == "ended" ) then
-         display.currentStage:setFocus( self, nil )
-         self.isFocus = false
-         if( isWithinBounds ) then
-            private.doDrop( self )
-         end
-         --currentStagePiece = nil
-         --private.highlightSelected()
-
-      end
-   end
-   return true
-end
---]]
-
-
+-- EFM Candidate for data driven update ==>
 --
 -- getAllPartsList() - Returns a part list for a specific instrument style.  (Some require special processing.)
 --
@@ -1716,22 +1601,19 @@ function private.findAnimationParts( parts, partSubName, partExactName, partExcl
          if( strMatch( parts[i].name, partExactName ) and            
             strMatch( parts[i].name, partExcludeName ) == nil ) then
             if( string.match( partSubName, "Instrument") ) then
-               --dprint("edochi a", i, parts[i].name )
             end
             subParts[#subParts+1] = i
          end
       else
          if( strMatch( parts[i].name, partExactName ) ) then
             if( string.match( partSubName, "Instrument") ) then
-               --dprint("edochi b", i, parts[i].name )
             end
             subParts[#subParts+1] = i
          end
       end
    end
    if(toTable and #subParts > 0) then
-      toTable[#toTable+1] = { partSubName, subParts, animationImageBase }
-      --toTable[#toTable+1] = { partExactName, subParts, animationImageBase }
+      toTable[#toTable+1] = { partSubName, subParts, animationImageBase }      
    end
    return subParts
 end
@@ -1828,8 +1710,7 @@ function private.playAllAnimations( animationSequence, params )
          end
 
 
-         if( executeOnComplete ) then 
-            --obj:stop(obj.frameCount) -- EDOCHI
+         if( executeOnComplete ) then             
             timer.performWithDelay( framePeriod * 2,
                function()
                local params2 =  { intervalTime        = params.intervalTime,
@@ -1841,8 +1722,6 @@ function private.playAllAnimations( animationSequence, params )
                if(sequence.removeSelf == nil) then return end
                private.playAllAnimations( animationSequence, params2 )               
             end )
-         else
-            --dprint("NOT ALL DONE WAITING", i, sequence, obj, system.getTimer() )
          end
       end
       
@@ -1905,8 +1784,7 @@ function private.playAllAnimations_pause( animationSequence, params )
    -- Set a timer to pause/resume at random intervals till we need to stop
    sequence.timer = function( self )
       if( self.removeSelf == nil ) then
-         self.__myLastTimer = nil
-         --dprint( "QUITTING TIMER" )
+         self.__myLastTimer = nil         
          return
       end
       
@@ -1914,12 +1792,9 @@ function private.playAllAnimations_pause( animationSequence, params )
       local dt             = curTime - sequence._startedPlayingAt
       local remainingTime  = sequence._playDuration - dt      
       local chance         = math.random(1,100)
-      local nextTime       = math.random(1000,2000)
-      
-      --dprint("Timer", sequence.__isPaused, chance, curTime, dt, remainingTime )
+      local nextTime       = math.random(1000,2000)      
       
       if(remainingTime < 1000) then 
-         --dprint("Timer abort")
          return 
       end      
       if( sequence.__isPaused ) then         
@@ -1927,8 +1802,7 @@ function private.playAllAnimations_pause( animationSequence, params )
             local obj            = sequence[i]
             obj:resume()
          end
-         sequence.__isPaused = false
-         --dprint( "RESUMED" )
+         sequence.__isPaused = false         
       
       elseif( chance > 66 ) then      
          for i=1, totalClips do
@@ -1936,114 +1810,11 @@ function private.playAllAnimations_pause( animationSequence, params )
             obj:pause()
          end
          sequence.__isPaused = true
-         --dprint( "PAUSED" )
       end
       sequence.__myLastTimer = timer.performWithDelay( nextTime, sequence )
    end
    sequence.__myLastTimer = timer.performWithDelay( params.instrumentOffset + math.random(2000,4000), sequence )
 end
-
-
-
---[[
-function private.playAllAnimations_orig( animationSequence, params )
-   params = params or { intervalTime = 30, iterations = 1, instrumentOffset = 30, instrumentEndTime = 10000 }
-   local sequence    = animationSequence
-
-   local totalClips  = sequence.numChildren
-
-   animationSequence.completed = {}
-   
-   local completed = animationSequence.completed
-   local completedIndex = #completed+1
-   completed[completedIndex] = false
-
-   local framePeriod = math.ceil(1000 / display.fps)
-
-   for i=1, totalClips do
-      local obj = sequence[i]
-
-      local function onCompletionGate()
-         completed[completedIndex] = true
-
-         if(obj.removeSelf == nil or obj.stop == nil) then return end
-         obj:stop(obj.frameCount)
-
-         local executeOnComplete = true
-         for j = 1, #completed do
-            executeOnComplete = executeOnComplete and completed[j]
-         end
-
-         local curTime = system.getTimer()
-         local dt = curTime - obj._startedPlayingAt
-
-         if( dt >= obj._playDuration ) then
-            dprint("STOPPING ANIMATION" )
-            return
-         end
-
-         if( executeOnComplete ) then
-            timer.performWithDelay( framePeriod * 2,
-               function()
-               local params2 =  { intervalTime        = params.intervalTime,
-                                  iterations          = math.random( 1, 3 ),
-                                  instrumentOffset    = math.random( 500, 2000 ),
-                                  instrumentEndTime   = params.instrumentEndTime}
-               local startTime = system.getTimer()
-               dprint("RESTARTING ANIMATION " )
-               if(obj.removeSelf == nil or obj.stop == nil) then return end
-               -- PING PONG
-               private.playAllAnimations( animationSequence, params2 )               
-               local endTime = system.getTimer()               
-            end )
-         end
-      end
-
-
-      
-      --dprint( "intervalTime, iterations, instrumentOffset, instrumentEndTime == ", params.intervalTime,
-      --        params.iterations, params.instrumentOffset, params.instrumentEndTime, system.getTimer() )
-      
---      if( params.isFirstCall ) then
---         obj._startedPlayingAt = system.getTimer()
---         if(obj._stopTimer) then
---            timer.cancel( obj._stopTimer )
---         end
---         local stopTime = params.instrumentEndTime
---         if( stopTime > params.showEndTime ) then
---            stopTime = params.showEndTime
---         end
---         obj._stopTimer = timer.performWithDelay( stopTime,
---            function()
---               dprint("STOP THIS INSTRUMENT", i)
---               obj._stopTimer = nil
---               if(obj.removeSelf == nil or obj.stop == nil) then return end
---               obj:stop(obj.currentIndex)
---            end )
---      end
-      
-      if( params.isFirstCall ) then
-         obj._startedPlayingAt = system.getTimer()
-         local stopTime = params.instrumentEndTime
-         if( stopTime > params.showEndTime ) then
-            stopTime = params.showEndTime
-         end
-         obj._playDuration = stopTime
-      end
-      obj:play({
-            showLastFrame     = not(autoLoop),
-            playBackward      = false,
-            autoLoop          = false, 
-            palindromicLoop   = false,
-            delay             = params.instrumentOffset,
-            intervalTime      = 30, --, params.intervalTime, --30, -- EFM TEARING FIX? SOURCE?
-            maxIterations     = params.iterations, -- 1
-            onCompletion      = onCompletionGate,
-            stopGate          = true
-         })
-   end
-end
---]]
 
 --
 -- stopAllAnimations() - Stops all of the character's animations (EFM needs work)
@@ -2060,7 +1831,6 @@ function private.stopAllAnimations( animationSequence )
          })
    end
 end
-
 
 --
 -- getPartName() - Extract replacment part (art) name from this character type's JSON/Lua data.
@@ -2352,54 +2122,3 @@ return public
          EFM() - EFM
 --]]
 -- ======================================================================
-
---[[
-
---
--- readXML() - Extracted XML reader (from animationManager) (EFM - Needs additional changes when I fix LUA bug)
---
-function private.readXML( fileName, baseXMLDir )
-   dprint( fileName, baseXMLDir )
-   local rawLUAcode, xmltable, preexistingFile, newLuaFile, err, dataToSave, appLUApath, docLUApath;
-   local XMLfilename = fileName;
-   local XMLLUAfilename = string.sub(XMLfilename, 1, string.len(XMLfilename)-3) .."lua";
-   local XMLfilepath = baseXMLDir .. XMLfilename;
-   appLUApath = system.pathForFile( baseXMLDir .. XMLLUAfilename );
-   docLUApath = system.pathForFile( XMLLUAfilename, system.DocumentsDirectory );
-
-   if (appLUApath) then -- or docLUApath) then
-      local path = appLUApath; -- or docLUApath;
-      preexistingFile, err = io.open(path,"r");
-
-      if (preexistingFile and not err) then
-         io.close(preexistingFile);
-         if (appLUApath) then
-            local appLUAFilename = strGSub( strGSub(baseXMLDir .. XMLLUAfilename, "/", "."), ".lua", "");
-            rawLUAcode = require(appLUAFilename);
-            xmltable = rawLUAcode; -- .xmltable;
-         end
-      else
-         --dprint( "EDO 1", XMLfilepath )
-         xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
-         if ( ON_SIMULATOR ) then
-            dataToSave = table.serialize( "xmltable", xmltable, "" );
-            newLuaFile, err = io.open(path,"w");
-            newLuaFile:write( dataToSave );
-            io.close(newLuaFile);
-         end
-      end
-   else
-      --dprint( "EDO 2", XMLfilepath )
-      xmltable = FRC_AnimationManager.loadXMLData( XMLfilepath );
-
-      if ( ON_SIMULATOR ) then
-         dataToSave = table.serialize( "xmltable", xmltable, "" );
-         --table.dump(dataToSave);
-         newLuaFile, err = io.open(docLUApath,"w");
-         newLuaFile:write( dataToSave );
-         io.close(newLuaFile);
-      end
-   end
-   return xmltable
-end
---]]
