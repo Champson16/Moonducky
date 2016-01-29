@@ -13,6 +13,7 @@ local FRC_Layout              = require('FRC_Modules.FRC_Layout.FRC_Layout')
 local FRC_AnimationManager    = require('FRC_Modules.FRC_AnimationManager.FRC_AnimationManager')
 local FRC_SetDesign_Settings  = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign_Settings')
 local FRC_Rehearsal_Settings  = require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Settings')
+local FRC_Util                = require('FRC_Modules.FRC_Util.FRC_Util')
 
 
 local function UI(key)
@@ -22,7 +23,6 @@ local function DATA(key, baseDir)
    baseDir = baseDir or system.ResourceDirectory
    return FRC_DataLib.readJSON(FRC_Rehearsal_Settings.DATA[key], baseDir)
 end
-
 
 -- ======================================================================
 -- Forward Declarations
@@ -88,7 +88,7 @@ end
 function public.dirtyTest( cb )
    dprint("public.dirtyTest() ", public.isDirty )
    if( public.isDirty ) then
-      public.easyAlert( 'Exit?', 
+      FRC_Util.easyAlert( 'Exit?', 
          'If you exit, your unsaved progress will be lost.\nIf you want to save first, tap Cancel now and then use the Save feature.',
          { { "OK", cb }, {"Cancel", nil }, } )      
    else
@@ -176,7 +176,7 @@ function public.createOrLoadShow( onLoad, onCreateHamster, onCreateCow, canLoad 
    end
    Runtime:addEventListener( "enterFrame", group )
 
-   local blur = private.easyBlur( group, 500, { 0, 0.4, 0.4, 0.8 } ) --  time, color )
+   local blur = FRC_Util.easyBlur( group, 500, { 0, 0.4, 0.4, 0.8 } ) --  time, color )
    blur.touch = function( self, event )
       return true
    end
@@ -322,7 +322,7 @@ function public.getShowTitle( onSuccess, onCancel )
    end
    Runtime:addEventListener( "enterFrame", group )
 
-   local blur = private.easyBlur( group, 500, { 0, 0.4, 0.4, 0.8 } ) --  time, color )
+   local blur = FRC_Util.easyBlur( group, 500, { 0, 0.4, 0.4, 0.8 } ) --  time, color )
    blur.touch = function( self, event )
       return true
    end
@@ -533,7 +533,7 @@ function public.placeNewInstrument( x, y, instrumentName )
    dprint( "public.placeNewInstrument( " .. tostring(instrumentName) .. " )" )
 
    if( instrumentsInUse[instrumentName] ) then
-      private.easyAlert( "Duplicate instrument",
+      FRC_Util.easyAlert( "Duplicate instrument",
          "Only one of each instrument can be placed.\n\n" .. instrumentName .. " is already on the stage.",
          { {"OK", nil} } )      
       return
@@ -1197,7 +1197,7 @@ function private.getDressingRoomDataByAnimalType( characterType, debugLevel )
    local allSaved = table.load( dressingRoomDataPath ) or {}
    if( not allSaved.savedItems ) then
       if( debugLevel and debugLevel > 0 ) then
-         private.easyAlert( "No saved costumes",
+         FRC_Util.easyAlert( "No saved costumes",
             "No characters/costumes saved, can't search for this animal type: " ..
             tostring(characterType) .. "\n\n Please go save some costumes first.",
             { {"OK", nil} } )
@@ -1213,7 +1213,7 @@ function private.getDressingRoomDataByAnimalType( characterType, debugLevel )
    end
    if( debugLevel and debugLevel > 0 ) then
       if( #characters == 0 ) then
-         private.easyAlert( "No saved costumes",
+         FRC_Util.easyAlert( "No saved costumes",
             "No characters/costumes saved for this animal type: " ..
             tostring(characterType) .. "\n\n Please go save some costumes first.",
             { {"OK", nil} } )
@@ -1233,7 +1233,7 @@ function private.getDressingRoomDataByID( id, debugLevel )
    local allSaved = table.load( dressingRoomDataPath ) or {}
    if( not allSaved.savedItems ) then
       if( debugLevel and debugLevel > 0 ) then
-         private.easyAlert( "No saved costumes",
+         FRC_Util.easyAlert( "No saved costumes",
             "No characters/costumes saved, can't search for this id: " ..
             tostring(id) .. "\n\n Please go save some costumes first.",
             { {"OK", nil} } )
@@ -1250,7 +1250,7 @@ function private.getDressingRoomDataByID( id, debugLevel )
    end
 
    if( debugLevel and debugLevel > 0 ) then
-      private.easyAlert( "Unknown Dressing Room ID",
+      FRC_Util.easyAlert( "Unknown Dressing Room ID",
          "No characters/costumes found matching this ID: " .. tostring(characterType),
          { {"OK", nil} } )
    end
@@ -1278,7 +1278,7 @@ function private.getCostumeData( animalType )
       end
    end
    if (not costumeData) then
-      private.easyAlert( "No character data found",
+      FRC_Util.easyAlert( "No character data found",
          tostring( animalType ) .. " had no data?",
          { {"OK", nil} } )
    end
@@ -1968,7 +1968,6 @@ function private.attachTouchClear()
    view:addEventListener("touch")
 end
 
-
 --
 -- getNextDanceNum() - Alternate dance numbers instead of relying on random.
 --
@@ -1981,52 +1980,6 @@ function private.getNextDanceNum()
    return lastDanceNum
 end
 
-
--- Easy Blur
---
-private.easyBlur = function( group, time, color )
-   group = group or display.getCurrentStage()
-   time = time or 0
-   color = color or {0.5,0.5,0.5}
-   local blur = display.captureScreen()
-   blur.x, blur.y = centerX, centerY
-   blur:setFillColor(unpack(color))
-   --blur.fill.effect = "filter.blur"
-   blur.alpha = 0
-   group:insert( blur )
-   transition.to( blur, { alpha = 1, time = time } )
-   return blur
-end
-
--- Easy alert popup
---
--- title - Name on popup.
--- msg - message in popup.
--- buttons - table of tables like this:
--- { { "button 1", opt_func1 }, { "button 2", opt_func2 }, ...}
---
-function private.easyAlert( title, msg, buttons )
-
-   local function onComplete( event )
-      local action = event.action
-      local index = event.index
-      if( action == "clicked" ) then
-         local func = buttons[index][2]
-         if( func ) then func() end
-      end
-      --native.cancelAlert()
-   end
-
-   local names = {}
-   for i = 1, #buttons do
-      names[i] = buttons[i][1]
-   end
-   --print( title, msg, names, onComplete )
-   local alert = native.showAlert( title, msg, names, onComplete )
-   return alert
-end
--- EFM temporarily exposed for use in FRC_Reheasal_Scene.lua till we come up with a better plan.
-public.easyAlert = private.easyAlert
 
 -- ==
 --    round(val, n) - Rounds a number to the nearest decimal places. (http://lua-users.org/wiki/FormattingNumbers)

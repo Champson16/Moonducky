@@ -1103,7 +1103,7 @@ function FRC_Rehearsal_Scene:createScene(event)
 
    self.startOver = function()
 
-      FRC_CharacterBuilder.easyAlert( "Start Over?",
+      FRC_Util.easyAlert( "Start Over?",
          "Would you like to:",
          {
             {"Clear The Stage", function() FRC_Rehearsal_Scene.doStartOver() end },
@@ -1658,7 +1658,7 @@ function FRC_Rehearsal_Scene:createScene(event)
       if( canLoad ) then
          showLoadPopup( true )
       else
-         FRC_CharacterBuilder.easyAlert( "No Saved Performances",
+         FRC_Util.easyAlert( "No Saved Performances",
             "You didn't create any performances yet.\n\nPlease go to Rehearsal to make a show or create a performance.",
             {
                {"OK", function() storyboard.gotoScene('Scenes.Lobby') end },

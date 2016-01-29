@@ -12,6 +12,7 @@
 --  public.localListener()     -- Handles (LOCAL) pushes.
 -- =============================================================
 -- =============================================================
+local FRC_Util        = require('FRC_Modules.FRC_Util.FRC_Util')
 
 local public   = {} -- Externally published functionality.
 local private  = {} -- Internal functionality.
@@ -87,14 +88,13 @@ function public.init( params )
 
 
    -- Initialize One Signal
-   --OneSignal.SetLogLevel(4, 4)
-   --oneSignalID = "7474c044-8712-11e5-abed-a0369f2d9328", projectNumber = "709462375959" } )
+   --OneSignal.SetLogLevel(4, 4)   
    OneSignal.Init( params.oneSignalID, params.projectNumber, private.oneSignalListener)
 
    -- Tag This User In 'Push Dev Group'
    --OneSignal.SendTags({["group"] = "PushDev",["user"] = "RoamingGamer"})
-     OneSignal.SendTags({["group"] = "PushDev"})
-   --OneSignal.SendTags({["user"] = "RGMoonDucky"})
+   --OneSignal.SendTags({["group"] = "PushDev"})
+
 
    if( params.discoverIdToken == true) then
       print("Discover ID & Token")
@@ -198,7 +198,7 @@ function private.oneSignalListener( msg, data, isActive )
    --
    -- ==================================
    if( data.msgType == "message" ) then
-      private.easyAlert( data.title, msg , { { "OK", nil } } )
+      FRC_Util.easyAlert( data.title, msg , { { "OK", nil } } )
 
       -- ==================================
       -- Push Type 2 - 'promo' (Promotional push)
@@ -248,15 +248,15 @@ function private.oneSignalListener( msg, data, isActive )
 
 
       if( ( promoType and promoType == "appstore" ) and
-          ( promoURL and promoURL ~= "None" ) ) then
+         ( promoURL and promoURL ~= "None" ) ) then
          -- private.easyAlert( data.title, msg .. "\n\nPromo Details: " .. promoDetails,
-         private.easyAlert( data.title, msg .. "\n\n" .. promoDetails,
+         FRC_Util.easyAlert( data.title, msg .. "\n\n" .. promoDetails,
             {
                { "Cancel", nil },
                { "Get The App", function() system.openURL( promoURL ) end } } )
       else
          -- private.easyAlert( data.title, msg .. "\n\nPromo Details: " .. promoDetails,
-         private.easyAlert( data.title, msg .. "\n\n" .. promoDetails,
+         FRC_Util.easyAlert( data.title, msg .. "\n\n" .. promoDetails,
             { { "OK", nil } } )
       end
    end
@@ -300,40 +300,8 @@ function public.localListener( event )
       private.oneSignalListener( event.alert, custom, false )
    else
       -- What!?
-      private.easyAlert( "Wrong Handler", "Got non-local push in this handler.\nIgnoring it.\n" .. tostring( event.type ) , { { "OK", nil } } )
+      FRC_Util.easyAlert( "Wrong Handler", "Got non-local push in this handler.\nIgnoring it.\n" .. tostring( event.type ) , { { "OK", nil } } )
    end
 end
-
--- ==
---     Easy alert popup
--- ==
---
--- title - Name on popup.
--- msg - message in popup.
--- buttons - table of tables like this:
--- { { "button 1", opt_func1 }, { "button 2", opt_func2 }, ...}
--- ==
-function private.easyAlert( title, msg, buttons )
-
-   local function onComplete( event )
-      local action = event.action
-      local index = event.index
-      if( action == "clicked" ) then
-         local func = buttons[index][2]
-         if( func ) then func() end
-      end
-      --native.cancelAlert()
-   end
-
-   local names = {}
-   for i = 1, #buttons do
-      names[i] = buttons[i][1]
-   end
-   --print( title, msg, names, onComplete )
-   local alert = native.showAlert( title, msg, names, onComplete )
-   return alert
-end
-
-
 
 return public

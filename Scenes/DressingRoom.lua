@@ -130,7 +130,7 @@ function scene.postCreateScene(self, event)
                      dprint("OOPS NO COSTUMES OF THIS TYPE")
                      local FRC_CharacterBuilder = require('FRC_Modules.FRC_Rehearsal.FRC_CharacterBuilder') --EFM
 
-                     FRC_CharacterBuilder.easyAlert( "No Costumes Saved Yet",
+                     FRC_Util.easyAlert( "No Costumes Saved Yet",
                                                       "You haven't saved any costumes for this character type.\n\nPlease save some first.",
                                                       { {"OK", nil } } )
                      return

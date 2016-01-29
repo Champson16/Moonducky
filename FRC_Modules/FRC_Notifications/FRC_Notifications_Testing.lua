@@ -121,20 +121,20 @@ end
 function public.localTest1( )
    logger = require( "FRC_Modules.FRC_Notifications.FRC_PushLogger" )
    logger.print("Attempting to execute local push test #1")
-        
+
 
    local options = {}
    local custom = {}
    options.custom   = custom
-   
+
    options.alert     = "Test content for local test #1." -- Equivalent to content
    options.badge     = 2
    options.sound     = "alarm.caf"   
    custom.msgType    = "message"
    custom.title      = "Local Message Test #1"
-      
+
    local tmp = notifications.scheduleNotification( 5, options )
-   
+
 end   
 
 -- ==
@@ -143,12 +143,12 @@ end
 function public.localTest2( )
    logger = require( "FRC_Modules.FRC_Notifications.FRC_PushLogger" )
    logger.print("Attempting to execute local push test #2")
-        
+
 
    local options = {}
    local custom = {}
    options.custom   = custom
-   
+
    options.alert        = "This is the content local test #2.\n Sweet Promo!" -- Equivalent to content 
    options.badge        = 2
    options.sound        = "alarm.caf"

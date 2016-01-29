@@ -26,10 +26,10 @@ local function detectPlatform()
    if ( ON_SIMULATOR ) then
       module.platform = debugPlatform
       debugMode = true
-   
+
    elseif ( IOS_DEVICE ) then
       module.platform = "apple"
-   
+
    elseif ( WINDOWS_PHONE ) then
       module.platform = "windows"
 
@@ -41,14 +41,14 @@ local function detectPlatform()
 
    elseif ( TABEO_DEVICE ) then
       module.platform = { targetAppStore, "tabeo", "google" }
-      
+
    elseif ( ANDROID_DEVICE ) then
       module.platform = { targetAppStore, "google" }
 
    else
       module.platform = targetAppStore
    end   
-   
+
    if( debugMode ) then
       print( "detectPlatform() -    targetAppStore: ",  targetAppStore )
       print( "detectPlatform() - Selected platform: ",  module.platform )
@@ -60,15 +60,15 @@ detectPlatform() -- Run as soon as module is loaded the first time
 --    init() - Initialize this module to use a specific provider.
 -- ==
 function module.init( provider )
-	if (analytics) then return end -- already initialized
-	module.provider   = provider or defaultProvider
-	module.config     = FRC_DataLib.readJSON(configPath, system.ResourceDirectory)
-	
+   if (analytics) then return end -- already initialized
+   module.provider   = provider or defaultProvider
+   module.config     = FRC_DataLib.readJSON(configPath, system.ResourceDirectory)
+
    local usedFallback = true  -- If this stays true, the module had to use a fallback analytics ID
-                              -- This means, you either did not provide oen that matches the 'targetAppStore' 
-                              -- for this run.
+   -- This means, you either did not provide oen that matches the 'targetAppStore' 
+   -- for this run.
    local initKey 
-   
+
    -- Find an 'initKey' that matches this provider and:
    --
    -- On Simulator     - Whatever you selected in 'debugPlatform' at top of file.
@@ -81,7 +81,7 @@ function module.init( provider )
    -- 
    if( type(module.platform) == "string" ) then
       initKey = module.config[module.provider][module.platform] 
-   
+
    elseif( type(module.platform) == "table" ) then
       local i = 1
       while( initKey == nil and i <= #module.platform ) do
@@ -98,7 +98,7 @@ function module.init( provider )
       end
    end   
 
-	if( not initKey or (initKey == "") ) then 
+   if( not initKey or (initKey == "") ) then 
       if (debugMode) then
          print("init() - Failed to get init key?")
          print("init() - initKey == ", initKey )
@@ -108,40 +108,40 @@ function module.init( provider )
       return 
    end
 
-	analytics = require("analytics")
-	analytics.init( initKey )
+   analytics = require("analytics")
+   analytics.init( initKey )
 
-	if (debugMode) then
-		print("Initialized analytics: ")
-		print("", "provider: ", module.provider )
-		print("", "platform: ", module.platform )
-		print("", "key: ", initKey)
-	end
+   if (debugMode) then
+      print("Initialized analytics: ")
+      print("", "provider: ", module.provider )
+      print("", "platform: ", module.platform )
+      print("", "key: ", initKey)
+   end
 end
 
 module.logEvent = function(eventData)   
    if( debugMode ) then
       print( "flurry logEvent() - analytics == ", analytics )
    end
-	
+
    if (not analytics) then return end   
-   
+
    if( debugMode ) then
       print( "flurry logEvent() - eventData == ", eventData )
    end
-	
+
    analytics.logEvent(eventData)
-	
+
    if (debugMode) then
-		if (type(eventData) ~= "table") then
-			print("Logged analytics event (string): " .. tostring(eventData))		
+      if (type(eventData) ~= "table") then
+         print("Logged analytics event (string): " .. tostring(eventData))		
       else
-			print("Logged analytics event (table):")
-			for k,v in pairs(eventData) do
-				print("", k, v)
-			end
-		end
-	end
+         print("Logged analytics event (table):")
+         for k,v in pairs(eventData) do
+            print("", k, v)
+         end
+      end
+   end
 end
 
 return module
