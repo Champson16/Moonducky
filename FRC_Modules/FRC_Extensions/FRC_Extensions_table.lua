@@ -98,42 +98,42 @@ end
 
 -- ==
 --    table.print_r( theTable ) - Dumps indexes and values inside multi-level table (for debug)
+--    table.dump2( theTable )    - Ed's variant of a first-level table dump.
 -- ==
-local print = _G.print
+local dprint = ( _G.edmode ) and (_G.dprint or _G.print) or function() end
 table.print_r = function ( t ) 
    --local depth   = depth or math.huge
    local print_r_cache={}
    local function sub_print_r(t,indent)
       if (print_r_cache[tostring(t)]) then
-         print(indent.."*"..tostring(t))
+         dprint(indent.."*"..tostring(t))
       else
          print_r_cache[tostring(t)]=true
          if (type(t)=="table") then
             for pos,val in pairs(t) do
                if (type(val)=="table") then
-                  print(indent.."["..pos.."] => "..tostring(t).." {")
+                  dprint(indent.."["..pos.."] => "..tostring(t).." {")
                   sub_print_r(val,indent..string.rep(" ",string.len(pos)+1))
-                  print(indent..string.rep(" ",string.len(pos)+1).."}")
+                  dprint(indent..string.rep(" ",string.len(pos)+1).."}")
                elseif (type(val)=="string") then
-                  print(indent.."["..pos..'] => "'..val..'"')
+                  dprint(indent.."["..pos..'] => "'..val..'"')
                else
-                  print(indent.."["..pos.."] => "..tostring(val))
+                  dprint(indent.."["..pos.."] => "..tostring(val))
                end
             end
          else
-            print(indent..tostring(t))
+            dprint(indent..tostring(t))
          end			
       end
    end
    if (type(t)=="table") then
-      print(tostring(t).." {")
+      dprint(tostring(t).." {")
       sub_print_r(t," ")
-      print("}")
+      dprint("}")
    else
       sub_print_r(t," ")
    end
 end
-
 function table.dump2(theTable, padding, marker ) -- Sorted
    marker = marker or ""
    local theTable = theTable or  {}
@@ -145,8 +145,8 @@ function table.dump2(theTable, padding, marker ) -- Sorted
    table.sort(tmp,compare)
 
    local padding = padding or 30
-   print("\Table Dump:")
-   print("-----")
+   dprint("\Table Dump:")
+   dprint("-----")
    if(#tmp > 0) then
       for i,n in ipairs(tmp) do     
 
@@ -160,12 +160,12 @@ function table.dump2(theTable, padding, marker ) -- Sorted
          keyString = keyString:rpad(padding)
          valueString = valueString:rpad(padding)
 
-         print( keyString .. " == " .. valueString ) 
+         dprint( keyString .. " == " .. valueString ) 
       end
    else
-      print("empty")
+      dprint("empty")
    end
-   print( marker .. "-----\n")
+   dprint( marker .. "-----\n")
 end
 
 -- ==

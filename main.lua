@@ -7,27 +7,17 @@
 -- BEGIN Ed's DEBUG convenience code
 -- BEGIN Ed's DEBUG convenience code
 -- BEGIN Ed's DEBUG convenience code
-_G.edmode = false --EFM
+_G.edmode = false
 --timer.performWithDelay( 500, function() audio.setVolume( 0 ) end ) --EFM Turn off sound after start.
 if( edmode ) then
-   _G.dprint  = _G.print --EFM
-   require ("FRC_Modules.FRC_Extensions.FRC_Extensions") 
+   _G.dprint  = _G.print --EFM   
    _G.print = function() end
-
-   local function onKey( event )
-      local storyboard = require("storyboard");
-      if( event.phase ~= "up" ) then return false end
-      if( event.keyName == "d" ) then
-         storyboard.gotoScene('Scenes.DressingRoom', { effect="crossFade", time=0 });  -- EFM            
-      elseif( event.keyName == "r" ) then
-         storyboard.gotoScene('Scenes.Rehearsal', { effect="crossFade", time=0 }); -- EFM
-      elseif( event.keyName == "l" ) then
-         storyboard.gotoScene('Scenes.Lobby', { effect="crossFade", time=0 }); -- EFM
-      end
-   end
-   Runtime:addEventListener( "key", onKey )   
 else
-   _G.dprint = function() end --EFM
+   -- Stub out Ed's dprint() function
+   _G.dprint = function() end 
+            
+   -- Stub out print when on device for quiet logs ( This code used to be lower down)
+   _G.print = ( system.getInfo( "environment" ) == "simulator" ) and _G.print or function() end
 end
 
 --timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.SetDesign', { effect="crossFade", time=0 }); end )
@@ -39,21 +29,20 @@ end
 -- END Ed's DEBUG convenience code
 -- END Ed's DEBUG convenience code
 -- END Ed's DEBUG convenience code
+
 -----------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------
+--
+-- Load the extensions as early as possible to get them in play...
+--
+require ("FRC_Modules.FRC_Extensions.FRC_Extensions") 
+
 
 -- Uncomment following lines to get FPS and/or Memory Usage Meters
 --require("FRC_Modules.FRC_Util.FRC_Util_FPSMemMeters").create_fps()
 --require("FRC_Modules.FRC_Util.FRC_Util_FPSMemMeters").create_mem()
 
-
--- ==============================================================
--- TRS / EFM - temporary home of swipe threshold till we tune it.
--- ==============================================================
-_G.swipeThresh = 25
--- ==============================================================
--- ==============================================================
 
 -- ==============================================================
 -- native.showAlert() (bug?) Fix
@@ -76,10 +65,6 @@ display.setStatusBar(display.HiddenStatusBar);
 
 local FRC_Globals = require('FRC_Modules.FRC_Globals.FRC_Globals');
 
--- Stub out print when on device for quiet logs
-if( not edmode ) then
-   _G.print = ( ON_SIMULATOR ) and _G.print or function() end
-end
 
 -- LOAD BEFORE ALL FRC MODULES
 require ("FRC_Modules.FRC_Extensions.FRC_Extensions") 

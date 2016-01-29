@@ -1676,15 +1676,10 @@ function FRC_Rehearsal_Scene:createScene(event)
 end
 
 function FRC_Rehearsal_Scene.ensureRehearsalModeStopped()
-   dprint("BONG")
    if( FRC_Rehearsal_Scene.isPlaying == true ) then
          FRC_Rehearsal_Scene.stopRehearsalMode()
    end
 end
-
-
-
-
 
 
 function FRC_Rehearsal_Scene:enterScene(event)

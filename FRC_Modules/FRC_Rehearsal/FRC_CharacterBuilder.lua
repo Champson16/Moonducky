@@ -17,7 +17,6 @@ local FRC_SetDesign_Settings  = require('FRC_Modules.FRC_SetDesign.FRC_SetDesign
 local FRC_Rehearsal_Settings  = require('FRC_Modules.FRC_Rehearsal.FRC_Rehearsal_Settings')
 local FRC_Util                = require('FRC_Modules.FRC_Util.FRC_Util')
 
-
 local function UI(key)
    return FRC_Rehearsal_Settings.UI[key]
 end
@@ -552,9 +551,6 @@ function public.placeNewInstrument( x, y, instrumentName )
    stagePiece:scale(instrumentScale,instrumentScale)
 
    instrumentsInUse[instrumentName] = instrumentName
-   function stagePiece.destroy( self )
-      instrumentsInUse[self.instrument] = nil
-   end
 
    currentStagePiece = stagePiece
 
@@ -567,8 +563,21 @@ function public.placeNewInstrument( x, y, instrumentName )
    return stagePiece
 end
 
+-- EDOCHI
 --
 -- placeNewCharacter() - Create a new character and place it on the stage.
+--
+--       < x, y > - x,y Position to place character at.
+--
+--    characterID - Numeric ID used to find a saved dressing room record  
+--                       -- OR -- 
+--                  A table containing a saved dressing room record.
+--
+-- instrumentName - (Optional) name of instrument to give character.  If not provided will default to Dance1 or Dance2.
+--
+--    danceNumber - (Optional) numeric value in range [1,2] specifying which dance number this character was previously assigned.
+--                  This is only used when recreating an existing character and allows us to keep the characters original dance number in case
+--                  the player has no instrument or has just had it removed.
 --
 function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumber  )
    x = x or display.contentCenterX
@@ -589,12 +598,26 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    else
       instrumentName             = instrumentName or ("Dance" .. danceNumber) -- Assume all players as dancers
    end
+   
+   --
+   -- Get numeric ID of instrument/dance (later used to look up correct animation part(s) in unified list for this character)
+   --   
    local instrumentType       = private.instrumentNameMap(instrumentName)
+   
+   --
+   -- Get the 'costume data' from the dressing room record (or naked version) for this animal.
+   --
    local costumeData          = private.getCostumeData( animalType )
+   
+   --
+   -- Based on animal type, get the whole list of XML files associated with it so we can subsequently select the right one based on
+   -- instrument type (or dance number.)
+   --
    local xmlFiles             = private.getXMLFileNames( animalType )
 
    --
-   -- Get costume adjustment data for this character
+   -- Get costume adjustment data for this character.  These values are used to correctly translate costume elments relative to a
+   -- base offset.
    --
    local adjustments = {}
    for k,v in pairs( characterData.categories ) do
@@ -605,10 +628,21 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
          offset = private.getPartOffset( costumeData, k, v )
       }
    end
-
+   
+   --
+   -- 'StagePiece' is the character.  It is simply a group containing all of the subsquent animations, images, etc.
+   -- All content is placed at <0,0> in the group and then the group is moved and scaled to move and scale that content)
+   --
    local stagePiece = display.newGroup()
+   
+   --
+   -- stagePieces is the parent group that contains all characters and standalone instruments.  It is in turn a child of the scene hierarchy.
+   --
    stagePieces:insert( stagePiece )
 
+   --
+   -- Position the stagePiece/character and set some key values for future use in case we strip the current instrument from (or add one to) the character.
+   --
    stagePiece.x                  = x
    stagePiece.y                  = y
    stagePiece.pieceType          = "character"
@@ -616,23 +650,29 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    stagePiece.danceNumber        = danceNumber
    stagePiece.characterID        = characterID
 
-   -- Only preclude re-use of instruments (not dancers)
+   --
+   -- Check to be sure we are not trying to use an instrument that is already in use.  Only one instance of each instrument 
+   -- is allowed on the stage at once.
+   --
+   -- Note: Dance1/Dance2 are both treated as instruments in our animation hiearchy/etc.  However, we are allowing multiple
+   -- instances of both.  Therefore, the following code excludes dance* from the 'duplicate' restriction.
+   --
    if( not strMatch( strLower( instrumentName ), "dance" ) ) then
       instrumentsInUse[instrumentName] = instrumentName
    end
-
-
-   function stagePiece.destroy( self )
-      instrumentsInUse[self.instrument] = nil
-      
-      local sequence = stagePiece.animationSequence
-      for i = 1, sequence.numChildren do
-         sequence[i]:stop()
-      end      
-   end
-
-   -- Get all known parts for the selected instrument type within the previously selected character (animal) type
-   local partsList, xmlTable = private.getPartsList( xmlFiles[instrumentType], animationXMLBase, false )
+   
+   
+   -- Knowing the instrument type, parse the appropriate XML (or xjson) file and get:
+   -- 
+   -- + partList - A table containing all the parts associated with this character.  i.e. Just those parts we need in order render the character.
+   --   Each entry is a table containing: Name of part, and path to that part.  The latter is a correction specific to the way moonducky's
+   --   animation files were implemented.  Unfortunately, not all images are sourced from the same folder.
+   --  
+   -- + xmlTable - The entire XML file as a table.  We'll use this later by passing it to the clipgroup builder (to save loading time).
+   --
+   -- Set last argument in the following call to getPartsList() to tru to see the part details. (Requires edmode == true)
+   --
+   local partsList, xmlTable = private.getPartsList( xmlFiles[instrumentType], animationXMLBase, true )
    
    --
    -- Generate a list of the animation parts we need for this particular character
@@ -671,13 +711,16 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    animationsToBuild = tmp
    tmp = nil   
    
-
-   -- Copy the xml table, then trim it to just the parts we need to build this character
+   
+   --
+   -- Duplicate the xml table, then trim it to just the parts we need to build this character
    --
    local xmlTable = table.deepCopy( xmlTable ) 
    local newPart = {}
    local part = xmlTable.Animation.Part
-   
+   --
+   -- Trimming starts here:
+   --
    for i = 1, #animationsToBuild do    
       local unifiedData = animationsToBuild[i]
       local partsList = unifiedData[2]
@@ -733,10 +776,9 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    public.markDirty( true )
    
    --
-   -- EFM - Debug meter to show what frame each animation clip is at relative to other clips
+   -- DEBUG: Unccoment next line to see animation 'meter' for each character
    --
    --FRC_Util.animMeter( sequence, stagePiece )
-   
    
    --
    -- Lag Fix Code - Forces animation indexes to align every frame.
@@ -1521,7 +1563,7 @@ end
 -- getPartsList() - Get the parts list for this unified animation file (so we can parse and manipulate it).
 --
 function private.getPartsList( sourceFile, animationXMLBase, debugEn )
-   --dprint( sourceFile, animationXMLBase, debugEn )
+   dprint( sourceFile, animationXMLBase, debugEn )
    local xmltable = FRC_AnimationManager.loadAnimationDataUnified( sourceFile, animationXMLBase  )
    local partsList = xmltable.Animation.Part
    if( debugEn == true ) then

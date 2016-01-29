@@ -1,5 +1,7 @@
 -- ui widgets for Corona graphics 2.x engine (not compatible with 1.x)
 
+local swipeThresh = 25 -- Moved here from main.lua
+
 local math_abs = math.abs;
 local math_floor = math.floor;
 local ui = {};
@@ -309,7 +311,7 @@ ui.button.touch = function(event)
 			-- handle case where user pressed the button, but then begins to drag a scroller
 			local dx = math_abs(event.x - self._startX);
 			local dy = math_abs(event.y - self._startY);
-			local thresh = _G.swipeThresh;
+			local thresh = swipeThresh;
 			local eventPassedToScroller;
 			if ((dx < thresh) and (dy < thresh)) then
 				if (isWithinBounds) then
@@ -377,7 +379,7 @@ ui.button.touch = function(event)
 		local dx = math_abs(event.x - self._startX);
 		local dy = math_abs(event.y - self._startY);
 		--local thresh = 3;
-      local thresh = _G.swipeThresh;
+      local thresh = swipeThresh;
 		if ((dx >= thresh) or (dy >= thresh)) then
 			if (self.parentScrollContainer) then
 				local scrollerBounds = self.parentScrollContainer.contentBounds;
