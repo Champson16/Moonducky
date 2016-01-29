@@ -4,6 +4,8 @@
 local public   = {} -- Public interface
 local private  = {} -- Private inteface
 
+local enableLagFix = true 
+
 -- ======================================================================
 -- Requires
 -- ======================================================================
@@ -730,95 +732,34 @@ function public.placeNewCharacter( x, y, characterID, instrumentName, danceNumbe
    
    public.markDirty( true )
    
-   -- EFM MOVE THIS CODE TO UTILITY
    --
    -- EFM - Debug meter to show what frame each animation clip is at relative to other clips
    --
-   --  If things are working correctly, they should always line up vertically.  i.e. No ripple in meter.
+   --FRC_Util.animMeter( sequence, stagePiece )
+   
+   
    --
-   if( animMeter ) then
-      local labels = {}
-      local dFrame = display.newGroup()
-      local maxHeight = 400
-      local perWidth = 4
-      local fw = sequence.numChildren * perWidth
-      local back = display.newRect( dFrame, 0, 0, fw, maxHeight )
-      local bFrame = display.newGroup()
-      dFrame:insert(bFrame)
-      local x = back.x - back.contentWidth/2 + perWidth/2
+   -- Lag Fix Code - Forces animation indexes to align every frame.
+   --
+   local firstChild = sequence[1]
+   function firstChild.enterFrame( self )
+      if( self.removeSelf == nil ) then
+         Runtime:removeEventListener( "enterFrame", self )
+         dprint("AUTO STOP ENTERFRAME")
+         return
+      end
       
-      for i = 1, sequence.numChildren do
-         local child = sequence[i]
-         local bar = display.newRect( dFrame, x, maxHeight/2, perWidth, 1 )
-         bar.lbl = display.newText( dFrame, 1, x, -back.contentHeight/2 + 12, native.systemFont, 20 )
-         bar.lbl.anchorY = 0
-         bar.lbl:setFillColor( 0, 0, 0 )
-         labels[bar.lbl] = bar.lbl
-         bar.firstChild = ( i == 1 )
-         
-         if( i % 2  == 0 ) then
-            bar:setFillColor(1,0,0)
-         else
-            bar:setFillColor(0,0,1)
-         end
-         bar.anchorY = 1
-         x = x + perWidth
-         
-         function bar.enterFrame( self )
-            if( dFrame.removeSelf == nil ) then
-               Runtime:removeEventListener( "enterFrame", self )
-               return
-            end
-            
-            if( not _G.enableLagFix ) then
-               -- First child forces all frames to align
-               if( self.firstChild ) then
-                  local maxFrame = 0
-                  for k = 1, sequence.numChildren do
-                     local idx = sequence[k].currentIndex
-                     maxFrame = (idx > maxFrame) and idx or maxFrame
-                  end
-                  for k = 1, sequence.numChildren do
-                     sequence[k].currentIndex = maxFrame
-                  end
-               end
-            end
-            
-            self.yScale = child.currentIndex * 4
-            self.lbl.text = child.currentIndex
-         end
-         Runtime:addEventListener( "enterFrame", bar )
-      end      
-      back:setFillColor(1,1,0)
-      stagePiece:insert( dFrame )
-      local scale = 200/dFrame.contentWidth
-      dFrame:scale(scale,1) 
-      for k,v in pairs( labels ) do
-         v:scale( 1/scale, 1 )
+      -- First child forces all frames to align
+      local maxFrame = 0
+      for k = 1, sequence.numChildren do
+         local idx = sequence[k].currentIndex
+         maxFrame = (idx > maxFrame) and idx or maxFrame
+      end
+      for k = 1, sequence.numChildren do
+         sequence[k].currentIndex = maxFrame
       end
    end
-   
-   if( _G.enableLagFix ) then
-      local firstChild = sequence[1]
-      function firstChild.enterFrame( self )
-         if( self.removeSelf == nil ) then
-            Runtime:removeEventListener( "enterFrame", self )
-            dprint("AUTO STOP ENTERFRAME")
-            return
-         end
-         
-         -- First child forces all frames to align
-         local maxFrame = 0
-         for k = 1, sequence.numChildren do
-            local idx = sequence[k].currentIndex
-            maxFrame = (idx > maxFrame) and idx or maxFrame
-         end
-         for k = 1, sequence.numChildren do
-            sequence[k].currentIndex = maxFrame
-         end
-      end
-      Runtime:addEventListener( "enterFrame", firstChild )
-   end    
+   Runtime:addEventListener( "enterFrame", firstChild )
    
    return stagePiece   
 end

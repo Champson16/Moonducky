@@ -110,6 +110,59 @@ function FRC_Util.easyBlur( group, time, color )
 end
 
 
+-- 'Animation Meter' debug tool (first used in Moonducky)
+--
+function FRC_Util.animMeter( sequence, parentGroup )
+   local labels = {}
+   local dFrame = display.newGroup()
+   local maxHeight = 400
+   local perWidth = 4
+   local fw = sequence.numChildren * perWidth
+   local back = display.newRect( dFrame, 0, 0, fw, maxHeight )
+   local bFrame = display.newGroup()
+   dFrame:insert(bFrame)
+   local x = back.x - back.contentWidth/2 + perWidth/2
+
+   for i = 1, sequence.numChildren do
+      local child = sequence[i]
+      local bar = display.newRect( dFrame, x, maxHeight/2, perWidth, 1 )
+      bar.lbl = display.newText( dFrame, 1, x, -back.contentHeight/2 + 12, native.systemFont, 20 )
+      bar.lbl.anchorY = 0
+      bar.lbl:setFillColor( 0, 0, 0 )
+      labels[bar.lbl] = bar.lbl
+      bar.firstChild = ( i == 1 )
+
+      if( i % 2  == 0 ) then
+         bar:setFillColor(1,0,0)
+      else
+         bar:setFillColor(0,0,1)
+      end
+      bar.anchorY = 1
+      x = x + perWidth
+
+      function bar.enterFrame( self )
+         if( dFrame.removeSelf == nil ) then
+            Runtime:removeEventListener( "enterFrame", self )
+            return
+         end
+         self.yScale = child.currentIndex * 4
+         self.lbl.text = child.currentIndex
+      end
+      Runtime:addEventListener( "enterFrame", bar )
+   end      
+   back:setFillColor(1,1,0)
+   if( parentGroup ) then
+      parentGroup:insert( dFrame )
+   end
+   local scale = 200/dFrame.contentWidth
+   dFrame:scale(scale,1) 
+   for k,v in pairs( labels ) do
+      v:scale( 1/scale, 1 )
+   end
+end
+
+
+
 
 
 return FRC_Util

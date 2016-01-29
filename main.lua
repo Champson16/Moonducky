@@ -8,10 +8,6 @@ meter.create_mem()
 -- main.lua
 --
 -----------------------------------------------------------------------------------------
-_G.enableLagFix = true
-_G.animMeter = false
-
-
 _G.edmode = false --EFM
 if( edmode ) then
    _G.dprint  = _G.print --EFM
