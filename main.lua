@@ -1,14 +1,14 @@
---[[
-local meter = require "meter"
-meter.create_fps()
-meter.create_mem()
---]]
+--require("mobdebug").start(); --EFM required if you want to debug with ZeroBrane
 -----------------------------------------------------------------------------------------
 --
 -- main.lua
 --
 -----------------------------------------------------------------------------------------
+-- BEGIN Ed's DEBUG convenience code
+-- BEGIN Ed's DEBUG convenience code
+-- BEGIN Ed's DEBUG convenience code
 _G.edmode = false --EFM
+--timer.performWithDelay( 500, function() audio.setVolume( 0 ) end ) --EFM Turn off sound after start.
 if( edmode ) then
    _G.dprint  = _G.print --EFM
    require ("FRC_Modules.FRC_Extensions.FRC_Extensions") 
@@ -35,10 +35,18 @@ end
 --timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.Rehearsal', { time = 100, params = { mode = "rehearsal", skipCreateLoad = false } }); end )
 --timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.Rehearsal', { params = { mode = "showtime" } }); end )
 --timer.performWithDelay( 100, function() local storyboard = require("storyboard"); storyboard.gotoScene('Scenes.Lobby', { effect="crossFade", time=0 }); end )
---require("mobdebug").start() -- ZeroBrane Users
+
+-- END Ed's DEBUG convenience code
+-- END Ed's DEBUG convenience code
+-- END Ed's DEBUG convenience code
 -----------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------
+
+-- Uncomment following lines to get FPS and/or Memory Usage Meters
+--require("FRC_Modules.FRC_Util.FRC_Util_FPSMemMeters").create_fps()
+--require("FRC_Modules.FRC_Util.FRC_Util_FPSMemMeters").create_mem()
+
 
 -- ==============================================================
 -- TRS / EFM - temporary home of swipe threshold till we tune it.
